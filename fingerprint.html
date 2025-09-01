@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-900 text-white">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Browser Fingerprinting: A Closer Look</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    html { font-family: 'Inter', sans-serif; }
+    ::selection { background: #2563eb; color: #fff; }
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col">
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-blue-800 to-gray-900 py-10 px-4 text-center shadow-lg">
+    <h1 class="text-4xl md:text-5xl font-bold mb-3 text-white">Browser Fingerprinting: A Closer Look</h1>
+    <p class="text-lg md:text-xl text-blue-200 max-w-2xl mx-auto">Understand how your browser's unique fingerprint is created and why it matters for web security.</p>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 px-4 py-8 max-w-2xl mx-auto space-y-8">
+    <!-- What is Browser Fingerprinting? -->
+    <section class="bg-gray-800 rounded-xl shadow-md p-6">
+      <h2 class="text-2xl font-semibold mb-2 text-blue-400">What is Browser Fingerprinting?</h2>
+      <p class="mb-3 text-gray-200">
+        Browser fingerprinting is a technique used to identify and track users online by collecting detailed information about their browser, operating system, and hardware. Unlike cookies, which can be deleted or blocked, a fingerprint is generated from data your browser shares automatically.
+      </p>
+      <ul class="list-disc list-inside text-gray-300">
+        <li>User agent (browser & version)</li>
+        <li>Screen resolution</li>
+        <li>Installed fonts</li>
+        <li>Browser plugins</li>
+        <li>Time zone</li>
+        <li>Language</li>
+        <li>Operating system</li>
+      </ul>
+    </section>
+
+    <!-- Why is it Used? -->
+    <section class="bg-gray-800 rounded-xl shadow-md p-6">
+      <h2 class="text-2xl font-semibold mb-2 text-blue-400">Why is it Used?</h2>
+      <ul class="space-y-3">
+        <li>
+          <span class="font-semibold text-blue-300">Fraud Detection:</span>
+          <span class="text-gray-200">Helps prevent account takeover by detecting logins from new or suspicious devices, even if the correct credentials are used.</span>
+        </li>
+        <li>
+          <span class="font-semibold text-blue-300">Bot Detection:</span>
+          <span class="text-gray-200">Distinguishes between human users and automated bots that may scrape content, create spam accounts, or perform malicious activities.</span>
+        </li>
+        <li>
+          <span class="font-semibold text-blue-300">Improving User Security:</span>
+          <span class="text-gray-200">Enables services to better protect user accounts and prevent unauthorized access.</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Live Demonstration -->
+    <section class="bg-gray-800 rounded-xl shadow-md p-6">
+      <h2 class="text-2xl font-semibold mb-4 text-blue-400">Live Demonstration: Your Browser Fingerprint</h2>
+      <div id="fp-loading" class="flex items-center justify-center h-24">
+        <svg class="animate-spin h-6 w-6 text-blue-400 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+        </svg>
+        <span class="text-blue-300 text-lg">Loading fingerprint...</span>
+      </div>
+      <div id="fp-result" class="hidden">
+        <div class="mb-4">
+          <span class="text-lg font-semibold text-gray-100">Your Visitor ID:</span>
+          <span id="fp-id" class="bg-blue-900 text-blue-300 font-mono px-2 py-1 rounded select-all cursor-pointer ml-2"></span>
+          <button id="copy-id" class="ml-2 px-2 py-1 text-xs bg-blue-700 hover:bg-blue-600 rounded text-white focus:outline-none">Copy</button>
+        </div>
+        <div class="mb-4">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-blue-900 text-blue-200">
+                <th class="py-2 px-3 rounded-tl">Data Point</th>
+                <th class="py-2 px-3 rounded-tr">Value</th>
+              </tr>
+            </thead>
+            <tbody id="fp-table" class="bg-gray-700 text-gray-100"></tbody>
+          </table>
+        </div>
+        <button id="reload-fp" class="mt-2 px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold focus:outline-none transition">Generate New Fingerprint</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-gray-400 text-center py-4 mt-8 rounded-t-xl shadow-inner">
+    Built for educational purposes.
+  </footer>
+
+  <!-- Script for FingerprintJS Demo -->
+  <script>
+    // Utility functions
+    function getBrowserInfo() {
+      const ua = navigator.userAgent;
+      let browser = "Unknown", version = "";
+      if (/firefox/i.test(ua)) {
+        browser = "Firefox";
+        version = ua.match(/firefox\/([\d.]+)/i)?.[1] || "";
+      } else if (/edg/i.test(ua)) {
+        browser = "Edge";
+        version = ua.match(/edg\/([\d.]+)/i)?.[1] || "";
+      } else if (/chrome/i.test(ua)) {
+        browser = "Chrome";
+        version = ua.match(/chrome\/([\d.]+)/i)?.[1] || "";
+      } else if (/safari/i.test(ua)) {
+        browser = "Safari";
+        version = ua.match(/version\/([\d.]+)/i)?.[1] || "";
+      }
+      return browser + (version ? " " + version : "");
+    }
+    function getOSInfo() {
+      const platform = navigator.platform;
+      const ua = navigator.userAgent;
+      if (/Win/i.test(platform)) return "Windows";
+      if (/Mac/i.test(platform)) return "macOS";
+      if (/Linux/i.test(platform)) return "Linux";
+      if (/Android/i.test(ua)) return "Android";
+      if (/iPhone|iPad|iPod/i.test(ua)) return "iOS";
+      return "Unknown";
+    }
+    function getScreenRes() {
+      return `${window.screen.width} x ${window.screen.height}`;
+    }
+    function getTimezone() {
+      try {
+        return Intl.DateTimeFormat().resolvedOptions().timeZone;
+      } catch {
+        return "Unknown";
+      }
+    }
+    function getLanguage() {
+      return navigator.language || "Unknown";
+    }
+    function getPlatform() {
+      return navigator.platform || "Unknown";
+    }
+    function cookiesEnabled() {
+      return navigator.cookieEnabled ? "Yes" : "No";
+    }
+
+    // Main FingerprintJS logic
+    async function generateFingerprint() {
+      document.getElementById('fp-loading').classList.remove('hidden');
+      document.getElementById('fp-result').classList.add('hidden');
+      // Load FingerprintJS
+      const fpPromise = window.FingerprintJS.load();
+      const fp = await fpPromise;
+      const result = await fp.get();
+      // Display Visitor ID
+      document.getElementById('fp-id').textContent = result.visitorId;
+      // Data points
+      const dataPoints = [
+        { name: "Browser & Version", value: getBrowserInfo() },
+        { name: "Operating System", value: getOSInfo() },
+        { name: "Screen Resolution", value: getScreenRes() },
+        { name: "Timezone", value: getTimezone() },
+        { name: "Language", value: getLanguage() },
+        { name: "Platform", value: getPlatform() },
+        { name: "Cookies Enabled?", value: cookiesEnabled() }
+      ];
+      // Populate table
+      const table = document.getElementById('fp-table');
+      table.innerHTML = "";
+      dataPoints.forEach(dp => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td class="py-2 px-3 font-medium">${dp.name}</td><td class="py-2 px-3 font-mono">${dp.value}</td>`;
+        table.appendChild(row);
+      });
+      // Show result
+      document.getElementById('fp-loading').classList.add('hidden');
+      document.getElementById('fp-result').classList.remove('hidden');
+    }
+
+    // Copy Visitor ID
+    document.getElementById('copy-id').addEventListener('click', function() {
+      const id = document.getElementById('fp-id').textContent;
+      navigator.clipboard.writeText(id);
+      this.textContent = "Copied!";
+      setTimeout(() => { this.textContent = "Copy"; }, 1200);
+    });
+
+    // Reload Fingerprint
+    document.getElementById('reload-fp').addEventListener('click', generateFingerprint);
+
+    // Initial load
+    window.addEventListener('DOMContentLoaded', generateFingerprint);
+  </script>
+</body>
+</html>
