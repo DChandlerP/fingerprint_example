@@ -15,8 +15,7 @@
 </head>
 <body class="bg-gray-950 text-white min-h-screen flex flex-col">
   <!-- Navigation Bar -->
-  <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-30">
-    <div class="max-w-5xl mx-auto flex items-center justify-between px-4 py-3">
+  <div class="w-full flex items-center justify-between px-4 py-3">
       <div class="flex items-center space-x-3">
         <a href="https://www.linkedin.com/in/chandler-prince-b53b1427/" target="_blank" rel="noopener" class="text-blue-400 hover:text-blue-300" title="LinkedIn">
           <span id="nav-linkedin" class="w-6 h-6"></span>
@@ -25,8 +24,10 @@
           <span id="nav-github" class="w-6 h-6"></span>
         </a>
       </div>
-       <div class="flex space-x-2">
+       <div class="flex flex-wrap justify-center space-x-2">
         <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-home" class="mr-1"></span>Home</a>
+        <a href="threatmodel.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-threat" class="mr-1"></span>Threat Model</a>
+        <a href="checklist.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-checklist" class="mr-1"></span>Checklist Generator</a>
         <a href="jwt.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-jwt" class="mr-1"></span>JWT Decoder</a>
         <a href="fingerprint.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-fp" class="mr-1"></span>Fingerprint Demo</a>
         <a href="epssdemo.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-epss" class="mr-1"></span>EPSS Comparator</a>
@@ -41,10 +42,14 @@
     <p class="max-w-xl mx-auto text-gray-200 text-lg md:text-xl mb-6">
       A seasoned cybersecurity leader with extensive experience in cloud security, DevSecOps, and risk management. Passionate about building secure systems and mentoring high-performing teams at enterprise scale.
     </p>
-    <div class="flex justify-center items-center space-x-2">
-      <a href="https://github.com/DChandlerP" target="_blank" rel="noopener" class="inline-flex items-center px-3 py-2 bg-blue-700 hover:bg-blue-600 rounded-full text-white font-semibold transition shadow-lg">
+    <div class="flex justify-center items-center space-x-4">
+      <a href="https://github.com/DChandlerP" target="_blank" rel="noopener" class="inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded-full text-white font-semibold transition shadow-lg">
         <span id="github-icon" class="mr-2"></span>
         GitHub
+      </a>
+      <a href="https://www.linkedin.com/in/chandler-prince-b53b1427/" target="_blank" rel="noopener" class="inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded-full text-white font-semibold transition shadow-lg">
+        <span id="linkedin-icon" class="mr-2"></span>
+        LinkedIn
       </a>
     </div>
   </header>
@@ -97,7 +102,6 @@
             <span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-medium">Threat Modeling</span>
           </div>
         </div>
-        </div>
       </div>
     </section>
 
@@ -129,7 +133,35 @@
     <!-- Projects & Demonstrations -->
     <section>
       <h3 class="text-2xl font-semibold text-blue-400 mb-4">Projects & Demonstrations</h3>
-      <div class="grid gap-6 md:grid-cols-2">
+      <div class="grid gap-6 md:grid-cols-3">
+        <!-- Interactive Threat Model Card -->
+        <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
+          <div class="flex items-center mb-2">
+            <span id="threat-icon" class="mr-2"></span>
+            <span class="text-lg font-semibold text-blue-300">Interactive Threat Model</span>
+          </div>
+          <p class="text-gray-200 text-sm mb-4">
+            A hands-on walk-through of identifying security threats on a sample E-Commerce API using the STRIDE framework.
+          </p>
+          <a href="threat-model.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
+            <span id="external-link-threat" class="mr-2"></span>
+            View the Case Study
+          </a>
+        </div>
+        <!-- Security Checklist Generator Card -->
+        <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
+          <div class="flex items-center mb-2">
+            <span id="checklist-icon" class="mr-2"></span>
+            <span class="text-lg font-semibold text-blue-300">Security Checklist Generator</span>
+          </div>
+          <p class="text-gray-200 text-sm mb-4">
+            A tool to generate tailored security checklists for various project types and technologies, helping to standardize security posture.
+          </p>
+          <a href="checklist.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
+            <span id="external-link-checklist" class="mr-2"></span>
+            Use the Generator
+          </a>
+        </div>
         <!-- JWT Decoder Demo Card -->
         <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
           <div class="flex items-center mb-2">
@@ -139,7 +171,7 @@
           <p class="text-gray-200 text-sm mb-4">
             An interactive tool to decode and verify JSON Web Tokens (JWTs) securely in your browser.
           </p>
-          <a href="jwt.html" class="inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
+          <a href="jwt.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
             <span id="external-link-jwt" class="mr-2"></span>
             Try the JWT Decoder
           </a>
@@ -153,7 +185,7 @@
           <p class="text-gray-200 text-sm mb-4">
             A hands-on demonstration of browser fingerprinting techniques, explaining how they are used for fraud and bot detection to enhance user security.
           </p>
-          <a href="fingerprint.html" class="inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
+          <a href="fingerprint.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
             <span id="external-link-icon" class="mr-2"></span>
             View the Demo
           </a>
@@ -167,7 +199,7 @@
           <p class="text-gray-200 text-sm mb-4">
             An interactive tool to compare CVSS severity with EPSS exploitability, helping prioritize vulnerabilities based on both impact and real-world risk.
           </p>
-          <a href="epssdemo.html" class="inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
+          <a href="epssdemo.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
             <span id="external-link2-icon" class="mr-2"></span>
             Try the Comparator
           </a>
@@ -181,7 +213,7 @@
           <p class="text-gray-200 text-sm mb-4">
             A tool for decoding the complex model codes (MODCATs) used by Paul Reed Smith Guitars to specify instrument features.
           </p>
-          <a href="modcat.html" class="inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
+          <a href="modcat.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
             <span id="external-link-modcat" class="mr-2"></span>
             Try the Decoder
           </a>
@@ -223,17 +255,24 @@
     lucide.createIcons({
       icons: {
         'github-icon': lucide.Github,
+        'linkedin-icon': lucide.Linkedin,
         'shield-icon': lucide.ShieldCheck,
         'certificate-icon': lucide.BadgeCheck,
         'fingerprint-icon': lucide.Fingerprint,
         'epss-icon': lucide.Activity,
         'jwt-icon': lucide.KeyRound,
         'modcat-icon': lucide.Guitar,
+        'threat-icon': lucide.ShieldAlert,
+        'checklist-icon': lucide.ListChecks,
         'external-link-icon': lucide.ExternalLink,
         'external-link2-icon': lucide.ExternalLink,
         'external-link-jwt': lucide.ExternalLink,
         'external-link-modcat': lucide.ExternalLink,
+        'external-link-threat': lucide.ExternalLink,
+        'external-link-checklist': lucide.ExternalLink,
         'nav-home': lucide.Home,
+        'nav-threat': lucide.ShieldAlert,
+        'nav-checklist': lucide.ListChecks,
         'nav-jwt': lucide.KeyRound,
         'nav-modcat': lucide.Guitar,
         'nav-fp': lucide.Fingerprint,
