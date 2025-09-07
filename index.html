@@ -25,11 +25,12 @@
           <span id="nav-github" class="w-6 h-6"></span>
         </a>
       </div>
-      <div class="flex space-x-2">
+       <div class="flex space-x-2">
         <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-home" class="mr-1"></span>Home</a>
         <a href="jwt.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-jwt" class="mr-1"></span>JWT Decoder</a>
         <a href="fingerprint.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-fp" class="mr-1"></span>Fingerprint Demo</a>
         <a href="epssdemo.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-epss" class="mr-1"></span>EPSS Comparator</a>
+        <a href="modcat.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-modcat" class="mr-1"></span>MODCAT Decoder</a>
       </div>
     </div>
   </nav>
@@ -103,21 +104,7 @@
     <!-- Experience Highlights -->
     <section>
       <h3 class="text-2xl font-semibold text-blue-400 mb-4">Experience Highlights</h3>
-  <div class="grid gap-6 md:grid-cols-3">
-        <!-- JWT Decoder Demo Card -->
-        <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
-          <div class="flex items-center mb-2">
-            <span id="jwt-icon" class="mr-2"></span>
-            <span class="text-lg font-semibold text-blue-300">JWT Decoder & Verifier</span>
-          </div>
-          <p class="text-gray-200 text-sm mb-4">
-            An interactive tool to decode and verify JSON Web Tokens (JWTs) securely in your browser.
-          </p>
-          <a href="jwt.html" class="inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
-            <span id="external-link3-icon" class="mr-2"></span>
-            Try the JWT Decoder
-          </a>
-        </div>
+      <div class="grid gap-6 md:grid-cols-2">
         <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
           <div class="flex items-center mb-2">
             <span id="shield-icon" class="mr-2"></span>
@@ -143,6 +130,20 @@
     <section>
       <h3 class="text-2xl font-semibold text-blue-400 mb-4">Projects & Demonstrations</h3>
       <div class="grid gap-6 md:grid-cols-2">
+        <!-- JWT Decoder Demo Card -->
+        <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
+          <div class="flex items-center mb-2">
+            <span id="jwt-icon" class="mr-2"></span>
+            <span class="text-lg font-semibold text-blue-300">JWT Decoder & Verifier</span>
+          </div>
+          <p class="text-gray-200 text-sm mb-4">
+            An interactive tool to decode and verify JSON Web Tokens (JWTs) securely in your browser.
+          </p>
+          <a href="jwt.html" class="inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
+            <span id="external-link-jwt" class="mr-2"></span>
+            Try the JWT Decoder
+          </a>
+        </div>
         <!-- Browser Fingerprinting Demo Card -->
         <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
           <div class="flex items-center mb-2">
@@ -169,6 +170,20 @@
           <a href="epssdemo.html" class="inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
             <span id="external-link2-icon" class="mr-2"></span>
             Try the Comparator
+          </a>
+        </div>
+        <!-- MODCAT Decoder Demo Card -->
+        <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
+          <div class="flex items-center mb-2">
+            <span id="modcat-icon" class="mr-2"></span>
+            <span class="text-lg font-semibold text-blue-300">PRS MODCAT Decoder</span>
+          </div>
+          <p class="text-gray-200 text-sm mb-4">
+            A tool for decoding the complex model codes (MODCATs) used by Paul Reed Smith Guitars to specify instrument features.
+          </p>
+          <a href="modcat.html" class="inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
+            <span id="external-link-modcat" class="mr-2"></span>
+            Try the Decoder
           </a>
         </div>
       </div>
@@ -213,11 +228,14 @@
         'fingerprint-icon': lucide.Fingerprint,
         'epss-icon': lucide.Activity,
         'jwt-icon': lucide.KeyRound,
+        'modcat-icon': lucide.Guitar,
         'external-link-icon': lucide.ExternalLink,
         'external-link2-icon': lucide.ExternalLink,
-        'external-link3-icon': lucide.ExternalLink,
+        'external-link-jwt': lucide.ExternalLink,
+        'external-link-modcat': lucide.ExternalLink,
         'nav-home': lucide.Home,
         'nav-jwt': lucide.KeyRound,
+        'nav-modcat': lucide.Guitar,
         'nav-fp': lucide.Fingerprint,
         'nav-epss': lucide.Activity,
         'nav-linkedin': lucide.Linkedin,
@@ -235,3 +253,4 @@
   </script>
 </body>
 </html>
+
