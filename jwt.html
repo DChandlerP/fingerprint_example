@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-950 text-white">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JWT Decoder | D. Chandler Prince</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    html { font-family: 'Inter', sans-serif; }
+    ::selection { background: #2563eb; color: #fff; }
+    /* Custom styles for the JWT decoder */
+    .jwt-part-header { color: #fb7185; } /* red-400 */
+    .jwt-part-payload { color: #a78bfa; } /* violet-400 */
+    .jwt-part-signature { color: #38bdf8; } /* sky-400 */
+    .view-toggle-active { background-color: #3b82f6; color: white; }
+    .view-toggle-inactive { background-color: #1f2937; color: #9ca3af; }
+  </style>
+</head>
+<body class="bg-gray-950 text-white min-h-screen flex flex-col">
+  <!-- Navigation Bar -->
+  <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-30">
+    <div class="max-w-5xl mx-auto flex items-center justify-between px-4 py-3">
+      <div class="flex items-center space-x-3">
+        <a href="https://www.linkedin.com/in/chandler-prince-b53b1427/" target="_blank" rel="noopener" class="text-blue-400 hover:text-blue-300" title="LinkedIn">
+          <span id="nav-linkedin" class="w-6 h-6"></span>
+        </a>
+        <a href="https://github.com/DChandlerP/" target="_blank" rel="noopener" class="text-blue-400 hover:text-blue-300" title="GitHub">
+          <span id="nav-github" class="w-6 h-6"></span>
+        </a>
+      </div>
+      <div class="flex space-x-2">
+        <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-home" class="mr-1"></span>Home</a>
+        <a href="jwt.html" class="flex items-center px-3 py-1 rounded bg-gray-800 text-white font-semibold transition"><span id="nav-jwt" class="mr-1"></span>JWT Decoder</a>
+        <a href="fingerprint.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-fp" class="mr-1"></span>Fingerprint Demo</a>
+        <a href="epssdemo.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-epss" class="mr-1"></span>EPSS Comparator</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-blue-900 to-gray-900 py-10 px-4 text-center shadow-lg">
+    <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">JWT Decoder & Verifier</h1>
+    <p class="max-w-xl mx-auto text-gray-200 text-lg">
+      An interactive tool to decode JSON Web Tokens and verify their signatures.
+    </p>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 px-4 py-10 max-w-5xl mx-auto w-full">
+    <div class="bg-blue-900/50 border border-blue-700 text-blue-200 px-4 py-3 rounded-lg relative mb-8 flex items-center" role="alert">
+      <span id="info-icon" class="mr-3 shrink-0"></span>
+      <div>
+        <strong class="font-bold">For Demo Purposes Only. </strong>
+        <span class="block sm:inline">This tool decodes JWTs entirely within your browser. No data is ever stored or transmitted.</span>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Left Column: Encoded JWT Input -->
+      <section>
+        <h3 class="text-2xl font-semibold text-blue-400 mb-4">Encoded Token</h3>
+        <div class="bg-gray-900 p-4 rounded-lg shadow-lg">
+          <textarea id="jwt-input" class="w-full h-48 bg-gray-950 border border-gray-700 rounded-md p-3 text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none" placeholder="Paste your JWT here..."></textarea>
+          <div id="jwt-parts" class="mt-2 text-xs font-mono break-all"></div>
+          <div id="jwt-error" class="text-red-400 mt-2 text-sm hidden"></div>
+        </div>
+      </section>
+
+      <!-- Right Column: Decoded Output -->
+      <section class="space-y-6">
+        <!-- Header -->
+        <div>
+          <h3 class="text-xl font-semibold text-blue-400 mb-2">Header</h3>
+          <div class="bg-gray-900 p-4 rounded-lg shadow-lg">
+            <div class="flex justify-between items-center mb-3">
+              <div class="flex rounded-md" role="group">
+                <button type="button" id="header-table-btn" class="view-toggle-btn view-toggle-active px-3 py-1 text-sm font-medium rounded-l-lg">Table</button>
+                <button type="button" id="header-json-btn" class="view-toggle-btn view-toggle-inactive px-3 py-1 text-sm font-medium rounded-r-lg">JSON</button>
+              </div>
+              <button id="copy-header-btn" class="px-3 py-1 text-sm bg-gray-700 hover:bg-gray-600 rounded-md text-gray-300 font-medium transition-colors">Copy</button>
+            </div>
+            <div id="header-output-table" class="text-sm"></div>
+            <pre id="header-output-json" class="hidden bg-gray-950 p-3 rounded-md text-sm font-mono overflow-auto"></pre>
+          </div>
+        </div>
+
+        <!-- Payload -->
+        <div>
+          <h3 class="text-xl font-semibold text-blue-400 mb-2">Payload</h3>
+          <div class="bg-gray-900 p-4 rounded-lg shadow-lg">
+            <div class="flex justify-between items-center mb-3">
+              <div class="flex rounded-md" role="group">
+                  <button type="button" id="payload-table-btn" class="view-toggle-btn view-toggle-active px-3 py-1 text-sm font-medium rounded-l-lg">Table</button>
+                  <button type="button" id="payload-json-btn" class="view-toggle-btn view-toggle-inactive px-3 py-1 text-sm font-medium rounded-r-lg">JSON</button>
+              </div>
+              <button id="copy-payload-btn" class="px-3 py-1 text-sm bg-gray-700 hover:bg-gray-600 rounded-md text-gray-300 font-medium transition-colors">Copy</button>
+            </div>
+            <div id="payload-output-table" class="text-sm"></div>
+            <pre id="payload-output-json" class="hidden bg-gray-950 p-3 rounded-md text-sm font-mono overflow-auto"></pre>
+          </div>
+        </div>
+        
+        <!-- Signature Verification -->
+        <div>
+          <h3 class="text-xl font-semibold text-blue-400 mb-2">Verify Signature</h3>
+          <div class="bg-gray-900 p-4 rounded-lg shadow-lg">
+            <textarea id="secret-input" class="w-full bg-gray-950 border border-gray-700 rounded-md p-3 text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none" placeholder="Enter your secret to verify signature" rows="2"></textarea>
+            <div class="flex justify-between items-center mt-3">
+                <div class="flex rounded-md items-center" role="group">
+                    <span class="text-sm font-medium text-gray-400 mr-3">Secret:</span>
+                    <button type="button" id="secret-utf8-btn" class="view-toggle-btn view-toggle-active px-3 py-1 text-sm font-medium rounded-l-lg">UTF-8</button>
+                    <button type="button" id="secret-b64-btn" class="view-toggle-btn view-toggle-inactive px-3 py-1 text-sm font-medium rounded-r-lg">Base64Url</button>
+                </div>
+                <div class="flex space-x-2">
+                    <button id="copy-secret-btn" class="px-3 py-1 text-sm bg-gray-700 hover:bg-gray-600 rounded-md text-gray-300 font-medium transition-colors">Copy</button>
+                    <button id="clear-secret-btn" class="px-3 py-1 text-sm bg-gray-800 hover:bg-red-900/50 rounded-md text-red-400 font-medium transition-colors">Clear</button>
+                </div>
+            </div>
+             <div id="signature-result" class="mt-4 text-sm font-semibold flex items-center"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-400 text-center py-4 mt-8 rounded-t-xl shadow-inner">
+    © 2025 D. Chandler Prince
+  </footer>
+
+  <script>
+    // --- UTILITY FUNCTIONS & DOM ELEMENTS ---
+    const getEl = (id) => document.getElementById(id);
+    const jwtInput = getEl('jwt-input');
+    const jwtPartsEl = getEl('jwt-parts');
+    const jwtErrorEl = getEl('jwt-error');
+    const headerTable = getEl('header-output-table');
+    const headerJson = getEl('header-output-json');
+    const payloadTable = getEl('payload-output-table');
+    const payloadJson = getEl('payload-output-json');
+    const secretInput = getEl('secret-input');
+    const signatureResultEl = getEl('signature-result');
+
+    // --- STATE ---
+    let isSecretBase64 = false;
+
+    // --- CONSTANTS ---
+    const exampleJwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhdXRoMHwxMjM0NTY3ODkwIiwibmFtZSI6IkNoYW5kbGVyIFByaW5jZSIsImFkbWluIjp0cnVlLCJpYXQiOjE3MjU3Mjc2ODB9.M-22A_zHk1k-tJt2x932XQyRDYwJkU-x2bO_s6Y6s2g';
+
+    // --- CORE LOGIC ---
+    function b64UrlDecode(str) {
+      let output = str.replace(/-/g, '+').replace(/_/g, '/');
+      switch (output.length % 4) {
+        case 0: break;
+        case 2: output += '=='; break;
+        case 3: output += '='; break;
+        default: throw 'Illegal base64url string!';
+      }
+      return decodeURIComponent(atob(output).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+    }
+
+    function createClaimsTable(data, parentEl) {
+        parentEl.innerHTML = '';
+        const table = document.createElement('table');
+        table.className = 'w-full text-left border-collapse';
+        const tbody = document.createElement('tbody');
+        Object.entries(data).forEach(([key, value]) => {
+            const row = tbody.insertRow();
+            const keyCell = row.insertCell();
+            const valCell = row.insertCell();
+            keyCell.className = 'py-2 px-3 border-b border-gray-700 text-gray-400 align-top';
+            valCell.className = 'py-2 px-3 border-b border-gray-700 font-mono break-all';
+            keyCell.textContent = key;
+            if (['iat', 'exp', 'nbf'].includes(key) && typeof value === 'number') {
+                 valCell.textContent = `${value} (${new Date(value * 1000).toUTCString()})`;
+            } else {
+                 valCell.textContent = JSON.stringify(value);
+            }
+        });
+        table.appendChild(tbody);
+        parentEl.appendChild(table);
+    }
+    
+    function copyToClipboard(text, buttonId) {
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+        const button = getEl(buttonId);
+        if (button) {
+          const originalText = button.textContent;
+          button.textContent = 'Copied!';
+          button.classList.add('text-green-400');
+          setTimeout(() => {
+              button.textContent = originalText;
+              button.classList.remove('text-green-400');
+          }, 2000);
+        }
+      }).catch(err => {
+        console.error('Failed to copy text: ', err);
+      });
+    }
+
+    async function verifySignature(encodedHeader, encodedPayload, signature, secret, useBase64) {
+        if (!secret) {
+            signatureResultEl.innerHTML = '';
+            return;
+        }
+        try {
+            const secretKey = useBase64 ? b64UrlDecode(secret) : secret;
+            const keyData = new TextEncoder().encode(secretKey);
+            const key = await crypto.subtle.importKey(
+                'raw', keyData, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+            );
+
+            const dataToSign = new TextEncoder().encode(`${encodedHeader}.${encodedPayload}`);
+            const signatureBuffer = await crypto.subtle.sign('HMAC', key, dataToSign);
+
+            let base64UrlSignature = btoa(String.fromCharCode(...new Uint8Array(signatureBuffer)))
+                .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+            
+            if (base64UrlSignature === signature) {
+                signatureResultEl.innerHTML = `<span id="valid-sig-icon" class="mr-2"></span> Signature Valid`;
+                signatureResultEl.className = 'mt-4 text-sm font-semibold flex items-center text-green-400';
+                lucide.createIcons({icons: {'valid-sig-icon': lucide.ShieldCheck}, attrs: {color: "#4ade80", size: 20}});
+            } else {
+                signatureResultEl.innerHTML = `<span id="invalid-sig-icon" class="mr-2"></span> Signature Invalid`;
+                signatureResultEl.className = 'mt-4 text-sm font-semibold flex items-center text-red-400';
+                lucide.createIcons({icons: {'invalid-sig-icon': lucide.ShieldX}, attrs: {color: "#f87171", size: 20}});
+            }
+        } catch (e) {
+            console.error("Signature verification failed:", e);
+            signatureResultEl.innerHTML = `<span id="error-sig-icon" class="mr-2"></span> Verification Error`;
+            signatureResultEl.className = 'mt-4 text-sm font-semibold flex items-center text-red-400';
+            lucide.createIcons({icons: {'error-sig-icon': lucide.ShieldX}, attrs: {color: "#f87171", size: 20}});
+        }
+    }
+    
+    // --- MAIN DECODE FUNCTION ---
+    function decodeJwt() {
+      const token = jwtInput.value;
+      if (!token.trim()) {
+        jwtPartsEl.innerHTML = '';
+        headerTable.innerHTML = '';
+        payloadTable.innerHTML = '';
+        headerJson.textContent = '';
+        payloadJson.textContent = '';
+        signatureResultEl.innerHTML = '';
+        jwtErrorEl.classList.add('hidden');
+        return;
+      }
+      
+      const parts = token.split('.');
+      if (parts.length !== 3) {
+        jwtErrorEl.textContent = 'Invalid JWT structure. A JWT must have three parts separated by dots.';
+        jwtErrorEl.classList.remove('hidden');
+        jwtPartsEl.innerHTML = '';
+        return;
+      }
+      
+      jwtErrorEl.classList.add('hidden');
+      const [encodedHeader, encodedPayload, signature] = parts;
+      
+      jwtPartsEl.innerHTML = `<span class="jwt-part-header">${encodedHeader}</span>.<span class="jwt-part-payload">${encodedPayload}</span>.<span class="jwt-part-signature">${signature}</span>`;
+      
+      try {
+        const header = JSON.parse(b64UrlDecode(encodedHeader));
+        const payload = JSON.parse(b64UrlDecode(encodedPayload));
+        
+        headerJson.textContent = JSON.stringify(header, null, 2);
+        createClaimsTable(header, headerTable);
+        payloadJson.textContent = JSON.stringify(payload, null, 2);
+        createClaimsTable(payload, payloadTable);
+
+        verifySignature(encodedHeader, encodedPayload, signature, secretInput.value, isSecretBase64);
+      } catch (e) {
+        jwtErrorEl.textContent = 'Failed to decode Base64Url or parse JSON. Check token formatting.';
+        jwtErrorEl.classList.remove('hidden');
+        console.error(e);
+      }
+    }
+    
+    // --- EVENT LISTENERS & SETUP ---
+    jwtInput.addEventListener('input', decodeJwt);
+    secretInput.addEventListener('input', decodeJwt);
+    
+    // View Toggles
+    function setupViewToggle(tableBtnId, jsonBtnId, tableId, jsonId) {
+        const tableBtn = getEl(tableBtnId);
+        const jsonBtn = getEl(jsonBtnId);
+        const table = getEl(tableId);
+        const json = getEl(jsonId);
+
+        tableBtn.addEventListener('click', () => {
+            table.classList.remove('hidden');
+            json.classList.add('hidden');
+            tableBtn.classList.replace('view-toggle-inactive', 'view-toggle-active');
+            jsonBtn.classList.replace('view-toggle-active', 'view-toggle-inactive');
+        });
+        jsonBtn.addEventListener('click', () => {
+            json.classList.remove('hidden');
+            table.classList.add('hidden');
+            jsonBtn.classList.replace('view-toggle-inactive', 'view-toggle-active');
+            tableBtn.classList.replace('view-toggle-active', 'view-toggle-inactive');
+        });
+    }
+
+    // Secret encoding toggle
+    const utf8Btn = getEl('secret-utf8-btn');
+    const b64Btn = getEl('secret-b64-btn');
+    utf8Btn.addEventListener('click', () => {
+      isSecretBase64 = false;
+      utf8Btn.classList.replace('view-toggle-inactive', 'view-toggle-active');
+      b64Btn.classList.replace('view-toggle-active', 'view-toggle-inactive');
+      decodeJwt();
+    });
+    b64Btn.addEventListener('click', () => {
+      isSecretBase64 = true;
+      b64Btn.classList.replace('view-toggle-inactive', 'view-toggle-active');
+      utf8Btn.classList.replace('view-toggle-active', 'view-toggle-inactive');
+      decodeJwt();
+    });
+
+    // Button listeners
+    getEl('copy-header-btn').addEventListener('click', () => copyToClipboard(headerJson.textContent, 'copy-header-btn'));
+    getEl('copy-payload-btn').addEventListener('click', () => copyToClipboard(payloadJson.textContent, 'copy-payload-btn'));
+    getEl('copy-secret-btn').addEventListener('click', () => copyToClipboard(secretInput.value, 'copy-secret-btn'));
+    getEl('clear-secret-btn').addEventListener('click', () => {
+      secretInput.value = '';
+      decodeJwt();
+    });
+    
+    // --- INITIALIZATION ---
+    document.addEventListener('DOMContentLoaded', () => {
+      setupViewToggle('header-table-btn', 'header-json-btn', 'header-output-table', 'header-output-json');
+      setupViewToggle('payload-table-btn', 'payload-json-btn', 'payload-output-table', 'payload-output-json');
+      
+      jwtInput.value = exampleJwt;
+      decodeJwt();
+      
+      lucide.createIcons({
+        icons: {
+          'nav-linkedin': lucide.Linkedin,
+          'nav-github': lucide.Github,
+          'nav-home': lucide.Home,
+          'nav-jwt': lucide.KeyRound,
+          'nav-fp': lucide.Fingerprint,
+          'nav-epss': lucide.Activity,
+          'info-icon': lucide.Info,
+        },
+        attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
+      });
+    });
+  </script>
+</body>
+</html>
+
