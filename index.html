@@ -15,7 +15,8 @@
 </head>
 <body class="bg-gray-950 text-white min-h-screen flex flex-col">
   <!-- Navigation Bar -->
-  <div class="w-full flex items-center justify-between px-4 py-3">
+  <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-30">
+    <div class="w-full flex items-center justify-between px-4 py-3">
       <div class="flex items-center space-x-3">
         <a href="https://www.linkedin.com/in/chandler-prince-b53b1427/" target="_blank" rel="noopener" class="text-blue-400 hover:text-blue-300" title="LinkedIn">
           <span id="nav-linkedin" class="w-6 h-6"></span>
@@ -40,8 +41,8 @@
   <header class="bg-gradient-to-r from-blue-900 to-gray-900 py-10 px-4 text-center shadow-lg">
     <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">D. Chandler Prince</h1>
     <h2 class="text-xl md:text-2xl font-semibold text-blue-300 mb-4">Cybersecurity Leader & Product Strategist</h2>
-    <p class="max-w-xl mx-auto text-gray-200 text-lg md:text-xl mb-6">
-      A seasoned cybersecurity leader with extensive experience in cloud security, DevSecOps, and risk management. Passionate about building secure systems and mentoring high-performing teams at enterprise scale.
+    <p class="max-w-2xl mx-auto text-gray-200 text-lg md:text-xl mb-6">
+      A cybersecurity leader supporting Business Information Security Officer (BISO) organizations with deep technical expertise. My role is dynamic, adapting to fluctuating business needs, but always focused on solving complex problems. While my work is centered on cloud security, DevSecOps, and AppSec, I frequently provide guidance on secure architectures, assist teams during threat models and audits, and advise on privacy and compliance matters, escalating novel issues to legal and privacy specialists.
     </p>
     <div class="flex justify-center items-center space-x-4">
       <a href="https://github.com/DChandlerP" target="_blank" rel="noopener" class="inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded-full text-white font-semibold transition shadow-lg">
@@ -144,7 +145,7 @@
           <p class="text-gray-200 text-sm mb-4">
             A hands-on walk-through of identifying security threats on a sample E-Commerce API using the STRIDE framework.
           </p>
-          <a href="threat-model.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
+          <a href="threatmodel.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
             <span id="external-link-threat" class="mr-2"></span>
             View the Case Study
           </a>
@@ -181,13 +182,13 @@
         <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
           <div class="flex items-center mb-2">
             <span id="fingerprint-icon" class="mr-2"></span>
-            <span class="text-lg font-semibold text-blue-300">Interactive Browser Fingerprinting Demo</span>
+            <span class="text-lg font-semibold text-blue-300">Browser Fingerprinting Demo</span>
           </div>
           <p class="text-gray-200 text-sm mb-4">
-            A hands-on demonstration of browser fingerprinting techniques, explaining how they are used for fraud and bot detection to enhance user security.
+            A hands-on demonstration of browser fingerprinting techniques, explaining how they are used for fraud and bot detection.
           </p>
           <a href="fingerprint.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
-            <span id="external-link-icon" class="mr-2"></span>
+            <span id="external-link-fp" class="mr-2"></span>
             View the Demo
           </a>
         </div>
@@ -195,13 +196,13 @@
         <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
           <div class="flex items-center mb-2">
             <span id="epss-icon" class="mr-2"></span>
-            <span class="text-lg font-semibold text-blue-300">Vulnerability Comparator: CVSS vs. EPSS</span>
+            <span class="text-lg font-semibold text-blue-300">Vulnerability Comparator</span>
           </div>
           <p class="text-gray-200 text-sm mb-4">
-            An interactive tool to compare CVSS severity with EPSS exploitability, helping prioritize vulnerabilities based on both impact and real-world risk.
+            An interactive tool to compare CVSS severity with EPSS exploitability, helping prioritize vulnerabilities.
           </p>
           <a href="epssdemo.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
-            <span id="external-link2-icon" class="mr-2"></span>
+            <span id="external-link-epss" class="mr-2"></span>
             Try the Comparator
           </a>
         </div>
@@ -212,11 +213,39 @@
             <span class="text-lg font-semibold text-blue-300">PRS MODCAT Decoder</span>
           </div>
           <p class="text-gray-200 text-sm mb-4">
-            A tool for decoding the complex model codes (MODCATs) used by Paul Reed Smith Guitars to specify instrument features.
+            A tool for decoding the complex model codes (MODCATs) used by Paul Reed Smith Guitars.
           </p>
           <a href="modcat.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
             <span id="external-link-modcat" class="mr-2"></span>
             Try the Decoder
+          </a>
+        </div>
+         <!-- Threat Dashboard Card -->
+        <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
+          <div class="flex items-center mb-2">
+            <span id="dashboard-icon" class="mr-2"></span>
+            <span class="text-lg font-semibold text-blue-300">Threat Intelligence Dashboard</span>
+          </div>
+          <p class="text-gray-200 text-sm mb-4">
+            A live dashboard that pulls the latest CVEs from the NVD API to visualize the current threat landscape.
+          </p>
+          <a href="dashboard.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
+            <span id="external-link-dashboard" class="mr-2"></span>
+            View Dashboard
+          </a>
+        </div>
+         <!-- SAST Guide Card -->
+        <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
+          <div class="flex items-center mb-2">
+            <span id="sast-icon" class="mr-2"></span>
+            <span class="text-lg font-semibold text-blue-300">Guide to SAST False Positives</span>
+          </div>
+          <p class="text-gray-200 text-sm mb-4">
+            A practical guide on investigating SAST findings, using statistical analysis and file path context to triage alerts at scale.
+          </p>
+          <a href="sast.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
+            <span id="external-link-sast" class="mr-2"></span>
+            Read the Guide
           </a>
         </div>
       </div>
@@ -265,12 +294,16 @@
         'modcat-icon': lucide.Guitar,
         'threat-icon': lucide.ShieldAlert,
         'checklist-icon': lucide.ListChecks,
-        'external-link-icon': lucide.ExternalLink,
-        'external-link2-icon': lucide.ExternalLink,
+        'dashboard-icon': lucide.LayoutDashboard,
+        'sast-icon': lucide.FileSearch,
+        'external-link-fp': lucide.ExternalLink,
+        'external-link-epss': lucide.ExternalLink,
         'external-link-jwt': lucide.ExternalLink,
         'external-link-modcat': lucide.ExternalLink,
         'external-link-threat': lucide.ExternalLink,
         'external-link-checklist': lucide.ExternalLink,
+        'external-link-dashboard': lucide.ExternalLink,
+        'external-link-sast': lucide.ExternalLink,
         'nav-home': lucide.Home,
         'nav-threat': lucide.ShieldAlert,
         'nav-checklist': lucide.ListChecks,
@@ -278,6 +311,8 @@
         'nav-modcat': lucide.Guitar,
         'nav-fp': lucide.Fingerprint,
         'nav-epss': lucide.Activity,
+        'nav-dashboard': lucide.LayoutDashboard,
+        'nav-sast': lucide.FileSearch,
         'nav-linkedin': lucide.Linkedin,
         'nav-github': lucide.Github,
         'isc2-icon': lucide.Award,
@@ -293,4 +328,3 @@
   </script>
 </body>
 </html>
-
