@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-950 text-white">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Threat Intelligence Dashboard | D. Chandler Prince</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    html { font-family: 'Inter', sans-serif; }
+    ::selection { background: #2563eb; color: #fff; }
+    .chart-container {
+      position: relative;
+      height: 40vh;
+      width: 100%;
+    }
+  </style>
+</head>
+<body class="bg-gray-950 text-white min-h-screen flex flex-col">
+  <!-- Navigation Bar -->
+  <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-30">
+    <div class="w-full flex items-center justify-between px-4 py-3">
+      <div class="flex items-center space-x-3">
+        <a href="https://www.linkedin.com/in/chandler-prince-b53b1427/" target="blank" rel="noopener" class="text-blue-400 hover:text-blue-300" title="LinkedIn">
+          <span id="nav-linkedin" class="w-6 h-6"></span>
+        </a>
+        <a href="https://github.com/DChandlerP/" target="blank" rel="noopener" class="text-blue-400 hover:text-blue-300" title="GitHub">
+          <span id="nav-github" class="w-6 h-6"></span>
+        </a>
+      </div>
+       <div class="flex flex-wrap justify-center space-x-2">
+        <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-home" class="mr-1"></span>Home</a>
+        <a href="threatmodel.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-threat" class="mr-1"></span>Threat Model</a>
+        <a href="checklist.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-checklist" class="mr-1"></span>Checklist Generator</a>
+        <a href="jwt.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-jwt" class="mr-1"></span>JWT Decoder</a>
+        <a href="fingerprint.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-fp" class="mr-1"></span>Fingerprint Demo</a>
+        <a href="epssdemo.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-epss" class="mr-1"></span>EPSS Comparator</a>
+        <a href="dashboard.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-dashboard" class="mr-1"></span>Threat Dashboard</a>
+        <a href="sast.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-sast" class="mr-1"></span>SAST Guide</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-blue-900 to-gray-900 py-10 px-4 text-center shadow-lg">
+    <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">Live Threat Intelligence Dashboard</h1>
+    <p class="max-w-2xl mx-auto text-gray-200 text-lg">
+      An interactive dashboard pulling live vulnerability data from the NIST National Vulnerability Database (NVD).
+    </p>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 px-4 py-10 max-w-7xl mx-auto w-full space-y-8">
+    
+    <!-- Action Section -->
+    <section class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800 flex flex-col items-center">
+       <div id="loading-state" class="text-center mb-4 text-blue-300"></div>
+       <button id="fetch-btn" class="px-6 py-3 bg-blue-700 hover:bg-blue-600 rounded-md text-white font-semibold transition shadow-lg flex items-center justify-center">
+          <span id="refresh-icon" class="mr-2"></span>
+          Refresh (Last 30 Days)
+        </button>
+    </section>
+
+    <!-- Key Metrics -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+      <div class="bg-gray-900 p-5 rounded-xl shadow-lg border border-gray-800">
+        <h3 class="text-blue-400 font-semibold text-lg">Vulnerabilities (Last 30 Days)</h3>
+        <p id="total-vulns" class="text-4xl font-bold text-white mt-1">--</p>
+      </div>
+      <div class="bg-gray-900 p-5 rounded-xl shadow-lg border border-gray-800">
+        <h3 class="text-blue-400 font-semibold text-lg">Avg. CVSS Score (v3.1)</h3>
+        <p id="avg-cvss" class="text-4xl font-bold text-white mt-1">--</p>
+      </div>
+      <div class="bg-gray-900 p-5 rounded-xl shadow-lg border border-gray-800">
+        <h3 class="text-blue-400 font-semibold text-lg">Most Common Weakness</h3>
+        <p id="top-weakness" class="text-3xl font-bold text-white mt-1 leading-tight">--</p>
+      </div>
+    </section>
+
+    <!-- Charts Grid -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
+        <h3 class="text-xl font-semibold text-blue-400 mb-1">Vulnerability Severity Over Time</h3>
+        <p class="text-sm text-gray-400 mb-4">Each point is a CVE, plotted by its publication date and CVSS score.</p>
+        <div class="chart-container">
+          <canvas id="vulnScatterChart"></canvas>
+        </div>
+      </div>
+
+      <div class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
+        <h3 class="text-xl font-semibold text-blue-400 mb-1">Top 5 Vulnerability Types (CWE)</h3>
+        <p class="text-sm text-gray-400 mb-4">Distribution of the most common categories of weaknesses found.</p>
+        <div class="chart-container" style="height: 40vh; max-height: 400px; margin: auto;">
+          <canvas id="vulnsByTypeChart"></canvas>
+        </div>
+      </div>
+    </section>
+    
+  </main>
+  
+  <footer class="bg-gray-900 text-gray-400 text-center py-4 mt-8 rounded-t-xl shadow-inner">
+    © 2025 D. Chandler Prince
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const fetchBtn = document.getElementById('fetch-btn');
+      const loadingState = document.getElementById('loading-state');
+
+      // --- CHART INSTANCE HOLDERS ---
+      let vulnScatterChart = null;
+      let vulnsByTypeChart = null;
+
+      // --- API & DATA HANDLING ---
+      
+      const transformNvdData = (vulnerabilities) => {
+        return vulnerabilities.map(item => {
+          const cve = item.cve;
+          const cvssV31 = cve.metrics.cvssMetricV31?.[0];
+          const weakness = cve.weaknesses?.[0]?.description.find(d => d.lang === 'en')?.value || 'N/A';
+          
+          return {
+            id: cve.id,
+            date: cve.published,
+            cvss: cvssV31 ? cvssV31.cvssData.baseScore : null,
+            type: weakness,
+          };
+        }).filter(item => item.cvss !== null);
+      };
+
+      const fetchAndDisplayData = async () => {
+          loadingState.textContent = `Fetching CVEs from the last 30 days...`;
+          loadingState.className = 'text-center mb-4 text-blue-300 animate-pulse';
+          fetchBtn.disabled = true;
+
+          const endDate = new Date();
+          const startDate = new Date();
+          startDate.setDate(endDate.getDate() - 30);
+
+          const endDateISO = endDate.toISOString();
+          const startDateISO = startDate.toISOString();
+
+          // Increased results per page to get a better data sample
+          const apiUrl = `https://services.nvd.nist.gov/rest/json/cves/2.0?pubStartDate=${startDateISO}&pubEndDate=${endDateISO}&resultsPerPage=500`;
+
+          try {
+              const response = await fetch(apiUrl);
+              if (!response.ok) throw new Error(`NVD API returned status: ${response.status}`);
+              const data = await response.json();
+              
+              if (data.vulnerabilities.length === 0) {
+                loadingState.textContent = `No vulnerabilities found in the last 30 days.`;
+                loadingState.className = 'text-center mb-4 text-yellow-400';
+                return;
+              }
+
+              const transformedData = transformNvdData(data.vulnerabilities);
+              updateDashboard(transformedData);
+              loadingState.textContent = `Successfully loaded ${transformedData.length} vulnerabilities from the last 30 days.`;
+              loadingState.className = 'text-center mb-4 text-green-400';
+
+          } catch (error) {
+              console.error("Failed to fetch NVD data:", error);
+              loadingState.textContent = 'Failed to load data. The NVD API might be busy. Please try again later.';
+              loadingState.className = 'text-center mb-4 text-red-400';
+          } finally {
+              fetchBtn.disabled = false;
+          }
+      };
+
+      const updateDashboard = (vulnerabilityData) => {
+          // --- 1. Key Metrics ---
+          const totalVulns = vulnerabilityData.length;
+          const avgCvss = totalVulns > 0 ? (vulnerabilityData.reduce((acc, v) => acc + v.cvss, 0) / totalVulns).toFixed(1) : 'N/A';
+          const typeCounts = vulnerabilityData.reduce((acc, v) => {
+              if (v.type !== 'N/A') acc[v.type] = (acc[v.type] || 0) + 1;
+              return acc;
+          }, {});
+          const topWeakness = Object.keys(typeCounts).length > 0 ? Object.keys(typeCounts).reduce((a, b) => typeCounts[a] > typeCounts[b] ? a : b) : 'N/A';
+          
+          document.getElementById('total-vulns').textContent = totalVulns;
+          document.getElementById('avg-cvss').textContent = avgCvss;
+          document.getElementById('top-weakness').textContent = topWeakness;
+
+          // --- 2. Data for Charts ---
+          const scatterData = {
+              critical: vulnerabilityData.filter(v => v.cvss >= 9.0),
+              high: vulnerabilityData.filter(v => v.cvss >= 7.0 && v.cvss < 9.0),
+              medium: vulnerabilityData.filter(v => v.cvss >= 4.0 && v.cvss < 7.0),
+              low: vulnerabilityData.filter(v => v.cvss < 4.0),
+          };
+          const sortedTypes = Object.entries(typeCounts).sort(([,a],[,b]) => b-a).slice(0, 5);
+
+          // --- 3. Render Charts ---
+          renderCharts({ scatterData, sortedTypes });
+      };
+
+      const renderCharts = (chartData) => {
+          Chart.defaults.color = '#9ca3af';
+          Chart.defaults.borderColor = '#374151';
+          Chart.defaults.font.family = "'Inter', sans-serif";
+
+          if (vulnScatterChart) vulnScatterChart.destroy();
+          if (vulnsByTypeChart) vulnsByTypeChart.destroy();
+
+          // Scatter Plot
+          const ctxScatter = document.getElementById('vulnScatterChart').getContext('2d');
+          vulnScatterChart = new Chart(ctxScatter, {
+              type: 'scatter',
+              data: {
+                  datasets: [
+                      { label: 'Critical (9.0+)', data: chartData.scatterData.critical, backgroundColor: '#ef4444' },
+                      { label: 'High (7.0-8.9)', data: chartData.scatterData.high, backgroundColor: '#f97316' },
+                      { label: 'Medium (4.0-6.9)', data: chartData.scatterData.medium, backgroundColor: '#eab308' },
+                      { label: 'Low (0.1-3.9)', data: chartData.scatterData.low, backgroundColor: '#22c55e' }
+                  ]
+              },
+              options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  parsing: { xAxisKey: 'date', yAxisKey: 'cvss' },
+                  scales: {
+                      x: { type: 'time', time: { unit: 'day', tooltipFormat: 'MMM dd, yyyy' }, grid: { color: '#374151' }, title: { display: true, text: 'Publication Date' } },
+                      y: { grid: { color: '#374151' }, min: 0, max: 10, title: { display: true, text: 'CVSS Score' } }
+                  },
+                  plugins: {
+                      legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8 } },
+                      tooltip: {
+                          callbacks: {
+                              label: (context) => {
+                                  const cve = context.raw;
+                                  return `${cve.id}: CVSS ${cve.cvss}`;
+                              }
+                          }
+                      }
+                  }
+              }
+          });
+          
+          // Doughnut Chart
+          const ctxType = document.getElementById('vulnsByTypeChart').getContext('2d');
+          vulnsByTypeChart = new Chart(ctxType, {
+              type: 'doughnut',
+              data: {
+                  labels: chartData.sortedTypes.map(t => t[0]),
+                  datasets: [{
+                      data: chartData.sortedTypes.map(t => t[1]),
+                      backgroundColor: ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6'],
+                      borderColor: '#111827', // Use a dark border to match card bg
+                  }]
+              },
+              options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { padding: 15 } } } }
+          });
+      };
+      
+      fetchBtn.addEventListener('click', () => fetchAndDisplayData());
+      fetchAndDisplayData();
+
+      lucide.createIcons({
+        icons: {
+          'nav-linkedin': lucide.Linkedin, 'nav-github': lucide.Github, 'nav-home': lucide.Home, 'nav-threat': lucide.ShieldAlert, 'nav-checklist': lucide.ListChecks, 'nav-jwt': lucide.KeyRound, 'nav-fp': lucide.Fingerprint, 'nav-epss': lucide.Activity, 'nav-dashboard': lucide.LayoutDashboard, 'refresh-icon': lucide.RefreshCw
+        },
+        attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
+      });
+    });
+  </script>
+</body>
+</html>
+
