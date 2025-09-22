@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-950 text-white">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Insecure Encryption Explained | D. Chandler Prince</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    html { font-family: 'Inter', sans-serif; }
+    ::selection { background: #2563eb; color: #fff; }
+    .prose h3 {
+        color: #60a5fa; /* text-blue-400 */
+        font-weight: 600;
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+    }
+     .prose p, .prose li {
+        color: #d1d5db; /* text-gray-300 */
+    }
+    .prose strong {
+        color: #93c5fd; /* text-blue-300 */
+    }
+    .prose code {
+        background-color: #1f2937; /* bg-gray-800 */
+        color: #f3f4f6; /* text-gray-100 */
+        padding: 0.2em 0.4em;
+        border-radius: 0.25rem;
+    }
+  </style>
+</head>
+<body class="bg-gray-950 text-white min-h-screen flex flex-col">
+  <!-- Navigation Bar -->
+  <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-30">
+    <div class="w-full flex items-center justify-between px-4 py-3">
+      <div class="flex items-center space-x-3">
+        <a href="https://www.linkedin.com/in/chandler-prince-b53b1427/" target="_blank" rel="noopener" class="text-blue-400 hover:text-blue-300" title="LinkedIn">
+          <span id="nav-linkedin" class="w-6 h-6"></span>
+        </a>
+        <a href="https://github.com/DChandlerP/" target="_blank" rel="noopener" class="text-blue-400 hover:text-blue-300" title="GitHub">
+          <span id="nav-github" class="w-6 h-6"></span>
+        </a>
+      </div>
+       <div class="flex flex-wrap justify-center space-x-2">
+        <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-home" class="mr-1"></span>Home</a>
+        <a href="cloud.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-cloud" class="mr-1"></span>Cloud Explorer</a>
+        <a href="sast.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-sast" class="mr-1"></span>SAST Guide</a>
+        <a href="threatmodel.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-threat" class="mr-1"></span>Threat Model</a>
+        <a href="checklist.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-checklist" class="mr-1"></span>Checklist Generator</a>
+        <a href="jwt.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-jwt" class="mr-1"></span>JWT Decoder</a>
+        <a href="encryption.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-encryption" class="mr-1"></span>Encryption</a>
+        <a href="fingerprint.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-fp" class="mr-1"></span>Fingerprint Demo</a>
+        <a href="epssdemo.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-epss" class="mr-1"></span>EPSS Comparator</a>
+        <a href="dashboard.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-dashboard" class="mr-1"></span>Threat Dashboard</a>
+        <a href="modcat.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-modcat" class="mr-1"></span>MODCAT Decoder</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-blue-900 to-gray-900 py-10 px-4 text-center shadow-lg">
+    <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">A Journey Through Broken Ciphers</h1>
+    <h2 class="text-xl md:text-2xl font-semibold text-blue-300 mb-4">Understanding Encryption Formats of the Past</h2>
+    <p class="max-w-3xl mx-auto text-gray-200 text-lg md:text-xl">
+      In cybersecurity, what is strong today can be obsolete tomorrow. This guide explores cryptographic algorithms that were once considered secure but are now broken. Understanding their weaknesses is crucial for building resilient systems today.
+    </p>
+  </header>
+
+  <main class="flex-1 px-4 py-10 max-w-5xl mx-auto space-y-12">
+    <!-- Section for each encryption format -->
+    <section class="prose max-w-none">
+      <div class="bg-gray-900 rounded-xl shadow-lg p-6">
+        <div class="flex items-center mb-4">
+            <span id="des-icon" class="mr-3"></span>
+            <h2 class="text-2xl font-semibold text-blue-300 m-0">DES (Data Encryption Standard)</h2>
+        </div>
+        <p>Adopted as a federal standard in 1977, DES was a symmetric-key algorithm that became a worldwide standard. For over two decades, it was the go-to algorithm for encrypting sensitive data.</p>
+        
+        <h3>Core Weakness: Insufficient Key Size</h3>
+        <p>DES uses a <strong>56-bit key</strong>. At the time of its creation, this was considered adequate. However, Moore's Law predicted the exponential growth of computing power, and by the 1990s, a 56-bit key was within reach of a brute-force attack, where an attacker tries every possible key.</p>
+        
+        <h3>How It's Cracked</h3>
+        <ul>
+          <li><strong>Hardware:</strong> In 1998, the Electronic Frontier Foundation (EFF) built a custom machine called "Deep Crack" for under $250,000. It could decrypt a DES-encrypted message in just <strong>56 hours</strong> by testing billions of keys per second.</li>
+          <li><strong>Modern Context:</strong> Today, a similar attack could be performed much faster and cheaper. A distributed network of computers or modern GPUs could crack a DES key in hours or even minutes. Services in the cloud could be rented to perform this task for a few hundred dollars.</li>
+        </ul>
+        <p>DES was officially superseded by the Advanced Encryption Standard (AES) in 2002. Using Triple DES (3DES) was a temporary mitigation, but it is slow and also being phased out.</p>
+      </div>
+    </section>
+
+    <section class="prose max-w-none">
+        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
+            <div class="flex items-center mb-4">
+                <span id="hash-icon" class="mr-3"></span>
+                <h2 class="text-2xl font-semibold text-blue-300 m-0">MD5 and SHA-1 (Hashing Algorithms)</h2>
+            </div>
+            <p>MD5 and SHA-1 are not encryption algorithms but cryptographic hash functions. They produce a fixed-size "fingerprint" of a given input. They were widely used for verifying file integrity and storing password hashes.</p>
+            
+            <h3>Core Weakness: Collision Attacks</h3>
+            <p>A "collision" occurs when two different inputs produce the exact same hash output. While collisions are theoretically possible in any hash function, they should be computationally infeasible to find. For MD5 and SHA-1, practical methods for finding collisions have been discovered.</p>
+            <ul>
+                <li><strong>MD5:</strong> Collisions can be generated in seconds on a standard laptop. This makes it useless for security purposes like digital signatures or SSL certificates, as a malicious file could be created with the same signature as a legitimate one.</li>
+                <li><strong>SHA-1:</strong> In 2017, researchers from Google and CWI announced the first practical SHA-1 collision, named the <strong>SHAttered attack</strong>. It required immense computational power (equivalent to 6,500 years of single-CPU computations), but it proved that the algorithm was fundamentally broken and should no longer be trusted for security.</li>
+            </ul>
+            
+            <h3>How It's Cracked</h3>
+            <ul>
+                <li><strong>Technique:</strong> Collision attacks do not "crack" a single hash to find its input. Instead, they allow an attacker to craft two different documents (e.g., a benign contract and a fraudulent one) that produce the same hash value. This undermines trust in systems that use the hash for verification.</li>
+                <li><strong>Hardware:</strong> While MD5 collisions are trivial, the SHAttered attack on SHA-1 required a massive GPU cluster. However, as computation becomes cheaper, the cost and time for such attacks will only decrease.</li>
+            </ul>
+            <p>Modern applications should use hash functions from the SHA-2 (e.g., SHA-256) or SHA-3 family.</p>
+        </div>
+    </section>
+
+    <section class="prose max-w-none">
+        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
+             <div class="flex items-center mb-4">
+                <span id="rc4-icon" class="mr-3"></span>
+                <h2 class="text-2xl font-semibold text-blue-300 m-0">RC4 (Rivest Cipher 4)</h2>
+            </div>
+            <p>RC4 is a stream cipher that was simple and fast. Because of its speed, it was used in many common protocols, including WEP for Wi-Fi security and early versions of SSL/TLS for web traffic.</p>
+            
+            <h3>Core Weakness: Keystream Biases</h3>
+            <p>A secure stream cipher should produce a pseudorandom keystream that is indistinguishable from true randomness. However, researchers discovered several statistical biases in the RC4 keystream. The first few bytes of the output are particularly non-random, and certain byte patterns appear more frequently than they should.</p>
+
+            <h3>How It's Cracked</h3>
+            <ul>
+                <li><strong>Technique:</strong> Attackers can capture a large amount of ciphertext generated with the same key. By analyzing this data, they can exploit the statistical biases to deduce the original plaintext. This is a form of cryptanalysis, not brute force.</li>
+                <li><strong>Application - WEP:</strong> The WEP protocol made this attack devastatingly effective. It reused keys and concatenated a small, predictable initialization vector (IV) with the key. This allowed attackers to gather the necessary data to crack the WEP key in minutes using readily available software like Aircrack-ng.</li>
+                 <li><strong>Application - TLS:</strong> The BEAST and POODLE attacks against SSL/TLS also leveraged weaknesses in how protocols used ciphers, but RC4's own biases made it a poor choice, leading to its deprecation in modern TLS configurations.</li>
+            </ul>
+            <p>RC4 has been prohibited for use in TLS by the IETF since 2015. Secure alternatives include modern ciphers like AES (in GCM or CBC mode) and ChaCha20.</p>
+        </div>
+    </section>
+    
+    <section class="prose max-w-none">
+        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
+             <div class="flex items-center mb-4">
+                <span id="ssl-icon" class="mr-3"></span>
+                <h2 class="text-2xl font-semibold text-blue-300 m-0">SSL v2 & v3 (Secure Sockets Layer)</h2>
+            </div>
+            <p>As the precursors to the modern TLS (Transport Layer Security) protocol, SSL v2 and v3 were foundational in securing early internet traffic. However, they are plagued by fundamental design flaws.</p>
+            
+            <h3>Core Weakness: Downgrade Attacks & Weak Ciphers</h3>
+            <p>SSLv3's most famous vulnerability is the <strong>POODLE attack</strong> (Padding Oracle On Downgraded Legacy Encryption). An attacker can force a browser and server to "downgrade" their connection from the more secure TLS to the vulnerable SSLv3.</p>
+
+            <h3>How It's Cracked</h3>
+            <ul>
+                <li><strong>Technique (POODLE):</strong> This is a man-in-the-middle attack. Once the connection is downgraded, the attacker exploits a weakness in how CBC-mode ciphers handle padding. By manipulating ciphertext blocks, they can trick the server into revealing one byte of the encrypted secret (like a session cookie) at a time. While slow, it's very effective for session hijacking.</li>
+                 <li><strong>Mitigation:</strong> The only real defense is to completely disable SSLv2 and SSLv3 on both servers and clients. All modern web browsers and servers have done so, but legacy systems may still be at risk.</li>
+            </ul>
+            <p>Any system still using SSL is dangerously insecure. The minimum standard for secure web traffic today is TLS 1.2, with TLS 1.3 being the recommended version.</p>
+        </div>
+    </section>
+    
+    <section class="prose max-w-none">
+        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
+             <div class="flex items-center mb-4">
+                <span id="wep-icon" class="mr-3"></span>
+                <h2 class="text-2xl font-semibold text-blue-300 m-0">WEP (Wired Equivalent Privacy)</h2>
+            </div>
+            <p>Introduced in 1999, WEP was the first security protocol for Wi-Fi networks. Its goal was to provide confidentiality equivalent to a wired network, but a series of catastrophic flaws made it trivial to break.</p>
+            
+            <h3>Core Weakness: Flawed Implementation of RC4</h3>
+            <p>WEP's downfall was not just its use of RC4, but how it used it. It combined a static secret key with a short, 24-bit <strong>Initialization Vector (IV)</strong>. This IV is sent in plaintext with each packet.</p>
+            <ul>
+                <li><strong>IV Reuse:</strong> A 24-bit IV space is tiny (about 16.7 million possibilities). On a busy network, IVs are guaranteed to be reused quickly.</li>
+                <li><strong>Related-Key Attacks:</strong> Reusing IVs with the same key creates a related-key attack scenario against RC4, allowing an attacker to discover the secret key.</li>
+            </ul>
+            <h3>How It's Cracked</h3>
+            <ul>
+                <li><strong>Technique:</strong> An attacker simply listens to network traffic and collects packets. Tools like Aircrack-ng analyze these packets, specifically looking for "weak" IVs that leak information about the key. After collecting enough packets (sometimes only a few thousand), the tool can deduce the WEP key with near certainty.</li>
+                <li><strong>Hardware:</strong> A standard laptop with a compatible wireless card is all that is required. The attack can be performed in minutes.</li>
+            </ul>
+            <p>WEP was replaced by WPA and later WPA2/WPA3, which use much stronger cryptographic principles. No modern network should ever use WEP.</p>
+        </div>
+    </section>
+    
+    <section class="prose max-w-none">
+        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
+             <div class="flex items-center mb-4">
+                <span id="pptp-icon" class="mr-3"></span>
+                <h2 class="text-2xl font-semibold text-blue-300 m-0">PPTP (Point-to-Point Tunneling Protocol)</h2>
+            </div>
+            <p>PPTP is one of the oldest VPN protocols, created by Microsoft and valued for its speed and simplicity. However, its underlying security mechanisms are fundamentally broken by modern standards.</p>
+            
+            <h3>Core Weakness: Weak Authentication (MS-CHAPv2)</h3>
+            <p>PPTP's primary vulnerability lies in its reliance on the MS-CHAPv2 protocol for authentication. This protocol has several critical flaws:</p>
+            <ul>
+                <li>It uses the broken DES algorithm to encrypt password hashes.</li>
+                <li>The challenge-response mechanism allows an attacker who captures a single handshake to mount an offline brute-force attack against the user's password.</li>
+            </ul>
+            <h3>How It's Cracked</h3>
+            <ul>
+                <li><strong>Technique:</strong> An attacker captures the MS-CHAPv2 handshake between the client and the PPTP server. The captured data can then be fed into tools that brute-force the password hash. Due to the weaknesses in MS-CHAPv2, this process is highly efficient. Online services can often crack these hashes in under a day.</li>
+                <li><strong>Encryption:</strong> Even if the password is strong, the MPPE encryption used by PPTP is based on RC4 and is vulnerable to bit-flipping attacks, allowing a man-in-the-middle to potentially alter the data in transit.</li>
+            </ul>
+            <p>PPTP should be considered completely insecure. Modern VPN solutions should use protocols like OpenVPN or IKEv2/IPsec.</p>
+        </div>
+    </section>
+
+    <section class="prose max-w-none">
+        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
+             <div class="flex items-center mb-4">
+                <span id="lanman-icon" class="mr-3"></span>
+                <h2 class="text-2xl font-semibold text-blue-300 m-0">LANMAN (LM Hash)</h2>
+            </div>
+            <p>The LAN Manager hash was the original password hashing scheme used in Microsoft Windows before NTLM. Its design contained several critical flaws that make it trivial to crack by modern standards.</p>
+            
+            <h3>Core Weakness: Horrendous Design Choices</h3>
+            <p>The LM hash algorithm is a textbook example of how not to design a password storage scheme:</p>
+            <ul>
+                <li><strong>Case Insensitivity:</strong> Before hashing, the password is converted to all uppercase. This drastically reduces the character set and, therefore, the complexity.</li>
+                <li><strong>Password Splitting:</strong> The password is split into two 7-character chunks. If the password is shorter than 14 characters, it is padded with nulls.</li>
+                <li><strong>No Salt:</strong> The same password always results in the same hash, making it highly susceptible to pre-computed tables (rainbow tables).</li>
+                <li><strong>Use of DES:</strong> Each 7-character chunk is used as a DES key to encrypt a constant string. Since each half is handled independently, an attacker can crack each part of the password separately.</li>
+            </ul>
+            <h3>How It's Cracked</h3>
+            <ul>
+                <li><strong>Technique:</strong> Due to the weaknesses above, cracking LM hashes is extremely fast. An attacker doesn't need to attack the full password space. They attack two separate, case-insensitive, 7-character password spaces. Rainbow tables for every possible LM hash have been publicly available for years.</li>
+                <li><strong>Hardware:</strong> A standard modern computer can crack any LM hash in seconds or minutes.</li>
+            </ul>
+            <p>While long deprecated, LM hashes may still exist in legacy systems or old domain controller backups. Modern Windows systems use the much stronger NTLMv2 or Kerberos protocols.</p>
+        </div>
+    </section>
+
+    <section class="prose max-w-none">
+        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
+             <div class="flex items-center mb-4">
+                <span id="wpatkip-icon" class="mr-3"></span>
+                <h2 class="text-2xl font-semibold text-blue-300 m-0">WPA with TKIP</h2>
+            </div>
+            <p>Wi-Fi Protected Access (WPA) and its Temporal Key Integrity Protocol (TKIP) were designed as an interim replacement for WEP that could run on the same hardware. While a significant improvement, it was always meant to be a temporary solution.</p>
+            
+            <h3>Core Weakness: Lingering DNA from WEP</h3>
+            <p>TKIP was designed to be similar enough to WEP to work on legacy hardware. As a result, it still uses the RC4 stream cipher. While TKIP added important security features like per-packet key mixing and a message integrity check (MIC), it couldn't fully escape the underlying weaknesses of RC4.</p>
+            
+            <h3>How It's Cracked</h3>
+            <ul>
+                <li><strong>Technique:</strong> While not as simple as cracking WEP, attacks against TKIP do exist. They are more complex and often focus on the Message Integrity Check (MIC) portion of the protocol. An attacker can perform a man-in-the-middle attack, capture a packet, modify it, and replay it. If successful, they can recover small amounts of data. The "Tew-Weinmann-Pyshkin" attack is a well-known example that can decrypt short packets like ARP requests.</li>
+                <li><strong>Practicality:</strong> These attacks are much slower and less reliable than WEP attacks, but they prove the protocol is not secure against a determined attacker.</li>
+            </ul>
+            <p>The Wi-Fi Alliance has deprecated WPA-TKIP. The modern standard is WPA2 or WPA3, both of which mandate the use of the much stronger AES-CCMP encryption scheme.</p>
+        </div>
+    </section>
+
+    <section class="prose max-w-none">
+        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
+             <div class="flex items-center mb-4">
+                <span id="export-icon" class="mr-3"></span>
+                <h2 class="text-2xl font-semibold text-blue-300 m-0">Export-Grade Cryptography</h2>
+            </div>
+            <p>This is not a single algorithm, but a class of intentionally weakened cryptographic protocols mandated by U.S. export regulations during the 1990s. The goal was to ensure U.S. intelligence could decrypt foreign communications while still allowing U.S. companies to export software with "crypto" features.</p>
+            
+            <h3>Core Weakness: Severely Restricted Key Sizes</h3>
+            <p>Export-grade crypto was typically limited to dangerously small key sizes:</p>
+            <ul>
+                <li><strong>Symmetric Ciphers (like RC4/DES):</strong> Limited to <strong>40-bit keys</strong>.</li>
+                <li><strong>Asymmetric Ciphers (like RSA/Diffie-Hellman):</strong> Limited to <strong>512-bit keys</strong> for key exchange.</li>
+            </ul>
+            <p>These key sizes were known to be weak even at the time but were considered sufficient for commercial use while being breakable by a nation-state actor.</p>
+            
+            <h3>How It's Cracked</h3>
+            <ul>
+                <li><strong>Hardware (Brute Force):</strong> A 40-bit symmetric key has only about 1 trillion possibilities, which is trivial to brute-force with modern hardware. A 512-bit RSA/DH key is vulnerable to factorization or discrete logarithm attacks using algorithms like the Number Field Sieve. In the late 90s, this was achievable by academic teams; today it can be done by individuals with cloud computing resources.</li>
+                <li><strong>FREAK and Logjam Attacks:</strong> In 2015, researchers discovered that many modern servers were still configured to support these legacy export-grade cipher suites. Attackers could mount a man-in-the-middle downgrade attack, forcing a connection to use this weak crypto, crack the key in real-time, and intercept the "secure" traffic.</li>
+            </ul>
+            <p>U.S. export laws on cryptography were largely liberalized in the late 1990s, but the legacy of these weak protocols lingered for years, posing a significant security risk until actively purged from modern software.</p>
+        </div>
+    </section>
+
+    <section class="prose max-w-none">
+        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
+             <div class="flex items-center mb-4">
+                <span id="quantum-icon" class="mr-3"></span>
+                <h2 class="text-2xl font-semibold text-blue-300 m-0">The Future Threat: Post-Quantum Cryptography</h2>
+            </div>
+            <p>The ciphers discussed so far were broken by clever mathematics and advancing classical computers. The next cryptographic rupture won't be an evolution, but a revolution. Quantum computers, though still in development, operate on principles that could render much of our current cryptographic infrastructure obsolete.</p>
+            
+            <h3>Why Quantum Computing Changes Everything</h3>
+            <p>Most of modern public-key cryptography, which underpins secure web browsing (TLS), digital signatures, and cryptocurrencies, relies on mathematical problems that are impossibly hard for classical computers to solve. These include factoring huge numbers (RSA) or solving the discrete logarithm problem on elliptic curves (ECC). However, a sufficiently powerful quantum computer running <strong>Shor's Algorithm</strong> could solve these problems with shocking speed, effectively breaking the foundation of our secure communications.</p>
+            <p>Symmetric encryption like AES is also affected, but less dramatically. <strong>Grover's Algorithm</strong> allows a quantum computer to search an unsorted database quadratically faster than a classical computer. This means it could brute-force a symmetric key faster. To counter this, the solution is simply to use larger key sizes (e.g., moving from AES-128 to AES-256), which is a manageable upgrade.</p>
+
+            <h3>The "Harvest Now, Decrypt Later" Concern</h3>
+            <p>The primary reason governments are acting with urgency is the <strong>"Harvest Now, Decrypt Later"</strong> (HNDL) attack. Adversaries, particularly nation-states, are believed to be capturing and storing massive amounts of encrypted data today. This data—containing government secrets, intellectual property, and private communications—is currently safe. However, the fear is that once a powerful quantum computer is built, this trove of historical data can be decrypted. Secrets that need to remain secret for 50 years could be exposed in 10.</p>
+            
+            <h3>The Race to a Quantum-Resistant Future</h3>
+            <p>Recognizing this threat, governments and academic institutions are in a race to standardize and deploy <strong>Post-Quantum Cryptography (PQC)</strong>—new algorithms designed to be secure against both classical and quantum computers. The U.S. National Institute of Standards and Technology (NIST) is leading a global effort to select and standardize a new suite of PQC algorithms, including <strong>CRYSTALS-Kyber</strong> and <strong>CRYSTALS-Dilithium</strong>. In response, governments are setting deadlines for migration; the U.S. has mandated its federal agencies migrate critical systems by 2035, while other nations like Australia are pursuing similar or even more accelerated timelines, with some targets as early as 2030.</p>
+        </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-400 text-center py-4 mt-8 rounded-t-xl shadow-inner">
+    © 2025 D. Chandler Prince
+  </footer>
+
+  <!-- Lucide Icons Setup -->
+  <script>
+    lucide.createIcons({
+      icons: {
+        'nav-linkedin': lucide.Linkedin,
+        'nav-github': lucide.Github,
+        'nav-home': lucide.Home,
+        'nav-cloud': lucide.Cloud,
+        'nav-sast': lucide.FileSearch,
+        'nav-threat': lucide.ShieldAlert,
+        'nav-checklist': lucide.ListChecks,
+        'nav-jwt': lucide.KeyRound,
+        'nav-encryption': lucide.Lock,
+        'nav-fp': lucide.Fingerprint,
+        'nav-epss': lucide.Activity,
+        'nav-dashboard': lucide.LayoutDashboard,
+        'nav-modcat': lucide.Guitar,
+        'des-icon': lucide.Key,
+        'hash-icon': lucide.Hash,
+        'rc4-icon': lucide.Stream,
+        'ssl-icon': lucide.ShieldOff,
+        'wep-icon': lucide.WifiOff,
+        'pptp-icon': lucide.RouteOff,
+        'lanman-icon': lucide.CaseUpper,
+        'wpatkip-icon': lucide.ShieldQuestion,
+        'export-icon': lucide.Unplug,
+        'quantum-icon': lucide.BrainCircuit,
+      },
+      attrs: {
+        color: "#38bdf8",
+        size: 24,
+        strokeWidth: 2
+      }
+    });
+  </script>
+</body>
+</html>
+

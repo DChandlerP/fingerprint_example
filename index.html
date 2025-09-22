@@ -27,13 +27,15 @@
       </div>
        <div class="flex flex-wrap justify-center space-x-2">
         <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-home" class="mr-1"></span>Home</a>
+        <a href="cloud.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-cloud" class="mr-1"></span>Cloud Explorer</a>
+        <a href="sast.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-sast" class="mr-1"></span>SAST Guide</a>
         <a href="threatmodel.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-threat" class="mr-1"></span>Threat Model</a>
         <a href="checklist.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-checklist" class="mr-1"></span>Checklist Generator</a>
         <a href="jwt.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-jwt" class="mr-1"></span>JWT Decoder</a>
         <a href="fingerprint.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-fp" class="mr-1"></span>Fingerprint Demo</a>
         <a href="epssdemo.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-epss" class="mr-1"></span>EPSS Comparator</a>
         <a href="dashboard.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-dashboard" class="mr-1"></span>Threat Dashboard</a>
-        <a href="sast.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-sast" class="mr-1"></span>SAST Guide</a>
+        <a href="modcat.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-modcat" class="mr-1"></span>MODCAT Decoder</a>
       </div>
     </div>
   </nav>
@@ -248,6 +250,20 @@
             Read the Guide
           </a>
         </div>
+        <!-- Cloud Misconfiguration Card -->
+        <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
+          <div class="flex items-center mb-2">
+            <span id="cloud-icon" class="mr-2"></span>
+            <span class="text-lg font-semibold text-blue-300">Cloud Misconfiguration Explorer</span>
+          </div>
+          <p class="text-gray-200 text-sm mb-4">
+            A hands-on guide to common cloud security pitfalls. Click a component in the diagram to analyze a potential misconfiguration.
+          </p>
+          <a href="cloud.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
+            <span id="external-link-cloud" class="mr-2"></span>
+            Explore the Diagram
+          </a>
+        </div>
       </div>
     </section>
 
@@ -296,6 +312,7 @@
         'checklist-icon': lucide.ListChecks,
         'dashboard-icon': lucide.LayoutDashboard,
         'sast-icon': lucide.FileSearch,
+        'cloud-icon': lucide.Cloud,
         'external-link-fp': lucide.ExternalLink,
         'external-link-epss': lucide.ExternalLink,
         'external-link-jwt': lucide.ExternalLink,
@@ -304,6 +321,7 @@
         'external-link-checklist': lucide.ExternalLink,
         'external-link-dashboard': lucide.ExternalLink,
         'external-link-sast': lucide.ExternalLink,
+        'external-link-cloud': lucide.ExternalLink,
         'nav-home': lucide.Home,
         'nav-threat': lucide.ShieldAlert,
         'nav-checklist': lucide.ListChecks,
@@ -313,6 +331,7 @@
         'nav-epss': lucide.Activity,
         'nav-dashboard': lucide.LayoutDashboard,
         'nav-sast': lucide.FileSearch,
+        'nav-cloud': lucide.Cloud,
         'nav-linkedin': lucide.Linkedin,
         'nav-github': lucide.Github,
         'isc2-icon': lucide.Award,
@@ -328,3 +347,4 @@
   </script>
 </body>
 </html>
+

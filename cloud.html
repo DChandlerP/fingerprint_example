@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-950 text-white">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cloud Misconfiguration Explorer | D. Chandler Prince</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    html { font-family: 'Inter', sans-serif; }
+    ::selection { background: #2563eb; color: #fff; }
+    .diagram-component {
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+    }
+    .diagram-component .component-shape {
+      stroke: #38bdf8; /* sky-500 */
+      stroke-width: 2;
+      fill: #1f2937; /* gray-800 */
+    }
+    .diagram-component .component-label {
+      fill: #e5e7eb; /* gray-200 */
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .diagram-component:hover .component-shape, .diagram-component.active .component-shape {
+      fill: #3b82f6; /* blue-500 */
+      stroke: #fff;
+    }
+    .diagram-component:hover .component-label, .diagram-component.active .component-label {
+      fill: #fff;
+    }
+    #analysis-content ul {
+      list-style-position: inside;
+    }
+    #analysis-content li {
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body class="bg-gray-950 text-white min-h-screen flex flex-col">
+  <!-- Navigation Bar -->
+  <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-30">
+    <div class="w-full flex items-center justify-between px-4 py-3">
+      <div class="flex items-center space-x-3">
+        <a href="https://www.linkedin.com/in/chandler-prince-b53b1427/" target="_blank" rel="noopener" class="text-blue-400 hover:text-blue-300" title="LinkedIn">
+          <span id="nav-linkedin" class="w-6 h-6"></span>
+        </a>
+        <a href="https://github.com/DChandlerP/" target="_blank" rel="noopener" class="text-blue-400 hover:text-blue-300" title="GitHub">
+          <span id="nav-github" class="w-6 h-6"></span>
+        </a>
+      </div>
+       <div class="flex flex-wrap justify-center space-x-2">
+        <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-home" class="mr-1"></span>Home</a>
+        <a href="cloud.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-cloud" class="mr-1"></span>Cloud Explorer</a>
+        <a href="sast.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-sast" class="mr-1"></span>SAST Guide</a>
+        <a href="threatmodel.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-threat" class="mr-1"></span>Threat Model</a>
+        <a href="checklist.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-checklist" class="mr-1"></span>Checklist Generator</a>
+        <a href="jwt.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-jwt" class="mr-1"></span>JWT Decoder</a>
+        <a href="fingerprint.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-fp" class="mr-1"></span>Fingerprint Demo</a>
+        <a href="epssdemo.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-epss" class="mr-1"></span>EPSS Comparator</a>
+        <a href="dashboard.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-dashboard" class="mr-1"></span>Threat Dashboard</a>
+        <a href="modcat.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-modcat" class="mr-1"></span>MODCAT Decoder</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-blue-900 to-gray-900 py-10 px-4 text-center shadow-lg">
+    <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">Interactive Cloud Misconfiguration Explorer</h1>
+    <p class="max-w-2xl mx-auto text-gray-200 text-lg md:text-xl">
+      A hands-on guide to common cloud security pitfalls. Click a component in the architecture diagram to analyze a potential misconfiguration.
+    </p>
+  </header>
+
+  <main class="flex-1 px-4 py-10 max-w-7xl mx-auto w-full">
+    <div class="grid lg:grid-cols-2 gap-8">
+      <!-- Diagram Section -->
+      <section class="bg-gray-900 p-6 rounded-xl shadow-lg">
+        <h3 class="text-2xl font-semibold text-blue-400 mb-4 text-center">Sample Web Application Architecture</h3>
+        <div id="diagram-container" class="w-full flex justify-center items-center">
+            <!-- SVG Diagram -->
+            <svg id="cloud-diagram" viewBox="0 0 800 500" class="max-w-full">
+                <!-- VPC -->
+                <rect x="10" y="10" width="780" height="480" rx="15" fill="none" stroke="#4b5563" stroke-width="3" stroke-dasharray="10 5"/>
+                <text x="400" y="40" text-anchor="middle" class="text-lg font-bold" fill="#6b7280">VPC</text>
+
+                <!-- Internet Gateway -->
+                <g id="component-igw" class="diagram-component">
+                    <rect x="50" y="220" width="100" height="60" rx="8" class="component-shape"></rect>
+                    <text x="100" y="255" text-anchor="middle" class="component-label">Internet Gateway</text>
+                </g>
+
+                <!-- Public Subnet -->
+                <rect x="200" y="60" width="580" height="190" rx="10" fill="#111827" stroke="#374151" stroke-width="2"/>
+                <text x="230" y="85" fill="#6b7280" class="font-semibold">Public Subnet</text>
+
+                <!-- Private Subnet -->
+                <rect x="200" y="260" width="580" height="190" rx="10" fill="#111827" stroke="#374151" stroke-width="2"/>
+                <text x="230" y="285" fill="#6b7280" class="font-semibold">Private Subnet</text>
+
+                <!-- EC2 Instance -->
+                <g id="component-ec2" class="diagram-component">
+                    <rect x="400" y="120" width="120" height="70" rx="8" class="component-shape"></rect>
+                    <text x="460" y="150" text-anchor="middle" class="component-label">EC2 Instance</text>
+                    <text x="460" y="170" text-anchor="middle" class="component-label">(Web Server)</text>
+                </g>
+
+                <!-- Security Group -->
+                <g id="component-sg" class="diagram-component">
+                    <rect x="240" y="120" width="120" height="70" rx="8" class="component-shape"></rect>
+                    <text x="300" y="155" text-anchor="middle" class="component-label">Security Group</text>
+                </g>
+                
+                <!-- S3 Bucket -->
+                <g id="component-s3" class="diagram-component">
+                    <rect x="350" y="320" width="120" height="70" rx="8" class="component-shape"></rect>
+                    <text x="410" y="355" text-anchor="middle" class="component-label">S3 Bucket</text>
+                </g>
+                
+                <!-- IAM Role -->
+                 <g id="component-iam" class="diagram-component">
+                    <rect x="550" y="320" width="120" height="70" rx="8" class="component-shape"></rect>
+                    <text x="610" y="355" text-anchor="middle" class="component-label">IAM Role</text>
+                </g>
+
+                <!-- Connectors -->
+                <line x1="150" y1="250" x2="270" y2="190" stroke="#4b5563" stroke-width="2"/>
+                <line x1="360" y1="155" x2="400" y2="155" stroke="#4b5563" stroke-width="2"/>
+                <path d="M 480 190 C 480 250, 450 320, 410 320" stroke="#4b5563" stroke-width="2" fill="none" />
+                 <path d="M 490 190 C 520 250, 550 320, 580 320" stroke="#4b5563" stroke-width="2" fill="none" />
+            </svg>
+        </div>
+      </section>
+
+      <!-- Analysis Section -->
+      <section id="analysis-section" class="bg-gray-900 p-6 rounded-xl shadow-lg">
+        <h3 class="text-2xl font-semibold text-blue-400 mb-4">Analysis</h3>
+        <div id="analysis-content" class="space-y-4 text-gray-300">
+          <!-- Content will be injected here by JavaScript -->
+          <div id="initial-message" class="text-center py-16 text-gray-500">
+            <span id="icon-click" class="mx-auto mb-2"></span>
+            <p class="font-semibold">Click an interactive component in the diagram to learn about a common misconfiguration.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-400 text-center py-4 mt-8 rounded-t-xl shadow-inner">
+    © 2025 D. Chandler Prince
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const misconfigurationData = {
+        'component-igw': {
+          title: 'Internet Gateway',
+          misconfiguration: 'Lack of a Web Application Firewall (WAF) at the network edge.',
+          risk: 'Without a WAF, malicious web traffic (like SQL injection, Cross-Site Scripting) can travel directly from the internet to the EC2 instance. This bypasses a critical layer of defense, forcing the application itself to be the sole protector against common web exploits.',
+          remediation: 'Implement a WAF (like AWS WAF) and associate it with the Application Load Balancer or API Gateway handling the ingress traffic. Configure it with managed rule sets (e.g., for the OWASP Top 10) and custom rules to block known bad traffic patterns before they ever reach your application.'
+        },
+        'component-sg': {
+          title: 'Security Group',
+          misconfiguration: 'Overly Permissive Ingress Rule (`0.0.0.0/0` on Port 22/SSH).',
+          risk: 'Exposing SSH to the entire internet makes the instance a prime target for brute-force attacks, automated scanning, and credential stuffing, which can lead to a full system compromise.',
+          remediation: 'Restrict the source IP range to a known, trusted address (e.g., a corporate VPN or a specific bastion host). For production systems, avoid direct SSH access entirely in favor of using a session manager service (like AWS SSM Session Manager).'
+        },
+        'component-s3': {
+          title: 'S3 Bucket',
+          misconfiguration: 'Publicly Accessible Bucket.',
+          risk: 'Critical risk of sensitive data exposure. If the bucket contains user data, intellectual property, or configuration files, making it public can lead to massive data breaches, compliance violations (GDPR, CCPA), and reputational damage.',
+          remediation: `
+            <ul class="list-decimal">
+              <li><strong>Enable Block Public Access (BPA):</strong> This is a top-level account setting that acts as the primary defense.</li>
+              <li><strong>Apply Restrictive Bucket Policies:</strong> Ensure the bucket policy does not contain statements that allow anonymous principals (\`"Principal": "*"\`).</li>
+              <li><strong>Use IAM Access Analyzer:</strong> Continuously monitor for and be alerted to any publicly accessible S3 buckets.</li>
+            </ul>
+          `
+        },
+        'component-iam': {
+          title: 'IAM Role',
+          misconfiguration: 'Overly Permissive Role with Wildcard Permissions (`"Action": "*:*"`)',
+          risk: 'Violates the principle of least privilege. If the EC2 instance is compromised, an attacker can inherit these god-like permissions to access, modify, or destroy any resource in the entire cloud account.',
+          remediation: "Create a fine-grained IAM policy that only grants the specific permissions the application needs to function. For example, if the application only needs to read objects from a specific S3 bucket, the policy should only allow the `s3:GetObject` action on that specific bucket's ARN."
+        },
+        'component-ec2': {
+          title: 'EC2 Instance',
+          misconfiguration: 'Exposed Instance Metadata Service (IMDSv1).',
+          risk: 'The instance metadata service can be accessed by any process running on the instance to retrieve temporary credentials. If a Server-Side Request Forgery (SSRF) vulnerability exists in the web application, an attacker can exploit it to query the metadata service and steal the IAM role credentials.',
+          remediation: `
+            <ul class="list-decimal">
+              <li><strong>Enforce IMDSv2:</strong> This version requires a session-oriented approach with a secret token, which protects against basic SSRF attacks.</li>
+              <li><strong>Firewall Rules:</strong> Apply local firewall rules (iptables) on the instance itself to prevent the web server process from being able to reach the metadata endpoint (\`169.254.169.254\`).</li>
+            </ul>
+          `
+        }
+      };
+
+      const diagram = document.getElementById('cloud-diagram');
+      const analysisContent = document.getElementById('analysis-content');
+      const initialMessage = document.getElementById('initial-message');
+      const components = diagram.querySelectorAll('.diagram-component');
+
+      function displayInfo(componentId) {
+        const data = misconfigurationData[componentId];
+        if (!data) return;
+
+        initialMessage.classList.add('hidden');
+        
+        analysisContent.innerHTML = `
+          <h4 class="text-xl font-bold text-blue-300">${data.title}</h4>
+          <div class="space-y-4">
+            <div>
+              <h5 class="font-semibold text-blue-400 flex items-center"><span class="mr-2" id="icon-misconfig"></span>Misconfiguration</h5>
+              <p class="pl-7 border-l-2 border-gray-700 ml-2.5 text-gray-200">${data.misconfiguration}</p>
+            </div>
+            <div>
+              <h5 class="font-semibold text-red-400 flex items-center"><span class="mr-2" id="icon-risk"></span>Risk</h5>
+              <p class="pl-7 border-l-2 border-gray-700 ml-2.5 text-gray-200">${data.risk}</p>
+            </div>
+            <div>
+              <h5 class="font-semibold text-green-400 flex items-center"><span class="mr-2" id="icon-remediation"></span>Remediation</h5>
+              <div class="pl-7 border-l-2 border-gray-700 ml-2.5 text-gray-200">${data.remediation}</div>
+            </div>
+          </div>
+        `;
+        
+        lucide.createIcons({
+            icons: {
+                'icon-misconfig': lucide.AlertTriangle,
+                'icon-risk': lucide.ShieldAlert,
+                'icon-remediation': lucide.ShieldCheck,
+            },
+            attrs: { strokeWidth: 2, size: 20 }
+        });
+      }
+
+      components.forEach(component => {
+        // Exclude the IGW from being interactive if it has no data
+        if (misconfigurationData[component.id]) {
+            component.addEventListener('click', () => {
+                components.forEach(c => c.classList.remove('active'));
+                component.classList.add('active');
+                displayInfo(component.id);
+            });
+        }
+      });
+      
+      // Initial Icons
+      lucide.createIcons({
+        icons: {
+          'nav-linkedin': lucide.Linkedin,
+          'nav-github': lucide.Github,
+          'nav-home': lucide.Home,
+          'nav-cloud': lucide.Cloud,
+          'nav-sast': lucide.FileSearch,
+          'nav-dashboard': lucide.LayoutDashboard,
+          'nav-threat': lucide.ShieldAlert,
+          'icon-click': lucide.MousePointerClick
+        },
+        attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
+      });
+    });
+  </script>
+</body>
+</html>
+
