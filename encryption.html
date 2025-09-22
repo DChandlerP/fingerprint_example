@@ -34,16 +34,8 @@
 <body class="bg-gray-950 text-white min-h-screen flex flex-col">
   <!-- Navigation Bar -->
   <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-30">
-    <div class="w-full flex items-center justify-between px-4 py-3">
-      <div class="flex items-center space-x-3">
-        <a href="https://www.linkedin.com/in/chandler-prince-b53b1427/" target="_blank" rel="noopener" class="text-blue-400 hover:text-blue-300" title="LinkedIn">
-          <span id="nav-linkedin" class="w-6 h-6"></span>
-        </a>
-        <a href="https://github.com/DChandlerP/" target="_blank" rel="noopener" class="text-blue-400 hover:text-blue-300" title="GitHub">
-          <span id="nav-github" class="w-6 h-6"></span>
-        </a>
-      </div>
-       <div class="flex flex-wrap justify-center space-x-2">
+    <div class="w-full flex items-center justify-center px-6 py-3">
+       <div class="flex flex-wrap justify-center space-x-4">
         <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-home" class="mr-1"></span>Home</a>
         <a href="cloud.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-cloud" class="mr-1"></span>Cloud Explorer</a>
         <a href="sast.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-sast" class="mr-1"></span>SAST Guide</a>
@@ -274,6 +266,47 @@
     <section class="prose max-w-none">
         <div class="bg-gray-900 rounded-xl shadow-lg p-6">
              <div class="flex items-center mb-4">
+                <span id="ciphermode-icon" class="mr-3"></span>
+                <h2 class="text-2xl font-semibold text-blue-300 m-0">Insecure Block Cipher Modes of Operation</h2>
+            </div>
+            <p>A block cipher like AES encrypts data in fixed-size chunks (e.g., 128 bits). A "mode of operation" is the recipe used to encrypt messages that are longer than a single block. The choice of mode is just as important as the cipher itself, and using the wrong one can completely undermine security.</p>
+            
+            <h3>Core Weakness: Determinism in ECB Mode</h3>
+            <p>The most notoriously insecure mode is <strong>Electronic Codebook (ECB)</strong>. Its fatal flaw is that it's deterministic: for a given key, the same plaintext block will always encrypt to the exact same ciphertext block. This means patterns in the plaintext are preserved in the ciphertext.</p>
+            <p>The classic example is encrypting an image. An image with large areas of solid color will have many identical blocks. When encrypted with ECB, those identical plaintext blocks become identical ciphertext blocks, and the outline of the original image remains clearly visible.</p>
+
+            <h3>How It's Exploited</h3>
+            <ul>
+                <li><strong>Technique:</strong> This is a failure of confidentiality, not a key-cracking attack. An attacker doesn't need the key to gain valuable information. By analyzing the ciphertext for repeated blocks, they can learn about the structure of the underlying data. For example, they could identify where a session cookie starts and ends in an encrypted stream, or see if a sensitive command is being repeated.</li>
+                 <li><strong>Other Modes:</strong> While modes like Cipher Block Chaining (CBC) are a vast improvement by linking blocks together, they too can be vulnerable to implementation flaws, such as padding oracle attacks (exploited by POODLE) if not implemented carefully with a message authentication code.</li>
+            </ul>
+            <p>Modern cryptography has moved towards <strong>Authenticated Encryption with Associated Data (AEAD)</strong> modes like <strong>GCM (Galois/Counter Mode)</strong> and <strong>ChaCha20-Poly1305</strong>. These modes not only provide confidentiality but also integrity and authenticity, preventing both eavesdropping and tampering.</p>
+        </div>
+    </section>
+
+    <section class="prose max-w-none">
+        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
+             <div class="flex items-center mb-4">
+                <span id="prng-icon" class="mr-3"></span>
+                <h2 class="text-2xl font-semibold text-blue-300 m-0">Weak Pseudorandom Number Generators (PRNGs)</h2>
+            </div>
+            <p>Cryptography depends on a source of unpredictable numbers for everything from generating secret keys to creating nonces and initialization vectors. Using a poor source of randomness can lead to a total collapse of the security system, even if the algorithms themselves are strong.</p>
+            
+            <h3>Core Weakness: Predictability</h3>
+            <p>The critical distinction is between a standard PRNG and a Cryptographically Secure PRNG (CSPRNG). Standard PRNGs (like <code>Math.random()</code> in JavaScript or simple linear congruential generators) are designed for statistical randomness and speed, not unpredictability. If an attacker can learn the internal state of the generator, they can often predict all future—and past—outputs.</p>
+            
+            <h3>How It's Exploited</h3>
+            <ul>
+                <li><strong>Poor Seeding (Netscape SSL):</strong> In an early version of Netscape's browser, the SSL implementation seeded its random number generator with a combination of the current time and the process ID. Both of these values are predictable or easily guessable, allowing researchers to determine the SSL session key and decrypt traffic.</li>
+                <li><strong>Reduced Entropy (Debian OpenSSL Bug):</strong> From 2006 to 2008, a bug in the Debian distribution of OpenSSL severely limited the amount of entropy used to seed its PRNG. This meant that on affected systems, only a tiny fraction of the possible SSH keys, SSL certificates, and other cryptographic material could ever be generated. Attackers could simply pre-compute all possible keys and use them to compromise any server running the vulnerable software.</li>
+            </ul>
+            <p>Secure systems must use a dedicated CSPRNG. These are designed to be unpredictable and are continuously fed with entropy (unpredictable data) from the operating system, such as mouse movements, keyboard timings, and hardware interrupts. Examples include <code>/dev/urandom</code> on Linux/macOS and the <code>crypto.getRandomValues()</code> API in web browsers.</p>
+        </div>
+    </section>
+
+    <section class="prose max-w-none">
+        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
+             <div class="flex items-center mb-4">
                 <span id="quantum-icon" class="mr-3"></span>
                 <h2 class="text-2xl font-semibold text-blue-300 m-0">The Future Threat: Post-Quantum Cryptography</h2>
             </div>
@@ -288,6 +321,7 @@
             
             <h3>The Race to a Quantum-Resistant Future</h3>
             <p>Recognizing this threat, governments and academic institutions are in a race to standardize and deploy <strong>Post-Quantum Cryptography (PQC)</strong>—new algorithms designed to be secure against both classical and quantum computers. The U.S. National Institute of Standards and Technology (NIST) is leading a global effort to select and standardize a new suite of PQC algorithms, including <strong>CRYSTALS-Kyber</strong> and <strong>CRYSTALS-Dilithium</strong>. In response, governments are setting deadlines for migration; the U.S. has mandated its federal agencies migrate critical systems by 2035, while other nations like Australia are pursuing similar or even more accelerated timelines, with some targets as early as 2030.</p>
+            <p>This global migration is a proactive and necessary step to secure digital infrastructure against the next generation of computational threats.</p>
         </div>
     </section>
 
@@ -317,13 +351,15 @@
         'nav-modcat': lucide.Guitar,
         'des-icon': lucide.Key,
         'hash-icon': lucide.Hash,
-        'rc4-icon': lucide.Stream,
+        'rc4-icon': lucide.Waves,
         'ssl-icon': lucide.ShieldOff,
         'wep-icon': lucide.WifiOff,
         'pptp-icon': lucide.RouteOff,
-        'lanman-icon': lucide.CaseUpper,
+        'lanman-icon': lucide.CaseSensitive,
         'wpatkip-icon': lucide.ShieldQuestion,
         'export-icon': lucide.Unplug,
+        'ciphermode-icon': lucide.Blocks,
+        'prng-icon': lucide.Dices,
         'quantum-icon': lucide.BrainCircuit,
       },
       attrs: {
@@ -335,4 +371,6 @@
   </script>
 </body>
 </html>
+
+
 
