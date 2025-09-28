@@ -3,9 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Insecure Encryption Explained | D. Chandler Prince</title>
+  <!-- ADDED: Content Security Policy -->
+<meta http-equiv="Content-Security-Policy" content="
+    default-src 'self'; 
+    script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; 
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
+    font-src 'self' https://fonts.gstatic.com; 
+    connect-src 'self' https://services.nvd.nist.gov https://api.first.org; 
+    object-src 'none'; 
+    frame-ancestors 'self'; 
+    base-uri 'self';
+">
+<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer-policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">  <title>Interactive Cryptography Playground | D. Chandler Prince</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <!-- Crypto Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.3.2/jsencrypt.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
@@ -29,6 +46,11 @@
         padding: 0.2em 0.4em;
         border-radius: 0.25rem;
     }
+    /* Style for active tab */
+    .tab-btn-active {
+        background-color: #2563eb; /* bg-blue-600 */
+        color: white;
+    }
   </style>
 </head>
 <body class="bg-gray-950 text-white min-h-screen flex flex-col">
@@ -42,7 +64,7 @@
         <a href="threatmodel.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-threat" class="mr-1"></span>Threat Model</a>
         <a href="checklist.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-checklist" class="mr-1"></span>Checklist Generator</a>
         <a href="jwt.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-jwt" class="mr-1"></span>JWT Decoder</a>
-        <a href="encryption.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-encryption" class="mr-1"></span>Encryption</a>
+        <a href="encryption.html" class="flex items-center px-3 py-1 rounded text-blue-300 bg-gray-800 hover:text-white font-semibold transition"><span id="nav-encryption" class="mr-1"></span>Encryption</a>
         <a href="fingerprint.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-fp" class="mr-1"></span>Fingerprint Demo</a>
         <a href="epssdemo.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-epss" class="mr-1"></span>EPSS Comparator</a>
         <a href="dashboard.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-dashboard" class="mr-1"></span>Threat Dashboard</a>
@@ -53,14 +75,108 @@
 
   <!-- Header -->
   <header class="bg-gradient-to-r from-blue-900 to-gray-900 py-10 px-4 text-center shadow-lg">
-    <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">A Journey Through Broken Ciphers</h1>
-    <h2 class="text-xl md:text-2xl font-semibold text-blue-300 mb-4">Understanding Encryption Formats of the Past</h2>
+    <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">Interactive Cryptography Playground</h1>
+    <h2 class="text-xl md:text-2xl font-semibold text-blue-300 mb-4">Learn Modern Encryption by Doing</h2>
     <p class="max-w-3xl mx-auto text-gray-200 text-lg md:text-xl">
-      In cybersecurity, what is strong today can be obsolete tomorrow. This guide explores cryptographic algorithms that were once considered secure but are now broken. Understanding their weaknesses is crucial for building resilient systems today.
+      Experiment with modern, secure cryptographic algorithms like AES and RSA. See how hashing works, and create your own digital signatures. Below the playground, you'll find a guide to ciphers of the past that are no longer secure.
     </p>
   </header>
 
   <main class="flex-1 px-4 py-10 max-w-5xl mx-auto space-y-12">
+
+    <!-- NEW: Interactive Playground Section -->
+    <section id="interactive-playground" class="bg-gray-900 rounded-xl shadow-lg p-6">
+        <div class="flex items-center mb-4">
+             <span id="playground-icon" class="mr-3"></span>
+            <h2 class="text-2xl font-semibold text-blue-300 m-0">Cryptography Tools</h2>
+        </div>
+       
+        <!-- Tab Buttons -->
+        <div class="mb-4 flex flex-wrap space-x-1 sm:space-x-2 border-b border-gray-800">
+            <button id="tab-aes" class="tab-btn tab-btn-active flex-grow sm:flex-grow-0 flex items-center justify-center text-sm sm:text-base font-semibold py-2 px-4 rounded-t-lg transition hover:bg-gray-800"><span id="aes-tab-icon" class="mr-2"></span>AES</button>
+            <button id="tab-rsa" class="tab-btn text-blue-300 flex-grow sm:flex-grow-0 flex items-center justify-center text-sm sm:text-base font-semibold py-2 px-4 rounded-t-lg transition hover:bg-gray-800"><span id="rsa-tab-icon" class="mr-2"></span>RSA</button>
+            <button id="tab-hash" class="tab-btn text-blue-300 flex-grow sm:flex-grow-0 flex items-center justify-center text-sm sm:text-base font-semibold py-2 px-4 rounded-t-lg transition hover:bg-gray-800"><span id="hash-tab-icon" class="mr-2"></span>Hashing</button>
+            <button id="tab-sign" class="tab-btn text-blue-300 flex-grow sm:flex-grow-0 flex items-center justify-center text-sm sm:text-base font-semibold py-2 px-4 rounded-t-lg transition hover:bg-gray-800"><span id="sign-tab-icon" class="mr-2"></span>Signature</button>
+        </div>
+
+        <!-- Tool Panels Container -->
+        <div class="bg-gray-800/50 p-4 sm:p-6 rounded-b-lg rounded-r-lg shadow-inner">
+            <!-- AES Tool -->
+            <div id="tool-aes" class="tool-content">
+                <h3 class="text-xl font-bold mb-4 text-blue-300">Symmetric Encryption: AES</h3>
+                <p class="text-gray-300 mb-6">AES (Advanced Encryption Standard) is a symmetric-key algorithm, meaning the same key is used for both encrypting and decrypting data. It's incredibly fast and is the global standard for encrypting bulk data, such as files on your hard drive, database contents, and network traffic (e.g., inside TLS).</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="aes-input" class="block mb-2 font-semibold text-blue-300">Plaintext / Ciphertext</label>
+                        <textarea id="aes-input" rows="4" class="w-full bg-gray-900 rounded p-3 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200" placeholder="Type your message here...">The quick brown fox jumps over the lazy dog.</textarea>
+                    </div>
+                    <div>
+                        <label for="aes-key" class="block mb-2 font-semibold text-blue-300">Secret Key</label>
+                        <input type="text" id="aes-key" class="w-full bg-gray-900 rounded p-3 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200" placeholder="Enter a secret key..." value="SuperSecretKey123">
+                        <div class="flex space-x-4 mt-4">
+                             <button id="aes-encrypt-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">Encrypt</button>
+                             <button id="aes-decrypt-btn" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition">Decrypt</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <label class="block mb-2 font-semibold text-blue-300">Result</label>
+                    <pre id="aes-output" class="w-full bg-gray-950 rounded p-4 text-green-300 break-all h-24 overflow-x-auto border border-gray-700"></pre>
+                </div>
+            </div>
+
+            <!-- RSA Tool -->
+            <div id="tool-rsa" class="tool-content hidden">
+                <h3 class="text-xl font-bold mb-4 text-blue-300">Asymmetric Encryption: RSA</h3>
+                <p class="text-gray-300 mb-6">RSA is an asymmetric-key algorithm that uses a key pair: a public key for encryption and a private key for decryption. It's slower than AES, so it's not used for bulk data. Instead, its primary use is for secure key exchange (e.g., securely sending an AES key to someone) and for creating digital signatures.</p>
+                <button id="rsa-generate-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4 transition">Generate 2048-bit Key Pair</button>
+                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block mb-2 font-semibold text-blue-300">Public Key</label>
+                        <pre id="rsa-public-key" class="w-full h-32 bg-gray-950 rounded p-2 text-xs overflow-y-scroll border border-gray-700"></pre>
+                    </div>
+                    <div>
+                        <label class="block mb-2 font-semibold text-blue-300">Private Key</label>
+                        <pre id="rsa-private-key" class="w-full h-32 bg-gray-950 rounded p-2 text-xs overflow-y-scroll border border-gray-700"></pre>
+                    </div>
+                </div>
+                <label for="rsa-input" class="block mb-2 font-semibold text-blue-300">Message</label>
+                <textarea id="rsa-input" rows="3" class="w-full bg-gray-900 rounded p-3 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200" placeholder="Message to encrypt...">This is a secret message for RSA.</textarea>
+                <div class="flex space-x-4 mt-4">
+                    <button id="rsa-encrypt-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">Encrypt with Public Key</button>
+                    <button id="rsa-decrypt-btn" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition">Decrypt with Private Key</button>
+                </div>
+                 <p class="text-sm text-gray-400 mt-2">The "Encrypt" button uses the message above. The "Decrypt" button uses the ciphertext from the result box below.</p>
+                 <label class="block mb-2 mt-4 font-semibold text-blue-300">Result</label>
+                 <pre id="rsa-output" class="w-full bg-gray-950 rounded p-4 text-green-300 break-all h-24 overflow-x-auto border border-gray-700"></pre>
+            </div>
+
+            <!-- Hashing Tool -->
+            <div id="tool-hash" class="tool-content hidden">
+                 <h3 class="text-xl font-bold mb-4 text-blue-300">Hashing: SHA-256</h3>
+                 <p class="text-gray-300 mb-6">Hashing is not encryption. It's a one-way process that creates a unique, fixed-size "fingerprint" (a hash) from any amount of data. You cannot reverse a hash to get the original data. Its main uses are for password storage (storing hashes instead of passwords) and for verifying data integrity (checking if a file has been modified).</p>
+                 <label for="hash-input" class="block mb-2 font-semibold text-blue-300">Input Data (updates in real-time)</label>
+                 <textarea id="hash-input" rows="4" class="w-full bg-gray-900 rounded p-3 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200" placeholder="Type anything here...">Cryptography is fascinating!</textarea>
+                 <label class="block mb-2 mt-6 font-semibold text-blue-300">SHA-256 Hash Output</label>
+                 <pre id="hash-output" class="w-full bg-gray-950 rounded p-4 text-yellow-300 break-all border border-gray-700"></pre>
+            </div>
+
+            <!-- Digital Signature Tool -->
+            <div id="tool-sign" class="tool-content hidden">
+                <h3 class="text-xl font-bold mb-4 text-blue-300">Digital Signature</h3>
+                 <p class="text-gray-300 mb-6">A digital signature uses hashing and asymmetric cryptography (like RSA) to provide authenticity, integrity, and non-repudiation. By signing a message's hash with a private key, you prove you are the sender. Anyone with your public key can verify the signature, ensuring the message is authentic and hasn't been tampered with.</p>
+                <p class="text-sm text-gray-400 mb-4">Uses the RSA keys generated in the RSA tab. If you haven't generated keys, please go to the RSA tab first.</p>
+                <label for="sign-input" class="block mb-2 font-semibold text-blue-300">Message to Sign</label>
+                <textarea id="sign-input" rows="3" class="w-full bg-gray-900 rounded p-3 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200" placeholder="The message to prove ownership of...">I am the rightful owner of this key.</textarea>
+                <button id="sign-create-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-2 transition">Sign Message with Private Key</button>
+                <label class="block mb-2 mt-6 font-semibold text-blue-300">Generated Signature</label>
+                <pre id="sign-output" class="w-full h-24 bg-gray-950 rounded p-2 text-xs overflow-y-scroll break-all border border-gray-700"></pre>
+                <button id="sign-verify-btn" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mt-4 transition">Verify Signature with Public Key</button>
+                <div id="sign-verify-output" class="mt-4 p-3 rounded text-center font-bold"></div>
+            </div>
+        </div>
+    </section>
+
     <!-- Section for each encryption format -->
     <section class="prose max-w-none">
       <div class="bg-gray-900 rounded-xl shadow-lg p-6">
@@ -106,7 +222,8 @@
         </div>
     </section>
 
-    <section class="prose max-w-none">
+    <!-- ... Rest of the original sections (RC4, SSL, WEP, etc.) remain here ... -->
+     <section class="prose max-w-none">
         <div class="bg-gray-900 rounded-xl shadow-lg p-6">
              <div class="flex items-center mb-4">
                 <span id="rc4-icon" class="mr-3"></span>
@@ -332,12 +449,186 @@
     © 2025 D. Chandler Prince
   </footer>
 
+  <!-- Interactive Playground Logic -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- DOM Elements ---
+        const tabs = document.querySelectorAll('.tab-btn');
+        const toolContents = document.querySelectorAll('.tool-content');
+
+        const aesInput = document.getElementById('aes-input');
+        const aesKey = document.getElementById('aes-key');
+        const aesEncryptBtn = document.getElementById('aes-encrypt-btn');
+        const aesDecryptBtn = document.getElementById('aes-decrypt-btn');
+        const aesOutput = document.getElementById('aes-output');
+
+        const rsaGenerateBtn = document.getElementById('rsa-generate-btn');
+        const rsaPublicKeyEl = document.getElementById('rsa-public-key');
+        const rsaPrivateKeyEl = document.getElementById('rsa-private-key');
+        const rsaInput = document.getElementById('rsa-input');
+        const rsaEncryptBtn = document.getElementById('rsa-encrypt-btn');
+        const rsaDecryptBtn = document.getElementById('rsa-decrypt-btn');
+        const rsaOutput = document.getElementById('rsa-output');
+
+        const hashInput = document.getElementById('hash-input');
+        const hashOutput = document.getElementById('hash-output');
+
+        const signInput = document.getElementById('sign-input');
+        const signCreateBtn = document.getElementById('sign-create-btn');
+        const signOutput = document.getElementById('sign-output');
+        const signVerifyBtn = document.getElementById('sign-verify-btn');
+        const signVerifyOutput = document.getElementById('sign-verify-output');
+
+        // --- State ---
+        let rsaKey = null;
+
+        // --- Tab Navigation ---
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Update button styles
+                tabs.forEach(t => {
+                    t.classList.remove('tab-btn-active');
+                    t.classList.add('text-blue-300');
+                });
+                tab.classList.add('tab-btn-active');
+                tab.classList.remove('text-blue-300');
+
+                // Show correct content
+                const targetId = tab.id.replace('tab-', 'tool-');
+                toolContents.forEach(content => {
+                    if (content.id === targetId) {
+                        content.classList.remove('hidden');
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        // --- AES Logic ---
+        const handleAesEncrypt = () => {
+             try {
+                if (!aesInput.value || !aesKey.value) {
+                    aesOutput.textContent = 'Please provide both a message and a secret key.';
+                    return;
+                }
+                const encrypted = CryptoJS.AES.encrypt(aesInput.value, aesKey.value).toString();
+                aesOutput.textContent = encrypted;
+            } catch (e) {
+                aesOutput.textContent = `Error: ${e.message}`;
+            }
+        };
+        
+        aesEncryptBtn.addEventListener('click', handleAesEncrypt);
+
+        aesDecryptBtn.addEventListener('click', () => {
+            try {
+                 if (!aesInput.value || !aesKey.value) {
+                    aesOutput.textContent = 'Please provide both ciphertext and a secret key.';
+                    return;
+                }
+                const bytes = CryptoJS.AES.decrypt(aesInput.value, aesKey.value);
+                const originalText = bytes.toString(CryptoJS.enc.Utf8);
+                 if (originalText) {
+                    aesOutput.textContent = originalText;
+                } else {
+                    aesOutput.textContent = "Decryption failed. Check key or ciphertext.";
+                }
+            } catch (e) {
+                aesOutput.textContent = `Error: ${e.message}`;
+            }
+        });
+
+        // --- Hashing Logic ---
+        const updateHash = () => {
+            hashOutput.textContent = CryptoJS.SHA256(hashInput.value).toString();
+        }
+        hashInput.addEventListener('input', updateHash);
+        
+        // --- RSA Logic ---
+        rsaGenerateBtn.addEventListener('click', () => {
+            rsaGenerateBtn.textContent = 'Generating...';
+            rsaGenerateBtn.disabled = true;
+            setTimeout(() => {
+                rsaKey = new JSEncrypt({ default_key_size: 2048 });
+                rsaPublicKeyEl.textContent = rsaKey.getPublicKey();
+                rsaPrivateKeyEl.textContent = rsaKey.getPrivateKey();
+                rsaGenerateBtn.textContent = 'Generate 2048-bit Key Pair';
+                rsaGenerateBtn.disabled = false;
+            }, 50);
+        });
+
+        rsaEncryptBtn.addEventListener('click', () => {
+            if (!rsaKey) {
+                rsaOutput.textContent = 'Please generate an RSA key pair first.';
+                return;
+            }
+            const encrypted = rsaKey.encrypt(rsaInput.value);
+            rsaOutput.textContent = encrypted || 'Encryption failed. Message may be too long for RSA.';
+            // Visual cue for ciphertext
+            rsaOutput.classList.remove('text-green-300');
+            rsaOutput.classList.add('text-yellow-300');
+        });
+
+        rsaDecryptBtn.addEventListener('click', () => {
+            if (!rsaKey) {
+                rsaOutput.textContent = 'Please generate an RSA key pair first.';
+                return;
+            }
+            const decrypt = new JSEncrypt();
+            decrypt.setPrivateKey(rsaPrivateKeyEl.textContent);
+            // FIX: Decrypt from the output box, not the input box
+            const decrypted = decrypt.decrypt(rsaOutput.textContent);
+            rsaOutput.textContent = decrypted || 'Decryption failed. Check the private key or ciphertext.';
+             // Visual cue for plaintext
+            rsaOutput.classList.remove('text-yellow-300');
+            rsaOutput.classList.add('text-green-300');
+        });
+        
+        // --- Digital Signature Logic ---
+        signCreateBtn.addEventListener('click', () => {
+            if (!rsaKey) {
+                signOutput.textContent = 'Please generate an RSA key pair on the RSA tab first.';
+                return;
+            }
+            const signature = rsaKey.sign(signInput.value, CryptoJS.SHA256, "sha256");
+            signOutput.textContent = signature || "Signing failed.";
+        });
+        
+        signVerifyBtn.addEventListener('click', () => {
+            if (!rsaKey) {
+                signVerifyOutput.textContent = 'Please generate RSA keys first.';
+                signVerifyOutput.className = 'mt-4 p-3 rounded text-center font-bold bg-yellow-800 text-yellow-200';
+                return;
+            }
+            
+            const verify = new JSEncrypt();
+            verify.setPublicKey(rsaPublicKeyEl.textContent);
+            const isValid = verify.verify(signInput.value, signOutput.textContent, CryptoJS.SHA256);
+            
+            if (isValid) {
+                signVerifyOutput.textContent = '✅ Signature is Valid';
+                signVerifyOutput.className = 'mt-4 p-3 rounded text-center font-bold bg-green-800 text-green-200';
+            } else {
+                signVerifyOutput.textContent = '❌ Signature is Invalid';
+                signVerifyOutput.className = 'mt-4 p-3 rounded text-center font-bold bg-red-800 text-red-200';
+            }
+        });
+        
+        // --- Initial Run ---
+        const initializePlayground = () => {
+            handleAesEncrypt();
+            updateHash();
+        };
+        
+        initializePlayground();
+    });
+  </script>
+
   <!-- Lucide Icons Setup -->
   <script>
     lucide.createIcons({
       icons: {
-        'nav-linkedin': lucide.Linkedin,
-        'nav-github': lucide.Github,
         'nav-home': lucide.Home,
         'nav-cloud': lucide.Cloud,
         'nav-sast': lucide.FileSearch,
@@ -361,6 +652,12 @@
         'ciphermode-icon': lucide.Blocks,
         'prng-icon': lucide.Dices,
         'quantum-icon': lucide.BrainCircuit,
+        'playground-icon': lucide.FlaskConical,
+        // Tab Icons
+        'aes-tab-icon': lucide.Lock,
+        'rsa-tab-icon': lucide.KeyRound,
+        'hash-tab-icon': lucide.Hash,
+        'sign-tab-icon': lucide.PenSquare
       },
       attrs: {
         color: "#38bdf8",
@@ -368,9 +665,16 @@
         strokeWidth: 2
       }
     });
+    // Adjust tab icon size
+    const tabIcons = document.querySelectorAll('#interactive-playground .lucide');
+    tabIcons.forEach(icon => {
+        if(icon.parentElement.classList.contains('tab-btn')) {
+            icon.setAttribute('width', '20');
+            icon.setAttribute('height', '20');
+        }
+    });
+
   </script>
 </body>
-</html>
-
-
+</html> 
 

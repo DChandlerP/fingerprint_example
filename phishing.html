@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self'; 
+    script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; 
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
+    font-src 'self' https://fonts.gstatic.com; 
+    connect-src 'self' https://services.nvd.nist.gov https://api.first.org; 
+    object-src 'none'; 
+    frame-ancestors 'self'; 
+    base-uri 'self';
+">
+<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer-policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Awareness Training Platform</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Google Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Apply the Inter font family */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        ::selection { background: #2563eb; color: #fff; }
+        /* Custom scrollbar for better dark mode aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111827; /* gray-900 */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151; /* gray-700 */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563; /* gray-600 */
+        }
+    </style>
+</head>
+<body class="bg-gray-950 text-white min-h-screen flex flex-col">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-30">
+        <div class="w-full flex items-center justify-center px-6 py-3">
+           <div class="flex flex-wrap justify-center space-x-4">
+            <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-home" class="mr-1"></span>Home</a>
+            <a href="phishing.html" class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition"><span id="nav-phishing" class="mr-1"></span>Phishing Training</a>
+            <a href="cloud.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-cloud" class="mr-1"></span>Cloud Explorer</a>
+            <a href="sast.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-sast" class="mr-1"></span>SAST Guide</a>
+            <a href="threatmodel.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-threat" class="mr-1"></span>Threat Model</a>
+            <a href="checklist.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-checklist" class="mr-1"></span>Checklist Generator</a>
+            <a href="jwt.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-jwt" class="mr-1"></span>JWT Decoder</a>
+            <a href="encryption.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-encryption" class="mr-1"></span>Encryption</a>
+            <a href="fingerprint.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-fp" class="mr-1"></span>Fingerprint Demo</a>
+            <a href="epssdemo.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-epss" class="mr-1"></span>EPSS Comparator</a>
+            <a href="dashboard.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-dashboard" class="mr-1"></span>Threat Dashboard</a>
+            <a href="modcat.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-modcat" class="mr-1"></span>MODCAT Decoder</a>
+          </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-900 to-gray-900 py-10 px-4 text-center shadow-lg">
+        <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">Phishing Awareness Training</h1>
+        <p class="max-w-2xl mx-auto text-blue-200 text-lg md:text-xl">
+            Learn to identify and avoid phishing attacks by analyzing real-world examples.
+        </p>
+    </header>
+
+    <main class="w-full max-w-5xl mx-auto flex-1 px-4 py-10 space-y-12">
+        <!-- Section 1: General Phishing Examples -->
+        <section>
+            <h2 class="text-3xl font-bold text-blue-400 mb-2 text-center">Common Phishing Examples</h2>
+            <p class="text-center text-gray-400 mb-8">Click on the suspicious elements in the emails below to see why they are red flags.</p>
+            <div id="email-gallery" class="space-y-12">
+                <!-- Email examples will be dynamically inserted here by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Section 2: Tailored Phishing Examples -->
+        <section>
+            <h2 class="text-3xl font-bold text-blue-400 mb-2 text-center">Advanced Tailored Phishing</h2>
+            <p class="text-center text-gray-400 mb-8">See how attackers use public information to craft highly convincing emails. Click the highlighted parts to see how the email was tailored to the victim.</p>
+            <div id="tailored-examples-gallery" class="space-y-16">
+                <!-- Tailored examples will be inserted here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 text-center py-4 mt-8 shadow-inner">
+        © 2025 D. Chandler Prince
+    </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- DATA for Section 1: General Phishing ---
+    const emailScenarios = [
+        {
+            title: "Scenario 1: The Urgent Password Reset",
+            sender: `IT Support <span id="email-0-sender" class="suspicious-item rounded p-1">support@mail-accounts-update.com</span>`,
+            subject: `Urgent: <span id="email-0-subject" class="suspicious-item rounded p-1">Your Account Will Be Suspended</span>`,
+            bodyHTML: `
+                <div class="border-dashed border-gray-700 p-4 mb-4 text-center text-gray-400 italic text-sm">
+                    
+                </div>
+                <p>Dear Valued Employee,</p>
+                <p class="my-4">Our records indicate that your corporate password is expiring soon. To avoid suspension of your account, you must update your security information immediately.</p>
+                <p class="my-4">Please click the link below to maintain access:</p>
+                <a id="email-0-link" href="#" class="suspicious-item text-blue-400 hover:text-blue-300 underline rounded p-1">https://mycompany.com/reset-password</a>
+                <p class="my-4">If you do not complete this action within 24 hours, <span id="email-0-threat" class="suspicious-item rounded p-1">your account will be permanently disabled</span>.</p>
+                <p>Thank you,<br>IT Department</p>
+                <div class="mt-6 pt-4 border-t border-gray-700">
+                    <p class="font-semibold">Attachment:</p>
+                    <div id="email-0-attachment" class="suspicious-item flex items-center gap-2 mt-2 bg-gray-800 p-2 rounded-md border border-gray-700">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <span>Password_Update_Form.zip</span>
+                    </div>
+                </div>`,
+            suspiciousElements: [
+                { id: 'email-0-sender', feedback: "Correct! The sender's email domain 'mail-accounts-update.com' is unofficial and suspicious." },
+                { id: 'email-0-subject', feedback: "Good catch! Urgent or threatening subject lines are a common tactic to create panic." },
+                { id: 'email-0-link', feedback: "Excellent! Hovering reveals the link goes to 'malicious-site.net', not the company page." },
+                { id: 'email-0-threat', feedback: "That's right. Phishers often use threats of account suspension to rush you into making a mistake." },
+                { id: 'email-0-attachment', feedback: "Great find! Never open unexpected ZIP attachments, as they can contain malware." }
+            ]
+        },
+        {
+            title: "Scenario 2: The Failed Package Delivery",
+            sender: `Delivery Service <span id="email-1-sender" class="suspicious-item rounded p-1">support@fedex-shipping-alerts.net</span>`,
+            subject: `<span id="email-1-subject" class="suspicious-item rounded p-1">Problem with your package delivery</span>`,
+            bodyHTML: `
+                <div class="border-dashed border-gray-700 p-4 mb-4 text-center text-gray-400 italic text-sm">
+                    
+                </div>
+                <p>Dear Customer,</p>
+                <p class="my-4">We were unable to deliver your package today. The driver could not find a secure location.</p>
+                <p class="my-4">To reschedule your delivery for a convenient time, please visit our portal using the link below:</p>
+                <a id="email-1-link" href="#" class="suspicious-item text-blue-400 hover:text-blue-300 underline rounded p-1">Reschedule Delivery Here</a>
+                <p class="my-4">Please note that a small redelivery fee may apply. An invoice is attached for your records.</p>
+                <div class="mt-6 pt-4 border-t border-gray-700">
+                    <p class="font-semibold">Attachment:</p>
+                    <div id="email-1-attachment" class="suspicious-item flex items-center gap-2 mt-2 bg-gray-800 p-2 rounded-md border border-gray-700">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <span>shipping_invoice.pdf<span class="suspicious-item rounded p-1">.exe</span></span>
+                    </div>
+                </div>`,
+            suspiciousElements: [
+                { id: 'email-1-sender', feedback: "Well spotted! 'fedex-shipping-alerts.net' is not an official FedEx domain. Always check for slight misspellings." },
+                { id: 'email-1-subject', feedback: "Correct. A vague subject line without a tracking number is suspicious for a delivery notification." },
+                { id: 'email-1-link', feedback: "Great! Hovering would show this link leads to a suspicious URL, not the official carrier's website." },
+                { id: 'email-1-attachment', feedback: "Excellent catch! The file has a '.exe' extension hidden after '.pdf', indicating it's an executable program, likely malware." }
+            ]
+        }
+    ];
+
+    // --- DATA for Section 2: Tailored Phishing ---
+    const tailoredScenarios = [
+        {
+            persona: {
+                name: "Brenda, HR Manager",
+                details: "Works at 'Innovate Solutions Inc.' and often handles recruitment and new software rollouts. Her CEO is Sarah Chen. A LinkedIn post shows she starts work early, around 7:30 AM."
+            },
+            email: {
+                sender: `Sarah Chen <span class="tailored-item" id="tailored-0-sender">s.chen@innovate-solutions.org</span>`,
+                subject: `<span class="tailored-item" id="tailored-0-subject">Urgent review needed: New Performance Platform</span>`,
+                timestamp: `<span class="tailored-item" id="tailored-0-time">Sent at 7:45 AM</span>`,
+                bodyHTML: `
+                    <p><span class="tailored-item" id="tailored-0-name">Hi Brenda,</span></p>
+                    <p class="my-4">Following up on our discussion in <span class="tailored-item" id="tailored-0-context">yesterday's all-hands meeting</span>, I need you to urgently review the final candidate for our new Employee Performance Platform.</p>
+                    <p>Please access the secure portal below and provide your feedback before 9 AM.</p>
+                    <div class="text-center my-6">
+                        <a id="tailored-0-link" href="#" class="bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-lg transition">Access Review Portal</a>
+                    </div>
+                    <p>Thanks,</p>
+                    <p>Sarah Chen<br>CEO, Innovate Solutions Inc.</p>`,
+            },
+            tailoredElements: [
+                { id: 'tailored-0-name', explanation: "TAILORED: Using your first name is a simple but effective way to build immediate trust and make the email feel personal." },
+                { id: 'tailored-0-sender', explanation: "TAILORED: The attacker found the CEO's name, Sarah Chen, on the company website and used a fake, but plausible, email domain." },
+                { id: 'tailored-0-subject', explanation: "TAILORED: The subject line refers to a 'Performance Platform', a topic relevant to an HR Manager's job role, making it seem like a legitimate work task." },
+                { id: 'tailored-0-time', explanation: "TAILORED: The email was sent early in the morning, matching Brenda's known work schedule from social media, catching her when she's busiest." },
+                { id: 'tailored-0-context', explanation: "TAILORED: Mentioning a recent company event like an 'all-hands meeting' creates a false sense of shared context and legitimacy." }
+            ]
+        },
+        {
+            persona: {
+                name: "David, Junior Accountant",
+                details: "Works at 'Keystone Builders' processing invoices with QuickBooks. His LinkedIn profile mentions his involvement in the 'Skyline Tower' development project."
+            },
+            email: {
+                sender: `AP Clerks <invoices@quick-books-billing.com>`,
+                subject: `Overdue Invoice for project: <span class="tailored-item" id="tailored-1-project">Skyoline Tower</span>`,
+                timestamp: `Sent at 2:30 PM`,
+                bodyHTML: `
+                    <p><span class="tailored-item" id="tailored-1-name">David,</span></p>
+                    <p class="my-4">This is an urgent reminder that invoice #8842-B for the <span class="tailored-item" id="tailored-1-project-body">Skyoline Tower project</span> is now 15 days overdue.</p>
+                    <p>A late fee will be applied if not paid by EOD.</p>
+                    <p class="my-4">Please log in to your <span class="tailored-item" id="tailored-1-app">QuickBooks</span> portal via the link below to process this payment immediately.</p>
+                     <div class="text-center my-6">
+                        <a id="tailored-1-link" href="#" class="bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-lg transition">Pay Invoice Now</a>
+                    </div>
+                    <p>Thank you,</p>
+                    <p>Accounts Receivable</p>`,
+            },
+            tailoredElements: [
+                { id: 'tailored-1-name', explanation: "TAILORED: Addressing you by name makes the email feel like a legitimate, direct communication rather than a mass spam message." },
+                { id: 'tailored-1-project', explanation: "TAILORED: The attacker found the 'Skyline Tower' project on David's LinkedIn profile. Using a slight typo ('Skyoline') is a common trick to bypass email filters." },
+                { id: 'tailored-1-project-body', explanation: "TAILORED: Repeating the project name in the body reinforces the message's relevance to David's specific work." },
+                { id: 'tailored-1-app', explanation: "TAILORED: The email specifically mentions QuickBooks, the accounting software David uses, making the fake login request seem much more plausible." }
+            ]
+        }
+    ];
+
+    const emailGallery = document.getElementById('email-gallery');
+    const tailoredGallery = document.getElementById('tailored-examples-gallery');
+
+    function renderGeneralEmails() {
+        let galleryHTML = '';
+        emailScenarios.forEach((scenario, index) => {
+            galleryHTML += `
+                <div class="email-container bg-gray-900 rounded-xl shadow-lg p-6 sm:p-8" data-email-index="${index}">
+                    <h3 class="text-2xl font-semibold text-blue-300 mb-4">${scenario.title}</h3>
+                    <div id="feedback-area-${index}" class="mb-4 p-3 rounded-lg bg-gray-800 border border-gray-700 text-gray-300 min-h-[50px] transition-all">
+                        Click on suspicious elements in the email below.
+                    </div>
+                    <div class="email-simulation bg-black/20 p-4 sm:p-6 rounded-lg border border-gray-800 cursor-pointer">
+                        <div class="p-4 border-b border-gray-700">
+                            <p class="text-sm text-gray-400">From: ${scenario.sender}</p>
+                            <p class="text-sm text-gray-400">Subject: <span class="font-semibold text-gray-200">${scenario.subject}</span></p>
+                        </div>
+                        <div class="p-4 text-gray-300 text-sm leading-relaxed">
+                            ${scenario.bodyHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        emailGallery.innerHTML = galleryHTML;
+    }
+    
+    function renderTailoredEmails() {
+        let galleryHTML = '';
+        tailoredScenarios.forEach((scenario, index) => {
+            galleryHTML += `
+                <div class="tailored-container bg-gray-900 rounded-xl shadow-lg" data-tailored-index="${index}">
+                    <div class="p-6 border-b border-gray-800">
+                        <h3 class="text-xl font-bold text-blue-300">${scenario.persona.name}</h3>
+                        <p class="text-sm text-gray-400 mt-1">${scenario.persona.details}</p>
+                    </div>
+                    <div class="p-6">
+                         <div id="tailored-feedback-area-${index}" class="mb-4 p-3 rounded-lg bg-gray-800 border border-gray-700 text-gray-300 min-h-[50px] transition-all">
+                            Click on a highlighted element to see how it was personalized.
+                        </div>
+                        <div class="email-simulation bg-black/20 p-4 sm:p-6 rounded-lg border border-gray-800 cursor-pointer">
+                            <div class="p-4 border-b border-gray-700">
+                                <div class="flex justify-between items-center">
+                                    <p class="text-sm text-gray-400">From: ${scenario.email.sender}</p>
+                                    <p class="text-xs text-gray-500">${scenario.email.timestamp}</p>
+                                </div>
+                                <p class="text-sm text-gray-400">Subject: <span class="font-semibold text-gray-200">${scenario.email.subject}</span></p>
+                            </div>
+                            <div class="p-4 text-gray-300 text-sm leading-relaxed">
+                                ${scenario.email.bodyHTML}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        tailoredGallery.innerHTML = galleryHTML;
+    }
+
+    function handleGeneralClick(event) {
+        const suspiciousItem = event.target.closest('.suspicious-item');
+        if (!suspiciousItem) return;
+
+        const emailContainer = event.target.closest('.email-container');
+        const emailIndex = emailContainer.dataset.emailIndex;
+        const scenario = emailScenarios[emailIndex];
+        const feedbackArea = document.getElementById(`feedback-area-${emailIndex}`);
+
+        const suspiciousElData = scenario.suspiciousElements.find(el => el.id === suspiciousItem.id);
+
+        if (suspiciousElData && !suspiciousItem.classList.contains('bg-blue-600')) {
+            suspiciousItem.classList.add('bg-blue-600', 'text-white', 'ring-2', 'ring-blue-500');
+            feedbackArea.textContent = suspiciousElData.feedback;
+            feedbackArea.classList.remove('bg-gray-800', 'border-gray-700');
+            feedbackArea.classList.add('bg-blue-900/50', 'border-blue-800');
+        }
+    }
+
+    function handleTailoredClick(event) {
+        const tailoredItem = event.target.closest('.tailored-item');
+        if (!tailoredItem) return;
+
+        const container = event.target.closest('.tailored-container');
+        const index = container.dataset.tailoredIndex;
+        const scenario = tailoredScenarios[index];
+        const feedbackArea = document.getElementById(`tailored-feedback-area-${index}`);
+        
+        container.querySelectorAll('.tailored-item').forEach(item => {
+            item.classList.remove('bg-blue-600', 'text-white', 'ring-2', 'ring-blue-500');
+        });
+
+        const tailoredElData = scenario.tailoredElements.find(el => el.id === tailoredItem.id);
+
+        if (tailoredElData) {
+            tailoredItem.classList.add('bg-blue-600', 'text-white', 'ring-2', 'ring-blue-500');
+            feedbackArea.textContent = tailoredElData.explanation;
+            feedbackArea.classList.remove('bg-gray-800', 'border-gray-700');
+            feedbackArea.classList.add('bg-blue-900/50', 'border-blue-800');
+        }
+    }
+
+
+    renderGeneralEmails();
+    renderTailoredEmails();
+    
+    document.body.addEventListener('click', (event) => {
+        if (event.target.closest('.email-simulation a')) {
+            event.preventDefault();
+        }
+        if (event.target.closest('.email-container')) {
+            handleGeneralClick(event);
+        } else if (event.target.closest('.tailored-container')) {
+            handleTailoredClick(event);
+        }
+    });
+});
+</script>
+
+<script>
+    // Render Lucide icons
+    lucide.createIcons({
+      icons: {
+        'nav-home': lucide.Home,
+        'nav-phishing': lucide.Fish,
+        'nav-threat': lucide.ShieldAlert,
+        'nav-checklist': lucide.ListChecks,
+        'nav-jwt': lucide.KeyRound,
+        'nav-sast': lucide.FileSearch,
+        'nav-cloud': lucide.Cloud,
+        'nav-encryption': lucide.Lock,
+        'nav-fp': lucide.Fingerprint,
+        'nav-epss': lucide.Activity,
+        'nav-dashboard': lucide.LayoutDashboard,
+        'nav-modcat': lucide.Guitar,
+      },
+      attrs: {
+        color: "#93c5fd", /* blue-300 */
+        size: 20,
+        strokeWidth: 2
+      }
+    });
+</script>
+
+</body>
+</html>
+
