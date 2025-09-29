@@ -21,30 +21,14 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     html { font-family: 'Inter', sans-serif; }
     ::selection { background: #2563eb; color: #fff; }
-    .diagram-component {
-      cursor: pointer;
-      transition: all 0.2s ease-in-out;
-    }
-    .diagram-component rect {
-      stroke: #38bdf8; /* sky-500 */
-      stroke-width: 2;
-      fill: #1f2937; /* gray-800 */
-    }
-    .diagram-component text {
-      fill: #e5e7eb; /* gray-200 */
-      font-weight: 600;
-    }
-    .diagram-component:hover rect, .diagram-component.active rect {
-      fill: #3b82f6; /* blue-500 */
-      stroke: #fff;
-    }
-    .diagram-component:hover text, .diagram-component.active text {
-      fill: #fff;
-    }
+    .mono { font-family: 'Roboto Mono', monospace; }
+    .diagram-component { cursor: pointer; transition: all 0.2s ease-in-out; }
+    .diagram-component:hover { transform: scale(1.05); filter: drop-shadow(0 0 10px #38bdf8); }
+    .connector { stroke: #4b5563; stroke-width: 2px; }
   </style>
 </head>
 <body class="bg-gray-950 text-white min-h-screen flex flex-col">
@@ -53,10 +37,10 @@
       <div class="w-full flex items-center justify-center px-6 py-3">
          <div class="flex flex-wrap justify-center space-x-4">
           <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-home" class="mr-1"></span>Home</a>
-          <a href="phishing.html" class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition"><span id="nav-phishing" class="mr-1"></span>Phishing</a>
+          <a href="phishing.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-phishing" class="mr-1"></span>Phishing</a>
           <a href="cloud.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-cloud" class="mr-1"></span>Cloud</a>
           <a href="sast.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-sast" class="mr-1"></span>SAST</a>
-          <a href="threatmodel.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-threat" class="mr-1"></span>Threat Model</a>
+          <a href="threatmodel.html" class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition"><span id="nav-threat" class="mr-1"></span>Threat Model</a>
           <a href="checklist.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-checklist" class="mr-1"></span>Checklist</a>
           <a href="jwt.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-jwt" class="mr-1"></span>JWT Decoder</a>
           <a href="encryption.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-encryption" class="mr-1"></span>Encryption</a>
@@ -70,132 +54,113 @@
 
   <!-- Header -->
   <header class="bg-gradient-to-r from-blue-900 to-gray-900 py-10 px-4 text-center shadow-lg">
-    <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">Interactive Threat Model: E-Commerce API</h1>
-    <p class="max-w-2xl mx-auto text-gray-200 text-lg md:text-xl">
-      A hands-on walk-through of identifying security threats using the STRIDE framework. Click a component in the diagram to analyze its threats.
+    <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">Interactive Threat Modeling</h1>
+    <p class="max-w-3xl mx-auto text-gray-200 text-lg">
+      Explore different methodologies for identifying, evaluating, and mitigating security threats in system design.
     </p>
   </header>
 
-  <main class="flex-1 px-4 py-10 max-w-5xl mx-auto w-full space-y-8">
-    <!-- Interactive Diagram -->
-    <section id="diagram-section" class="bg-gray-900 p-6 rounded-xl shadow-lg">
-        <h3 class="text-2xl font-semibold text-blue-400 mb-4 text-center">System Architecture Diagram</h3>
-        <div id="diagram-container" class="w-full flex justify-center">
-            <svg id="architecture-diagram" viewBox="0 0 800 400" class="max-w-full">
-                <!-- Components -->
-                <g id="user" class="diagram-component">
-                    <rect x="50" y="160" width="120" height="60" rx="8"></rect>
-                    <text x="110" y="195" text-anchor="middle">User</text>
-                </g>
-                <g id="api-gateway" class="diagram-component">
-                    <rect x="250" y="160" width="120" height="60" rx="8"></rect>
-                    <text x="310" y="195" text-anchor="middle">API Gateway</text>
-                </g>
-                <g id="auth-service" class="diagram-component">
-                    <rect x="450" y="70" width="120" height="60" rx="8"></rect>
-                    <text x="510" y="105" text-anchor="middle">Auth Service</text>
-                </g>
-                <g id="product-service" class="diagram-component">
-                    <rect x="450" y="160" width="120" height="60" rx="8"></rect>
-                    <text x="510" y="195" text-anchor="middle">Product Service</text>
-                </g>
-                <g id="customer-db" class="diagram-component">
-                    <rect x="630" y="70" width="120" height="60" rx="8"></rect>
-                    <text x="690" y="105" text-anchor="middle">Customer DB</text>
-                </g>
-
+  <!-- Main Content -->
+  <main class="flex-1 px-4 py-10 max-w-7xl mx-auto w-full space-y-12">
+    <!-- STRIDE Example Section -->
+    <section class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
+      <div class="flex items-center gap-4 mb-4"><span id="stride-icon"></span><h2 class="text-2xl font-bold text-blue-300">STRIDE Threat Model Example</h2></div>
+      <p class="text-gray-300 mb-6">This is a simplified Data Flow Diagram (DFD) for a User Authentication Service. Click on a component (like the User, Web App, or Database) to see potential threats based on the STRIDE methodology.</p>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <!-- Diagram -->
+        <div id="diagram-container" class="relative">
+            <svg id="diagram" viewBox="0 0 400 300" class="w-full h-auto">
                 <!-- Connectors -->
-                <line x1="170" y1="190" x2="250" y2="190" stroke="#4b5563" stroke-width="2" />
-                <line x1="370" y1="190" x2="450" y2="190" stroke="#4b5563" stroke-width="2" />
-                <line x1="370" y1="170" x2="450" y2="100" stroke="#4b5563" stroke-width="2" />
-                <line x1="570" y1="100" x2="630" y2="100" stroke="#4b5563" stroke-width="2" />
+                <line class="connector" x1="60" y1="150" x2="160" y2="150" marker-end="url(#arrow)"></line>
+                <line class="connector" x1="240" y1="150" x2="340" y2="150" marker-end="url(#arrow)"></line>
+                <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4b5563"></path></marker></defs>
+                <!-- Components -->
+                <g id="user" class="diagram-component"><rect x="10" y="125" width="100" height="50" fill="#1e3a8a" rx="10"></rect><text x="60" y="155" fill="white" text-anchor="middle" font-weight="bold">User</text></g>
+                <g id="webapp" class="diagram-component"><rect x="150" y="125" width="100" height="50" fill="#1e3a8a" rx="10"></rect><text x="200" y="155" fill="white" text-anchor="middle" font-weight="bold">Web App</text></g>
+                <g id="database" class="diagram-component"><rect x="290" y="125" width="100" height="50" fill="#1e3a8a" rx="10"></rect><text x="340" y="155" fill="white" text-anchor="middle" font-weight="bold">Database</text></g>
             </svg>
         </div>
-        <div class="mt-4 text-center text-gray-400 text-sm">
-          <p><span class="font-bold text-blue-300">STRIDE:</span> <span class="font-semibold">S</span>poofing, <span class="font-semibold">T</span>ampering, <span class="font-semibold">R</span>epudiation, <span class="font-semibold">I</span>nformation Disclosure, <span class="font-semibold">D</span>enial of Service, <span class="font-semibold">E</span>levation of Privilege</p>
+        <!-- Threat Output -->
+        <div id="threat-output" class="bg-gray-950 p-6 rounded-lg border border-gray-700 min-h-[300px]">
+          <p class="text-gray-400 text-center">Click a diagram component to view its threats.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PASTA Example Section -->
+    <section class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
+        <div class="flex items-center gap-4 mb-4"><span id="pasta-icon"></span><h2 class="text-2xl font-bold text-blue-300">PASTA Threat Model Example</h2></div>
+        <p class="text-gray-300 mb-6">PASTA (Process for Attack Simulation and Threat Analysis) is a risk-centric methodology that aligns business objectives with security requirements. It involves seven stages to provide a deeper, attacker-centric view of threats.</p>
+        <div class="space-y-4">
+            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-blue-300">Stage I: Define Business Objectives</h3><p class="text-gray-400 text-sm">Identify the primary goals of the application. For our User Authentication Service, objectives are: Securely authenticate users, protect Personally Identifiable Information (PII), and maintain 99.9% uptime.</p></div>
+            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-blue-300">Stage II: Define the Technical Scope</h3><p class="text-gray-400 text-sm">Map out the technologies in use: A React frontend, a Node.js backend API, a PostgreSQL database, all hosted on AWS. Data flows over HTTPS.</p></div>
+            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-blue-300">Stage III: Application Decomposition</h3><p class="text-gray-400 text-sm">Break down the application into its core components and trust boundaries, similar to the DFD in the STRIDE example. Identify entry points (login forms, API endpoints) and data stores (user database, session store).</p></div>
+            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-blue-300">Stage IV: Threat Analysis</h3><p class="text-gray-400 text-sm">Analyze known vulnerabilities and threat intelligence relevant to the tech stack (e.g., known Node.js library vulnerabilities, common attacks against PostgreSQL).</p></div>
+            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-blue-300">Stage V: Vulnerability & Weakness Analysis</h3><p class="text-gray-400 text-sm">Correlate application components with known threats. For example, identify a lack of rate limiting on the login endpoint (a weakness) and correlate it with the threat of credential stuffing (from Stage IV).</p></div>
+            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-blue-300">Stage VI: Attack Modeling</h3><p class="text-gray-400 text-sm">Simulate attacks based on the vulnerabilities identified. Create an attack tree for an attacker to achieve the goal of "Steal User Credentials". This might involve exploiting a SQL injection flaw found in Stage V.</p></div>
+            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-blue-300">Stage VII: Risk & Impact Analysis</h3><p class="text-gray-400 text-sm">Calculate the business impact of a successful attack. A credential stuffing attack could lead to account takeovers, resulting in reputational damage and financial loss. The impact of a PII breach would be high due to regulatory fines (e.g., GDPR). This stage helps prioritize which threats to fix first based on business risk.</p></div>
         </div>
     </section>
 
-    <!-- Threat Analysis -->
-    <section id="analysis-section" class="bg-gray-900 p-6 rounded-xl shadow-lg min-h-[200px]">
-        <h3 class="text-2xl font-semibold text-blue-400 mb-4">Threat Analysis</h3>
-        <div id="threat-output" class="space-y-4">
-             <p class="text-center py-8 text-gray-500">Click a component in the diagram to see its potential threats.</p>
+    <!-- Comparison Section -->
+    <section class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
+        <div class="flex items-center gap-4 mb-4"><span id="compare-icon"></span><h2 class="text-2xl font-bold text-blue-300">Choosing the Right Methodology</h2></div>
+        <p class="text-gray-300 mb-6">Different methodologies excel in different contexts. Here’s a comparison to help you decide which approach is best for your needs.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span id="stride-icon2"></span>STRIDE</h3><p class="text-gray-400 mt-2">A mnemonic-based approach focused on identifying common software security threats.</p><p class="mt-3 text-sm"><strong class="text-gray-200">Best for:</strong> Developer-focused, systematic brainstorming. Great for initial analysis of applications and identifying a broad range of common vulnerabilities.</p></div>
+            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span id="pasta-icon2"></span>PASTA</h3><p class="text-gray-400 mt-2">A seven-stage, risk-centric methodology that aligns security with business objectives.</p><p class="mt-3 text-sm"><strong class="text-gray-200">Best for:</strong> Mature organizations or critical applications where aligning security effort with business impact is key. It is comprehensive but more time-intensive.</p></div>
+            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span id="vast-icon"></span>VAST</h3><p class="text-gray-400 mt-2">A methodology focused on integrating threat modeling into Agile and DevOps pipelines.</p><p class="mt-3 text-sm"><strong class="text-gray-200">Best for:</strong> Teams practicing CI/CD and DevOps. It provides actionable outputs for developers and scales across an organization.</p></div>
+            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span id="linddun-icon"></span>LINDDUN</h3><p class="text-gray-400 mt-2">A privacy-focused methodology that identifies privacy-specific threats.</p><p class="mt-3 text-sm"><strong class="text-gray-200">Best for:</strong> Applications that handle Personally Identifiable Information (PII) or need to comply with privacy regulations like GDPR or CCPA.</p></div>
+            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span id="attacktree-icon"></span>Attack Trees</h3><p class="text-gray-400 mt-2">A visual method of breaking down an attacker's goal into smaller, achievable steps.</p><p class="mt-3 text-sm"><strong class="text-gray-200">Best for:</strong> Deep-diving into specific, high-risk threats. Excellent for visualizing complex attack paths and identifying potential mitigation points.</p></div>
+            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span id="dread-icon"></span>DREAD</h3><p class="text-gray-400 mt-2">A risk-rating model used to prioritize threats (Damage, Reproducibility, Exploitability, Affected users, Discoverability).</p><p class="mt-3 text-sm"><strong class="text-gray-200">Best for:</strong> Quickly ranking and prioritizing threats found using another methodology like STRIDE. It's less of a full methodology and more of a prioritization tool.</p></div>
         </div>
     </section>
   </main>
-
-  <!-- Footer -->
+  
   <footer class="bg-gray-900 text-gray-400 text-center py-4 mt-8 rounded-t-xl shadow-inner">
     © 2025 D. Chandler Prince
   </footer>
 
   <script>
     const threatData = {
-      user: {
-        name: "User",
-        threats: [
-          { type: "Spoofing", scenario: "An attacker impersonates a legitimate user by stealing their credentials through a phishing attack.", mitigation: "Enforce Multi-Factor Authentication (MFA) and educate users about phishing risks." },
-          { type: "Repudiation", scenario: "A legitimate user denies performing an action (e.g., a large purchase), claiming their account was compromised.", mitigation: "Implement comprehensive and immutable audit logs for all sensitive user actions." }
-        ]
-      },
-      "api-gateway": {
-        name: "API Gateway",
-        threats: [
-          { type: "Denial of Service", scenario: "An attacker floods the gateway with a massive volume of requests, overwhelming it and making the service unavailable for legitimate users.", mitigation: "Implement rate limiting, throttling, and use a Web Application Firewall (WAF) like Cloud Armor or Akamai." },
-          { type: "Information Disclosure", scenario: "Overly verbose error messages from the gateway reveal internal system details that could aid an attacker.", mitigation: "Configure generic, non-descriptive error messages for production environments." },
-          { type: "Tampering", scenario: "A Man-in-the-Middle (MITM) attacker intercepts and modifies requests between the user and the gateway.", mitigation: "Enforce HTTPS/TLS across all connections to encrypt data in transit." }
-        ]
-      },
-      "auth-service": {
-        name: "Authentication Service",
-        threats: [
-          { type: "Spoofing", scenario: "An attacker bypasses authentication using stolen session tokens or JWTs.", mitigation: "Use short-lived tokens, implement secure token storage on clients, and add a token revocation mechanism." },
-          { type: "Denial of Service", scenario: "An attacker launches a credential stuffing attack, locking out legitimate user accounts due to failed login attempts.", mitigation: "Implement account lockout policies, rate limiting, and use a captcha after several failed attempts." },
-          { type: "Elevation of Privilege", scenario: "A vulnerability in the service allows a regular user to generate a token with administrative privileges.", mitigation: "Follow the principle of least privilege in token generation; conduct regular code reviews and security testing." }
-        ]
-      },
-      "product-service": {
-        name: "Product Service",
-        threats: [
-          { type: "Elevation of Privilege", scenario: "An Insecure Direct Object Reference (IDOR) vulnerability allows a user to access or modify data for a product they don't own by manipulating an ID in the URL.", mitigation: "Implement robust authorization checks on every request to ensure the user has permission to access the requested resource." },
-          { type: "Tampering", scenario: "An attacker exploits a vulnerability to change the price of a product before adding it to their cart.", mitigation: "Validate all business logic on the server-side; treat all client-side data as untrusted." }
-        ]
-      },
-      "customer-db": {
-        name: "Customer Database",
-        threats: [
-          { type: "Information Disclosure", scenario: "An attacker exploits a SQL injection vulnerability to dump the entire customer table, exposing Personally Identifiable Information (PII).", mitigation: "Use parameterized queries/prepared statements, and encrypt sensitive data columns at rest." },
-          { type: "Tampering", scenario: "An attacker gains access and alters customer records or deletes data.", mitigation: "Enforce strict, role-based access controls on the database; implement regular backups and point-in-time recovery." },
-          { type: "Denial of Service", scenario: "An attacker runs a computationally expensive query that locks up the database, preventing legitimate access.", mitigation: "Implement query timeouts, restrict database user permissions, and monitor database performance." }
-        ]
-      }
+        user: {
+            name: 'User',
+            threats: [
+                { type: 'Spoofing', scenario: 'An attacker impersonates a legitimate user by stealing their credentials through a phishing attack.', mitigation: 'Implement Multi-Factor Authentication (MFA). Educate users on phishing.' },
+                { type: 'Tampering', scenario: 'A malicious user attempts to tamper with data sent from their client, such as changing their user ID in a hidden form field.', mitigation: 'Perform all validation and authorization checks on the server-side, never trust client-side data.' },
+                { type: 'Repudiation', scenario: 'A user performs a critical action (e.g., deleting data) and later claims they never did it.', mitigation: 'Implement comprehensive audit logging for all sensitive actions, including user ID, timestamp, and IP address.' },
+            ]
+        },
+        webapp: {
+            name: 'Web App',
+            threats: [
+                { type: 'Information Disclosure', scenario: 'An error message reveals sensitive system information, such as a database schema or internal file paths.', mitigation: 'Configure the server to show generic error messages to users and log detailed errors internally.' },
+                { type: 'Denial of Service', scenario: 'An attacker floods the login endpoint with requests, overwhelming the server and preventing legitimate users from logging in.', mitigation: 'Implement rate limiting and consider a Web Application Firewall (WAF) to block malicious IPs.' },
+                { type: 'Elevation of Privilege', scenario: 'A flaw in session management allows a regular user to access administrative endpoints by guessing URLs.', mitigation: 'Enforce strict, role-based access control (RBAC) on all server-side endpoints.' },
+            ]
+        },
+        database: {
+            name: 'Database',
+            threats: [
+                { type: 'Spoofing', scenario: 'An attacker uses stolen application credentials from a configuration file to connect to the database directly.', mitigation: 'Use a secrets management system (e.g., AWS Secrets Manager, HashiCorp Vault) instead of hardcoding credentials.' },
+                { type: 'Tampering', scenario: 'A SQL Injection vulnerability allows an attacker to modify or delete records in the database.', mitigation: 'Use parameterized queries (prepared statements) for all database interactions.' },
+                { type: 'Information Disclosure', scenario: 'The database is not encrypted at rest, and an attacker who gains access to the server\'s file system can read the raw data files.', mitigation: 'Enable Transparent Data Encryption (TDE) on the database server.' },
+            ]
+        }
     };
 
-    const diagram = document.getElementById('architecture-diagram');
+    const diagram = document.getElementById('diagram');
     const threatOutput = document.getElementById('threat-output');
-    const components = diagram.querySelectorAll('.diagram-component');
 
     function displayThreats(componentId) {
-        // Remove active class from all components
-        components.forEach(c => c.classList.remove('active'));
-        
-        const activeComponent = document.getElementById(componentId);
-        if (activeComponent) {
-            activeComponent.classList.add('active');
-        }
-
         const data = threatData[componentId];
-        if (!data) {
-            threatOutput.innerHTML = `<p class="text-center py-8 text-gray-500">No threat data available for this component.</p>`;
-            return;
-        }
+        if (!data) return;
 
-        let html = `<h4 class="text-xl font-semibold text-blue-300 mb-3">Threats for: ${data.name}</h4>`;
+        let html = `<h4 class="text-lg font-semibold text-blue-300 mb-3">Threats for: ${data.name}</h4>`;
         
         data.threats.forEach(threat => {
             html += `
-                <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+                <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 mb-3">
                     <p class="font-bold text-blue-300"><span class="font-mono bg-blue-900 px-2 py-1 rounded text-sm">${threat.type[0]}</span> ${threat.type}</p>
                     <p class="mt-2 text-gray-300"><span class="font-semibold text-gray-100">Scenario:</span> ${threat.scenario}</p>
                     <p class="mt-2 text-gray-300"><span class="font-semibold text-gray-100">Mitigation:</span> ${threat.mitigation}</p>
@@ -214,21 +179,11 @@
 
     lucide.createIcons({
       icons: {
-        'nav-home': lucide.Home,
-        'nav-threat': lucide.ShieldAlert,
-        'nav-checklist': lucide.ListChecks,
-        'nav-jwt': lucide.KeyRound,
-        'nav-fp': lucide.Fingerprint,
-        'nav-epss': lucide.Activity,
-        'nav-modcat': lucide.Guitar,
-        'nav-linkedin': lucide.Linkedin,
-        'nav-github': lucide.Github
+        'nav-home': lucide.Home, 'nav-phishing': lucide.Fish, 'nav-cloud': lucide.Cloud, 'nav-sast': lucide.Code, 'nav-threat': lucide.ShieldAlert, 'nav-checklist': lucide.ListChecks, 'nav-jwt': lucide.KeyRound, 'nav-encryption': lucide.Lock, 'nav-fp': lucide.Fingerprint, 'nav-epss': lucide.Activity, 'nav-dashboard': lucide.LayoutDashboard, 'nav-modcat': lucide.Guitar,
+        'stride-icon': lucide.Target, 'pasta-icon': lucide.ClipboardList, 'compare-icon': lucide.Scaling,
+        'stride-icon2': lucide.Target, 'pasta-icon2': lucide.ClipboardList, 'vast-icon': lucide.GitMerge, 'linddun-icon': lucide.ShieldQuestion, 'attacktree-icon': lucide.GitFork, 'dread-icon': lucide.Calculator
       },
-      attrs: {
-        color: "#38bdf8",
-        size: 24,
-        strokeWidth: 2
-      }
+      attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
     });
   </script>
 </body>

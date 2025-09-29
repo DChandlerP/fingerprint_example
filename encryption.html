@@ -20,52 +20,34 @@
 <meta http-equiv="Permissions-Policy" content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">  <title>Interactive Cryptography Playground | D. Chandler Prince</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-  <!-- Crypto Libraries -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.3.2/jsencrypt.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.3.2/jsencrypt.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+
   <style>
     html { font-family: 'Inter', sans-serif; }
     ::selection { background: #2563eb; color: #fff; }
-    .prose h3 {
-        color: #60a5fa; /* text-blue-400 */
-        font-weight: 600;
-        margin-top: 1.5em;
-        margin-bottom: 0.5em;
-    }
-     .prose p, .prose li {
-        color: #d1d5db; /* text-gray-300 */
-    }
-    .prose strong {
-        color: #93c5fd; /* text-blue-300 */
-    }
-    .prose code {
-        background-color: #1f2937; /* bg-gray-800 */
-        color: #f3f4f6; /* text-gray-100 */
-        padding: 0.2em 0.4em;
-        border-radius: 0.25rem;
-    }
-    /* Style for active tab */
-    .tab-btn-active {
-        background-color: #2563eb; /* bg-blue-600 */
-        color: white;
+    .mono { font-family: 'Roboto Mono', monospace; }
+    .hash-diff {
+        color: #f87171; /* red-400 */
+        font-weight: bold;
     }
   </style>
 </head>
 <body class="bg-gray-950 text-white min-h-screen flex flex-col">
   <!-- Navigation Bar -->
-  <<nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-30">
+  <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-30">
       <div class="w-full flex items-center justify-center px-6 py-3">
          <div class="flex flex-wrap justify-center space-x-4">
           <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-home" class="mr-1"></span>Home</a>
-          <a href="phishing.html" class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition"><span id="nav-phishing" class="mr-1"></span>Phishing</a>
+          <a href="phishing.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-phishing" class="mr-1"></span>Phishing</a>
           <a href="cloud.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-cloud" class="mr-1"></span>Cloud</a>
           <a href="sast.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-sast" class="mr-1"></span>SAST</a>
           <a href="threatmodel.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-threat" class="mr-1"></span>Threat Model</a>
           <a href="checklist.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-checklist" class="mr-1"></span>Checklist</a>
           <a href="jwt.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-jwt" class="mr-1"></span>JWT Decoder</a>
-          <a href="encryption.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-encryption" class="mr-1"></span>Encryption</a>
+          <a href="encryption.html" class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition"><span id="nav-encryption" class="mr-1"></span>Encryption</a>
           <a href="fingerprint.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-fp" class="mr-1"></span>Fingerprinting</a>
           <a href="epssdemo.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-epss" class="mr-1"></span>CVSS vs EPSS</a>
           <a href="dashboard.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-dashboard" class="mr-1"></span>Threat Intel</a>
@@ -77,605 +59,356 @@
   <!-- Header -->
   <header class="bg-gradient-to-r from-blue-900 to-gray-900 py-10 px-4 text-center shadow-lg">
     <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">Interactive Cryptography Playground</h1>
-    <h2 class="text-xl md:text-2xl font-semibold text-blue-300 mb-4">Learn Modern Encryption by Doing</h2>
-    <p class="max-w-3xl mx-auto text-gray-200 text-lg md:text-xl">
-      Experiment with modern, secure cryptographic algorithms like AES and RSA. See how hashing works, and create your own digital signatures. Below the playground, you'll find a guide to ciphers of the past that are no longer secure.
+    <p class="max-w-2xl mx-auto text-gray-200 text-lg">
+      A hands-on tool to explore the fundamentals of modern and historical cryptography.
     </p>
   </header>
-
-  <main class="flex-1 px-4 py-10 max-w-5xl mx-auto space-y-12">
-
-    <!-- NEW: Interactive Playground Section -->
-    <section id="interactive-playground" class="bg-gray-900 rounded-xl shadow-lg p-6">
-        <div class="flex items-center mb-4">
-             <span id="playground-icon" class="mr-3"></span>
-            <h2 class="text-2xl font-semibold text-blue-300 m-0">Cryptography Tools</h2>
+  
+  <!-- Main Content -->
+  <main class="flex-1 px-4 py-10 max-w-7xl mx-auto w-full space-y-8">
+    
+    <!-- Playground Section -->
+    <section class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
+        <div class="flex items-center gap-4 mb-6">
+            <span id="playground-icon"></span>
+            <h2 class="text-2xl font-bold text-blue-300">Cryptography Playground</h2>
         </div>
-       
-        <!-- Tab Buttons -->
-        <div class="mb-4 flex flex-wrap space-x-1 sm:space-x-2 border-b border-gray-800">
-            <button id="tab-aes" class="tab-btn tab-btn-active flex-grow sm:flex-grow-0 flex items-center justify-center text-sm sm:text-base font-semibold py-2 px-4 rounded-t-lg transition hover:bg-gray-800"><span id="aes-tab-icon" class="mr-2"></span>AES</button>
-            <button id="tab-rsa" class="tab-btn text-blue-300 flex-grow sm:flex-grow-0 flex items-center justify-center text-sm sm:text-base font-semibold py-2 px-4 rounded-t-lg transition hover:bg-gray-800"><span id="rsa-tab-icon" class="mr-2"></span>RSA</button>
-            <button id="tab-hash" class="tab-btn text-blue-300 flex-grow sm:flex-grow-0 flex items-center justify-center text-sm sm:text-base font-semibold py-2 px-4 rounded-t-lg transition hover:bg-gray-800"><span id="hash-tab-icon" class="mr-2"></span>Hashing</button>
-            <button id="tab-sign" class="tab-btn text-blue-300 flex-grow sm:flex-grow-0 flex items-center justify-center text-sm sm:text-base font-semibold py-2 px-4 rounded-t-lg transition hover:bg-gray-800"><span id="sign-tab-icon" class="mr-2"></span>Signature</button>
+        <p class="text-gray-300 mb-4">
+            Cryptography is the practice and study of techniques for secure communication in the presence of third parties. This playground lets you interact with several key cryptographic concepts. Use the dropdown below to select a function and experiment with it.
+        </p>
+        <div class="mb-6">
+            <label for="crypto-select" class="block font-semibold text-lg text-blue-300 mb-2">Select a Cryptographic Function:</label>
+            <select id="crypto-select" class="w-full bg-gray-800 border border-gray-700 text-white rounded-md p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <option value="aes" selected>AES (Symmetric Encryption)</option>
+                <option value="rsa">RSA (Asymmetric Encryption)</option>
+                <option value="hash">Cryptographic Hashing</option>
+                <option value="sign">Digital Signatures</option>
+            </select>
         </div>
 
-        <!-- Tool Panels Container -->
-        <div class="bg-gray-800/50 p-4 sm:p-6 rounded-b-lg rounded-r-lg shadow-inner">
-            <!-- AES Tool -->
-            <div id="tool-aes" class="tool-content">
-                <h3 class="text-xl font-bold mb-4 text-blue-300">Symmetric Encryption: AES</h3>
-                <p class="text-gray-300 mb-6">AES (Advanced Encryption Standard) is a symmetric-key algorithm, meaning the same key is used for both encrypting and decrypting data. It's incredibly fast and is the global standard for encrypting bulk data, such as files on your hard drive, database contents, and network traffic (e.g., inside TLS).</p>
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="aes-input" class="block mb-2 font-semibold text-blue-300">Plaintext / Ciphertext</label>
-                        <textarea id="aes-input" rows="4" class="w-full bg-gray-900 rounded p-3 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200" placeholder="Type your message here...">The quick brown fox jumps over the lazy dog.</textarea>
-                    </div>
-                    <div>
-                        <label for="aes-key" class="block mb-2 font-semibold text-blue-300">Secret Key</label>
-                        <input type="text" id="aes-key" class="w-full bg-gray-900 rounded p-3 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200" placeholder="Enter a secret key..." value="SuperSecretKey123">
-                        <div class="flex space-x-4 mt-4">
-                             <button id="aes-encrypt-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">Encrypt</button>
-                             <button id="aes-decrypt-btn" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition">Decrypt</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-6">
-                    <label class="block mb-2 font-semibold text-blue-300">Result</label>
-                    <pre id="aes-output" class="w-full bg-gray-950 rounded p-4 text-green-300 break-all h-24 overflow-x-auto border border-gray-700"></pre>
-                </div>
+        <!-- AES Section -->
+        <div id="aes-section" class="crypto-section space-y-4">
+            <h3 class="text-xl font-semibold text-white">AES (Advanced Encryption Standard)</h3>
+            <p class="text-gray-400">AES is a symmetric encryption algorithm, meaning the same key is used for both encryption and decryption. It is the standard for encrypting data at rest and is widely used across the industry for its security and performance.</p>
+            <blockquote class="bg-gray-800 border-l-4 border-blue-400 p-4 rounded-r-lg">
+                <p class="text-gray-300 italic"><strong>Where is this used?</strong> You see AES in action when you encrypt a file on your computer (like with FileVault or BitLocker), connect to a secure Wi-Fi network (WPA2/3), or use a VPN.</p>
+            </blockquote>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2"><label for="aes-plaintext" class="font-semibold text-blue-300">Plaintext</label><textarea id="aes-plaintext" class="w-full h-32 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter text to encrypt..."></textarea></div>
+                <div class="space-y-2"><label for="aes-ciphertext" class="font-semibold text-blue-300">Ciphertext</label><textarea id="aes-ciphertext" class="w-full h-32 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter text to decrypt..."></textarea></div>
             </div>
+            <div class="flex items-end gap-4">
+                <div class="flex-grow space-y-2"><label for="aes-key" class="font-semibold text-blue-300">Secret Key</label><input type="text" id="aes-key" class="w-full bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter a secret key..."></div>
+                <button id="aes-generate-key-btn" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-md text-white font-semibold transition shadow-md flex items-center">Generate Key</button>
+            </div>
+            <div class="flex gap-4"><button id="aes-encrypt-btn" class="flex-1 px-6 py-3 bg-blue-700 hover:bg-blue-600 rounded-md text-white font-semibold transition shadow-lg">Encrypt</button><button id="aes-decrypt-btn" class="flex-1 px-6 py-3 bg-green-700 hover:bg-green-600 rounded-md text-white font-semibold transition shadow-lg">Decrypt</button></div>
+            <div class="space-y-2"><label for="aes-decryptedtext" class="font-semibold text-blue-300">Result</label><textarea id="aes-decryptedtext" class="w-full h-24 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" readonly placeholder="Result will appear here..."></textarea></div>
+        </div>
 
-            <!-- RSA Tool -->
-            <div id="tool-rsa" class="tool-content hidden">
-                <h3 class="text-xl font-bold mb-4 text-blue-300">Asymmetric Encryption: RSA</h3>
-                <p class="text-gray-300 mb-6">RSA is an asymmetric-key algorithm that uses a key pair: a public key for encryption and a private key for decryption. It's slower than AES, so it's not used for bulk data. Instead, its primary use is for secure key exchange (e.g., securely sending an AES key to someone) and for creating digital signatures.</p>
-                <button id="rsa-generate-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4 transition">Generate 2048-bit Key Pair</button>
-                <div class="grid md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block mb-2 font-semibold text-blue-300">Public Key</label>
-                        <pre id="rsa-public-key" class="w-full h-32 bg-gray-950 rounded p-2 text-xs overflow-y-scroll border border-gray-700"></pre>
-                    </div>
-                    <div>
-                        <label class="block mb-2 font-semibold text-blue-300">Private Key</label>
-                        <pre id="rsa-private-key" class="w-full h-32 bg-gray-950 rounded p-2 text-xs overflow-y-scroll border border-gray-700"></pre>
-                    </div>
-                </div>
-                <label for="rsa-input" class="block mb-2 font-semibold text-blue-300">Message</label>
-                <textarea id="rsa-input" rows="3" class="w-full bg-gray-900 rounded p-3 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200" placeholder="Message to encrypt...">This is a secret message for RSA.</textarea>
-                <div class="flex space-x-4 mt-4">
-                    <button id="rsa-encrypt-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">Encrypt with Public Key</button>
-                    <button id="rsa-decrypt-btn" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition">Decrypt with Private Key</button>
-                </div>
-                 <p class="text-sm text-gray-400 mt-2">The "Encrypt" button uses the message above. The "Decrypt" button uses the ciphertext from the result box below.</p>
-                 <label class="block mb-2 mt-4 font-semibold text-blue-300">Result</label>
-                 <pre id="rsa-output" class="w-full bg-gray-950 rounded p-4 text-green-300 break-all h-24 overflow-x-auto border border-gray-700"></pre>
+        <!-- RSA Section -->
+        <div id="rsa-section" class="crypto-section space-y-4 hidden">
+            <h3 class="text-xl font-semibold text-white">RSA (Rivest–Shamir–Adleman)</h3>
+            <p class="text-gray-400">RSA is an asymmetric algorithm that uses a pair of keys: a public key for encryption and a private key for decryption. The public key can be shared freely, while the private key must be kept secret. This allows anyone to send an encrypted message, but only the intended recipient can decrypt it.</p>
+            <blockquote class="bg-gray-800 border-l-4 border-blue-400 p-4 rounded-r-lg">
+                <p class="text-gray-300 italic"><strong>Where is this used?</strong> RSA is a cornerstone of asymmetric (public-key) cryptography. Your browser uses it to secure websites with HTTPS, establishing a secure connection by exchanging a symmetric key that's been encrypted with the server's public key.</p>
+            </blockquote>
+            <button id="rsa-generate-btn" class="w-full px-6 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-md text-white font-semibold transition shadow-lg mb-4">Generate RSA Key Pair (2048-bit)</button>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2"><label for="rsa-public-key" class="font-semibold text-blue-300">Public Key</label><textarea id="rsa-public-key" class="w-full h-48 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" readonly placeholder="Public key will appear here..."></textarea></div>
+                <div class="space-y-2"><label for="rsa-private-key" class="font-semibold text-blue-300">Private Key</label><textarea id="rsa-private-key" class="w-full h-48 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" readonly placeholder="Private key will appear here..."></textarea></div>
             </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2"><label for="rsa-plaintext" class="font-semibold text-blue-300">Plaintext</label><textarea id="rsa-plaintext" class="w-full h-32 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter text to encrypt..."></textarea></div>
+                <div class="space-y-2"><label for="rsa-ciphertext" class="font-semibold text-blue-300">Ciphertext</label><textarea id="rsa-ciphertext" class="w-full h-32 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter text to decrypt..."></textarea></div>
+            </div>
+            <div class="flex gap-4"><button id="rsa-encrypt-btn" class="flex-1 px-6 py-3 bg-blue-700 hover:bg-blue-600 rounded-md text-white font-semibold transition shadow-lg">Encrypt with Public Key</button><button id="rsa-decrypt-btn" class="flex-1 px-6 py-3 bg-green-700 hover:bg-green-600 rounded-md text-white font-semibold transition shadow-lg">Decrypt with Private Key</button></div>
+            <div class="space-y-2"><label for="rsa-result" class="font-semibold text-blue-300">Result</label><textarea id="rsa-result" class="w-full h-24 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" readonly placeholder="Result will appear here..."></textarea></div>
+        </div>
 
-            <!-- Hashing Tool -->
-            <div id="tool-hash" class="tool-content hidden">
-                 <h3 class="text-xl font-bold mb-4 text-blue-300">Hashing: SHA-256</h3>
-                 <p class="text-gray-300 mb-6">Hashing is not encryption. It's a one-way process that creates a unique, fixed-size "fingerprint" (a hash) from any amount of data. You cannot reverse a hash to get the original data. Its main uses are for password storage (storing hashes instead of passwords) and for verifying data integrity (checking if a file has been modified).</p>
-                 <label for="hash-input" class="block mb-2 font-semibold text-blue-300">Input Data (updates in real-time)</label>
-                 <textarea id="hash-input" rows="4" class="w-full bg-gray-900 rounded p-3 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200" placeholder="Type anything here...">Cryptography is fascinating!</textarea>
-                 <label class="block mb-2 mt-6 font-semibold text-blue-300">SHA-256 Hash Output</label>
-                 <pre id="hash-output" class="w-full bg-gray-950 rounded p-4 text-yellow-300 break-all border border-gray-700"></pre>
-            </div>
+        <!-- Hashing Section -->
+        <div id="hash-section" class="crypto-section space-y-6 hidden">
+             <h3 class="text-xl font-semibold text-white">Cryptographic Hashing</h3>
+            <p class="text-gray-400">A hash function is a one-way function that takes an input of any size and produces a fixed-size string of characters, which is a hash. It is computationally infeasible to reverse the process to find the original input. This is used to verify data integrity and for password storage.</p>
+            <blockquote class="bg-gray-800 border-l-4 border-blue-400 p-4 rounded-r-lg">
+                <p class="text-gray-300 italic"><strong>Where is this used?</strong> Hashing is used to verify data integrity. When you download a file, the provided checksum (like SHA-256) is a hash. You can hash the downloaded file on your end to ensure it wasn't corrupted or tampered with. It's also used to securely store passwords.</p>
+            </blockquote>
+            <div class="space-y-2"><label for="hash-input" class="font-semibold text-blue-300">Input Text</label><textarea id="hash-input" class="w-full h-24 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter text to hash..."></textarea></div>
+            <div class="flex flex-wrap gap-4"><button id="hash-md5-btn" class="flex-1 px-4 py-2 bg-red-700 hover:bg-red-600 rounded-md text-white font-semibold transition shadow-md">MD5 (Insecure)</button><button id="hash-sha1-btn" class="flex-1 px-4 py-2 bg-yellow-600 hover:bg-yellow-500 rounded-md text-white font-semibold transition shadow-md">SHA-1 (Weak)</button><button id="hash-sha256-btn" class="flex-1 px-4 py-2 bg-green-700 hover:bg-green-600 rounded-md text-white font-semibold transition shadow-md">SHA-256 (Secure)</button><button id="hash-sha512-btn" class="flex-1 px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded-md text-white font-semibold transition shadow-md">SHA-512 (Secure)</button></div>
+            <div class="space-y-2"><label for="hash-output" class="font-semibold text-blue-300">Hash Output</label><textarea id="hash-output" class="w-full h-20 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" readonly placeholder="Hash result will appear here..."></textarea></div>
+            <div class="bg-gray-800 p-4 rounded-lg border border-gray-700"><h3 class="text-lg font-semibold text-blue-300 mb-2">Avalanche Effect Visualizer (SHA-256)</h3><p class="text-sm text-gray-400 mb-4">Notice how changing a single character completely and unpredictably changes the resulting hash. This is a critical property of secure hash functions.</p><div class="space-y-4"><div><label for="avalanche-input1" class="font-semibold text-gray-300">Original Text</label><input type="text" id="avalanche-input1" class="w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" value="Hello World"><p id="avalanche-hash1" class="mono text-xs mt-1 break-all text-gray-400"></p></div><div><label for="avalanche-input2" class="font-semibold text-gray-300">Modified Text (change one character)</label><input type="text" id="avalanche-input2" class="w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" value="hello World"><p id="avalanche-hash2" class="mono text-xs mt-1 break-all"></p></div></div></div>
+        </div>
 
-            <!-- Digital Signature Tool -->
-            <div id="tool-sign" class="tool-content hidden">
-                <h3 class="text-xl font-bold mb-4 text-blue-300">Digital Signature</h3>
-                 <p class="text-gray-300 mb-6">A digital signature uses hashing and asymmetric cryptography (like RSA) to provide authenticity, integrity, and non-repudiation. By signing a message's hash with a private key, you prove you are the sender. Anyone with your public key can verify the signature, ensuring the message is authentic and hasn't been tampered with.</p>
-                <p class="text-sm text-gray-400 mb-4">Uses the RSA keys generated in the RSA tab. If you haven't generated keys, please go to the RSA tab first.</p>
-                <label for="sign-input" class="block mb-2 font-semibold text-blue-300">Message to Sign</label>
-                <textarea id="sign-input" rows="3" class="w-full bg-gray-900 rounded p-3 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200" placeholder="The message to prove ownership of...">I am the rightful owner of this key.</textarea>
-                <button id="sign-create-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-2 transition">Sign Message with Private Key</button>
-                <label class="block mb-2 mt-6 font-semibold text-blue-300">Generated Signature</label>
-                <pre id="sign-output" class="w-full h-24 bg-gray-950 rounded p-2 text-xs overflow-y-scroll break-all border border-gray-700"></pre>
-                <button id="sign-verify-btn" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mt-4 transition">Verify Signature with Public Key</button>
-                <div id="sign-verify-output" class="mt-4 p-3 rounded text-center font-bold"></div>
-            </div>
+        <!-- Digital Signature Section -->
+        <div id="sign-section" class="crypto-section space-y-4 hidden">
+            <h3 class="text-xl font-semibold text-white">Digital Signatures</h3>
+            <p class="text-gray-400">A digital signature is a mathematical scheme for verifying the authenticity of digital messages or documents. It provides a recipient with reason to believe that the message was created by a known sender (authentication), that the sender cannot deny having sent the message (non-repudiation), and that the message was not altered in transit (integrity).</p>
+            <blockquote class="bg-gray-800 border-l-4 border-blue-400 p-4 rounded-r-lg">
+                <p class="text-gray-300 italic"><strong>Where is this used?</strong> Your operating system uses digital signatures to verify that a software update is from the authentic developer (like Apple or Microsoft) and hasn't been tampered with by a malicious actor.</p>
+            </blockquote>
+            <div class="space-y-2"><label for="sign-message" class="font-semibold text-blue-300">Message to Sign</label><textarea id="sign-message" class="w-full h-32 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter a message..."></textarea></div>
+            <div class="flex gap-4"><button id="sign-btn" class="flex-1 px-6 py-3 bg-blue-700 hover:bg-blue-600 rounded-md text-white font-semibold transition shadow-lg">Sign with Private Key</button><button id="verify-btn" class="flex-1 px-6 py-3 bg-green-700 hover:bg-green-600 rounded-md text-white font-semibold transition shadow-lg">Verify with Public Key</button></div>
+            <div class="space-y-2"><label for="sign-signature" class="font-semibold text-blue-300">Generated Signature (Base64)</label><textarea id="sign-signature" class="w-full h-24 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Signature will be generated here..."></textarea></div>
+            <div id="verify-result" class="p-4 rounded-md text-center font-bold"></div>
         </div>
     </section>
 
-    <!-- Section for each encryption format -->
-    <section class="prose max-w-none">
-      <div class="bg-gray-900 rounded-xl shadow-lg p-6">
-        <div class="flex items-center mb-4">
-            <span id="des-icon" class="mr-3"></span>
-            <h2 class="text-2xl font-semibold text-blue-300 m-0">DES (Data Encryption Standard)</h2>
-        </div>
-        <p>Adopted as a federal standard in 1977, DES was a symmetric-key algorithm that became a worldwide standard. For over two decades, it was the go-to algorithm for encrypting sensitive data.</p>
-        
-        <h3>Core Weakness: Insufficient Key Size</h3>
-        <p>DES uses a <strong>56-bit key</strong>. At the time of its creation, this was considered adequate. However, Moore's Law predicted the exponential growth of computing power, and by the 1990s, a 56-bit key was within reach of a brute-force attack, where an attacker tries every possible key.</p>
-        
-        <h3>How It's Cracked</h3>
-        <ul>
-          <li><strong>Hardware:</strong> In 1998, the Electronic Frontier Foundation (EFF) built a custom machine called "Deep Crack" for under $250,000. It could decrypt a DES-encrypted message in just <strong>56 hours</strong> by testing billions of keys per second.</li>
-          <li><strong>Modern Context:</strong> Today, a similar attack could be performed much faster and cheaper. A distributed network of computers or modern GPUs could crack a DES key in hours or even minutes. Services in the cloud could be rented to perform this task for a few hundred dollars.</li>
-        </ul>
-        <p>DES was officially superseded by the Advanced Encryption Standard (AES) in 2002. Using Triple DES (3DES) was a temporary mitigation, but it is slow and also being phased out.</p>
+    <!-- Weak & Deprecated Cryptography Section -->
+    <section class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
+      <div class="flex items-center gap-4 mb-4">
+        <span id="shield-off-icon"></span>
+        <h2 class="text-2xl font-bold text-red-400">Weak & Deprecated Cryptography</h2>
+      </div>
+      <p class="text-gray-300 mb-6">
+        As technology advances, cryptographic algorithms and protocols that were once considered secure can become vulnerable. It's crucial to understand why certain methods are no longer recommended for use. Below are examples of algorithms and protocols that are now considered weak or deprecated due to known vulnerabilities.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- List of deprecated items -->
+        <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-red-300 flex items-center gap-2"><span id="des-icon"></span>DES/3DES</h3><p class="text-gray-400 text-sm">Small key size (56-bit) makes it vulnerable to brute-force attacks with modern hardware.</p></div>
+        <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-red-300 flex items-center gap-2"><span id="hash-icon"></span>MD5/SHA-1</h3><p class="text-gray-400 text-sm">Vulnerable to collision attacks, meaning different inputs can produce the same hash.</p></div>
+        <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-red-300 flex items-center gap-2"><span id="rc4-icon"></span>RC4</h3><p class="text-gray-400 text-sm">Has several biases and vulnerabilities that can be exploited to recover the key.</p></div>
+        <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-red-300 flex items-center gap-2"><span id="ssl-icon"></span>SSL v2/v3</h3><p class="text-gray-400 text-sm">Susceptible to attacks like POODLE. Superseded by the more secure TLS protocols.</p></div>
+        <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-red-300 flex items-center gap-2"><span id="wep-icon"></span>WEP</h3><p class="text-gray-400 text-sm">Contained serious design flaws that allow for key recovery in minutes.</p></div>
+        <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-red-300 flex items-center gap-2"><span id="pptp-icon"></span>PPTP</h3><p class="text-gray-400 text-sm">Known vulnerabilities in its authentication protocols make it insecure for VPNs.</p></div>
       </div>
     </section>
 
-    <section class="prose max-w-none">
-        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
-            <div class="flex items-center mb-4">
-                <span id="hash-icon" class="mr-3"></span>
-                <h2 class="text-2xl font-semibold text-blue-300 m-0">MD5 and SHA-1 (Hashing Algorithms)</h2>
-            </div>
-            <p>MD5 and SHA-1 are not encryption algorithms but cryptographic hash functions. They produce a fixed-size "fingerprint" of a given input. They were widely used for verifying file integrity and storing password hashes.</p>
-            
-            <h3>Core Weakness: Collision Attacks</h3>
-            <p>A "collision" occurs when two different inputs produce the exact same hash output. While collisions are theoretically possible in any hash function, they should be computationally infeasible to find. For MD5 and SHA-1, practical methods for finding collisions have been discovered.</p>
-            <ul>
-                <li><strong>MD5:</strong> Collisions can be generated in seconds on a standard laptop. This makes it useless for security purposes like digital signatures or SSL certificates, as a malicious file could be created with the same signature as a legitimate one.</li>
-                <li><strong>SHA-1:</strong> In 2017, researchers from Google and CWI announced the first practical SHA-1 collision, named the <strong>SHAttered attack</strong>. It required immense computational power (equivalent to 6,500 years of single-CPU computations), but it proved that the algorithm was fundamentally broken and should no longer be trusted for security.</li>
-            </ul>
-            
-            <h3>How It's Cracked</h3>
-            <ul>
-                <li><strong>Technique:</strong> Collision attacks do not "crack" a single hash to find its input. Instead, they allow an attacker to craft two different documents (e.g., a benign contract and a fraudulent one) that produce the same hash value. This undermines trust in systems that use the hash for verification.</li>
-                <li><strong>Hardware:</strong> While MD5 collisions are trivial, the SHAttered attack on SHA-1 required a massive GPU cluster. However, as computation becomes cheaper, the cost and time for such attacks will only decrease.</li>
-            </ul>
-            <p>Modern applications should use hash functions from the SHA-2 (e.g., SHA-256) or SHA-3 family.</p>
+    <!-- Future of Cryptography Section -->
+    <section class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
+        <div class="flex items-center gap-4 mb-4">
+            <span id="future-icon"></span>
+            <h2 class="text-2xl font-bold text-green-400">The Future of Cryptography</h2>
+        </div>
+        <p class="text-gray-300 mb-6">
+            The field of cryptography is constantly evolving to counter new threats, especially the rise of quantum computing, which threatens to break many of our current encryption standards.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span id="quantum-icon"></span>Post-Quantum Cryptography (PQC)</h3><p class="text-gray-400 text-sm">Developing new algorithms (like lattice-based or hash-based cryptography) that are secure against attacks from both classical and quantum computers.</p></div>
+            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span id="prng-icon"></span>Homomorphic Encryption</h3><p class="text-gray-400 text-sm">Allows computation on encrypted data without decrypting it first. This could revolutionize cloud computing privacy by allowing services to process sensitive data while it remains encrypted.</p></div>
         </div>
     </section>
-
-    <!-- ... Rest of the original sections (RC4, SSL, WEP, etc.) remain here ... -->
-     <section class="prose max-w-none">
-        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
-             <div class="flex items-center mb-4">
-                <span id="rc4-icon" class="mr-3"></span>
-                <h2 class="text-2xl font-semibold text-blue-300 m-0">RC4 (Rivest Cipher 4)</h2>
-            </div>
-            <p>RC4 is a stream cipher that was simple and fast. Because of its speed, it was used in many common protocols, including WEP for Wi-Fi security and early versions of SSL/TLS for web traffic.</p>
-            
-            <h3>Core Weakness: Keystream Biases</h3>
-            <p>A secure stream cipher should produce a pseudorandom keystream that is indistinguishable from true randomness. However, researchers discovered several statistical biases in the RC4 keystream. The first few bytes of the output are particularly non-random, and certain byte patterns appear more frequently than they should.</p>
-
-            <h3>How It's Cracked</h3>
-            <ul>
-                <li><strong>Technique:</strong> Attackers can capture a large amount of ciphertext generated with the same key. By analyzing this data, they can exploit the statistical biases to deduce the original plaintext. This is a form of cryptanalysis, not brute force.</li>
-                <li><strong>Application - WEP:</strong> The WEP protocol made this attack devastatingly effective. It reused keys and concatenated a small, predictable initialization vector (IV) with the key. This allowed attackers to gather the necessary data to crack the WEP key in minutes using readily available software like Aircrack-ng.</li>
-                 <li><strong>Application - TLS:</strong> The BEAST and POODLE attacks against SSL/TLS also leveraged weaknesses in how protocols used ciphers, but RC4's own biases made it a poor choice, leading to its deprecation in modern TLS configurations.</li>
-            </ul>
-            <p>RC4 has been prohibited for use in TLS by the IETF since 2015. Secure alternatives include modern ciphers like AES (in GCM or CBC mode) and ChaCha20.</p>
-        </div>
-    </section>
-    
-    <section class="prose max-w-none">
-        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
-             <div class="flex items-center mb-4">
-                <span id="ssl-icon" class="mr-3"></span>
-                <h2 class="text-2xl font-semibold text-blue-300 m-0">SSL v2 & v3 (Secure Sockets Layer)</h2>
-            </div>
-            <p>As the precursors to the modern TLS (Transport Layer Security) protocol, SSL v2 and v3 were foundational in securing early internet traffic. However, they are plagued by fundamental design flaws.</p>
-            
-            <h3>Core Weakness: Downgrade Attacks & Weak Ciphers</h3>
-            <p>SSLv3's most famous vulnerability is the <strong>POODLE attack</strong> (Padding Oracle On Downgraded Legacy Encryption). An attacker can force a browser and server to "downgrade" their connection from the more secure TLS to the vulnerable SSLv3.</p>
-
-            <h3>How It's Cracked</h3>
-            <ul>
-                <li><strong>Technique (POODLE):</strong> This is a man-in-the-middle attack. Once the connection is downgraded, the attacker exploits a weakness in how CBC-mode ciphers handle padding. By manipulating ciphertext blocks, they can trick the server into revealing one byte of the encrypted secret (like a session cookie) at a time. While slow, it's very effective for session hijacking.</li>
-                 <li><strong>Mitigation:</strong> The only real defense is to completely disable SSLv2 and SSLv3 on both servers and clients. All modern web browsers and servers have done so, but legacy systems may still be at risk.</li>
-            </ul>
-            <p>Any system still using SSL is dangerously insecure. The minimum standard for secure web traffic today is TLS 1.2, with TLS 1.3 being the recommended version.</p>
-        </div>
-    </section>
-    
-    <section class="prose max-w-none">
-        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
-             <div class="flex items-center mb-4">
-                <span id="wep-icon" class="mr-3"></span>
-                <h2 class="text-2xl font-semibold text-blue-300 m-0">WEP (Wired Equivalent Privacy)</h2>
-            </div>
-            <p>Introduced in 1999, WEP was the first security protocol for Wi-Fi networks. Its goal was to provide confidentiality equivalent to a wired network, but a series of catastrophic flaws made it trivial to break.</p>
-            
-            <h3>Core Weakness: Flawed Implementation of RC4</h3>
-            <p>WEP's downfall was not just its use of RC4, but how it used it. It combined a static secret key with a short, 24-bit <strong>Initialization Vector (IV)</strong>. This IV is sent in plaintext with each packet.</p>
-            <ul>
-                <li><strong>IV Reuse:</strong> A 24-bit IV space is tiny (about 16.7 million possibilities). On a busy network, IVs are guaranteed to be reused quickly.</li>
-                <li><strong>Related-Key Attacks:</strong> Reusing IVs with the same key creates a related-key attack scenario against RC4, allowing an attacker to discover the secret key.</li>
-            </ul>
-            <h3>How It's Cracked</h3>
-            <ul>
-                <li><strong>Technique:</strong> An attacker simply listens to network traffic and collects packets. Tools like Aircrack-ng analyze these packets, specifically looking for "weak" IVs that leak information about the key. After collecting enough packets (sometimes only a few thousand), the tool can deduce the WEP key with near certainty.</li>
-                <li><strong>Hardware:</strong> A standard laptop with a compatible wireless card is all that is required. The attack can be performed in minutes.</li>
-            </ul>
-            <p>WEP was replaced by WPA and later WPA2/WPA3, which use much stronger cryptographic principles. No modern network should ever use WEP.</p>
-        </div>
-    </section>
-    
-    <section class="prose max-w-none">
-        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
-             <div class="flex items-center mb-4">
-                <span id="pptp-icon" class="mr-3"></span>
-                <h2 class="text-2xl font-semibold text-blue-300 m-0">PPTP (Point-to-Point Tunneling Protocol)</h2>
-            </div>
-            <p>PPTP is one of the oldest VPN protocols, created by Microsoft and valued for its speed and simplicity. However, its underlying security mechanisms are fundamentally broken by modern standards.</p>
-            
-            <h3>Core Weakness: Weak Authentication (MS-CHAPv2)</h3>
-            <p>PPTP's primary vulnerability lies in its reliance on the MS-CHAPv2 protocol for authentication. This protocol has several critical flaws:</p>
-            <ul>
-                <li>It uses the broken DES algorithm to encrypt password hashes.</li>
-                <li>The challenge-response mechanism allows an attacker who captures a single handshake to mount an offline brute-force attack against the user's password.</li>
-            </ul>
-            <h3>How It's Cracked</h3>
-            <ul>
-                <li><strong>Technique:</strong> An attacker captures the MS-CHAPv2 handshake between the client and the PPTP server. The captured data can then be fed into tools that brute-force the password hash. Due to the weaknesses in MS-CHAPv2, this process is highly efficient. Online services can often crack these hashes in under a day.</li>
-                <li><strong>Encryption:</strong> Even if the password is strong, the MPPE encryption used by PPTP is based on RC4 and is vulnerable to bit-flipping attacks, allowing a man-in-the-middle to potentially alter the data in transit.</li>
-            </ul>
-            <p>PPTP should be considered completely insecure. Modern VPN solutions should use protocols like OpenVPN or IKEv2/IPsec.</p>
-        </div>
-    </section>
-
-    <section class="prose max-w-none">
-        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
-             <div class="flex items-center mb-4">
-                <span id="lanman-icon" class="mr-3"></span>
-                <h2 class="text-2xl font-semibold text-blue-300 m-0">LANMAN (LM Hash)</h2>
-            </div>
-            <p>The LAN Manager hash was the original password hashing scheme used in Microsoft Windows before NTLM. Its design contained several critical flaws that make it trivial to crack by modern standards.</p>
-            
-            <h3>Core Weakness: Horrendous Design Choices</h3>
-            <p>The LM hash algorithm is a textbook example of how not to design a password storage scheme:</p>
-            <ul>
-                <li><strong>Case Insensitivity:</strong> Before hashing, the password is converted to all uppercase. This drastically reduces the character set and, therefore, the complexity.</li>
-                <li><strong>Password Splitting:</strong> The password is split into two 7-character chunks. If the password is shorter than 14 characters, it is padded with nulls.</li>
-                <li><strong>No Salt:</strong> The same password always results in the same hash, making it highly susceptible to pre-computed tables (rainbow tables).</li>
-                <li><strong>Use of DES:</strong> Each 7-character chunk is used as a DES key to encrypt a constant string. Since each half is handled independently, an attacker can crack each part of the password separately.</li>
-            </ul>
-            <h3>How It's Cracked</h3>
-            <ul>
-                <li><strong>Technique:</strong> Due to the weaknesses above, cracking LM hashes is extremely fast. An attacker doesn't need to attack the full password space. They attack two separate, case-insensitive, 7-character password spaces. Rainbow tables for every possible LM hash have been publicly available for years.</li>
-                <li><strong>Hardware:</strong> A standard modern computer can crack any LM hash in seconds or minutes.</li>
-            </ul>
-            <p>While long deprecated, LM hashes may still exist in legacy systems or old domain controller backups. Modern Windows systems use the much stronger NTLMv2 or Kerberos protocols.</p>
-        </div>
-    </section>
-
-    <section class="prose max-w-none">
-        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
-             <div class="flex items-center mb-4">
-                <span id="wpatkip-icon" class="mr-3"></span>
-                <h2 class="text-2xl font-semibold text-blue-300 m-0">WPA with TKIP</h2>
-            </div>
-            <p>Wi-Fi Protected Access (WPA) and its Temporal Key Integrity Protocol (TKIP) were designed as an interim replacement for WEP that could run on the same hardware. While a significant improvement, it was always meant to be a temporary solution.</p>
-            
-            <h3>Core Weakness: Lingering DNA from WEP</h3>
-            <p>TKIP was designed to be similar enough to WEP to work on legacy hardware. As a result, it still uses the RC4 stream cipher. While TKIP added important security features like per-packet key mixing and a message integrity check (MIC), it couldn't fully escape the underlying weaknesses of RC4.</p>
-            
-            <h3>How It's Cracked</h3>
-            <ul>
-                <li><strong>Technique:</strong> While not as simple as cracking WEP, attacks against TKIP do exist. They are more complex and often focus on the Message Integrity Check (MIC) portion of the protocol. An attacker can perform a man-in-the-middle attack, capture a packet, modify it, and replay it. If successful, they can recover small amounts of data. The "Tew-Weinmann-Pyshkin" attack is a well-known example that can decrypt short packets like ARP requests.</li>
-                <li><strong>Practicality:</strong> These attacks are much slower and less reliable than WEP attacks, but they prove the protocol is not secure against a determined attacker.</li>
-            </ul>
-            <p>The Wi-Fi Alliance has deprecated WPA-TKIP. The modern standard is WPA2 or WPA3, both of which mandate the use of the much stronger AES-CCMP encryption scheme.</p>
-        </div>
-    </section>
-
-    <section class="prose max-w-none">
-        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
-             <div class="flex items-center mb-4">
-                <span id="export-icon" class="mr-3"></span>
-                <h2 class="text-2xl font-semibold text-blue-300 m-0">Export-Grade Cryptography</h2>
-            </div>
-            <p>This is not a single algorithm, but a class of intentionally weakened cryptographic protocols mandated by U.S. export regulations during the 1990s. The goal was to ensure U.S. intelligence could decrypt foreign communications while still allowing U.S. companies to export software with "crypto" features.</p>
-            
-            <h3>Core Weakness: Severely Restricted Key Sizes</h3>
-            <p>Export-grade crypto was typically limited to dangerously small key sizes:</p>
-            <ul>
-                <li><strong>Symmetric Ciphers (like RC4/DES):</strong> Limited to <strong>40-bit keys</strong>.</li>
-                <li><strong>Asymmetric Ciphers (like RSA/Diffie-Hellman):</strong> Limited to <strong>512-bit keys</strong> for key exchange.</li>
-            </ul>
-            <p>These key sizes were known to be weak even at the time but were considered sufficient for commercial use while being breakable by a nation-state actor.</p>
-            
-            <h3>How It's Cracked</h3>
-            <ul>
-                <li><strong>Hardware (Brute Force):</strong> A 40-bit symmetric key has only about 1 trillion possibilities, which is trivial to brute-force with modern hardware. A 512-bit RSA/DH key is vulnerable to factorization or discrete logarithm attacks using algorithms like the Number Field Sieve. In the late 90s, this was achievable by academic teams; today it can be done by individuals with cloud computing resources.</li>
-                <li><strong>FREAK and Logjam Attacks:</strong> In 2015, researchers discovered that many modern servers were still configured to support these legacy export-grade cipher suites. Attackers could mount a man-in-the-middle downgrade attack, forcing a connection to use this weak crypto, crack the key in real-time, and intercept the "secure" traffic.</li>
-            </ul>
-            <p>U.S. export laws on cryptography were largely liberalized in the late 1990s, but the legacy of these weak protocols lingered for years, posing a significant security risk until actively purged from modern software.</p>
-        </div>
-    </section>
-
-    <section class="prose max-w-none">
-        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
-             <div class="flex items-center mb-4">
-                <span id="ciphermode-icon" class="mr-3"></span>
-                <h2 class="text-2xl font-semibold text-blue-300 m-0">Insecure Block Cipher Modes of Operation</h2>
-            </div>
-            <p>A block cipher like AES encrypts data in fixed-size chunks (e.g., 128 bits). A "mode of operation" is the recipe used to encrypt messages that are longer than a single block. The choice of mode is just as important as the cipher itself, and using the wrong one can completely undermine security.</p>
-            
-            <h3>Core Weakness: Determinism in ECB Mode</h3>
-            <p>The most notoriously insecure mode is <strong>Electronic Codebook (ECB)</strong>. Its fatal flaw is that it's deterministic: for a given key, the same plaintext block will always encrypt to the exact same ciphertext block. This means patterns in the plaintext are preserved in the ciphertext.</p>
-            <p>The classic example is encrypting an image. An image with large areas of solid color will have many identical blocks. When encrypted with ECB, those identical plaintext blocks become identical ciphertext blocks, and the outline of the original image remains clearly visible.</p>
-
-            <h3>How It's Exploited</h3>
-            <ul>
-                <li><strong>Technique:</strong> This is a failure of confidentiality, not a key-cracking attack. An attacker doesn't need the key to gain valuable information. By analyzing the ciphertext for repeated blocks, they can learn about the structure of the underlying data. For example, they could identify where a session cookie starts and ends in an encrypted stream, or see if a sensitive command is being repeated.</li>
-                 <li><strong>Other Modes:</strong> While modes like Cipher Block Chaining (CBC) are a vast improvement by linking blocks together, they too can be vulnerable to implementation flaws, such as padding oracle attacks (exploited by POODLE) if not implemented carefully with a message authentication code.</li>
-            </ul>
-            <p>Modern cryptography has moved towards <strong>Authenticated Encryption with Associated Data (AEAD)</strong> modes like <strong>GCM (Galois/Counter Mode)</strong> and <strong>ChaCha20-Poly1305</strong>. These modes not only provide confidentiality but also integrity and authenticity, preventing both eavesdropping and tampering.</p>
-        </div>
-    </section>
-
-    <section class="prose max-w-none">
-        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
-             <div class="flex items-center mb-4">
-                <span id="prng-icon" class="mr-3"></span>
-                <h2 class="text-2xl font-semibold text-blue-300 m-0">Weak Pseudorandom Number Generators (PRNGs)</h2>
-            </div>
-            <p>Cryptography depends on a source of unpredictable numbers for everything from generating secret keys to creating nonces and initialization vectors. Using a poor source of randomness can lead to a total collapse of the security system, even if the algorithms themselves are strong.</p>
-            
-            <h3>Core Weakness: Predictability</h3>
-            <p>The critical distinction is between a standard PRNG and a Cryptographically Secure PRNG (CSPRNG). Standard PRNGs (like <code>Math.random()</code> in JavaScript or simple linear congruential generators) are designed for statistical randomness and speed, not unpredictability. If an attacker can learn the internal state of the generator, they can often predict all future—and past—outputs.</p>
-            
-            <h3>How It's Exploited</h3>
-            <ul>
-                <li><strong>Poor Seeding (Netscape SSL):</strong> In an early version of Netscape's browser, the SSL implementation seeded its random number generator with a combination of the current time and the process ID. Both of these values are predictable or easily guessable, allowing researchers to determine the SSL session key and decrypt traffic.</li>
-                <li><strong>Reduced Entropy (Debian OpenSSL Bug):</strong> From 2006 to 2008, a bug in the Debian distribution of OpenSSL severely limited the amount of entropy used to seed its PRNG. This meant that on affected systems, only a tiny fraction of the possible SSH keys, SSL certificates, and other cryptographic material could ever be generated. Attackers could simply pre-compute all possible keys and use them to compromise any server running the vulnerable software.</li>
-            </ul>
-            <p>Secure systems must use a dedicated CSPRNG. These are designed to be unpredictable and are continuously fed with entropy (unpredictable data) from the operating system, such as mouse movements, keyboard timings, and hardware interrupts. Examples include <code>/dev/urandom</code> on Linux/macOS and the <code>crypto.getRandomValues()</code> API in web browsers.</p>
-        </div>
-    </section>
-
-    <section class="prose max-w-none">
-        <div class="bg-gray-900 rounded-xl shadow-lg p-6">
-             <div class="flex items-center mb-4">
-                <span id="quantum-icon" class="mr-3"></span>
-                <h2 class="text-2xl font-semibold text-blue-300 m-0">The Future Threat: Post-Quantum Cryptography</h2>
-            </div>
-            <p>The ciphers discussed so far were broken by clever mathematics and advancing classical computers. The next cryptographic rupture won't be an evolution, but a revolution. Quantum computers, though still in development, operate on principles that could render much of our current cryptographic infrastructure obsolete.</p>
-            
-            <h3>Why Quantum Computing Changes Everything</h3>
-            <p>Most of modern public-key cryptography, which underpins secure web browsing (TLS), digital signatures, and cryptocurrencies, relies on mathematical problems that are impossibly hard for classical computers to solve. These include factoring huge numbers (RSA) or solving the discrete logarithm problem on elliptic curves (ECC). However, a sufficiently powerful quantum computer running <strong>Shor's Algorithm</strong> could solve these problems with shocking speed, effectively breaking the foundation of our secure communications.</p>
-            <p>Symmetric encryption like AES is also affected, but less dramatically. <strong>Grover's Algorithm</strong> allows a quantum computer to search an unsorted database quadratically faster than a classical computer. This means it could brute-force a symmetric key faster. To counter this, the solution is simply to use larger key sizes (e.g., moving from AES-128 to AES-256), which is a manageable upgrade.</p>
-
-            <h3>The "Harvest Now, Decrypt Later" Concern</h3>
-            <p>The primary reason governments are acting with urgency is the <strong>"Harvest Now, Decrypt Later"</strong> (HNDL) attack. Adversaries, particularly nation-states, are believed to be capturing and storing massive amounts of encrypted data today. This data—containing government secrets, intellectual property, and private communications—is currently safe. However, the fear is that once a powerful quantum computer is built, this trove of historical data can be decrypted. Secrets that need to remain secret for 50 years could be exposed in 10.</p>
-            
-            <h3>The Race to a Quantum-Resistant Future</h3>
-            <p>Recognizing this threat, governments and academic institutions are in a race to standardize and deploy <strong>Post-Quantum Cryptography (PQC)</strong>—new algorithms designed to be secure against both classical and quantum computers. The U.S. National Institute of Standards and Technology (NIST) is leading a global effort to select and standardize a new suite of PQC algorithms, including <strong>CRYSTALS-Kyber</strong> and <strong>CRYSTALS-Dilithium</strong>. In response, governments are setting deadlines for migration; the U.S. has mandated its federal agencies migrate critical systems by 2035, while other nations like Australia are pursuing similar or even more accelerated timelines, with some targets as early as 2030.</p>
-            <p>This global migration is a proactive and necessary step to secure digital infrastructure against the next generation of computational threats.</p>
-        </div>
-    </section>
-
   </main>
-
-  <!-- Footer -->
+  
   <footer class="bg-gray-900 text-gray-400 text-center py-4 mt-8 rounded-t-xl shadow-inner">
     © 2025 D. Chandler Prince
   </footer>
 
-  <!-- Interactive Playground Logic -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- DOM Elements ---
-        const tabs = document.querySelectorAll('.tab-btn');
-        const toolContents = document.querySelectorAll('.tool-content');
+      // --- Element Selectors ---
+      const getEl = (id) => document.getElementById(id);
+      
+      const cryptoSelect = getEl('crypto-select');
+      const cryptoSections = document.querySelectorAll('.crypto-section');
+      
+      // AES Elements
+      const aesPlaintext = getEl('aes-plaintext');
+      const aesCiphertext = getEl('aes-ciphertext');
+      const aesKey = getEl('aes-key');
+      const aesEncryptBtn = getEl('aes-encrypt-btn');
+      const aesDecryptBtn = getEl('aes-decrypt-btn');
+      const aesDecryptedtext = getEl('aes-decryptedtext');
+      const aesGenerateKeyBtn = getEl('aes-generate-key-btn');
 
-        const aesInput = document.getElementById('aes-input');
-        const aesKey = document.getElementById('aes-key');
-        const aesEncryptBtn = document.getElementById('aes-encrypt-btn');
-        const aesDecryptBtn = document.getElementById('aes-decrypt-btn');
-        const aesOutput = document.getElementById('aes-output');
+      // RSA Elements
+      const rsaGenerateBtn = getEl('rsa-generate-btn');
+      const rsaPublicKey = getEl('rsa-public-key');
+      const rsaPrivateKey = getEl('rsa-private-key');
+      const rsaPlaintext = getEl('rsa-plaintext');
+      const rsaCiphertext = getEl('rsa-ciphertext');
+      const rsaEncryptBtn = getEl('rsa-encrypt-btn');
+      const rsaDecryptBtn = getEl('rsa-decrypt-btn');
+      const rsaResult = getEl('rsa-result');
+      
+      // Hashing Elements
+      const hashInput = getEl('hash-input');
+      const hashOutput = getEl('hash-output');
+      const hashMd5Btn = getEl('hash-md5-btn');
+      const hashSha1Btn = getEl('hash-sha1-btn');
+      const hashSha256Btn = getEl('hash-sha256-btn');
+      const hashSha512Btn = getEl('hash-sha512-btn');
+      
+      // Avalanche Elements
+      const avalancheInput1 = getEl('avalanche-input1');
+      const avalancheHash1 = getEl('avalanche-hash1');
+      const avalancheInput2 = getEl('avalanche-input2');
+      const avalancheHash2 = getEl('avalanche-hash2');
 
-        const rsaGenerateBtn = document.getElementById('rsa-generate-btn');
-        const rsaPublicKeyEl = document.getElementById('rsa-public-key');
-        const rsaPrivateKeyEl = document.getElementById('rsa-private-key');
-        const rsaInput = document.getElementById('rsa-input');
-        const rsaEncryptBtn = document.getElementById('rsa-encrypt-btn');
-        const rsaDecryptBtn = document.getElementById('rsa-decrypt-btn');
-        const rsaOutput = document.getElementById('rsa-output');
+      // Digital Signature Elements
+      const signMessage = getEl('sign-message');
+      const signSignature = getEl('sign-signature');
+      const signBtn = getEl('sign-btn');
+      const verifyBtn = getEl('verify-btn');
+      const verifyResult = getEl('verify-result');
 
-        const hashInput = document.getElementById('hash-input');
-        const hashOutput = document.getElementById('hash-output');
-
-        const signInput = document.getElementById('sign-input');
-        const signCreateBtn = document.getElementById('sign-create-btn');
-        const signOutput = document.getElementById('sign-output');
-        const signVerifyBtn = document.getElementById('sign-verify-btn');
-        const signVerifyOutput = document.getElementById('sign-verify-output');
-
-        // --- State ---
-        let rsaKey = null;
-
-        // --- Tab Navigation ---
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                // Update button styles
-                tabs.forEach(t => {
-                    t.classList.remove('tab-btn-active');
-                    t.classList.add('text-blue-300');
-                });
-                tab.classList.add('tab-btn-active');
-                tab.classList.remove('text-blue-300');
-
-                // Show correct content
-                const targetId = tab.id.replace('tab-', 'tool-');
-                toolContents.forEach(content => {
-                    if (content.id === targetId) {
-                        content.classList.remove('hidden');
-                    } else {
-                        content.classList.add('hidden');
-                    }
-                });
-            });
-        });
-
-        // --- AES Logic ---
-        const handleAesEncrypt = () => {
-             try {
-                if (!aesInput.value || !aesKey.value) {
-                    aesOutput.textContent = 'Please provide both a message and a secret key.';
-                    return;
-                }
-                const encrypted = CryptoJS.AES.encrypt(aesInput.value, aesKey.value).toString();
-                aesOutput.textContent = encrypted;
-            } catch (e) {
-                aesOutput.textContent = `Error: ${e.message}`;
-            }
-        };
-        
-        aesEncryptBtn.addEventListener('click', handleAesEncrypt);
-
-        aesDecryptBtn.addEventListener('click', () => {
-            try {
-                 if (!aesInput.value || !aesKey.value) {
-                    aesOutput.textContent = 'Please provide both ciphertext and a secret key.';
-                    return;
-                }
-                const bytes = CryptoJS.AES.decrypt(aesInput.value, aesKey.value);
-                const originalText = bytes.toString(CryptoJS.enc.Utf8);
-                 if (originalText) {
-                    aesOutput.textContent = originalText;
-                } else {
-                    aesOutput.textContent = "Decryption failed. Check key or ciphertext.";
-                }
-            } catch (e) {
-                aesOutput.textContent = `Error: ${e.message}`;
-            }
-        });
-
-        // --- Hashing Logic ---
-        const updateHash = () => {
-            hashOutput.textContent = CryptoJS.SHA256(hashInput.value).toString();
-        }
-        hashInput.addEventListener('input', updateHash);
-        
-        // --- RSA Logic ---
-        rsaGenerateBtn.addEventListener('click', () => {
-            rsaGenerateBtn.textContent = 'Generating...';
-            rsaGenerateBtn.disabled = true;
-            setTimeout(() => {
-                rsaKey = new JSEncrypt({ default_key_size: 2048 });
-                rsaPublicKeyEl.textContent = rsaKey.getPublicKey();
-                rsaPrivateKeyEl.textContent = rsaKey.getPrivateKey();
-                rsaGenerateBtn.textContent = 'Generate 2048-bit Key Pair';
-                rsaGenerateBtn.disabled = false;
-            }, 50);
-        });
-
-        rsaEncryptBtn.addEventListener('click', () => {
-            if (!rsaKey) {
-                rsaOutput.textContent = 'Please generate an RSA key pair first.';
-                return;
-            }
-            const encrypted = rsaKey.encrypt(rsaInput.value);
-            rsaOutput.textContent = encrypted || 'Encryption failed. Message may be too long for RSA.';
-            // Visual cue for ciphertext
-            rsaOutput.classList.remove('text-green-300');
-            rsaOutput.classList.add('text-yellow-300');
-        });
-
-        rsaDecryptBtn.addEventListener('click', () => {
-            if (!rsaKey) {
-                rsaOutput.textContent = 'Please generate an RSA key pair first.';
-                return;
-            }
-            const decrypt = new JSEncrypt();
-            decrypt.setPrivateKey(rsaPrivateKeyEl.textContent);
-            // FIX: Decrypt from the output box, not the input box
-            const decrypted = decrypt.decrypt(rsaOutput.textContent);
-            rsaOutput.textContent = decrypted || 'Decryption failed. Check the private key or ciphertext.';
-             // Visual cue for plaintext
-            rsaOutput.classList.remove('text-yellow-300');
-            rsaOutput.classList.add('text-green-300');
-        });
-        
-        // --- Digital Signature Logic ---
-        signCreateBtn.addEventListener('click', () => {
-            if (!rsaKey) {
-                signOutput.textContent = 'Please generate an RSA key pair on the RSA tab first.';
-                return;
-            }
-            const signature = rsaKey.sign(signInput.value, CryptoJS.SHA256, "sha256");
-            signOutput.textContent = signature || "Signing failed.";
-        });
-        
-        signVerifyBtn.addEventListener('click', () => {
-            if (!rsaKey) {
-                signVerifyOutput.textContent = 'Please generate RSA keys first.';
-                signVerifyOutput.className = 'mt-4 p-3 rounded text-center font-bold bg-yellow-800 text-yellow-200';
-                return;
-            }
-            
-            const verify = new JSEncrypt();
-            verify.setPublicKey(rsaPublicKeyEl.textContent);
-            const isValid = verify.verify(signInput.value, signOutput.textContent, CryptoJS.SHA256);
-            
-            if (isValid) {
-                signVerifyOutput.textContent = '✅ Signature is Valid';
-                signVerifyOutput.className = 'mt-4 p-3 rounded text-center font-bold bg-green-800 text-green-200';
+      // --- Section Switching Logic ---
+      cryptoSelect.addEventListener('change', (e) => {
+        const selectedValue = e.target.value;
+        cryptoSections.forEach(section => {
+            if (section.id === `${selectedValue}-section`) {
+                section.classList.remove('hidden');
             } else {
-                signVerifyOutput.textContent = '❌ Signature is Invalid';
-                signVerifyOutput.className = 'mt-4 p-3 rounded text-center font-bold bg-red-800 text-red-200';
+                section.classList.add('hidden');
             }
         });
-        
-        // --- Initial Run ---
-        const initializePlayground = () => {
-            handleAesEncrypt();
-            updateHash();
-        };
-        
-        initializePlayground();
-    });
-  </script>
+      });
 
-  <!-- Lucide Icons Setup -->
-  <script>
-    lucide.createIcons({
-      icons: {
-        'nav-home': lucide.Home,
-        'nav-cloud': lucide.Cloud,
-        'nav-sast': lucide.FileSearch,
-        'nav-threat': lucide.ShieldAlert,
-        'nav-checklist': lucide.ListChecks,
-        'nav-jwt': lucide.KeyRound,
-        'nav-encryption': lucide.Lock,
-        'nav-fp': lucide.Fingerprint,
-        'nav-epss': lucide.Activity,
-        'nav-dashboard': lucide.LayoutDashboard,
-        'nav-modcat': lucide.Guitar,
-        'des-icon': lucide.Key,
-        'hash-icon': lucide.Hash,
-        'rc4-icon': lucide.Waves,
-        'ssl-icon': lucide.ShieldOff,
-        'wep-icon': lucide.WifiOff,
-        'pptp-icon': lucide.RouteOff,
-        'lanman-icon': lucide.CaseSensitive,
-        'wpatkip-icon': lucide.ShieldQuestion,
-        'export-icon': lucide.Unplug,
-        'ciphermode-icon': lucide.Blocks,
-        'prng-icon': lucide.Dices,
-        'quantum-icon': lucide.BrainCircuit,
-        'playground-icon': lucide.FlaskConical,
-        // Tab Icons
-        'aes-tab-icon': lucide.Lock,
-        'rsa-tab-icon': lucide.KeyRound,
-        'hash-tab-icon': lucide.Hash,
-        'sign-tab-icon': lucide.PenSquare
-      },
-      attrs: {
-        color: "#38bdf8",
-        size: 24,
-        strokeWidth: 2
-      }
-    });
-    // Adjust tab icon size
-    const tabIcons = document.querySelectorAll('#interactive-playground .lucide');
-    tabIcons.forEach(icon => {
-        if(icon.parentElement.classList.contains('tab-btn')) {
-            icon.setAttribute('width', '20');
-            icon.setAttribute('height', '20');
+      // --- AES Functions ---
+      const aesEncrypt = (text, key) => {
+        try {
+          const salt = CryptoJS.lib.WordArray.random(128 / 8);
+          const key256 = CryptoJS.PBKDF2(key, salt, { keySize: 256 / 32, iterations: 1000 });
+          const iv = CryptoJS.lib.WordArray.random(128 / 8);
+          const encrypted = CryptoJS.AES.encrypt(text, key256, { iv: iv, padding: CryptoJS.pad.Pkcs7, mode: CryptoJS.mode.CBC });
+          return salt.toString() + "::" + iv.toString() + "::" + encrypted.toString();
+        } catch (e) {
+          console.error("AES Encryption Error:", e);
+          return "Encryption failed.";
         }
-    });
+      };
 
+      const aesDecrypt = (transitmessage, key) => {
+        try {
+          const parts = transitmessage.split('::');
+          if (parts.length !== 3) return "Decryption Failed: Invalid format.";
+          const salt = CryptoJS.enc.Hex.parse(parts[0]);
+          const iv = CryptoJS.enc.Hex.parse(parts[1]);
+          const ciphertext = parts[2];
+          const key256 = CryptoJS.PBKDF2(key, salt, { keySize: 256 / 32, iterations: 1000 });
+          const decrypted = CryptoJS.AES.decrypt(ciphertext, key256, { iv: iv, padding: CryptoJS.pad.Pkcs7, mode: CryptoJS.mode.CBC });
+          const decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
+          return decryptedText || 'Decryption Failed. Please check your key.';
+        } catch (e) {
+          console.error("AES Decryption Error:", e);
+          return "Decryption failed. Ensure format is correct.";
+        }
+      };
+
+      const generateAesKey = () => {
+        const rawKey = CryptoJS.lib.WordArray.random(256 / 8);
+        return CryptoJS.enc.Hex.stringify(rawKey);
+      }
+
+      // --- RSA Functions ---
+      const rsaGenerateKeys = () => {
+        const crypt = new JSEncrypt({ default_key_size: 2048 });
+        rsaPublicKey.value = crypt.getPublicKey();
+        rsaPrivateKey.value = crypt.getPrivateKey();
+      };
+      
+      const rsaEncrypt = (text, publicKey) => {
+        if (!publicKey) return "Please generate a key pair first.";
+        const crypt = new JSEncrypt();
+        crypt.setPublicKey(publicKey);
+        const encrypted = crypt.encrypt(text);
+        return encrypted || "Encryption failed. Message may be too long for RSA key size.";
+      };
+      
+      const rsaDecrypt = (ciphertext, privateKey) => {
+        if (!privateKey) return "Please generate a key pair first.";
+        const crypt = new JSEncrypt();
+        crypt.setPrivateKey(privateKey);
+        const decrypted = crypt.decrypt(ciphertext);
+        return decrypted || "Decryption failed. Check ciphertext and private key.";
+      };
+
+      // --- Hashing Functions ---
+      const hash = (text, algo) => {
+        return algo(text).toString();
+      };
+      
+      // --- Avalanche Effect Logic ---
+      const updateAvalanche = () => {
+        const text1 = avalancheInput1.value;
+        const text2 = avalancheInput2.value;
+        const hash1 = CryptoJS.SHA256(text1).toString();
+        const hash2 = CryptoJS.SHA256(text2).toString();
+        
+        avalancheHash1.textContent = hash1;
+        
+        let diffHtml = '';
+        for (let i = 0; i < hash2.length; i++) {
+            if (i >= hash1.length || hash1[i] !== hash2[i]) {
+                diffHtml += `<span class="hash-diff">${hash2[i]}</span>`;
+            } else {
+                diffHtml += hash2[i];
+            }
+        }
+        avalancheHash2.innerHTML = diffHtml;
+      };
+
+      // --- Digital Signature Functions ---
+      const signMessageFunc = (message, privateKey) => {
+        if (!privateKey) {
+            alert("Please generate an RSA key pair in the RSA tab first.");
+            return "";
+        }
+        const crypt = new JSEncrypt();
+        crypt.setPrivateKey(privateKey);
+        const signature = crypt.sign(message, CryptoJS.SHA256, "sha256");
+        return signature || "Signing failed.";
+      };
+      
+      const verifyMessageFunc = (message, signature, publicKey) => {
+        if (!publicKey) return { valid: false, message: "Please generate an RSA key pair in the RSA tab first." };
+        const crypt = new JSEncrypt();
+        crypt.setPublicKey(publicKey);
+        const isValid = crypt.verify(message, signature, CryptoJS.SHA256);
+        return {
+          valid: isValid,
+          message: isValid ? "Signature is valid." : "Signature is INVALID."
+        };
+      };
+      
+      // --- Event Listeners ---
+      
+      // AES Logic
+      aesEncryptBtn.addEventListener('click', () => {
+        const plaintext = aesPlaintext.value;
+        const key = aesKey.value;
+        if (plaintext && key) aesCiphertext.value = aesEncrypt(plaintext, key);
+      });
+      aesDecryptBtn.addEventListener('click', () => {
+        const ciphertext = aesCiphertext.value;
+        const key = aesKey.value;
+        if (ciphertext && key) aesDecryptedtext.value = aesDecrypt(ciphertext, key);
+      });
+      aesGenerateKeyBtn.addEventListener('click', () => aesKey.value = generateAesKey());
+
+      // RSA Logic
+      rsaGenerateBtn.addEventListener('click', rsaGenerateKeys);
+      rsaEncryptBtn.addEventListener('click', () => rsaCiphertext.value = rsaEncrypt(rsaPlaintext.value, rsaPublicKey.value));
+      rsaDecryptBtn.addEventListener('click', () => rsaResult.value = rsaDecrypt(rsaCiphertext.value, rsaPrivateKey.value));
+
+      // Hashing Logic
+      hashMd5Btn.addEventListener('click', () => hashOutput.value = hash(hashInput.value, CryptoJS.MD5));
+      hashSha1Btn.addEventListener('click', () => hashOutput.value = hash(hashInput.value, CryptoJS.SHA1));
+      hashSha256Btn.addEventListener('click', () => hashOutput.value = hash(hashInput.value, CryptoJS.SHA256));
+      hashSha512Btn.addEventListener('click', () => hashOutput.value = hash(hashInput.value, CryptoJS.SHA512));
+      
+      // Avalanche Logic
+      avalancheInput1.addEventListener('input', updateAvalanche);
+      avalancheInput2.addEventListener('input', updateAvalanche);
+
+      // Digital Signature Logic
+      signBtn.addEventListener('click', () => signSignature.value = signMessageFunc(signMessage.value, rsaPrivateKey.value));
+      verifyBtn.addEventListener('click', () => {
+        const result = verifyMessageFunc(signMessage.value, signSignature.value, rsaPublicKey.value);
+        verifyResult.textContent = result.message;
+        verifyResult.className = `p-4 rounded-md text-center font-bold ${result.valid ? 'bg-green-800 text-green-200' : 'bg-red-800 text-red-200'}`;
+      });
+
+      // --- Initial Calls ---
+      updateAvalanche();
+      
+      lucide.createIcons({
+        icons: {
+            'nav-home': lucide.Home, 'nav-phishing': lucide.Fish, 'nav-cloud': lucide.Cloud, 'nav-sast': lucide.Code, 'nav-threat': lucide.ShieldAlert, 'nav-checklist': lucide.ListChecks, 'nav-jwt': lucide.KeyRound, 'nav-encryption': lucide.Lock, 'nav-fp': lucide.Fingerprint, 'nav-epss': lucide.Activity, 'nav-dashboard': lucide.LayoutDashboard, 'nav-modcat': lucide.Guitar,
+            'playground-icon': lucide.FlaskConical, 'shield-off-icon': lucide.ShieldOff, 'future-icon': lucide.Sparkles,
+            'des-icon': lucide.Key, 'hash-icon': lucide.Hash, 'rc4-icon': lucide.Waves, 'ssl-icon': lucide.ShieldOff, 'wep-icon': lucide.WifiOff, 'pptp-icon': lucide.RouteOff, 'quantum-icon': lucide.BrainCircuit, 'prng-icon': lucide.Dices
+        },
+        attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
+      });
+    });
   </script>
 </body>
-</html> 
-
+</html>
