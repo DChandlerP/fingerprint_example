@@ -22,6 +22,7 @@
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -33,6 +34,9 @@
       height: 40vh;
       width: 100%;
     }
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
   </style>
 </head>
 <body class="bg-gray-950 text-white min-h-screen flex flex-col">
@@ -41,7 +45,7 @@
       <div class="w-full flex items-center justify-center px-6 py-3">
          <div class="flex flex-wrap justify-center space-x-4">
           <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-home" class="mr-1"></span>Home</a>
-          <a href="phishing.html" class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition"><span id="nav-phishing" class="mr-1"></span>Phishing</a>
+          <a href="phishing.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-phishing" class="mr-1"></span>Phishing</a>
           <a href="cloud.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-cloud" class="mr-1"></span>Cloud</a>
           <a href="sast.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-sast" class="mr-1"></span>SAST</a>
           <a href="threatmodel.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-threat" class="mr-1"></span>Threat Model</a>
@@ -50,7 +54,7 @@
           <a href="encryption.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-encryption" class="mr-1"></span>Encryption</a>
           <a href="fingerprint.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-fp" class="mr-1"></span>Fingerprinting</a>
           <a href="epssdemo.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-epss" class="mr-1"></span>CVSS vs EPSS</a>
-          <a href="dashboard.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-dashboard" class="mr-1"></span>Threat Intel</a>
+          <a href="dashboard.html" class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition"><span id="nav-dashboard" class="mr-1"></span>Threat Intel</a>
           <a href="modcat.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-modcat" class="mr-1"></span>PRS MODCAT</a>
         </div>
       </div>
@@ -69,17 +73,34 @@
     
     <!-- Action Section -->
     <section class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800 flex flex-col items-center">
-       <div id="loading-state" class="text-center mb-4 text-blue-300"></div>
-       <button id="fetch-btn" class="px-6 py-3 bg-blue-700 hover:bg-blue-600 rounded-md text-white font-semibold transition shadow-lg flex items-center justify-center">
-          <span id="refresh-icon" class="mr-2"></span>
-          Refresh (Last 30 Days)
-        </button>
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4 w-full">
+            <div class="flex items-center gap-2">
+                <label for="start-date" class="text-gray-300 font-semibold">Start Date:</label>
+                <input type="date" id="start-date" class="bg-gray-800 border border-gray-700 text-white rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+            <div class="flex items-center gap-2">
+                <label for="end-date" class="text-gray-300 font-semibold">End Date:</label>
+                <input type="date" id="end-date" class="bg-gray-800 border border-gray-700 text-white rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+        </div>
+       <div id="loading-state" class="text-center my-4 text-blue-300"></div>
+       <div class="flex flex-wrap justify-center gap-4">
+         <button id="fetch-btn" class="px-6 py-3 bg-blue-700 hover:bg-blue-600 rounded-md text-white font-semibold transition shadow-lg flex items-center justify-center">
+            <span id="refresh-icon" class="mr-2"></span>
+            Fetch Vulnerabilities
+          </button>
+          <button id="download-btn" class="px-6 py-3 bg-green-700 hover:bg-green-600 rounded-md text-white font-semibold transition shadow-lg flex items-center justify-center disabled:bg-gray-600 disabled:cursor-not-allowed" disabled>
+            <span id="download-icon" class="mr-2"></span>
+            Download JSON
+          </button>
+       </div>
+       <p class="text-xs text-gray-500 mt-3">Fetches all vulnerabilities in the selected date range, up to a maximum of 5,000.</p>
     </section>
 
     <!-- Key Metrics -->
     <section class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
       <div class="bg-gray-900 p-5 rounded-xl shadow-lg border border-gray-800">
-        <h3 class="text-blue-400 font-semibold text-lg">Vulnerabilities (Last 30 Days)</h3>
+        <h3 class="text-blue-400 font-semibold text-lg">Vulnerabilities with CVSS Scores</h3>
         <p id="total-vulns" class="text-4xl font-bold text-white mt-1">--</p>
       </div>
       <div class="bg-gray-900 p-5 rounded-xl shadow-lg border border-gray-800">
@@ -101,7 +122,6 @@
           <canvas id="vulnScatterChart"></canvas>
         </div>
       </div>
-
       <div class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
         <h3 class="text-xl font-semibold text-blue-400 mb-1">Top 5 Vulnerability Types (CWE)</h3>
         <p class="text-sm text-gray-400 mb-4">Distribution of the most common categories of weaknesses found.</p>
@@ -109,6 +129,36 @@
           <canvas id="vulnsByTypeChart"></canvas>
         </div>
       </div>
+    </section>
+
+    <!-- New Charts Grid -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+        <div class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
+            <h3 class="text-xl font-semibold text-blue-400 mb-1">Attack Vector Distribution</h3>
+            <p class="text-sm text-gray-400 mb-4">How vulnerabilities are exploited (Network, Local, etc.).</p>
+            <div class="chart-container">
+                <canvas id="attackVectorChart"></canvas>
+            </div>
+        </div>
+        <div class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
+            <h3 class="text-xl font-semibold text-blue-400 mb-1">Top 10 Vulnerable Vendors</h3>
+            <p class="text-sm text-gray-400 mb-4">Vendors with the most vulnerabilities reported in the period.</p>
+            <div class="chart-container">
+                <canvas id="topVendorsChart"></canvas>
+            </div>
+        </div>
+        <div class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
+            <h3 class="text-xl font-semibold text-blue-400 mb-1">CVSS Vector Metrics</h3>
+            <p class="text-sm text-gray-400 mb-4">Common characteristics of reported vulnerabilities.</p>
+            <div class="chart-container">
+                <canvas id="cvssMetricsRadarChart"></canvas>
+            </div>
+        </div>
+        <div class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800 flex flex-col">
+            <h3 class="text-xl font-semibold text-blue-400 mb-1">Common Terms in Descriptions</h3>
+            <p class="text-sm text-gray-400 mb-4">Frequently used words in CVE descriptions.</p>
+            <div id="wordCloudContainer" class="chart-container flex-1 w-full h-full"></div>
+        </div>
     </section>
     
   </main>
@@ -120,74 +170,145 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const fetchBtn = document.getElementById('fetch-btn');
+      const downloadBtn = document.getElementById('download-btn');
       const loadingState = document.getElementById('loading-state');
+      const startDateInput = document.getElementById('start-date');
+      const endDateInput = document.getElementById('end-date');
 
       // --- CHART INSTANCE HOLDERS ---
       let vulnScatterChart = null;
       let vulnsByTypeChart = null;
+      let attackVectorChart = null;
+      let topVendorsChart = null;
+      let cvssMetricsRadarChart = null;
+      let lastApiData = null; // Variable to store raw API data
+
+      // --- INITIAL SETUP ---
+      const setDefaultDates = () => {
+        const endDate = new Date();
+        const startDate = new Date();
+        startDate.setDate(endDate.getDate() - 30);
+        endDateInput.value = endDate.toISOString().split('T')[0];
+        startDateInput.value = startDate.toISOString().split('T')[0];
+      };
 
       // --- API & DATA HANDLING ---
-      
-      const transformNvdData = (vulnerabilities) => {
-        return vulnerabilities.map(item => {
-          const cve = item.cve;
-          const cvssV31 = cve.metrics.cvssMetricV31?.[0];
-          const weakness = cve.weaknesses?.[0]?.description.find(d => d.lang === 'en')?.value || 'N/A';
-          
-          return {
-            id: cve.id,
-            date: cve.published,
-            cvss: cvssV31 ? cvssV31.cvssData.baseScore : null,
-            type: weakness,
-          };
-        }).filter(item => item.cvss !== null);
+      const downloadJsonData = () => {
+        if (!lastApiData) {
+            console.error("No data available to download.");
+            return;
+        }
+        const dataStr = JSON.stringify(lastApiData, null, 2); // Pretty print JSON
+        const dataBlob = new Blob([dataStr], {type: "application/json"});
+        const url = URL.createObjectURL(dataBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `nvd_vulnerabilities_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
       };
 
       const fetchAndDisplayData = async () => {
-          loadingState.textContent = `Fetching CVEs from the last 30 days...`;
-          loadingState.className = 'text-center mb-4 text-blue-300 animate-pulse';
+          const startDateValue = startDateInput.value;
+          const endDateValue = endDateInput.value;
+
+          if (!startDateValue || !endDateValue) {
+              loadingState.textContent = 'Please select both a start and end date.';
+              loadingState.className = 'text-center my-4 text-red-400';
+              return;
+          }
+          if (new Date(startDateValue) > new Date(endDateValue)) {
+              loadingState.textContent = 'Start date cannot be after the end date.';
+              loadingState.className = 'text-center my-4 text-red-400';
+              return;
+          }
+
+          loadingState.textContent = `Fetching vulnerabilities from ${startDateValue} to ${endDateValue}... This may take a moment.`;
+          loadingState.className = 'text-center my-4 text-blue-300 animate-pulse';
           fetchBtn.disabled = true;
+          downloadBtn.disabled = true;
 
-          const endDate = new Date();
-          const startDate = new Date();
-          startDate.setDate(endDate.getDate() - 30);
+          const allVulnerabilities = [];
+          let startIndex = 0;
+          const resultsPerPage = 2000; // Max allowed by NVD API
+          const maxResults = 5000;
+          let totalResults = 0;
+          let hasMorePages = true;
 
-          const endDateISO = endDate.toISOString();
-          const startDateISO = startDate.toISOString();
-
-          // Increased results per page to get a better data sample
-          const apiUrl = `https://services.nvd.nist.gov/rest/json/cves/2.0?pubStartDate=${startDateISO}&pubEndDate=${endDateISO}&resultsPerPage=500`;
+          // Convert dates to ISO format for the API, ensuring end date includes the full day
+          const startDateISO = new Date(startDateValue).toISOString();
+          const endDateISO = new Date(new Date(endDateValue).setUTCHours(23, 59, 59, 999)).toISOString();
 
           try {
-              const response = await fetch(apiUrl);
-              if (!response.ok) throw new Error(`NVD API returned status: ${response.status}`);
-              const data = await response.json();
-              
-              if (data.vulnerabilities.length === 0) {
-                loadingState.textContent = `No vulnerabilities found in the last 30 days.`;
-                loadingState.className = 'text-center mb-4 text-yellow-400';
-                return;
-              }
+              while (hasMorePages && allVulnerabilities.length < maxResults) {
+                  const apiUrl = `https://services.nvd.nist.gov/rest/json/cves/2.0?pubStartDate=${startDateISO}&pubEndDate=${endDateISO}&resultsPerPage=${resultsPerPage}&startIndex=${startIndex}`;
+                  const response = await fetch(apiUrl);
+                  if (!response.ok) throw new Error(`NVD API returned status: ${response.status}`);
+                  const data = await response.json();
 
-              const transformedData = transformNvdData(data.vulnerabilities);
-              updateDashboard(transformedData);
-              loadingState.textContent = `Successfully loaded ${transformedData.length} vulnerabilities from the last 30 days.`;
-              loadingState.className = 'text-center mb-4 text-green-400';
+                  if (startIndex === 0) totalResults = data.totalResults;
+                  
+                  allVulnerabilities.push(...data.vulnerabilities);
+                  startIndex += resultsPerPage;
+
+                  if (startIndex >= totalResults || allVulnerabilities.length >= maxResults) {
+                      hasMorePages = false;
+                  }
+              }
+              
+              const finalVulnerabilities = allVulnerabilities.slice(0, maxResults);
+              
+              lastApiData = {
+                  resultsPerPage: finalVulnerabilities.length,
+                  startIndex: 0,
+                  totalResults: totalResults > maxResults ? maxResults : totalResults,
+                  format: "NVD_CVE",
+                  version: "2.0",
+                  timestamp: new Date().toISOString(),
+                  vulnerabilities: finalVulnerabilities
+              };
+              downloadBtn.disabled = false;
+
+              if (finalVulnerabilities.length === 0) {
+                  loadingState.textContent = `No vulnerabilities found in the selected date range.`;
+                  loadingState.className = 'text-center my-4 text-yellow-400';
+                  return;
+              }
+              
+              const scoredVulnerabilities = finalVulnerabilities
+                .map(item => {
+                    const cve = item.cve;
+                    const cvssV31 = cve.metrics.cvssMetricV31?.[0];
+                    const weakness = cve.weaknesses?.[0]?.description.find(d => d.lang === 'en')?.value || 'N/A';
+                    return { id: cve.id, date: cve.published, cvss: cvssV31 ? cvssV31.cvssData.baseScore : null, type: weakness, original: item };
+                })
+                .filter(item => item.cvss !== null);
+
+              const fullVulnerabilitiesForCharts = scoredVulnerabilities.map(item => item.original);
+
+              updateDashboard(fullVulnerabilitiesForCharts, scoredVulnerabilities);
+
+              loadingState.textContent = `Displaying ${scoredVulnerabilities.length} vulnerabilities with CVSS scores from ${finalVulnerabilities.length} total found (limit 5000).`;
+              loadingState.className = 'text-center my-4 text-green-400';
 
           } catch (error) {
               console.error("Failed to fetch NVD data:", error);
               loadingState.textContent = 'Failed to load data. The NVD API might be busy. Please try again later.';
-              loadingState.className = 'text-center mb-4 text-red-400';
+              loadingState.className = 'text-center my-4 text-red-400';
+              lastApiData = null;
+              downloadBtn.disabled = true;
           } finally {
               fetchBtn.disabled = false;
           }
       };
 
-      const updateDashboard = (vulnerabilityData) => {
-          // --- 1. Key Metrics ---
-          const totalVulns = vulnerabilityData.length;
-          const avgCvss = totalVulns > 0 ? (vulnerabilityData.reduce((acc, v) => acc + v.cvss, 0) / totalVulns).toFixed(1) : 'N/A';
-          const typeCounts = vulnerabilityData.reduce((acc, v) => {
+      const updateDashboard = (vulnerabilities, transformedData) => {
+          // --- 1. DATA PROCESSING ---
+          const totalVulns = transformedData.length;
+          const avgCvss = totalVulns > 0 ? (transformedData.reduce((acc, v) => acc + v.cvss, 0) / totalVulns).toFixed(1) : 'N/A';
+          const typeCounts = transformedData.reduce((acc, v) => {
               if (v.type !== 'N/A') acc[v.type] = (acc[v.type] || 0) + 1;
               return acc;
           }, {});
@@ -197,17 +318,61 @@
           document.getElementById('avg-cvss').textContent = avgCvss;
           document.getElementById('top-weakness').textContent = topWeakness;
 
-          // --- 2. Data for Charts ---
           const scatterData = {
-              critical: vulnerabilityData.filter(v => v.cvss >= 9.0),
-              high: vulnerabilityData.filter(v => v.cvss >= 7.0 && v.cvss < 9.0),
-              medium: vulnerabilityData.filter(v => v.cvss >= 4.0 && v.cvss < 7.0),
-              low: vulnerabilityData.filter(v => v.cvss < 4.0),
+              critical: transformedData.filter(v => v.cvss >= 9.0),
+              high: transformedData.filter(v => v.cvss >= 7.0 && v.cvss < 9.0),
+              medium: transformedData.filter(v => v.cvss >= 4.0 && v.cvss < 7.0),
+              low: transformedData.filter(v => v.cvss < 4.0),
           };
           const sortedTypes = Object.entries(typeCounts).sort(([,a],[,b]) => b-a).slice(0, 5);
+          
+          const attackVectorCounts = vulnerabilities.reduce((acc, { cve }) => {
+              const vector = cve.metrics.cvssMetricV31?.[0]?.cvssData?.vectorString?.match(/AV:([N|A|L|P])/);
+              if (vector) { acc[vector[1]] = (acc[vector[1]] || 0) + 1; }
+              return acc;
+          }, {});
+          const attackVectorData = {'N': 'Network', 'A': 'Adjacent', 'L': 'Local', 'P': 'Physical'};
 
-          // --- 3. Render Charts ---
-          renderCharts({ scatterData, sortedTypes });
+          const vendorCounts = vulnerabilities.reduce((acc, { cve }) => {
+              if (cve.configurations) {
+                  cve.configurations.forEach(conf => {
+                      conf.nodes.forEach(node => {
+                          node.cpeMatch.forEach(cpe => {
+                              if (cpe.vulnerable) {
+                                  const vendor = cpe.criteria.split(':')[3];
+                                  if (vendor) acc[vendor] = (acc[vendor] || 0) + 1;
+                              }
+                          });
+                      });
+                  });
+              }
+              return acc;
+          }, {});
+          const topVendors = Object.entries(vendorCounts).sort(([, a], [, b]) => b - a).slice(0, 10);
+          
+          const radarMetrics = vulnerabilities.reduce((acc, { cve }) => {
+              const vector = cve.metrics.cvssMetricV31?.[0]?.cvssData?.vectorString;
+              if (vector) {
+                  if (vector.includes('AC:L')) acc['AC:L'] = (acc['AC:L'] || 0) + 1;
+                  if (vector.includes('AC:H')) acc['AC:H'] = (acc['AC:H'] || 0) + 1;
+                  if (vector.includes('PR:N')) acc['PR:N'] = (acc['PR:N'] || 0) + 1;
+                  if (vector.includes('PR:L')) acc['PR:L'] = (acc['PR:L'] || 0) + 1;
+                  if (vector.includes('PR:H')) acc['PR:H'] = (acc['PR:H'] || 0) + 1;
+                  if (vector.includes('UI:N')) acc['UI:N'] = (acc['UI:N'] || 0) + 1;
+                  if (vector.includes('UI:R')) acc['UI:R'] = (acc['UI:R'] || 0) + 1;
+              }
+              return acc;
+          }, {});
+          
+          const stopWords = new Set(['a','an','the','and','or','in','of','to','for','on','with','is','was','were','it','that','this','from','by','as','at','which','what','who','when','where','why','how','an','the','and','or','but','if','so','then','thus','http','https']);
+          const allDescriptions = vulnerabilities.map(({ cve }) => cve.descriptions.find(d => d.lang === 'en')?.value || '').join(' ');
+          const wordCounts = allDescriptions.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").split(/\s+/).reduce((acc, word) => {
+              if (word && !stopWords.has(word) && isNaN(word)) { acc[word] = (acc[word] || 0) + 1; }
+              return acc;
+          }, {});
+          const wordCloudData = Object.entries(wordCounts).sort(([, a], [, b]) => b - a).slice(0, 100).map(([text, weight]) => [text, Math.log2(weight + 1) * 5]);
+
+          renderCharts({ scatterData, sortedTypes, attackVectorData, attackVectorCounts, topVendors, radarMetrics, wordCloudData });
       };
 
       const renderCharts = (chartData) => {
@@ -217,68 +382,98 @@
 
           if (vulnScatterChart) vulnScatterChart.destroy();
           if (vulnsByTypeChart) vulnsByTypeChart.destroy();
+          if (attackVectorChart) attackVectorChart.destroy();
+          if (topVendorsChart) topVendorsChart.destroy();
+          if (cvssMetricsRadarChart) cvssMetricsRadarChart.destroy();
 
-          // Scatter Plot
           const ctxScatter = document.getElementById('vulnScatterChart').getContext('2d');
           vulnScatterChart = new Chart(ctxScatter, {
               type: 'scatter',
-              data: {
-                  datasets: [
-                      { label: 'Critical (9.0+)', data: chartData.scatterData.critical, backgroundColor: '#ef4444' },
-                      { label: 'High (7.0-8.9)', data: chartData.scatterData.high, backgroundColor: '#f97316' },
-                      { label: 'Medium (4.0-6.9)', data: chartData.scatterData.medium, backgroundColor: '#eab308' },
-                      { label: 'Low (0.1-3.9)', data: chartData.scatterData.low, backgroundColor: '#22c55e' }
-                  ]
-              },
-              options: {
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  parsing: { xAxisKey: 'date', yAxisKey: 'cvss' },
-                  scales: {
-                      x: { type: 'time', time: { unit: 'day', tooltipFormat: 'MMM dd, yyyy' }, grid: { color: '#374151' }, title: { display: true, text: 'Publication Date' } },
-                      y: { grid: { color: '#374151' }, min: 0, max: 10, title: { display: true, text: 'CVSS Score' } }
-                  },
-                  plugins: {
-                      legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8 } },
-                      tooltip: {
-                          callbacks: {
-                              label: (context) => {
-                                  const cve = context.raw;
-                                  return `${cve.id}: CVSS ${cve.cvss}`;
-                              }
-                          }
-                      }
-                  }
-              }
+              data: { datasets: [
+                  { label: 'Critical (9.0+)', data: chartData.scatterData.critical, backgroundColor: '#ef4444' },
+                  { label: 'High (7.0-8.9)', data: chartData.scatterData.high, backgroundColor: '#f97316' },
+                  { label: 'Medium (4.0-6.9)', data: chartData.scatterData.medium, backgroundColor: '#eab308' },
+                  { label: 'Low (0.1-3.9)', data: chartData.scatterData.low, backgroundColor: '#22c55e' }
+              ]},
+              options: { responsive: true, maintainAspectRatio: false, parsing: { xAxisKey: 'date', yAxisKey: 'cvss' }, scales: { x: { type: 'time', time: { unit: 'day', tooltipFormat: 'MMM dd, yyyy' }, title: { display: true, text: 'Publication Date' } }, y: { min: 0, max: 10, title: { display: true, text: 'CVSS Score' } }}, plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8 } }, tooltip: { callbacks: { label: (c) => `${c.raw.id}: CVSS ${c.raw.cvss}` }}}}
           });
           
-          // Doughnut Chart
           const ctxType = document.getElementById('vulnsByTypeChart').getContext('2d');
           vulnsByTypeChart = new Chart(ctxType, {
               type: 'doughnut',
-              data: {
-                  labels: chartData.sortedTypes.map(t => t[0]),
-                  datasets: [{
-                      data: chartData.sortedTypes.map(t => t[1]),
-                      backgroundColor: ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6'],
-                      borderColor: '#111827', // Use a dark border to match card bg
-                  }]
+              data: { labels: chartData.sortedTypes.map(t => t[0]), datasets: [{ data: chartData.sortedTypes.map(t => t[1]), backgroundColor: ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6'], borderColor: '#111827' }]},
+              options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { padding: 15 } } } }
+          });
+          
+          const ctxAttackVector = document.getElementById('attackVectorChart').getContext('2d');
+          attackVectorChart = new Chart(ctxAttackVector, {
+              type: 'pie',
+              data: { 
+                  labels: Object.keys(chartData.attackVectorCounts).map(k => chartData.attackVectorData[k]),
+                  datasets: [{ data: Object.values(chartData.attackVectorCounts), backgroundColor: ['#f97316', '#eab308', '#22c55e', '#3b82f6'], borderColor: '#111827'}]
               },
               options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { padding: 15 } } } }
           });
+          
+          const ctxTopVendors = document.getElementById('topVendorsChart').getContext('2d');
+          topVendorsChart = new Chart(ctxTopVendors, {
+              type: 'bar',
+              data: { 
+                  labels: chartData.topVendors.map(v => v[0]),
+                  datasets: [{ label: 'Vulnerability Count', data: chartData.topVendors.map(v => v[1]), backgroundColor: '#3b82f6' }]
+              },
+              options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { beginAtZero: true } } } }
+          });
+
+          const ctxRadar = document.getElementById('cvssMetricsRadarChart').getContext('2d');
+          cvssMetricsRadarChart = new Chart(ctxRadar, {
+              type: 'radar',
+              data: {
+                  labels: ['Complexity: Low', 'Complexity: High', 'Privileges: None', 'Privileges: Low', 'Privileges: High', 'User Interaction: None', 'User Interaction: Required'],
+                  datasets: [{
+                      label: 'Frequency',
+                      data: [
+                          chartData.radarMetrics['AC:L'], chartData.radarMetrics['AC:H'],
+                          chartData.radarMetrics['PR:N'], chartData.radarMetrics['PR:L'], chartData.radarMetrics['PR:H'],
+                          chartData.radarMetrics['UI:N'], chartData.radarMetrics['UI:R']
+                      ],
+                      backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                      borderColor: 'rgba(59, 130, 246, 1)',
+                      pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                  }]
+              },
+              options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { r: { pointLabels: { font: { size: 10 } }, ticks: { display: false } } } }
+          });
+
+          WordCloud(document.getElementById('wordCloudContainer'), { 
+              list: chartData.wordCloudData,
+              gridSize: Math.round(16 * document.getElementById('wordCloudContainer').offsetWidth / 1024),
+              weightFactor: 1,
+              fontFamily: 'Inter, sans-serif',
+              color: 'random-light',
+              backgroundColor: '#111827',
+              rotateRatio: 0.5,
+          });
       };
       
-      fetchBtn.addEventListener('click', () => fetchAndDisplayData());
+      fetchBtn.addEventListener('click', fetchAndDisplayData);
+      downloadBtn.addEventListener('click', downloadJsonData);
+      
+      setDefaultDates();
       fetchAndDisplayData();
 
       lucide.createIcons({
         icons: {
-          'nav-linkedin': lucide.Linkedin, 'nav-github': lucide.Github, 'nav-home': lucide.Home, 'nav-threat': lucide.ShieldAlert, 'nav-checklist': lucide.ListChecks, 'nav-jwt': lucide.KeyRound, 'nav-fp': lucide.Fingerprint, 'nav-epss': lucide.Activity, 'nav-dashboard': lucide.LayoutDashboard, 'refresh-icon': lucide.RefreshCw
+          'nav-linkedin': lucide.Linkedin, 'nav-github': lucide.Github, 'nav-home': lucide.Home, 'nav-threat': lucide.ShieldAlert, 'nav-checklist': lucide.ListChecks, 'nav-jwt': lucide.KeyRound, 'nav-fp': lucide.Fingerprint, 'nav-epss': lucide.Activity, 'nav-dashboard': lucide.LayoutDashboard, 'refresh-icon': lucide.RefreshCw, 'download-icon': lucide.Download
         },
         attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
       });
+      
+      document.querySelector('#refresh-icon > svg')?.setAttribute('color', 'white');
+      document.querySelector('#download-icon > svg')?.setAttribute('color', 'white');
     });
   </script>
 </body>
 </html>
+
 
