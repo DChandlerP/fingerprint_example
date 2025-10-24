@@ -1,16 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="bg-gray-950 text-white">
 <head>
-  <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self'; 
-    script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; 
-    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
-    font-src 'self' https://fonts.gstatic.com; 
-    connect-src 'self' https://services.nvd.nist.gov https://api.first.org; 
-    object-src 'none'; 
-    frame-ancestors 'self'; 
-    base-uri 'self';
-">
+  
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer-policy" content="strict-origin-when-cross-origin">
@@ -40,12 +31,12 @@
       <div class="w-full flex items-center justify-center px-6 py-3">
          <div class="flex flex-wrap justify-center space-x-4">
           <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-home" class="mr-1"></span>Home</a>
-          <a href="phishing.html" class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition"><span id="nav-phishing" class="mr-1"></span>Phishing</a>
+          <a href="phishing.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-phishing" class="mr-1"></span>Phishing</a>
           <a href="cloud.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-cloud" class="mr-1"></span>Cloud</a>
           <a href="sast.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-sast" class="mr-1"></span>SAST</a>
           <a href="threatmodel.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-threat" class="mr-1"></span>Threat Model</a>
           <a href="checklist.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-checklist" class="mr-1"></span>Checklist</a>
-          <a href="jwt.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-jwt" class="mr-1"></span>JWT Decoder</a>
+          <a href="jwt.html" class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition"><span id="nav-jwt" class="mr-1"></span>JWT Decoder</a>
           <a href="encryption.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-encryption" class="mr-1"></span>Encryption</a>
           <a href="fingerprint.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-fp" class="mr-1"></span>Fingerprinting</a>
           <a href="epssdemo.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-epss" class="mr-1"></span>CVSS vs EPSS</a>
@@ -61,6 +52,20 @@
     <p class="max-w-xl mx-auto text-gray-200 text-lg">
       An interactive tool to decode JSON Web Tokens and verify their signatures.
     </p>
+    <div class="mt-6 max-w-4xl mx-auto grid md:grid-cols-3 gap-4 text-left px-4">
+        <div class="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
+            <h3 class="font-semibold text-lg text-red-400">Header</h3>
+            <p class="text-sm text-gray-300 mt-1">Contains metadata like the token type (JWT) and the signing algorithm used (e.g., HS256).</p>
+        </div>
+        <div class="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
+            <h3 class="font-semibold text-lg text-violet-400">Payload</h3>
+            <p class="text-sm text-gray-300 mt-1">Contains the "claims" or data, such as user ID, name, and permissions, plus token expiration info.</p>
+        </div>
+        <div class="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
+            <h3 class="font-semibold text-lg text-sky-400">Signature</h3>
+            <p class="text-sm text-gray-300 mt-1">A cryptographic signature used to verify that the token is authentic and has not been tampered with.</p>
+        </div>
+    </div>
   </header>
 
   <!-- Main Content -->
@@ -75,7 +80,12 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       <!-- Left Column: Encoded JWT Input -->
       <section>
-        <h3 class="text-2xl font-semibold text-blue-400 mb-4">Encoded Token</h3>
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-2xl font-semibold text-blue-400">Encoded Token</h3>
+            <button id="clear-jwt-btn" class="px-3 py-1 text-sm bg-gray-800 hover:bg-red-900/50 rounded-md text-red-400 font-medium transition-colors flex items-center">
+                <span id="clear-jwt-icon" class="mr-2"></span>Clear
+            </button>
+        </div>
         <div class="bg-gray-900 p-4 rounded-lg shadow-lg">
           <textarea id="jwt-input" class="w-full h-48 bg-gray-950 border border-gray-700 rounded-md p-3 text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none" placeholder="Paste your JWT here..."></textarea>
           <div id="jwt-parts" class="mt-2 text-xs font-mono break-all"></div>
@@ -138,6 +148,57 @@
         </div>
       </section>
     </div>
+
+    <!-- How to find a JWT section -->
+    <section class="mt-12 bg-gray-900 p-6 rounded-lg shadow-lg">
+        <h3 class="text-2xl font-semibold text-blue-400 mb-4 flex items-center">
+            <span id="tutorial-icon" class="mr-3"></span>
+            Tutorial: Finding a JWT in the Wild
+        </h3>
+        <p class="text-gray-300 mb-4">
+            Many modern websites—like social media platforms, online shopping sites, and project management tools—use JWTs to keep you logged in. You can often find these tokens in your browser's developer tools after you sign in. This guide shows you how.
+        </p>
+
+        <div class="bg-yellow-900/30 border border-yellow-700 text-yellow-200 px-4 py-3 rounded-lg relative mb-6 flex items-start" role="alert">
+          <span id="warning-icon" class="mr-3 shrink-0 mt-1"></span>
+          <div>
+            <strong class="font-bold">Security Warning: Your JWT is Sensitive!</strong>
+            <p class="text-sm">A JWT is like a temporary password. Pasting an active token from a site where you are logged in (like your email or social media) into a public, third-party website is a major security risk. If that site is malicious, it could use your token to impersonate you and access your account.</p>
+            <p class="text-sm mt-2">While <strong class="font-semibold">this specific decoder is safe</strong> because all processing happens in your browser (no data is ever sent to a server), you should never paste sensitive tokens into online tools you don't fully trust.</p>
+          </div>
+        </div>
+    
+        <div class="space-y-4 text-gray-200">
+            <div class="flex items-start">
+                <div class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold text-white mr-4">1</div>
+                <p><strong class="font-semibold text-white">Log In to a Website:</strong> Go to any site that requires a login and sign in to your account.</p>
+            </div>
+            <div class="flex items-start">
+                <div class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold text-white mr-4">2</div>
+                <p><strong class="font-semibold text-white">Open Developer Tools:</strong> Press <code class="bg-gray-800 px-2 py-1 rounded-md text-sm font-mono">F12</code> or right-click the page and select "Inspect".</p>
+            </div>
+            <div class="flex items-start">
+                <div class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold text-white mr-4">3</div>
+                <p><strong class="font-semibold text-white">Navigate to Storage:</strong> Find the <strong class="text-white">Application</strong> tab (in Chrome/Edge) or the <strong class="text-white">Storage</strong> tab (in Firefox).</p>
+            </div>
+            <div class="flex items-start">
+                <div class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold text-white mr-4">4</div>
+                <p><strong class="font-semibold text-white">Check Browser Storage:</strong> On the left side, look under <strong class="text-white">Local Storage</strong> and <strong class="text-white">Session Storage</strong>. Click the URL for the site you're on.</p>
+            </div>
+            <div class="flex items-start">
+                <div class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold text-white mr-4">5</div>
+                <p><strong class="font-semibold text-white">Find the Token:</strong> Look for a key named <code class="bg-gray-800 px-2 py-1 rounded-md text-sm font-mono text-violet-300">token</code>, <code class="bg-gray-800 px-2 py-1 rounded-md text-sm font-mono text-violet-300">jwt</code>, <code class="bg-gray-800 px-2 py-1 rounded-md text-sm font-mono text-violet-300">access_token</code>, or similar. The value next to it is the JWT. Copy it.</p>
+            </div>
+            <div class="!mt-6 pl-12">
+                <p class="text-sm text-gray-400"><strong class="font-semibold text-sky-300">Alternative Method:</strong> Sometimes tokens aren't in storage. Check the <strong class="text-white">Network</strong> tab in dev tools. After logging in, look for requests and check their <strong class="text-white">Headers</strong> for an <code class="bg-gray-800 px-1 py-0.5 rounded-md font-mono">Authorization: Bearer ey...</code> header, or check the <strong class="text-white">Response</strong> body for the token.</p>
+            </div>
+             <div class="flex items-start mt-6">
+                <div class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold text-white mr-4">6</div>
+                <p><strong class="font-semibold text-white">Decode Safely:</strong> Paste the token into the <strong class="text-white">"Encoded Token"</strong> box above to see its contents.</p>
+            </div>
+        </div>
+    </section>
+
   </main>
   
   <!-- Footer -->
@@ -344,6 +405,10 @@
       secretInput.value = '';
       decodeJwt();
     });
+    getEl('clear-jwt-btn').addEventListener('click', () => {
+      jwtInput.value = '';
+      decodeJwt();
+    });
     
     // --- INITIALIZATION ---
     document.addEventListener('DOMContentLoaded', () => {
@@ -362,11 +427,27 @@
           'nav-fp': lucide.Fingerprint,
           'nav-epss': lucide.Activity,
           'info-icon': lucide.Info,
+          'tutorial-icon': lucide.BookOpen,
+          'warning-icon': lucide.ShieldAlert,
+          'clear-jwt-icon': lucide.X,
         },
-        attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
+        attrs: { color: "#facc15", size: 24, strokeWidth: 2 }
       });
+
+      // Override colors for specific icons
+      const infoIcon = getEl('info-icon');
+      if(infoIcon) infoIcon.setAttribute('color', '#38bdf8');
+      const tutorialIcon = getEl('tutorial-icon');
+      if(tutorialIcon) tutorialIcon.setAttribute('color', '#38bdf8');
+      const clearJwtIcon = getEl('clear-jwt-icon');
+      if(clearJwtIcon) {
+          clearJwtIcon.setAttribute('color', '#f87171');
+          clearJwtIcon.setAttribute('size', 16);
+      }
+
     });
   </script>
 </body>
 </html>
+
 

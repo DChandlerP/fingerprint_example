@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-950 text-white"> <!-- Apply base dark mode classes -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybersecurity Certification Roadmap</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Apply dark mode base from index.html */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #030712; /* Tailwind gray-950 */
+            color: #d1d5db; /* Tailwind gray-300 */
+        }
+        ::selection { background: #2563eb; color: #fff; }
+
+        /* Styles for the filter buttons - Dark Mode */
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px; /* pill shape */
+            font-weight: 500;
+            background-color: #1f2937; /* gray-800 */
+            color: #9ca3af; /* gray-400 */
+            transition: all 0.2s ease;
+            border: 2px solid #374151; /* gray-700 */
+            cursor: pointer;
+        }
+        .filter-btn:hover {
+            background-color: #374151; /* gray-700 */
+            color: #d1d5db; /* gray-300 */
+        }
+        .filter-btn.active {
+            background-color: #1d4ed8; /* blue-700 */
+            color: #ffffff;
+            border-color: #1d4ed8; /* blue-700 */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Styles for the certification list items - Dark Mode */
+        .cert-trigger {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem; /* 8px */
+            background-color: #111827; /* gray-900 */
+            border: 1px solid #1f2937; /* gray-800 */
+            transition: transform 0.2s ease, border-color 0.2s ease, opacity 0.3s ease;
+            cursor: pointer;
+        }
+        .cert-trigger:hover {
+            transform: translateY(-2px);
+            border-color: #3b82f6; /* blue-500 */
+        }
+        .cert-trigger.hidden {
+            opacity: 0;
+            height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            margin-bottom: 0;
+            border: none;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        /* Modal Styles - Dark Mode */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(17, 24, 39, 0.8); /* gray-900 with opacity */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .modal-overlay:not(.hidden) {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content {
+            background-color: #111827; /* gray-900 */
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+            position: relative; /* For close button positioning */
+            border-top: 4px solid #3b82f6; /* Default border color (blue-500) */
+            color: #d1d5db; /* gray-300 */
+        }
+        .modal-overlay:not(.hidden) .modal-content {
+            transform: scale(1);
+        }
+        .modal-content h2, .modal-content h3 {
+             color: #f9fafb; /* gray-50 */
+        }
+        .modal-content p {
+             color: #9ca3af; /* gray-400 */
+        }
+        .modal-content #modal-notes {
+             color: #6b7280; /* gray-500 */
+        }
+        .modal-close-button { /* Added class for styling */
+            position: absolute;
+            top: 0.75rem; /* Adjusted position */
+            right: 1rem; /* Adjusted position */
+            color: #6b7280; /* gray-500 */
+            transition: color 0.2s ease;
+        }
+        .modal-close-button:hover {
+             color: #f9fafb; /* gray-50 */
+        }
+
+        /* Vendor-specific tag colors - Dark Mode */
+        .tag-comptia { background-color: #1e3a8a; color: #bfdbfe; } /* blue-900 / blue-200 */
+        .tag-isc2 { background-color: #14532d; color: #bbf7d0; } /* green-900 / green-200 */
+        .tag-giac { background-color: #7f1d1d; color: #fecaca; } /* red-900 / red-200 */
+        .tag-isaca { background-color: #713f12; color: #fef08a; } /* yellow-900 / yellow-300 */
+        .tag-offsec { background-color: #1f2937; color: #e5e7eb; } /* gray-800 / gray-200 */
+        .tag-platform { background-color: #581c87; color: #e9d5ff; } /* purple-900 / purple-200 */
+        
+        /* Level-specific tag colors - Dark Mode */
+        .tag-basic { background-color: #312e81; color: #c7d2fe; } /* indigo-900 / indigo-200 */
+        .tag-intermediate { background-color: #78350f; color: #fde68a; } /* amber-900 / amber-200 */
+        .tag-advanced { background-color: #831843; color: #fbcfe8; } /* pink-900 / pink-200 */
+        
+        /* Vendor-specific modal border colors */
+        .modal-comptia { border-top-color: #3b82f6; } /* blue-500 */
+        .modal-isc2 { border-top-color: #22c55e; } /* green-500 */
+        .modal-giac { border-top-color: #ef4444; } /* red-500 */
+        .modal-isaca { border-top-color: #f59e0b; } /* yellow-500 */
+        .modal-offsec { border-top-color: #4b5563; } /* gray-600 - Adjusted for visibility */
+        .modal-platform { border-top-color: #a855f7; } /* purple-500 */
+
+        /* Info boxes - Dark Mode */
+        .info-box {
+            background-color: #1f2937; /* gray-800 */
+            border-left: 4px solid #60a5fa; /* blue-400 */
+            padding: 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            margin-bottom: 2rem;
+            transition: opacity 0.3s ease;
+            color: #9ca3af; /* gray-400 */
+        }
+        .info-box h3 {
+             color: #e5e7eb; /* gray-200 */
+        }
+        .info-box a {
+            color: #60a5fa; /* blue-400 */
+        }
+        .info-box a:hover {
+            color: #93c5fd; /* blue-300 */
+        }
+        .info-box.hidden { /* No change needed */
+            opacity: 0;
+            height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            margin-bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        /* Modal Official Link Button - Dark Mode */
+        .official-link-btn {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            padding: 0.75rem 1.25rem; /* Adjusted padding */
+            border-radius: 0.5rem; /* rounded-lg */
+            font-weight: 600; /* semibold */
+            color: #ffffff;
+            background-color: #1d4ed8; /* blue-700 */
+            transition: background-color 0.2s ease;
+        }
+        .official-link-btn:hover {
+            background-color: #1e40af; /* blue-800 */
+        }
+
+
+    </style>
+</head>
+<body class="text-gray-300"> <!-- Default dark text -->
+
+    <!-- Header - Dark Mode -->
+    <header class="bg-gray-900 shadow-sm border-b border-gray-800">
+        <div class="container mx-auto max-w-4xl px-6 py-5">
+            <h1 class="text-3xl font-bold text-gray-50">Cybersecurity Certification Roadmap</h1> <!-- Brighter text -->
+            <p class="mt-2 text-lg text-gray-400">Your guide to the top certifications. Filter by provider and level, or click any cert for details.</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto max-w-4xl px-6 py-12">
+        
+        <!-- Filter Buttons -->
+        <div class="flex flex-col gap-4 mb-8">
+            <div id="filter-container-vendor" class="flex flex-wrap gap-3">
+                <span class="font-medium text-gray-400 self-center">Provider:</span> <!-- Adjusted text color -->
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="comptia">CompTIA</button>
+                <button class="filter-btn" data-filter="isc2">(ISC)²</button>
+                <button class="filter-btn" data-filter="giac">GIAC</button>
+                <button class="filter-btn" data-filter="isaca">ISACA</button>
+                <button class="filter-btn" data-filter="offsec">OffSec</button>
+                <button class="filter-btn" data-filter="platform">Cloud & Platform</button>
+            </div>
+            <div id="filter-container-level" class="flex flex-wrap gap-3">
+                <span class="font-medium text-gray-400 self-center">Level:</span> <!-- Adjusted text color -->
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="basic">Basic</button>
+                <button class="filter-btn" data-filter="intermediate">Intermediate</button>
+                <button class="filter-btn" data-filter="advanced">Advanced</button>
+            </div>
+        </div>
+
+        <!-- GIAC Info Box (MOVED and made permanently visible) -->
+        <!-- This div is now at the END of the main section, after the cert list -->
+
+
+        <!-- Certification List -->
+        <div id="cert-list" class="flex flex-col gap-4">
+
+            <!-- DATA TEMPLATE:
+            data-name="Cert Name"
+            data-price="$XXX"
+            data-vendor="comptia | isc2 | giac"
+            data-level="basic | intermediate | advanced"
+            data-level-raw="Entry | Core | Intermediate | Specialization | Expert"
+            data-description="Full description here."
+            data-notes="*Any notes here."
+            -->
+
+            <!-- (ISC)² Certified in Cybersecurity (CC) -->
+            <a href="#" class="cert-trigger" data-vendor="isc2" data-level="basic" data-level-raw="Entry"
+                data-name="(ISC)² Certified in Cybersecurity (CC)"
+                data-price="Free*"
+                data-description="The premier entry-level certification. Provides a foundational understanding of cybersecurity concepts, principles, and best practices."
+                data-notes="*(ISC)² often offers the exam and training for free as part of a promotion. Standard price is ~$199."
+                data-vendor-color="modal-isc2"
+                data-link="https://www.isc2.org/certifications/cc">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² Certified in Cybersecurity (CC)</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-isc2 px-3 py-0.5 text-sm font-medium">(ISC)²</span>
+                        <span class="inline-block rounded-full tag-basic px-3 py-0.5 text-sm font-medium">Basic</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-green-400 flex-shrink-0">Free*</span> <!-- Brighter price -->
+            </a>
+            
+            <!-- GIAC Foundational Cybersecurity Technologies (GFACT) -->
+            <a href="#" class="cert-trigger" data-vendor="giac" data-level="basic" data-level-raw="Entry"
+                data-name="GIAC Foundational Cybersecurity Technologies (GFACT)"
+                data-price="See Notes*"
+                data-description="Validates foundational knowledge of core computing concepts, including hardware, software, networking, and basic security."
+                data-notes="*Price is for the exam attempt only (~$999). Associated SANS training (~$8,000+) is highly recommended and separate."
+                data-vendor-color="modal-giac"
+                data-link="https://www.giac.org/certifications/foundational-cybersecurity-technologies-gfact/">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Foundational Cybersecurity Technologies (GFACT)</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-giac px-3 py-0.5 text-sm font-medium">GIAC</span>
+                        <span class="inline-block rounded-full tag-basic px-3 py-0.5 text-sm font-medium">Basic</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span> <!-- Brighter price -->
+            </a>
+
+            <!-- CompTIA A+ -->
+            <!-- (REMOVED) -->
+            
+            <!-- CompTIA Network+ -->
+            <!-- (REMOVED) -->
+            
+            <!-- CompTIA Security+ -->
+            <a href="#" class="cert-trigger" data-vendor="comptia" data-level="basic" data-level-raw="Core"
+                data-name="CompTIA Security+"
+                data-price="$425"
+                data-description="The global benchmark for baseline cybersecurity skills. Establishes the core knowledge required for any cybersecurity role, covering threats, attacks, and vulnerabilities."
+                data-notes=""
+                data-vendor-color="modal-comptia"
+                data-link="https://www.comptia.org/certifications/security">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">CompTIA Security+</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-comptia px-3 py-0.5 text-sm font-medium">CompTIA</span>
+                        <span class="inline-block rounded-full tag-basic px-3 py-0.5 text-sm font-medium">Basic</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-blue-400 flex-shrink-0">$425</span> <!-- Brighter price -->
+            </a>
+
+            <!-- Microsoft Certified: Security, Compliance, and Identity Fundamentals (SC-900) -->
+            <a href="#" class="cert-trigger" data-vendor="platform" data-level="basic" data-level-raw="Basic"
+                data-name="Microsoft Certified: Security, Compliance, and Identity Fundamentals (SC-900)"
+                data-price="$99"
+                data-description="A foundational cert covering the fundamentals of security, compliance, and identity (SCI) across Microsoft's cloud-based and related services."
+                data-notes="Price is for the exam attempt. This is a great starting point for anyone who will be working in a Microsoft 365 or Azure environment."
+                data-vendor-color="modal-platform"
+                data-link="https://learn.microsoft.com/en-us/certifications/exams/sc-900/">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">Microsoft Certified: Security... (SC-900)</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-platform px-3 py-0.5 text-sm font-medium">Cloud & Platform</span>
+                        <span class="inline-block rounded-full tag-basic px-3 py-0.5 text-sm font-medium">Basic</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-purple-400 flex-shrink-0">$99</span> <!-- Brighter price -->
+            </a>
+
+            <!-- ISACA CISA -->
+            <a href="#" class="cert-trigger" data-vendor="isaca" data-level="advanced" data-level-raw="Specialization"
+                data-name="ISACA CISA"
+                data-price="$575 / $760*"
+                data-description="The global standard for professionals who audit, control, monitor, and assess an organization's information technology and business systems."
+                data-notes="*Price is for ISACA Members / Non-Members. Requires 5 years of experience in IS audit, control, or security."
+                data-vendor-color="modal-isaca"
+                data-link="https://www.isaca.org/credentialing/cisa">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">ISACA CISA</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-isaca px-3 py-0.5 text-sm font-medium">ISACA</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-yellow-400 flex-shrink-0">$575 / $760*</span> <!-- Brighter price -->
+            </a>
+
+            <!-- ISACA CISM -->
+            <a href="#" class="cert-trigger" data-vendor="isaca" data-level="advanced" data-level-raw="Expert"
+                data-name="ISACA CISM"
+                data-price="$575 / $760*"
+                data-description="A management-focused certification for professionals who design, build, and manage enterprise information security programs."
+                data-notes="*Price is for ISACA Members / Non-Members. Requires 5 years of experience in information security management."
+                data-vendor-color="modal-isaca"
+                data-link="https://www.isaca.org/credentialing/cism">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">ISACA CISM</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-isaca px-3 py-0.5 text-sm font-medium">ISACA</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-yellow-400 flex-shrink-0">$575 / $760*</span> <!-- Brighter price -->
+            </a>
+
+            <!-- (ISC)² SSCP -->
+            <a href="#" class="cert-trigger" data-vendor="isc2" data-level="intermediate" data-level-raw="Intermediate"
+                data-name="(ISC)² SSCP"
+                data-price="$249"
+                data-description="For IT administrators, managers, and network security professionals with hands-on technical security skills. A great step after foundational certs."
+                data-notes="*Requires 1 year of paid work experience."
+                data-vendor-color="modal-isc2"
+                data-link="https://www.isc2.org/certifications/sscp">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² SSCP</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-isc2 px-3 py-0.5 text-sm font-medium">(ISC)²</span>
+                        <span class="inline-block rounded-full tag-intermediate px-3 py-0.5 text-sm font-medium">Intermediate</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-green-400 flex-shrink-0">$249</span> <!-- Brighter price -->
+            </a>
+            
+            <!-- (ISC)² CGRC -->
+            <a href="#" class="cert-trigger" data-vendor="isc2" data-level="intermediate" data-level-raw="Intermediate"
+                data-name="(ISC)² CGRC"
+                data-price="$599"
+                data-description="Focuses on Governance, Risk, and Compliance (GRC). Validates skills in authorizing and maintaining information systems, and managing risk."
+                data-notes="*Requires 2 years of paid work experience. Formerly the (ISC)² CAP."
+                data-vendor-color="modal-isc2"
+                data-link="https://www.isc2.org/certifications/cgrc">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² CGRC</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-isc2 px-3 py-0.5 text-sm font-medium">(ISC)²</span>
+                        <span class="inline-block rounded-full tag-intermediate px-3 py-0.5 text-sm font-medium">Intermediate</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-green-400 flex-shrink-0">$599</span> <!-- Brighter price -->
+            </a>
+
+            <!-- Cisco Certified CyberOps Associate -->
+            <a href="#" class="cert-trigger" data-vendor="platform" data-level="intermediate" data-level-raw="Intermediate"
+                data-name="Cisco Certified CyberOps Associate"
+                data-price="$300"
+                data-description="Focuses on the skills needed for a Security Operations Center (SOC) Analyst. Covers incident response, digital forensics, and threat detection."
+                data-notes="Price is for the exam attempt. This is a direct competitor to CompTIA's CySA+ and is highly respected for SOC roles."
+                data-vendor-color="modal-platform"
+                data-link="https://www.cisco.com/c/en/us/training-events/training-certifications/certifications/associate/cyberops-associate.html">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">Cisco Certified CyberOps Associate</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-platform px-3 py-0.5 text-sm font-medium">Cloud & Platform</span>
+                        <span class="inline-block rounded-full tag-intermediate px-3 py-0.5 text-sm font-medium">Intermediate</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-purple-400 flex-shrink-0">$300</span> <!-- Brighter price -->
+            </a>
+
+            <!-- GIAC Security Essentials (GSEC) -->
+            <a href="#" class="cert-trigger" data-vendor="giac" data-level="intermediate" data-level-raw="Intermediate"
+                data-name="GIAC Security Essentials (GSEC)"
+                data-price="See Notes*"
+                data-description="A key foundational cert validating hands-on skills in IT systems, security tasks, and core security concepts."
+                data-notes="*Price is for the exam attempt only (~$999). Associated SANS training (~$8,000+) is highly recommended and separate."
+                data-vendor-color="modal-giac"
+                data-link="https://www.giac.org/certifications/security-essentials-gsec/">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Security Essentials (GSEC)</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-giac px-3 py-0.5 text-sm font-medium">GIAC</span>
+                        <span class="inline-block rounded-full tag-intermediate px-3 py-0.5 text-sm font-medium">Intermediate</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span> <!-- Brighter price -->
+            </a>
+            
+            <!-- CompTIA CySA+ -->
+            <a href="#" class="cert-trigger" data-vendor="comptia" data-level="advanced" data-level-raw="Specialization"
+                data-name="CompTIA CySA+"
+                data-price="$425"
+                data-description="A 'Blue Team' cert focusing on threat detection, vulnerability analysis, and incident response. Validates security analytics and monitoring."
+                data-notes=""
+                data-vendor-color="modal-comptia"
+                data-link="https://www.comptia.org/certifications/cybersecurity-analyst">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">CompTIA CySA+</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-comptia px-3 py-0.5 text-sm font-medium">CompTIA</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-blue-400 flex-shrink-0">$425</span> <!-- Brighter price -->
+            </a>
+            
+            <!-- CompTIA PenTest+ -->
+            <a href="#" class="cert-trigger" data-vendor="comptia" data-level="advanced" data-level-raw="Specialization"
+                data-name="CompTIA PenTest+"
+                data-price="$425"
+                data-description="A 'Red Team' cert that validates your ability to plan, scope, and perform penetration tests and vulnerability assessments."
+                data-notes=""
+                data-vendor-color="modal-comptia"
+                data-link="https://www.comptia.org/certifications/pentest">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">CompTIA PenTest+</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-comptia px-3 py-0.5 text-sm font-medium">CompTIA</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-blue-400 flex-shrink-0">$425</span> <!-- Brighter price -->
+            </a>
+
+            <!-- (ISC)² CCSP -->
+            <a href="#" class="cert-trigger" data-vendor="isc2" data-level="advanced" data-level-raw="Specialization"
+                data-name="(ISC)² CCSP"
+                data-price="$599"
+                data-description="The premier cloud security certification. Validates skills to design, manage, and secure data, applications, and infrastructure in the cloud."
+                data-notes="*Requires 5 years of IT experience, 3 of which must be in information security and 1 in cloud security."
+                data-vendor-color="modal-isc2"
+                data-link="https://www.isc2.org/certifications/ccsp">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² CCSP</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-isc2 px-3 py-0.5 text-sm font-medium">(ISC)²</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-green-400 flex-shrink-0">$599</span> <!-- Brighter price -->
+            </a>
+            
+            <!-- (ISC)² CSSLP -->
+            <a href="#" class="cert-trigger" data-vendor="isc2" data-level="advanced" data-level-raw="Specialization"
+                data-name="(ISC)² CSSLP"
+                data-price="$599"
+                data-description="For professionals involved in the software development lifecycle (SDLC). Validates skills in application security and writing secure code."
+                data-notes="*Requires 4 years of paid work experience in the SDLC."
+                data-vendor-color="modal-isc2"
+                data-link="https://www.isc2.org/certifications/csslp">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² CSSLP</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-isc2 px-3 py-0.5 text-sm font-medium">(ISC)²</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-green-400 flex-shrink-0">$599</span> <!-- Brighter price -->
+            </a>
+
+            <!-- Microsoft Certified: Azure Security Engineer Associate (AZ-500) -->
+            <a href="#" class="cert-trigger" data-vendor="platform" data-level="advanced" data-level-raw="Advanced"
+                data-name="Microsoft Certified: Azure Security Engineer Associate (AZ-500)"
+                data-price="$165"
+                data-description="Validates subject matter expertise in implementing security controls, maintaining the security posture, and identifying and remediating vulnerabilities in Azure."
+                data-notes="Price is for the exam attempt. This is the core hands-on cert for securing Azure environments. Despite 'Associate' in the name, it is an advanced-level cert."
+                data-vendor-color="modal-platform"
+                data-link="https://learn.microsoft.com/en-us/certifications/exams/az-500/">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">Microsoft Certified: Azure Security... (AZ-500)</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-platform px-3 py-0.5 text-sm font-medium">Cloud & Platform</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-purple-400 flex-shrink-0">$165</span> <!-- Brighter price -->
+            </a>
+
+            <!-- AWS Certified Security - Specialty -->
+            <a href="#" class="cert-trigger" data-vendor="platform" data-level="advanced" data-level-raw="Advanced"
+                data-name="AWS Certified Security - Specialty"
+                data-price="$300"
+                data-description="Validates expertise in creating and implementing security solutions in the AWS cloud. Covers data protection, infrastructure security, incident response, and more."
+                data-notes="Price is for the exam attempt. This is the premier security certification for AWS, the world's largest cloud provider. Requires at least 2 years of hands-on AWS experience."
+                data-vendor-color="modal-platform"
+                data-link="https://aws.amazon.com/certification/certified-security-specialty/">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">AWS Certified Security - Specialty</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-platform px-3 py-0.5 text-sm font-medium">Cloud & Platform</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-purple-400 flex-shrink-0">$300</span> <!-- Brighter price -->
+            </a>
+
+            <!-- Google Cloud Certified: Professional Cloud Security Engineer -->
+            <a href="#" class="cert-trigger" data-vendor="platform" data-level="advanced" data-level-raw="Advanced"
+                data-name="Google Cloud Certified: Professional Cloud Security Engineer"
+                data-price="$200"
+                data-description="Validates expertise in designing, developing, and managing a secure infrastructure on Google Cloud Platform using Google's security technologies."
+                data-notes="Price is for the exam attempt. This is the premier security certification for the GCP ecosystem."
+                data-vendor-color="modal-platform"
+                data-link="https://cloud.google.com/certification/cloud-security-engineer">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">Google Cloud Certified: Professional...</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-platform px-3 py-0.5 text-sm font-medium">Cloud & Platform</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-purple-400 flex-shrink-0">$200</span> <!-- Brighter price -->
+            </a>
+
+            <!-- GIAC Certified Incident Handler (GCIH) -->
+            <a href="#" class="cert-trigger" data-vendor="giac" data-level="advanced" data-level-raw="Specialization"
+                data-name="GIAC Certified Incident Handler (GCIH)"
+                data-price="See Notes*"
+                data-description="Validates your ability to detect, respond to, and resolve computer security incidents. Covers attack techniques, vectors, and incident handling."
+                data-notes="*Price is for the exam attempt only (~$999). Associated SANS training (~$8,000+) is highly recommended and separate."
+                data-vendor-color="modal-giac"
+                data-link="https://www.giac.org/certifications/certified-incident-handler-gcih/">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Certified Incident Handler (GCIH)</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-giac px-3 py-0.5 text-sm font-medium">GIAC</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span> <!-- Brighter price -->
+            </a>
+            
+            <!-- GIAC Certified Intrusion Analyst (GCIA) -->
+            <a href="#" class="cert-trigger" data-vendor="giac" data-level="advanced" data-level-raw="Specialization"
+                data-name="GIAC Certified Intrusion Analyst (GCIA)"
+                data-price="See Notes*"
+                data-description="Validates skills in network traffic analysis, intrusion detection, and network security operations. Focuses on understanding and defending against attacks."
+                data-notes="*Price is for the exam attempt only (~$999). Associated SANS training (~$8,000+) is highly recommended and separate."
+                data-vendor-color="modal-giac"
+                data-link="https://www.giac.org/certifications/certified-intrusion-analyst-gcia/">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Certified Intrusion Analyst (GCIA)</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-giac px-3 py-0.5 text-sm font-medium">GIAC</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span> <!-- Brighter price -->
+            </a>
+            
+            <!-- GIAC Certified Penetration Tester (GPEN) -->
+            <a href="#" class="cert-trigger" data-vendor="giac" data-level="advanced" data-level-raw="Specialization"
+                data-name="GIAC Certified Penetration Tester (GPEN)"
+                data-price="See Notes*"
+                data-description="A 'Red Team' cert validating your ability to perform penetration tests. Covers methodology, vulnerability assessment, and reporting."
+                data-notes="*Price is for the exam attempt only (~$999). Associated SANS training (~$8,000+) is highly recommended and separate."
+                data-vendor-color="modal-giac"
+                data-link="https://www.giac.org/certifications/penetration-tester-gpen/">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Certified Penetration Tester (GPEN)</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-giac px-3 py-0.5 text-sm font-medium">GIAC</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span> <!-- Brighter price -->
+            </a>
+            
+            <!-- GIAC Web Application Penetration Tester (GWAPT) -->
+            <a href="#" class="cert-trigger" data-vendor="giac" data-level="advanced" data-level-raw="Specialization"
+                data-name="GIAC Web Application Penetration Tester (GWAPT)"
+                data-price="See Notes*"
+                data-description="Focuses specifically on web application security. Validates skills in finding, exploiting, and defending web vulnerabilities."
+                data-notes="*Price is for the exam attempt only (~$999). Associated SANS training (~$8,000+) is highly recommended and separate."
+                data-vendor-color="modal-giac"
+                data-link="https://www.giac.org/certifications/web-application-penetration-tester-gwapt/">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Web Application Penetration Tester (GWAPT)</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-giac px-3 py-0.5 text-sm font-medium">GIAC</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span> <!-- Brighter price -->
+            </a>
+            
+            <!-- GIAC Certified Forensic Analyst (GCFA) -->
+            <a href="#" class="cert-trigger" data-vendor="giac" data-level="advanced" data-level-raw="Specialization"
+                data-name="GIAC Certified Forensic Analyst (GCFA)"
+                data-price="See Notes*"
+                data-description="Focuses on Digital Forensics & Incident Response (DFIR). Covers advanced memory forensics, threat hunting, and incident response."
+                data-notes="*Price is for the exam attempt only (~$999). Associated SANS training (~$8,000+) is highly recommended and separate."
+                data-vendor-color="modal-giac"
+                data-link="https://www.giac.org/certifications/certified-forensic-analyst-gcfa/">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Certified Forensic Analyst (GCFA)</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-giac px-3 py-0.5 text-sm font-medium">GIAC</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span> <!-- Brighter price -->
+            </a>
+            
+            <!-- GIAC Reverse Engineering Malware (GREM) -->
+            <a href="#" class="cert-trigger" data-vendor="giac" data-level="advanced" data-level-raw="Specialization"
+                data-name="GIAC Reverse Engineering Malware (GREM)"
+                data-price="See Notes*"
+                data-description="An expert-level cert for malware analysts. Validates skills in reverse-engineering malicious code (viruses, worms, trojans)."
+                data-notes="*Price is for the exam attempt only (~$999). Associated SANS training (~$8,000+) is highly recommended and separate."
+                data-vendor-color="modal-giac"
+                data-link="https://www.giac.org/certifications/reverse-engineering-malware-grem/">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Reverse Engineering Malware (GREM)</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-giac px-3 py-0.5 text-sm font-medium">GIAC</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span> <!-- Brighter price -->
+            </a>
+
+            <!-- Offensive Security OSCP -->
+            <a href="#" class="cert-trigger" data-vendor="offsec" data-level="advanced" data-level-raw="Specialization"
+                data-name="Offensive Security Certified Professional (OSCP)"
+                data-price="$1,749*"
+                data-description="A notoriously difficult, fully hands-on certification. Proves your ability to compromise a series of vulnerable machines in a 24-hour, proctored exam."
+                data-notes="*Price includes the PEN-200 course, 90 days of lab access, and one exam attempt."
+                data-vendor-color="modal-offsec"
+                data-link="https://www.offsec.com/courses/pen-200/">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">Offensive Security OSCP</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-offsec px-3 py-0.5 text-sm font-medium">OffSec</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-gray-200 flex-shrink-0">$1,749*</span> <!-- Brighter price -->
+            </a>
+
+            <!-- CompTIA SecurityX -->
+            <a href="#" class="cert-trigger" data-vendor="comptia" data-level="advanced" data-level-raw="Expert"
+                data-name="CompTIA SecurityX (CASP+)"
+                data-price="$494"
+                data-description="The expert-level certification for enterprise security architects. Validates advanced skills in security engineering, risk, and architecture."
+                data-notes="*Formerly known as CASP+."
+                data-vendor-color="modal-comptia"
+                data-link="https://www.comptia.org/certifications/comptia-advanced-security-practitioner">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">CompTIA SecurityX (CASP+)</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-comptia px-3 py-0.5 text-sm font-medium">CompTIA</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-blue-400 flex-shrink-0">$494</span> <!-- Brighter price -->
+            </a>
+
+            <!-- (ISC)² CISSP -->
+            <a href="#" class="cert-trigger" data-vendor="isc2" data-level="advanced" data-level-raw="Expert"
+                data-name="(ISC)² CISSP"
+                data-price="$749"
+                data-description="The gold standard in cybersecurity. Validates deep technical and managerial competence to design and manage an organization's security program."
+                data-notes="*Requires 5 years of cumulative, paid work experience."
+                data-vendor-color="modal-isc2"
+                data-link="https://www.isc2.org/certifications/cissp">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² CISSP</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-isc2 px-3 py-0.5 text-sm font-medium">(ISC)²</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-green-400 flex-shrink-0">$749</span> <!-- Brighter price -->
+            </a>
+            
+            <!-- (ISC)² ISSAP (CISSP Concentration) -->
+            <a href="#" class="cert-trigger" data-vendor="isc2" data-level="advanced" data-level-raw="Expert"
+                data-name="(ISC)² ISSAP (CISSP Concentration)"
+                data-price="$599"
+                data-description="CISSP Concentration for Architects. Validates skills in designing and managing security architecture. A 'post-CISSP' expert cert."
+                data-notes="*Requires an active CISSP certification in good standing."
+                data-vendor-color="modal-isc2"
+                data-link="https://www.isc2.org/certifications/issap">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² ISSAP (CISSP Concentration)</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-isc2 px-3 py-0.5 text-sm font-medium">(ISC)²</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-green-400 flex-shrink-0">$599</span> <!-- Brighter price -->
+            </a>
+            
+            <!-- (ISC)² ISSEP (CISSP Concentration) -->
+            <a href="#" class="cert-trigger" data-vendor="isc2" data-level="advanced" data-level-raw="Expert"
+                data-name="(ISC)² ISSEP (CISSP Concentration)"
+                data-price="$599"
+                data-description="CISSP Concentration for Engineers. Validates skills in security engineering and integration. A 'post-CISSP' expert cert."
+                data-notes="*Requires an active CISSP certification in good standing."
+                data-vendor-color="modal-isc2"
+                data-link="https://www.isc2.org/certifications/issep">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² ISSEP (CISSP Concentration)</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-isc2 px-3 py-0.5 text-sm font-medium">(ISC)²</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-green-400 flex-shrink-0">$599</span> <!-- Brighter price -->
+            </a>
+            
+            <!-- (ISC)² ISSMP (CISSP Concentration) -->
+            <a href="#" class="cert-trigger" data-vendor="isc2" data-level="advanced" data-level-raw="Expert"
+                data-name="(ISC)² ISSMP (CISSP Concentration)"
+                data-price="$599"
+                data-description="CISSP Concentration for Managers. Validates skills in establishing and managing security programs. A 'post-CISSP' expert cert."
+                data-notes="*Requires an active CISSP certification in good standing."
+                data-vendor-color="modal-isc2"
+                data-link="https://www.isc2.org/certifications/issmp">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² ISSMP (CISSP Concentration)</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-isc2 px-3 py-0.5 text-sm font-medium">(ISC)²</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-green-400 flex-shrink-0">$599</span> <!-- Brighter price -->
+            </a>
+            
+            <!-- GIAC Security Expert (GSE) -->
+            <a href="#" class="cert-trigger" data-vendor="giac" data-level="advanced" data-level-raw="Expert"
+                data-name="GIAC Security Expert (GSE)"
+                data-price="Varies"
+                data-description="The pinnacle of GIAC certifications, demonstrating a mastery of a broad range of cybersecurity skills. Requires passing multiple exams and a hands-on lab."
+                data-notes="*Not a single exam. This is a cumulative, expert-level credential. Price varies significantly."
+                data-vendor-color="modal-giac"
+                data-link="https://www.giac.org/certifications/security-expert-gse/">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Security Expert (GSE)</span> <!-- Brighter text -->
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-giac px-3 py-0.5 text-sm font-medium">GIAC</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-red-400 flex-shrink-0">Varies*</span> <!-- Brighter price -->
+            </a>
+
+
+        </div> <!-- /#cert-list -->
+
+        <!-- GIAC Info Box (MOVED HERE) -->
+        <div id="giac-info-box" class="info-box mt-12">
+            <h3 class="font-bold text-lg text-gray-200">A Note on GIAC & SANS Pricing</h3> <!-- Adjusted text color -->
+            <p class="mt-2 text-gray-400"> <!-- Adjusted text color -->
+                The prices listed for GIAC certifications are for the <strong>exam attempt only</strong>. 
+                GIAC exams are open-book and designed to be taken after completing their associated SANS training courses, which cost several thousand dollars (e.g., $8,000+).
+            </p>
+            <p class="mt-2 text-gray-400"> <!-- Adjusted text color -->
+                It's very challenging, but possible, to "challenge" the exam without the course. SANS also offers a <a href="https://www.sans.org/work-study-program/" target="_blank" rel="noopener noreferrer" class="text-blue-400 underline hover:text-blue-300">Work Study Program</a> (assisting at courses for a deep discount) and <a href="https://www.sans.org/scholarship-academies/" target="_blank" rel="noopener noreferrer" class="text-blue-400 underline hover:text-blue-300">scholarship academies</a> that can significantly reduce or cover these costs.
+            </p>
+        </div>
+    </main>
+
+    <!-- Footer - Dark Mode -->
+    <footer class="mt-12 bg-gray-900 text-gray-500 border-t border-gray-800">
+        <div class="container mx-auto max-w-4xl px-6 py-8 text-center">
+            <p>&copy; <span id="current-year"></span> Cybersecurity Roadmap. All prices are estimates and for informational purposes only.</p>
+            <p class="mt-1 text-sm">This site is not affiliated with or endorsed by CompTIA, (ISC)², GIAC, ISACA, Offensive Security, Microsoft, AWS, Google, or Cisco.</p>
+            <!-- UPDATED DISCLAIMER -->
+            <p class="mt-2 text-sm">
+                <strong>Note on Exclusions:</strong> This list focuses on globally-recognized certifications. Certs from EC-Council are intentionally omitted as they have fallen out of favor with much of the infosec community. Additionally, smaller providers mentioned in the DoD 8140 are excluded as they are not well-recognized outside of the US.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Details Modal -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div id="modal-content" class="modal-content">
+            <!-- Close Button -->
+            <button id="modal-close-btn" class="modal-close-button"> <!-- Applied class -->
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <!-- Header -->
+            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4">
+                <h2 id="modal-name" class="text-2xl font-bold pr-10">Cert Name</h2> <!-- Removed text-gray-900 -->
+                <span id="modal-price" class="mt-2 sm:mt-0 sm:ml-4 flex-shrink-0 rounded-full px-4 py-1 text-lg font-bold"></span>
+            </div>
+            
+            <!-- Tags -->
+            <div class="mb-4 flex flex-wrap gap-2">
+                <span id="modal-vendor-tag" class="inline-block rounded-full px-3 py-1 text-sm font-medium"></span>
+                <span id="modal-level-tag" class="inline-block rounded-full px-3 py-1 text-sm font-medium"></span>
+            </div>
+
+            <!-- Description -->
+            <p id="modal-description" class="mt-4">Full description goes here.</p> <!-- Removed text-gray-700 -->
+            
+            <!-- Notes -->
+            <p id="modal-notes" class="mt-3 text-sm font-medium"></p> <!-- Removed text-gray-600 -->
+
+            <!-- Official Link Button -->
+            <div class="mt-6">
+                <a id="modal-link" href="#" target="_blank" rel="noopener noreferrer" class="official-link-btn"> <!-- Applied class -->
+                    View Official Page
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Set the current year in the footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // --- Filter Logic ---
+        const filterVendorContainer = document.getElementById('filter-container-vendor');
+        const filterLevelContainer = document.getElementById('filter-container-level');
+        const certTriggers = document.querySelectorAll('.cert-trigger');
+       
+
+        let currentVendorFilter = 'all';
+        let currentLevelFilter = 'all';
+
+        function applyFilters() {
+            certTriggers.forEach(card => {
+                const vendor = card.dataset.vendor;
+                const level = card.dataset.level;
+
+                const vendorMatch = (currentVendorFilter === 'all' || vendor === currentVendorFilter);
+                const levelMatch = (currentLevelFilter === 'all' || level === currentLevelFilter);
+
+                if (vendorMatch && levelMatch) {
+                    card.classList.remove('hidden');
+                    // Force re-flow for transition
+                    card.style.display = 'flex'; 
+                } else {
+                    card.classList.add('hidden');
+                    // Use timeout to allow transition to play before display:none
+                    setTimeout(() => {
+                        if (card.classList.contains('hidden')) {
+                            card.style.display = 'none';
+                        }
+                    }, 300); // Match transition duration
+                }
+            });
+            // Restore display for items that are no longer hidden
+            certTriggers.forEach(card => {
+                if (!card.classList.contains('hidden')) {
+                    card.style.display = 'flex';
+                }
+            });
+        }
+
+        filterVendorContainer.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('filter-btn')) return;
+            
+            filterVendorContainer.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            currentVendorFilter = e.target.dataset.filter;
+            
+            // REMOVED: Show/Hide GIAC Info Box logic
+            // if (currentVendorFilter === 'giac') { ... }
+
+            applyFilters();
+        });
+
+        filterLevelContainer.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('filter-btn')) return;
+            
+            filterLevelContainer.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            currentLevelFilter = e.target.dataset.filter;
+
+            applyFilters();
+        });
+
+        // --- Modal Logic ---
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalContent = document.getElementById('modal-content');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+        const certList = document.getElementById('cert-list');
+
+        // Modal content fields
+        const modalName = document.getElementById('modal-name');
+        const modalPrice = document.getElementById('modal-price');
+        const modalVendorTag = document.getElementById('modal-vendor-tag');
+        const modalLevelTag = document.getElementById('modal-level-tag');
+        const modalDescription = document.getElementById('modal-description');
+        const modalNotes = document.getElementById('modal-notes');
+        const modalLink = document.getElementById('modal-link'); // NEW
+
+        certList.addEventListener('click', (e) => {
+            const trigger = e.target.closest('.cert-trigger');
+            if (!trigger) return;
+
+            e.preventDefault(); 
+            const data = trigger.dataset;
+
+            // Populate modal
+            modalName.textContent = data.name;
+            modalPrice.textContent = data.price;
+            modalDescription.textContent = data.description;
+            modalNotes.textContent = data.notes;
+            modalLevelTag.textContent = data.levelRaw; // Use the "raw" level name
+            modalLink.href = data.link; // NEW
+
+            // Clear old vendor classes
+            modalContent.className = 'modal-content'; // Reset to base class first
+            // modalContent.classList.remove('modal-comptia', 'modal-isc2', 'modal-giac', 'modal-isaca', 'modal-offsec', 'modal-platform');
+            modalPrice.className = 'mt-2 sm:mt-0 sm:ml-4 flex-shrink-0 rounded-full px-4 py-1 text-lg font-bold'; // Reset price classes
+            // modalPrice.classList.remove('text-blue-700', 'bg-blue-100', 'text-green-700', 'bg-green-100', 'text-red-700', 'bg-red-100', 'text-yellow-700', 'bg-yellow-100', 'text-gray-800', 'bg-gray-100', 'text-purple-700', 'bg-purple-100');
+            modalVendorTag.className = 'inline-block rounded-full px-3 py-1 text-sm font-medium'; // Reset vendor tag classes
+            // modalVendorTag.classList.remove('tag-comptia', 'tag-isc2', 'tag-giac', 'tag-isaca', 'tag-offsec', 'tag-platform');
+            
+            // Clear and set level tag styles
+            modalLevelTag.className = 'inline-block rounded-full px-3 py-1 text-sm font-medium'; // Reset level tag classes
+            // modalLevelTag.classList.remove('tag-basic', 'tag-intermediate', 'tag-advanced');
+            if (data.level === 'basic') {
+                modalLevelTag.classList.add('tag-basic');
+            } else if (data.level === 'intermediate') {
+                modalLevelTag.classList.add('tag-intermediate');
+            } else if (data.level === 'advanced') {
+                modalLevelTag.classList.add('tag-advanced');
+            }
+
+            // Set new vendor-specific styles
+            if (data.vendor === 'comptia') {
+                modalContent.classList.add('modal-comptia');
+                modalPrice.classList.add('text-blue-200', 'bg-blue-900'); // Dark mode adjusted
+                modalVendorTag.classList.add('tag-comptia');
+                modalVendorTag.textContent = 'CompTIA';
+            } else if (data.vendor === 'isc2') {
+                modalContent.classList.add('modal-isc2');
+                modalPrice.classList.add('text-green-200', 'bg-green-900'); // Dark mode adjusted
+                modalVendorTag.classList.add('tag-isc2');
+                modalVendorTag.textContent = '(ISC)²';
+            } else if (data.vendor === 'giac') {
+                modalContent.classList.add('modal-giac');
+                modalPrice.classList.add('text-red-200', 'bg-red-900'); // Dark mode adjusted
+                modalVendorTag.classList.add('tag-giac');
+                modalVendorTag.textContent = 'GIAC';
+            } else if (data.vendor === 'isaca') {
+                modalContent.classList.add('modal-isaca');
+                modalPrice.classList.add('text-yellow-200', 'bg-yellow-900'); // Dark mode adjusted
+                modalVendorTag.classList.add('tag-isaca');
+                modalVendorTag.textContent = 'ISACA';
+            } else if (data.vendor === 'offsec') {
+                modalContent.classList.add('modal-offsec');
+                modalPrice.classList.add('text-gray-200', 'bg-gray-700'); // Dark mode adjusted
+                modalVendorTag.classList.add('tag-offsec');
+                modalVendorTag.textContent = 'OffSec';
+            } else if (data.vendor === 'platform') {
+                modalContent.classList.add('modal-platform');
+                modalPrice.classList.add('text-purple-200', 'bg-purple-900'); // Dark mode adjusted
+                modalVendorTag.classList.add('tag-platform');
+                modalVendorTag.textContent = 'Cloud & Platform';
+            }
+            
+            // --- NEW: Gemini Study Plan Logic ---
+            // Clear previous results and hide loader
+            
+            // NEW: Show the modal
+            modalOverlay.classList.remove('hidden');
+        });
+
+        // Function to close the modal
+        const closeModal = () => {
+            modalOverlay.classList.add('hidden');
+        };
+
+        // Close modal events
+        modalCloseBtn.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                closeModal();
+            }
+        });
+
+        // Initialize view
+        applyFilters();
+
+    </script>
+
+</body>
+</html>
+
