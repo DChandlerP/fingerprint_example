@@ -29,25 +29,100 @@
     .diagram-component { cursor: pointer; transition: all 0.2s ease-in-out; }
     .diagram-component:hover { transform: scale(1.05); filter: drop-shadow(0 0 10px #38bdf8); }
     .connector { stroke: #4b5563; stroke-width: 2px; }
+    /* Ensure dropdown content is above other elements */
+    .group .absolute {
+      z-index: 50;
+    }
   </style>
 </head>
 <body class="bg-gray-950 text-white min-h-screen flex flex-col">
-  <!-- Navigation Bar -->
-  <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-30">
+  <!-- 
+    NAV BAR FOR "GUIDES & CASE STUDIES" PAGES
+    - "Home" is inactive.
+    - "Guides & Case Studies" is ACTIVE.
+    - "Tools & Demos" is inactive.
+  -->
+  <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
       <div class="w-full flex items-center justify-center px-6 py-3">
+         <!-- Main navigation container -->
          <div class="flex flex-wrap justify-center space-x-4">
-          <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-home" class="mr-1"></span>Home</a>
-          <a href="phishing.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-phishing" class="mr-1"></span>Phishing</a>
-          <a href="cloud.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-cloud" class="mr-1"></span>Cloud</a>
-          <a href="sast.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-sast" class="mr-1"></span>SAST</a>
-          <a href="threatmodel.html" class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition"><span id="nav-threat" class="mr-1"></span>Threat Model</a>
-          <a href="checklist.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-checklist" class="mr-1"></span>Checklist</a>
-          <a href="jwt.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-jwt" class="mr-1"></span>JWT Decoder</a>
-          <a href="encryption.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-encryption" class="mr-1"></span>Encryption</a>
-          <a href="fingerprint.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-fp" class="mr-1"></span>Fingerprinting</a>
-          <a href="epssdemo.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-epss" class="mr-1"></span>CVSS vs EPSS</a>
-          <a href="dashboard.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-dashboard" class="mr-1"></span>Threat Intel</a>
-          <a href="modcat.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-modcat" class="mr-1"></span>PRS MODCAT</a>
+          
+          <!-- Home Link (Inactive) -->
+          <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
+            <span id="nav-home" class="mr-1"></span>Home
+          </a>
+
+          <!-- Guides & Case Studies Dropdown (ACTIVE) -->
+          <div class="relative group">
+            <!-- Dropdown Trigger -->
+            <button class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition">
+              <span id="nav-guides-trigger" class="mr-1"></span>
+              Guides & Case Studies
+              <span id="nav-guides-chevron" class="ml-1"></span>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+              <div class="py-1" role="menu" aria-orientation="vertical">
+                <a href="cloud.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-cloud" class="mr-2"></span>Cloud
+                </a>
+                <a href="cyber_roadmap.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-roadmap" class="mr-2"></span>Cyber Roadmap
+                </a>
+                <a href="phishing.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-phishing" class="mr-2"></span>Phishing
+                </a>
+                <a href="sast.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-sast" class="mr-2"></span>SAST
+                </a>
+                <a href="threatmodel.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-threat" class="mr-2"></span>Threat Model
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tools & Demos Dropdown (Inactive) -->
+          <div class="relative group">
+            <!-- Dropdown Trigger -->
+            <button class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
+              <span id="nav-tools-trigger" class="mr-1"></span>
+              Tools & Demos
+              <span id="nav-tools-chevron" class="ml-1"></span>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+              <div class="py-1" role="menu" aria-orientation="vertical">
+                <a href="checklist.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-checklist" class="mr-2"></span>Checklist
+                </a>
+                <a href="epssdemo.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-epss" class="mr-2"></span>CVSS vs EPSS
+                </a>
+                <a href="encryption.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-encryption" class="mr-2"></span>Encryption
+                </a>
+                <a href="fingerprint.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-fp" class="mr-2"></span>Fingerprinting
+                </a>
+                <a href="jwt.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-jwt" class="mr-2"></span>JWT Decoder
+                </a>
+                <a href="modcat.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-modcat" class="mr-2"></span>PRS MODCAT
+                </a>
+                <a href="shamir.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-shamir" class="mr-2"></span>Shamir's Visualizer
+                </a>
+                <a href="dashboard.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-dashboard" class="mr-2"></span>Threat Intel
+                </a>
+              </div>
+            </div>
+          </div>
+          
         </div>
       </div>
   </nav>
@@ -122,69 +197,135 @@
   </footer>
 
   <script>
-    const threatData = {
-        user: {
-            name: 'User',
-            threats: [
-                { type: 'Spoofing', scenario: 'An attacker impersonates a legitimate user by stealing their credentials through a phishing attack.', mitigation: 'Implement Multi-Factor Authentication (MFA). Educate users on phishing.' },
-                { type: 'Tampering', scenario: 'A malicious user attempts to tamper with data sent from their client, such as changing their user ID in a hidden form field.', mitigation: 'Perform all validation and authorization checks on the server-side, never trust client-side data.' },
-                { type: 'Repudiation', scenario: 'A user performs a critical action (e.g., deleting data) and later claims they never did it.', mitigation: 'Implement comprehensive audit logging for all sensitive actions, including user ID, timestamp, and IP address.' },
-            ]
-        },
-        webapp: {
-            name: 'Web App',
-            threats: [
-                { type: 'Information Disclosure', scenario: 'An error message reveals sensitive system information, such as a database schema or internal file paths.', mitigation: 'Configure the server to show generic error messages to users and log detailed errors internally.' },
-                { type: 'Denial of Service', scenario: 'An attacker floods the login endpoint with requests, overwhelming the server and preventing legitimate users from logging in.', mitigation: 'Implement rate limiting and consider a Web Application Firewall (WAF) to block malicious IPs.' },
-                { type: 'Elevation of Privilege', scenario: 'A flaw in session management allows a regular user to access administrative endpoints by guessing URLs.', mitigation: 'Enforce strict, role-based access control (RBAC) on all server-side endpoints.' },
-            ]
-        },
-        database: {
-            name: 'Database',
-            threats: [
-                { type: 'Spoofing', scenario: 'An attacker uses stolen application credentials from a configuration file to connect to the database directly.', mitigation: 'Use a secrets management system (e.g., AWS Secrets Manager, HashiCorp Vault) instead of hardcoding credentials.' },
-                { type: 'Tampering', scenario: 'A SQL Injection vulnerability allows an attacker to modify or delete records in the database.', mitigation: 'Use parameterized queries (prepared statements) for all database interactions.' },
-                { type: 'Information Disclosure', scenario: 'The database is not encrypted at rest, and an attacker who gains access to the server\'s file system can read the raw data files.', mitigation: 'Enable Transparent Data Encryption (TDE) on the database server.' },
-            ]
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- 1. Page-Specific Logic ---
+        const threatData = {
+            user: {
+                name: 'User',
+                threats: [
+                    { type: 'Spoofing', scenario: 'An attacker impersonates a legitimate user by stealing their credentials through a phishing attack.', mitigation: 'Implement Multi-Factor Authentication (MFA). Educate users on phishing.' },
+                    { type: 'Tampering', scenario: 'A malicious user attempts to tamper with data sent from their client, such as changing their user ID in a hidden form field.', mitigation: 'Perform all validation and authorization checks on the server-side, never trust client-side data.' },
+                    { type: 'Repudiation', scenario: 'A user performs a critical action (e.g., deleting data) and later claims they never did it.', mitigation: 'Implement comprehensive audit logging for all sensitive actions, including user ID, timestamp, and IP address.' },
+                ]
+            },
+            webapp: {
+                name: 'Web App',
+                threats: [
+                    { type: 'Information Disclosure', scenario: 'An error message reveals sensitive system information, such as a database schema or internal file paths.', mitigation: 'Configure the server to show generic error messages to users and log detailed errors internally.' },
+                    { type: 'Denial of Service', scenario: 'An attacker floods the login endpoint with requests, overwhelming the server and preventing legitimate users from logging in.', mitigation: 'Implement rate limiting and consider a Web Application Firewall (WAF) to block malicious IPs.' },
+                    { type: 'Elevation of Privilege', scenario: 'A flaw in session management allows a regular user to access administrative endpoints by guessing URLs.', mitigation: 'Enforce strict, role-based access control (RBAC) on all server-side endpoints.' },
+                ]
+            },
+            database: {
+                name: 'Database',
+                threats: [
+                    { type: 'Spoofing', scenario: 'An attacker uses stolen application credentials from a configuration file to connect to the database directly.', mitigation: 'Use a secrets management system (e.g., AWS Secrets Manager, HashiCorp Vault) instead of hardcoding credentials.' },
+                    { type: 'Tampering', scenario: 'A SQL Injection vulnerability allows an attacker to modify or delete records in the database.', mitigation: 'Use parameterized queries (prepared statements) for all database interactions.' },
+                    { type: 'Information Disclosure', scenario: 'The database is not encrypted at rest, and an attacker who gains access to the server\'s file system can read the raw data files.', mitigation: 'Enable Transparent Data Encryption (TDE) on the database server.' },
+                ]
+            }
+        };
+
+        const diagram = document.getElementById('diagram');
+        const threatOutput = document.getElementById('threat-output');
+
+        function displayThreats(componentId) {
+            const data = threatData[componentId];
+            if (!data) return;
+
+            let html = `<h4 class="text-lg font-semibold text-blue-300 mb-3">Threats for: ${data.name}</h4>`;
+            
+            data.threats.forEach(threat => {
+                html += `
+                    <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 mb-3">
+                        <p class="font-bold text-blue-300"><span class="font-mono bg-blue-900 px-2 py-1 rounded text-sm">${threat.type[0]}</span> ${threat.type}</p>
+                        <p class="mt-2 text-gray-300"><span class="font-semibold text-gray-100">Scenario:</span> ${threat.scenario}</p>
+                        <p class="mt-2 text-gray-300"><span class="font-semibold text-gray-100">Mitigation:</span> ${threat.mitigation}</p>
+                    </div>
+                `;
+            });
+            threatOutput.innerHTML = html;
         }
-    };
 
-    const diagram = document.getElementById('diagram');
-    const threatOutput = document.getElementById('threat-output');
+        if(diagram) {
+            diagram.addEventListener('click', (e) => {
+                const component = e.target.closest('.diagram-component');
+                if (component) {
+                    displayThreats(component.id);
+                }
+            });
+        }
 
-    function displayThreats(componentId) {
-        const data = threatData[componentId];
-        if (!data) return;
+        // --- 2. Render ALL Icons (Nav + Page) ---
+        if (window.lucide) {
+            lucide.createIcons({
+            icons: {
+                // All Nav Icons
+                'nav-home': lucide.Home,
+                'nav-guides-trigger': lucide.BookOpen,
+                'nav-tools-trigger': lucide.Briefcase,
+                'nav-guides-chevron': lucide.ChevronDown,
+                'nav-tools-chevron': lucide.ChevronDown,
+                'nav-cloud': lucide.Cloud,
+                'nav-roadmap': lucide.Map,
+                'nav-phishing': lucide.Fish,
+                'nav-sast': lucide.FileSearch,
+                'nav-threat': lucide.ShieldAlert,
+                'nav-checklist': lucide.ListChecks,
+                'nav-epss': lucide.Activity,
+                'nav-encryption': lucide.Lock,
+                'nav-fp': lucide.Fingerprint,
+                'nav-jwt': lucide.KeyRound,
+                'nav-modcat': lucide.Guitar,
+                'nav-shamir': lucide.Share2,
+                'nav-dashboard': lucide.LayoutDashboard,
 
-        let html = `<h4 class="text-lg font-semibold text-blue-300 mb-3">Threats for: ${data.name}</h4>`;
-        
-        data.threats.forEach(threat => {
-            html += `
-                <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 mb-3">
-                    <p class="font-bold text-blue-300"><span class="font-mono bg-blue-900 px-2 py-1 rounded text-sm">${threat.type[0]}</span> ${threat.type}</p>
-                    <p class="mt-2 text-gray-300"><span class="font-semibold text-gray-100">Scenario:</span> ${threat.scenario}</p>
-                    <p class="mt-2 text-gray-300"><span class="font-semibold text-gray-100">Mitigation:</span> ${threat.mitigation}</p>
-                </div>
-            `;
+                // Page-specific icons
+                'stride-icon': lucide.Target, 
+                'pasta-icon': lucide.ClipboardList, 
+                'compare-icon': lucide.Scaling,
+                'stride-icon2': lucide.Target, 
+                'pasta-icon2': lucide.ClipboardList, 
+                'vast-icon': lucide.GitMerge, 
+                'linddun-icon': lucide.ShieldQuestion, 
+                'attacktree-icon': lucide.GitFork, 
+                'dread-icon': lucide.Calculator
+            },
+            attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
+            });
+        }
+
+        // --- 3. Add Nav Dropdown Logic ---
+        const dropdownButtons = document.querySelectorAll('.group > button');
+        dropdownButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+            const dropdownMenu = e.currentTarget.nextElementSibling;
+            // Close all other open dropdowns
+            document.querySelectorAll('.group .absolute').forEach(menu => {
+                if (menu !== dropdownMenu) {
+                menu.classList.add('opacity-0', 'invisible');
+                menu.classList.remove('opacity-100', 'visible');
+                }
+            });
+            // Toggle the current dropdown
+            dropdownMenu.classList.toggle('opacity-0');
+            dropdownMenu.classList.toggle('invisible');
+            dropdownMenu.classList.toggle('opacity-100');
+            dropdownMenu.classList.toggle('visible');
+            });
         });
-        threatOutput.innerHTML = html;
-    }
 
-    diagram.addEventListener('click', (e) => {
-        const component = e.target.closest('.diagram-component');
-        if (component) {
-            displayThreats(component.id);
-        }
-    });
-
-    lucide.createIcons({
-      icons: {
-        'nav-home': lucide.Home, 'nav-phishing': lucide.Fish, 'nav-cloud': lucide.Cloud, 'nav-sast': lucide.Code, 'nav-threat': lucide.ShieldAlert, 'nav-checklist': lucide.ListChecks, 'nav-jwt': lucide.KeyRound, 'nav-encryption': lucide.Lock, 'nav-fp': lucide.Fingerprint, 'nav-epss': lucide.Activity, 'nav-dashboard': lucide.LayoutDashboard, 'nav-modcat': lucide.Guitar,
-        'stride-icon': lucide.Target, 'pasta-icon': lucide.ClipboardList, 'compare-icon': lucide.Scaling,
-        'stride-icon2': lucide.Target, 'pasta-icon2': lucide.ClipboardList, 'vast-icon': lucide.GitMerge, 'linddun-icon': lucide.ShieldQuestion, 'attacktree-icon': lucide.GitFork, 'dread-icon': lucide.Calculator
-      },
-      attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
+        // Close dropdowns if clicking outside
+        window.addEventListener('click', (e) => {
+            if (!e.target.closest('.group')) {
+            document.querySelectorAll('.group .absolute').forEach(menu => {
+                menu.classList.add('opacity-0', 'invisible');
+                menu.classList.remove('opacity-100', 'visible');
+            });
+            }
+        });
     });
   </script>
 </body>
 </html>
+

@@ -19,6 +19,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CVSS vs. EPSS Comparator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -31,28 +32,104 @@
         background: linear-gradient(135deg, #1e40af, #3b82f6);
         border: 2px solid #60a5fa;
       }
+       /* Ensure dropdown content is above other elements */
+      .group .absolute {
+        z-index: 50;
+      }
     </style>
 </head>
 
 <body class="bg-gray-950 text-white min-h-screen flex flex-col">
-    <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-30">
-      <div class="w-full flex items-center justify-center px-6 py-3">
-         <div class="flex flex-wrap justify-center space-x-4">
-          <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-home" class="mr-1"></span>Home</a>
-          <a href="phishing.html" class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition"><span id="nav-phishing" class="mr-1"></span>Phishing</a>
-          <a href="cloud.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-cloud" class="mr-1"></span>Cloud</a>
-          <a href="sast.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-sast" class="mr-1"></span>SAST</a>
-          <a href="threatmodel.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-threat" class="mr-1"></span>Threat Model</a>
-          <a href="checklist.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-checklist" class="mr-1"></span>Checklist</a>
-          <a href="jwt.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-jwt" class="mr-1"></span>JWT Decoder</a>
-          <a href="encryption.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-encryption" class="mr-1"></span>Encryption</a>
-          <a href="fingerprint.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-fp" class="mr-1"></span>Fingerprinting</a>
-          <a href="epssdemo.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-epss" class="mr-1"></span>CVSS vs EPSS</a>
-          <a href="dashboard.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-dashboard" class="mr-1"></span>Threat Intel</a>
-          <a href="modcat.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-modcat" class="mr-1"></span>PRS MODCAT</a>
+    <!-- 
+      NAV BAR FOR "TOOLS & DEMOS" PAGES
+      - "Home" is inactive.
+      - "Guides & Case Studies" is inactive.
+      - "Tools & Demos" is ACTIVE.
+    -->
+    <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
+        <div class="w-full flex items-center justify-center px-6 py-3">
+           <!-- Main navigation container -->
+           <div class="flex flex-wrap justify-center space-x-4">
+            
+            <!-- Home Link (Inactive) -->
+            <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
+              <span id="nav-home" class="mr-1"></span>Home
+            </a>
+
+            <!-- Guides & Case Studies Dropdown (Inactive) -->
+            <div class="relative group">
+              <!-- Dropdown Trigger -->
+              <button class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
+                <span id="nav-guides-trigger" class="mr-1"></span>
+                Guides & Case Studies
+                <span id="nav-guides-chevron" class="ml-1"></span>
+              </button>
+              
+              <!-- Dropdown Menu -->
+              <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <div class="py-1" role="menu" aria-orientation="vertical">
+                  <a href="cloud.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-cloud" class="mr-2"></span>Cloud
+                  </a>
+                  <a href="cyber_roadmap.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-roadmap" class="mr-2"></span>Cyber Roadmap
+                  </a>
+                  <a href="phishing.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-phishing" class="mr-2"></span>Phishing
+                  </a>
+                  <a href="sast.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-sast" class="mr-2"></span>SAST
+                  </a>
+                  <a href="threatmodel.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-threat" class="mr-2"></span>Threat Model
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tools & Demos Dropdown (ACTIVE) -->
+            <div class="relative group">
+              <!-- Dropdown Trigger -->
+               <button class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition">
+                <span id="nav-tools-trigger" class="mr-1"></span>
+                Tools & Demos
+                <span id="nav-tools-chevron" class="ml-1"></span>
+              </button>
+              
+              <!-- Dropdown Menu -->
+              <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <div class="py-1" role="menu" aria-orientation="vertical">
+                  <a href="checklist.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-checklist" class="mr-2"></span>Checklist
+                  </a>
+                  <a href="epssdemo.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-epss" class="mr-2"></span>CVSS vs EPSS
+                  </a>
+                  <a href="encryption.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-encryption" class="mr-2"></span>Encryption
+                  </a>
+                  <a href="fingerprint.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-fp" class="mr-2"></span>Fingerprinting
+                  </a>
+                  <a href="jwt.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-jwt" class="mr-2"></span>JWT Decoder
+                  </a>
+                  <a href="modcat.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-modcat" class="mr-2"></span>PRS MODCAT
+                  </a>
+                  <a href="shamir.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-shamir" class="mr-2"></span>Shamir's Visualizer
+                  </a>
+                  <a href="dashboard.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-dashboard" class="mr-2"></span>Threat Intel
+                  </a>
+                </div>
+              </div>
+            </div>
+            
+          </div>
         </div>
-      </div>
-  </nav>
+    </nav>
 
     <main class="flex-1 px-4 py-10 max-w-7xl mx-auto w-full">
         <header class="text-center mb-10">
@@ -90,274 +167,327 @@
         © 2025 D. Chandler Prince
     </footer>
 
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
     <script>
-        // --- All JavaScript functions are now combined here ---
-        
-        const metricTooltips = {
-            attackVector: 'This metric reflects the context by which vulnerability exploitation is possible. The more remote an attacker can be to exploit the vulnerability, the higher the score.',
-            attackComplexity: 'This metric describes the conditions beyond the attacker\'s control that must exist to exploit the vulnerability. The lower the complexity, the higher the score.',
-            privilegesRequired: 'This metric describes the level of privileges an attacker must possess before successfully exploiting the vulnerability. No privileges required is the highest score.',
-            userInteraction: 'This metric captures the requirement for a user, other than the attacker, to participate in the successful compromise of the vulnerable component. No interaction required is the highest score.',
-            scope: 'An important feature of CVSS v3.x is the concept of Scope. When a vulnerability in one component impacts a separate component, a Scope change has occurred.',
-            confidentialityImpact: 'This metric measures the impact to the confidentiality of the information managed by the system due to a successfully exploited vulnerability.',
-            integrityImpact: 'This metric measures the impact to the integrity of a successfully exploited vulnerability. Integrity refers to the trustworthiness and veracity of information.',
-            availabilityImpact: 'This metric measures the impact to the availability of the impacted component resulting from a successfully exploited vulnerability.',
-            exploitabilityScore: 'A CVSS score component that measures the ease and technical means by which a vulnerability can be exploited.',
-            impactScore: 'A CVSS score component that measures the impact of a successfully exploited vulnerability on confidentiality, integrity, and availability.'
-        };
-        
-        async function fetchVulnComparison() {
-            const cveId = document.getElementById('vulnId').value.trim();
-            const resultsContainer = document.getElementById('results-container');
-            
-            if (!cveId) {
-                resultsContainer.innerHTML = `<p class="text-center text-red-400">Please enter a CVE ID.</p>`;
-                return;
-            }
-
-            resultsContainer.innerHTML = `<div class="text-center p-12 bg-gray-900 rounded-lg border border-gray-800"><p class="text-2xl animate-pulse">Fetching data for ${cveId}...</p></div>`;
-            const nvdUrl = `https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=${cveId}`;
-            const epssUrl = `https://api.first.org/data/v1/epss?cve=${cveId}`;
-
-            try {
-                const [nvdResult, epssResult] = await Promise.allSettled([
-                    fetch(nvdUrl).then(res => res.ok ? res.json() : Promise.reject(`NVD API Error: ${res.status}`)),
-                    fetch(epssUrl).then(res => res.ok ? res.json() : Promise.reject(`EPSS API Error: ${res.status}`))
-                ]);
-
-                let cveDetails = { description: 'No description found.' };
-                let cvssData = null;
-                let epssData = null;
-
-                if (nvdResult.status === 'fulfilled' && nvdResult.value.vulnerabilities?.length > 0) {
-                    const cve = nvdResult.value.vulnerabilities[0].cve;
-                    cveDetails.description = cve.descriptions.find(d => d.lang === 'en')?.value || 'No description provided.';
-                    
-                    const nistMetricV3 = cve.metrics.cvssMetricV31?.find(m => m.source === 'nvd@nist.gov');
-                    const anyMetricV3 = cve.metrics.cvssMetricV31?.[0];
-                    const metricsV3 = nistMetricV3 || anyMetricV3;
-                    
-                    const nistMetricV4 = cve.metrics.cvssMetricV40?.find(m => m.source === 'nvd@nist.gov');
-                    const anyMetricV4 = cve.metrics.cvssMetricV40?.[0];
-                    const metricsV4 = nistMetricV4 || anyMetricV4;
-
-                    if (metricsV4) {
-                        cvssData = { ...metricsV4.cvssData, version: '4.0' };
-                    } else if (metricsV3) {
-                        cvssData = { ...metricsV3.cvssData, exploitabilityScore: metricsV3.exploitabilityScore, impactScore: metricsV3.impactScore, version: '3.1' };
-                    }
-                }
-
-                if (epssResult.status === 'fulfilled' && epssResult.value.data?.length > 0) {
-                    epssData = epssResult.value.data[0];
-                }
-                renderResults(cveId, cveDetails, cvssData, epssData);
-            } catch (error) {
-                console.error('Fetch error:', error);
-                resultsContainer.innerHTML = `<p class="text-center text-red-400">An unexpected error occurred.</p>`;
-            }
-        }
-
-        function renderResults(cveId, cveDetails, cvssData, epssData) {
-            const resultsContainer = document.getElementById('results-container');
-            let cvssColumnHtml = '';
-            let cvssBreakdownHtml = '';
-
-            if (cvssData && cvssData.version === '4.0') {
-                cvssColumnHtml = renderCvss4Column(cvssData);
-                // Future: cvssBreakdownHtml = renderCvss4Breakdown(cvssData);
-            } else if (cvssData && cvssData.version === '3.1') {
-                cvssColumnHtml = renderCvss3Column(cvssData);
-                cvssBreakdownHtml = renderCvss3Breakdown(cvssData);
-            } else {
-                cvssColumnHtml = `<div class="bg-gray-900 p-6"><h3 class="text-2xl font-semibold text-yellow-400 mb-4">CVSS Data</h3><p class="text-gray-400">No CVSS data found for this CVE.</p></div>`;
-            }
-
-            resultsContainer.innerHTML = `
-                <div class="bg-gray-900 rounded-xl shadow-2xl border border-gray-800 overflow-hidden mb-8">
-                    <div class="p-6">
-                        <h2 class="text-3xl font-bold text-white mb-3">${cveId}</h2>
-                        <p class="text-gray-300 mb-6">${cveDetails.description}</p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-800">
-                        ${cvssColumnHtml}
-                        ${renderEpssColumn(epssData)}
-                    </div>
-                </div>
-                ${cvssBreakdownHtml}
-            `;
-        }
-        
-        function renderCvss4Column(data) {
-            const { baseScore, baseSeverity, vectorString, attackVector, privilegesRequired, userInteraction } = data;
-            const { severityClass, severityTextClass } = getSeverityClasses(baseSeverity);
-             return `<div class="bg-gray-900 p-6">
-                    <h3 class="text-2xl font-semibold text-yellow-400 mb-4">CVSS v4.0 Severity</h3>
-                    <div class="text-center rounded-lg p-6 mb-6 ${severityClass}">
-                        <div class="text-sm font-bold uppercase tracking-widest ${severityTextClass} opacity-75">Base Score</div>
-                        <div class="text-7xl font-bold ${severityTextClass}">${baseScore.toFixed(1)}</div>
-                        <div class="text-3xl font-semibold ${severityTextClass}">${baseSeverity}</div>
-                    </div>
-                    <div class="font-mono text-xs text-center text-gray-400 mb-4 break-all">${vectorString}</div>
-                    <h4 class="text-lg font-semibold text-gray-200 mb-3">Metric Details</h4>
-                    <ul class="space-y-2">
-                        ${renderMetricItem('Attack Vector', attackVector)}
-                        ${renderMetricItem('Privileges Required', privilegesRequired)}
-                        ${renderMetricItem('User Interaction', userInteraction)}
-                    </ul>
-                </div>`;
-        }
-        
-        function renderCvss3Column(data) {
-            const { baseScore, baseSeverity, exploitabilityScore, impactScore } = data;
-            const { severityClass, severityTextClass } = getSeverityClasses(baseSeverity);
-            return `<div class="bg-gray-900 p-6">
-                    <h3 class="text-2xl font-semibold text-yellow-400 mb-4">CVSS v3.1 Severity</h3>
-                    <div class="text-center rounded-lg p-6 mb-6 ${severityClass}">
-                        <div class="text-sm font-bold uppercase tracking-widest ${severityTextClass} opacity-75">Base Score</div>
-                        <div class="text-7xl font-bold ${severityTextClass}">${baseScore.toFixed(1)}</div>
-                        <div class="text-3xl font-semibold ${severityTextClass}">${baseSeverity}</div>
-                    </div>
-                    <h4 class="text-lg font-semibold text-gray-200 mb-3">Metric Scores</h4>
-                    <ul class="space-y-2">
-                        ${renderMetricItem('Exploitability Score', exploitabilityScore)}
-                        ${renderMetricItem('Impact Score', impactScore)}
-                    </ul>
-                </div>`;
-        }
-
-        function renderCvss3Breakdown(data) {
-            const { vectorString, attackVector, attackComplexity, privilegesRequired, userInteraction, scope, confidentialityImpact, integrityImpact, availabilityImpact } = data;
-            return `
-            <div class="bg-gray-900 rounded-xl shadow-2xl border border-gray-800 overflow-hidden">
-                <div class="p-6 border-b border-gray-800">
-                     <h3 class="text-2xl font-semibold text-yellow-400">CVSS v3.1 Vector Breakdown</h3>
-                     <p class="font-mono text-sm text-gray-400 mt-2 break-all">${vectorString || 'N/A'}</p>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-800">
-                    ${renderBreakdownCard('Attack Vector', attackVector, metricTooltips.attackVector)}
-                    ${renderBreakdownCard('Attack Complexity', attackComplexity, metricTooltips.attackComplexity)}
-                    ${renderBreakdownCard('Privileges Required', privilegesRequired, metricTooltips.privilegesRequired)}
-                    ${renderBreakdownCard('User Interaction', userInteraction, metricTooltips.userInteraction)}
-                    ${renderBreakdownCard('Scope', scope, metricTooltips.scope)}
-                    ${renderBreakdownCard('Confidentiality', confidentialityImpact, metricTooltips.confidentialityImpact)}
-                    ${renderBreakdownCard('Integrity', integrityImpact, metricTooltips.integrityImpact)}
-                    ${renderBreakdownCard('Availability', availabilityImpact, metricTooltips.availabilityImpact)}
-                </div>
-            </div>`;
-        }
-
-        function getMetricValueClass(label, value) {
-            const val = (value || '').toUpperCase();
-            switch (label) {
-                case 'Attack Vector':
-                    if (val === 'NETWORK') return 'bg-red-900/50 border border-red-700 text-red-300';
-                    if (val === 'ADJACENT_NETWORK') return 'bg-orange-800/60 border border-orange-700 text-orange-300';
-                    if (val === 'LOCAL') return 'bg-yellow-800/60 border border-yellow-700 text-yellow-300';
-                    if (val === 'PHYSICAL') return 'bg-green-800/60 border border-green-700 text-green-300';
-                    break;
-                case 'Attack Complexity':
-                    if (val === 'LOW') return 'bg-red-900/50 border border-red-700 text-red-300';
-                    if (val === 'HIGH') return 'bg-green-800/60 border border-green-700 text-green-300';
-                    break;
-                case 'Privileges Required':
-                    if (val === 'NONE') return 'bg-red-900/50 border border-red-700 text-red-300';
-                    if (val === 'LOW') return 'bg-orange-800/60 border border-orange-700 text-orange-300';
-                    if (val === 'HIGH') return 'bg-green-800/60 border border-green-700 text-green-300';
-                    break;
-                case 'User Interaction':
-                    if (val === 'NONE') return 'bg-red-900/50 border border-red-700 text-red-300';
-                    if (val === 'REQUIRED') return 'bg-green-800/60 border border-green-700 text-green-300';
-                    break;
-                case 'Scope':
-                    if (val === 'CHANGED') return 'bg-orange-800/60 border border-orange-700 text-orange-300';
-                    if (val === 'UNCHANGED') return 'bg-blue-800/60 border border-blue-700 text-blue-300';
-                    break;
-                case 'Confidentiality':
-                case 'Integrity':
-                case 'Availability':
-                    if (val === 'HIGH') return 'bg-red-900/50 border border-red-700 text-red-300';
-                    if (val === 'LOW') return 'bg-yellow-800/60 border border-yellow-700 text-yellow-300';
-                    if (val === 'NONE') return 'bg-green-800/60 border border-green-700 text-green-300';
-                    break;
-                default:
-                    return 'bg-gray-700 border border-gray-600 text-gray-300';
-            }
-            return 'bg-gray-700 border border-gray-600 text-gray-300';
-        }
-
-        function renderBreakdownCard(label, value, explanation) {
-            if (!value) return '';
-            const valueClass = getMetricValueClass(label, value);
-            return `
-                <div class="bg-gray-900 p-5">
-                    <div class="flex justify-between items-baseline mb-2">
-                        <h4 class="font-semibold text-gray-200">${label}</h4>
-                        <span class="font-bold ${valueClass} px-3 py-1 rounded-full text-sm">${value}</span>
-                    </div>
-                    <p class="text-sm text-gray-400">${explanation}</p>
-                </div>
-            `;
-        }
-
-        function renderEpssColumn(data) {
-            if (!data) { return `<div class="bg-gray-900 p-6"><h3 class="text-2xl font-semibold text-blue-400 mb-4">EPSS Exploitability</h3><p class="text-gray-400">No EPSS data found.</p></div>`; }
-            const epssPercent = formatPercent(data.epss);
-            const percentilePercent = formatPercent(data.percentile);
-            return `<div class="bg-gray-900 p-6">
-                    <h3 class="text-2xl font-semibold text-blue-400 mb-4">EPSS Exploitability</h3>
-                    <div class="text-center rounded-lg p-6 mb-6 bg-gray-800 border border-gray-700">
-                        <div class="text-sm font-bold uppercase tracking-widest text-blue-400 opacity-75">Exploitation Probability</div>
-                        <div class="text-7xl font-bold text-blue-400">${epssPercent}</div>
-                        <div class="text-2xl font-semibold text-gray-200">in next 30 days</div>
-                    </div>
-                    <div class="text-center bg-gray-800 rounded-lg p-4 border border-gray-700">
-                        <p class="text-lg text-gray-200">More likely to be exploited than <strong class="text-4xl block text-white my-1">${percentilePercent}</strong> of other vulnerabilities.</p>
-                    </div>
-                </div>`;
-        }
-
-        function renderMetricItem(label, value) {
-            if (!value && value !== 0) return '';
-            return `<li class="flex justify-between items-center text-sm">
-                        <span class="text-gray-400 flex items-center">${label}</span>
-                        <span class="font-bold text-gray-100 bg-gray-700 px-2 py-0.5 rounded">${value}</span>
-                    </li>`;
-        }
-
-        function formatPercent(value) {
-            return (parseFloat(value) * 100).toFixed(1) + '%';
-        }
-
-        function getSeverityClasses(severity) {
-            const s = (severity || '').toUpperCase();
-            switch (s) {
-                case 'CRITICAL': return { severityClass: 'bg-red-900/50 border border-red-700', severityTextClass: 'text-red-300' };
-                case 'HIGH': return { severityClass: 'bg-orange-900/50 border border-orange-700', severityTextClass: 'text-orange-300' };
-                case 'MEDIUM': return { severityClass: 'bg-yellow-900/50 border border-yellow-700', severityTextClass: 'text-yellow-300' };
-                case 'LOW': return { severityClass: 'bg-green-900/50 border border-green-700', severityTextClass: 'text-green-300' };
-                default: return { severityClass: 'bg-gray-800 border border-gray-700', severityTextClass: 'text-gray-300' };
-            }
-        }
-        
         document.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons({
+            // --- 1. Page-Specific EPSS/CVSS Logic ---
+            const metricTooltips = {
+                attackVector: 'This metric reflects the context by which vulnerability exploitation is possible. The more remote an attacker can be to exploit the vulnerability, the higher the score.',
+                attackComplexity: 'This metric describes the conditions beyond the attacker\'s control that must exist to exploit the vulnerability. The lower the complexity, the higher the score.',
+                privilegesRequired: 'This metric describes the level of privileges an attacker must possess before successfully exploiting the vulnerability. No privileges required is the highest score.',
+                userInteraction: 'This metric captures the requirement for a user, other than the attacker, to participate in the successful compromise of the vulnerable component. No interaction required is the highest score.',
+                scope: 'An important feature of CVSS v3.x is the concept of Scope. When a vulnerability in one component impacts a separate component, a Scope change has occurred.',
+                confidentialityImpact: 'This metric measures the impact to the confidentiality of the information managed by the system due to a successfully exploited vulnerability.',
+                integrityImpact: 'This metric measures the impact to the integrity of a successfully exploited vulnerability. Integrity refers to the trustworthiness and veracity of information.',
+                availabilityImpact: 'This metric measures the impact to the availability of the impacted component resulting from a successfully exploited vulnerability.',
+                exploitabilityScore: 'A CVSS score component that measures the ease and technical means by which a vulnerability can be exploited.',
+                impactScore: 'A CVSS score component that measures the impact of a successfully exploited vulnerability on confidentiality, integrity, and availability.'
+            };
+            
+            async function fetchVulnComparison() {
+                const cveId = document.getElementById('vulnId').value.trim();
+                const resultsContainer = document.getElementById('results-container');
+                
+                if (!cveId) {
+                    resultsContainer.innerHTML = `<p class="text-center text-red-400">Please enter a CVE ID.</p>`;
+                    return;
+                }
+
+                resultsContainer.innerHTML = `<div class="text-center p-12 bg-gray-900 rounded-lg border border-gray-800"><p class="text-2xl animate-pulse">Fetching data for ${cveId}...</p></div>`;
+                const nvdUrl = `https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=${cveId}`;
+                const epssUrl = `https://api.first.org/data/v1/epss?cve=${cveId}`;
+
+                try {
+                    const [nvdResult, epssResult] = await Promise.allSettled([
+                        fetch(nvdUrl).then(res => res.ok ? res.json() : Promise.reject(`NVD API Error: ${res.status}`)),
+                        fetch(epssUrl).then(res => res.ok ? res.json() : Promise.reject(`EPSS API Error: ${res.status}`))
+                    ]);
+
+                    let cveDetails = { description: 'No description found.' };
+                    let cvssData = null;
+                    let epssData = null;
+
+                    if (nvdResult.status === 'fulfilled' && nvdResult.value.vulnerabilities?.length > 0) {
+                        const cve = nvdResult.value.vulnerabilities[0].cve;
+                        cveDetails.description = cve.descriptions.find(d => d.lang === 'en')?.value || 'No description provided.';
+                        
+                        const nistMetricV3 = cve.metrics.cvssMetricV31?.find(m => m.source === 'nvd@nist.gov');
+                        const anyMetricV3 = cve.metrics.cvssMetricV31?.[0];
+                        const metricsV3 = nistMetricV3 || anyMetricV3;
+                        
+                        const nistMetricV4 = cve.metrics.cvssMetricV40?.find(m => m.source === 'nvd@nist.gov');
+                        const anyMetricV4 = cve.metrics.cvssMetricV40?.[0];
+                        const metricsV4 = nistMetricV4 || anyMetricV4;
+
+                        if (metricsV4) {
+                            cvssData = { ...metricsV4.cvssData, version: '4.0' };
+                        } else if (metricsV3) {
+                            cvssData = { ...metricsV3.cvssData, exploitabilityScore: metricsV3.exploitabilityScore, impactScore: metricsV3.impactScore, version: '3.1' };
+                        }
+                    }
+
+                    if (epssResult.status === 'fulfilled' && epssResult.value.data?.length > 0) {
+                        epssData = epssResult.value.data[0];
+                    }
+                    renderResults(cveId, cveDetails, cvssData, epssData);
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                    resultsContainer.innerHTML = `<p class="text-center text-red-400">An unexpected error occurred.</p>`;
+                }
+            }
+
+            function renderResults(cveId, cveDetails, cvssData, epssData) {
+                const resultsContainer = document.getElementById('results-container');
+                let cvssColumnHtml = '';
+                let cvssBreakdownHtml = '';
+
+                if (cvssData && cvssData.version === '4.0') {
+                    cvssColumnHtml = renderCvss4Column(cvssData);
+                    // Future: cvssBreakdownHtml = renderCvss4Breakdown(cvssData);
+                } else if (cvssData && cvssData.version === '3.1') {
+                    cvssColumnHtml = renderCvss3Column(cvssData);
+                    cvssBreakdownHtml = renderCvss3Breakdown(cvssData);
+                } else {
+                    cvssColumnHtml = `<div class="bg-gray-900 p-6"><h3 class="text-2xl font-semibold text-yellow-400 mb-4">CVSS Data</h3><p class="text-gray-400">No CVSS data found for this CVE.</p></div>`;
+                }
+
+                resultsContainer.innerHTML = `
+                    <div class="bg-gray-900 rounded-xl shadow-2xl border border-gray-800 overflow-hidden mb-8">
+                        <div class="p-6">
+                            <h2 class="text-3xl font-bold text-white mb-3">${cveId}</h2>
+                            <p class="text-gray-300 mb-6">${cveDetails.description}</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-800">
+                            ${cvssColumnHtml}
+                            ${renderEpssColumn(epssData)}
+                        </div>
+                    </div>
+                    ${cvssBreakdownHtml}
+                `;
+            }
+            
+            function renderCvss4Column(data) {
+                const { baseScore, baseSeverity, vectorString, attackVector, privilegesRequired, userInteraction } = data;
+                const { severityClass, severityTextClass } = getSeverityClasses(baseSeverity);
+                 return `<div class="bg-gray-900 p-6">
+                        <h3 class="text-2xl font-semibold text-yellow-400 mb-4">CVSS v4.0 Severity</h3>
+                        <div class="text-center rounded-lg p-6 mb-6 ${severityClass}">
+                            <div class="text-sm font-bold uppercase tracking-widest ${severityTextClass} opacity-75">Base Score</div>
+                            <div class="text-7xl font-bold ${severityTextClass}">${baseScore.toFixed(1)}</div>
+                            <div class="text-3xl font-semibold ${severityTextClass}">${baseSeverity}</div>
+                        </div>
+                        <div class="font-mono text-xs text-center text-gray-400 mb-4 break-all">${vectorString}</div>
+                        <h4 class="text-lg font-semibold text-gray-200 mb-3">Metric Details</h4>
+                        <ul class="space-y-2">
+                            ${renderMetricItem('Attack Vector', attackVector)}
+                            ${renderMetricItem('Privileges Required', privilegesRequired)}
+                            ${renderMetricItem('User Interaction', userInteraction)}
+                        </ul>
+                    </div>`;
+            }
+            
+            function renderCvss3Column(data) {
+                const { baseScore, baseSeverity, exploitabilityScore, impactScore } = data;
+                const { severityClass, severityTextClass } = getSeverityClasses(baseSeverity);
+                return `<div class="bg-gray-900 p-6">
+                        <h3 class="text-2xl font-semibold text-yellow-400 mb-4">CVSS v3.1 Severity</h3>
+                        <div class="text-center rounded-lg p-6 mb-6 ${severityClass}">
+                            <div class="text-sm font-bold uppercase tracking-widest ${severityTextClass} opacity-75">Base Score</div>
+                            <div class="text-7xl font-bold ${severityTextClass}">${baseScore.toFixed(1)}</div>
+                            <div class="text-3xl font-semibold ${severityTextClass}">${baseSeverity}</div>
+                        </div>
+                        <h4 class="text-lg font-semibold text-gray-200 mb-3">Metric Scores</h4>
+                        <ul class="space-y-2">
+                            ${renderMetricItem('Exploitability Score', exploitabilityScore)}
+                            ${renderMetricItem('Impact Score', impactScore)}
+                        </ul>
+                    </div>`;
+            }
+
+            function renderCvss3Breakdown(data) {
+                const { vectorString, attackVector, attackComplexity, privilegesRequired, userInteraction, scope, confidentialityImpact, integrityImpact, availabilityImpact } = data;
+                return `
+                <div class="bg-gray-900 rounded-xl shadow-2xl border border-gray-800 overflow-hidden">
+                    <div class="p-6 border-b border-gray-800">
+                         <h3 class="text-2xl font-semibold text-yellow-400">CVSS v3.1 Vector Breakdown</h3>
+                         <p class="font-mono text-sm text-gray-400 mt-2 break-all">${vectorString || 'N/A'}</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-800">
+                        ${renderBreakdownCard('Attack Vector', attackVector, metricTooltips.attackVector)}
+                        ${renderBreakdownCard('Attack Complexity', attackComplexity, metricTooltips.attackComplexity)}
+                        ${renderBreakdownCard('Privileges Required', privilegesRequired, metricTooltips.privilegesRequired)}
+                        ${renderBreakdownCard('User Interaction', userInteraction, metricTooltips.userInteraction)}
+                        ${renderBreakdownCard('Scope', scope, metricTooltips.scope)}
+                        ${renderBreakdownCard('Confidentiality', confidentialityImpact, metricTooltips.confidentialityImpact)}
+                        ${renderBreakdownCard('Integrity', integrityImpact, metricTooltips.integrityImpact)}
+                        ${renderBreakdownCard('Availability', availabilityImpact, metricTooltips.availabilityImpact)}
+                    </div>
+                </div>`;
+            }
+
+            function getMetricValueClass(label, value) {
+                const val = (value || '').toUpperCase();
+                switch (label) {
+                    case 'Attack Vector':
+                        if (val === 'NETWORK') return 'bg-red-900/50 border border-red-700 text-red-300';
+                        if (val === 'ADJACENT_NETWORK') return 'bg-orange-800/60 border border-orange-700 text-orange-300';
+                        if (val === 'LOCAL') return 'bg-yellow-800/60 border border-yellow-700 text-yellow-300';
+                        if (val === 'PHYSICAL') return 'bg-green-800/60 border border-green-700 text-green-300';
+                        break;
+                    case 'Attack Complexity':
+                        if (val === 'LOW') return 'bg-red-900/50 border border-red-700 text-red-300';
+                        if (val === 'HIGH') return 'bg-green-800/60 border border-green-700 text-green-300';
+                        break;
+                    case 'Privileges Required':
+                        if (val === 'NONE') return 'bg-red-900/50 border border-red-700 text-red-300';
+                        if (val === 'LOW') return 'bg-orange-800/60 border border-orange-700 text-orange-300';
+                        if (val === 'HIGH') return 'bg-green-800/60 border border-green-700 text-green-300';
+                        break;
+                    case 'User Interaction':
+                        if (val === 'NONE') return 'bg-red-900/50 border border-red-700 text-red-300';
+                        if (val === 'REQUIRED') return 'bg-green-800/60 border border-green-700 text-green-300';
+                        break;
+                    case 'Scope':
+                        if (val === 'CHANGED') return 'bg-orange-800/60 border border-orange-700 text-orange-300';
+                        if (val === 'UNCHANGED') return 'bg-blue-800/60 border border-blue-700 text-blue-300';
+                        break;
+                    case 'Confidentiality':
+                    case 'Integrity':
+                    case 'Availability':
+                        if (val === 'HIGH') return 'bg-red-900/50 border border-red-700 text-red-300';
+                        if (val === 'LOW') return 'bg-yellow-800/60 border border-yellow-700 text-yellow-300';
+                        if (val === 'NONE') return 'bg-green-800/60 border border-green-700 text-green-300';
+                        break;
+                    default:
+                        return 'bg-gray-700 border border-gray-600 text-gray-300';
+                }
+                return 'bg-gray-700 border border-gray-600 text-gray-300';
+            }
+
+            function renderBreakdownCard(label, value, explanation) {
+                if (!value) return '';
+                const valueClass = getMetricValueClass(label, value);
+                return `
+                    <div class="bg-gray-900 p-5">
+                        <div class="flex justify-between items-baseline mb-2">
+                            <h4 class="font-semibold text-gray-200">${label}</h4>
+                            <span class="font-bold ${valueClass} px-3 py-1 rounded-full text-sm">${value}</span>
+                        </div>
+                        <p class="text-sm text-gray-400">${explanation}</p>
+                    </div>
+                `;
+            }
+
+            function renderEpssColumn(data) {
+                if (!data) { return `<div class="bg-gray-900 p-6"><h3 class="text-2xl font-semibold text-blue-400 mb-4">EPSS Exploitability</h3><p class="text-gray-400">No EPSS data found.</p></div>`; }
+                const epssPercent = formatPercent(data.epss);
+                const percentilePercent = formatPercent(data.percentile);
+                return `<div class="bg-gray-900 p-6">
+                        <h3 class="text-2xl font-semibold text-blue-400 mb-4">EPSS Exploitability</h3>
+                        <div class="text-center rounded-lg p-6 mb-6 bg-gray-800 border border-gray-700">
+                            <div class="text-sm font-bold uppercase tracking-widest text-blue-400 opacity-75">Exploitation Probability</div>
+                            <div class="text-7xl font-bold text-blue-400">${epssPercent}</div>
+                            <div class="text-2xl font-semibold text-gray-200">in next 30 days</div>
+                        </div>
+                        <div class="text-center bg-gray-800 rounded-lg p-4 border border-gray-700">
+                            <p class="text-lg text-gray-200">More likely to be exploited than <strong class="text-4xl block text-white my-1">${percentilePercent}</strong> of other vulnerabilities.</p>
+                        </div>
+                    </div>`;
+            }
+
+            function renderMetricItem(label, value) {
+                if (!value && value !== 0) return '';
+                return `<li class="flex justify-between items-center text-sm">
+                            <span class="text-gray-400 flex items-center">${label}</span>
+                            <span class="font-bold text-gray-100 bg-gray-700 px-2 py-0.5 rounded">${value}</span>
+                        </li>`;
+            }
+
+            function formatPercent(value) {
+                return (parseFloat(value) * 100).toFixed(1) + '%';
+            }
+
+            function getSeverityClasses(severity) {
+                const s = (severity || '').toUpperCase();
+                switch (s) {
+                    case 'CRITICAL': return { severityClass: 'bg-red-900/50 border border-red-700', severityTextClass: 'text-red-300' };
+                    case 'HIGH': return { severityClass: 'bg-orange-900/50 border border-orange-700', severityTextClass: 'text-orange-300' };
+                    case 'MEDIUM': return { severityClass: 'bg-yellow-900/50 border border-yellow-700', severityTextClass: 'text-yellow-300' };
+                    case 'LOW': return { severityClass: 'bg-green-900/50 border border-green-700', severityTextClass: 'text-green-300' };
+                    default: return { severityClass: 'bg-gray-800 border border-gray-700', severityTextClass: 'text-gray-300' };
+                }
+            }
+            
+            // --- 2. Render ALL Icons (Nav + Page) ---
+            if (window.lucide) {
+                lucide.createIcons({
                 icons: {
-                    'nav-home': lucide.Home, 'nav-cloud': lucide.Cloud, 'nav-sast': lucide.FileSearch, 'nav-threat': lucide.ShieldAlert, 'nav-checklist': lucide.ListChecks, 'nav-jwt': lucide.KeyRound, 'nav-encryption': lucide.Lock, 'nav-fp': lucide.Fingerprint, 'nav-epss': lucide.Activity, 'nav-dashboard': lucide.LayoutDashboard, 'nav-modcat': lucide.Guitar,
+                    // All Nav Icons
+                    'nav-home': lucide.Home,
+                    'nav-guides-trigger': lucide.BookOpen,
+                    'nav-tools-trigger': lucide.Briefcase,
+                    'nav-guides-chevron': lucide.ChevronDown,
+                    'nav-tools-chevron': lucide.ChevronDown,
+                    'nav-cloud': lucide.Cloud,
+                    'nav-roadmap': lucide.Map,
+                    'nav-phishing': lucide.Fish,
+                    'nav-sast': lucide.FileSearch,
+                    'nav-threat': lucide.ShieldAlert,
+                    'nav-checklist': lucide.ListChecks,
+                    'nav-epss': lucide.Activity, // <-- Already included for page logic
+                    'nav-encryption': lucide.Lock,
+                    'nav-fp': lucide.Fingerprint,
+                    'nav-jwt': lucide.KeyRound,
+                    'nav-modcat': lucide.Guitar,
+                    'nav-shamir': lucide.Share2,
+                    'nav-dashboard': lucide.LayoutDashboard,
+
+                    // No specific page icons needed for this page beyond what's in nav
                 },
                 attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
+                });
+            }
+
+            // --- 3. Add Nav Dropdown Logic ---
+            const dropdownButtons = document.querySelectorAll('.group > button');
+            dropdownButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                const dropdownMenu = e.currentTarget.nextElementSibling;
+                // Close all other open dropdowns
+                document.querySelectorAll('.group .absolute').forEach(menu => {
+                    if (menu !== dropdownMenu) {
+                    menu.classList.add('opacity-0', 'invisible');
+                    menu.classList.remove('opacity-100', 'visible');
+                    }
+                });
+                // Toggle the current dropdown
+                dropdownMenu.classList.toggle('opacity-0');
+                dropdownMenu.classList.toggle('invisible');
+                dropdownMenu.classList.toggle('opacity-100');
+                dropdownMenu.classList.toggle('visible');
+                });
             });
 
+            // Close dropdowns if clicking outside
+            window.addEventListener('click', (e) => {
+                if (!e.target.closest('.group')) {
+                document.querySelectorAll('.group .absolute').forEach(menu => {
+                    menu.classList.add('opacity-0', 'invisible');
+                    menu.classList.remove('opacity-100', 'visible');
+                });
+                }
+            });
+
+            // --- 4. Keep existing page event listeners ---
             const fetchButton = document.getElementById('fetchButton');
             const vulnIdInput = document.getElementById('vulnId');
             fetchButton.addEventListener('click', fetchVulnComparison);
             vulnIdInput.addEventListener('keyup', (event) => {
                 if (event.key === 'Enter') { fetchVulnComparison(); }
             });
-            fetchVulnComparison();
+            // Initial fetch
+            fetchVulnComparison(); 
         });
     </script>
 </body>
 </html>
-
