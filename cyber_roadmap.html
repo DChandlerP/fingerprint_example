@@ -6,6 +6,8 @@
     <title>Cybersecurity Certification Roadmap</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <!-- Load Inter font from Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -188,11 +190,105 @@
         .official-link-btn:hover {
             background-color: #1e40af; /* blue-800 */
         }
-
+         /* Ensure dropdown content is above other elements */
+        .group .absolute {
+          z-index: 50;
+        }
 
     </style>
 </head>
 <body class="text-gray-300"> <!-- Default dark text -->
+
+    <!-- 
+      NAV BAR FOR "GUIDES & CASE STUDIES" PAGES
+      - "Home" is inactive.
+      - "Guides & Case Studies" is ACTIVE.
+      - "Tools & Demos" is inactive.
+    -->
+    <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
+        <div class="w-full flex items-center justify-center px-6 py-3">
+           <!-- Main navigation container -->
+           <div class="flex flex-wrap justify-center space-x-4">
+            
+            <!-- Home Link (Inactive) -->
+            <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
+              <span id="nav-home" class="mr-1"></span>Home
+            </a>
+
+            <!-- Guides & Case Studies Dropdown (ACTIVE) -->
+            <div class="relative group">
+              <!-- Dropdown Trigger -->
+               <button class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition">
+                <span id="nav-guides-trigger" class="mr-1"></span>
+                Guides & Case Studies
+                <span id="nav-guides-chevron" class="ml-1"></span>
+              </button>
+              
+              <!-- Dropdown Menu -->
+              <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <div class="py-1" role="menu" aria-orientation="vertical">
+                  <a href="cloud.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-cloud" class="mr-2"></span>Cloud
+                  </a>
+                  <a href="cyber_roadmap.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-roadmap" class="mr-2"></span>Cyber Roadmap
+                  </a>
+                  <a href="phishing.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-phishing" class="mr-2"></span>Phishing
+                  </a>
+                  <a href="sast.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-sast" class="mr-2"></span>SAST
+                  </a>
+                  <a href="threatmodel.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-threat" class="mr-2"></span>Threat Model
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tools & Demos Dropdown (Inactive) -->
+            <div class="relative group">
+              <!-- Dropdown Trigger -->
+               <button class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
+                <span id="nav-tools-trigger" class="mr-1"></span>
+                Tools & Demos
+                <span id="nav-tools-chevron" class="ml-1"></span>
+              </button>
+              
+              <!-- Dropdown Menu -->
+              <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <div class="py-1" role="menu" aria-orientation="vertical">
+                  <a href="checklist.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-checklist" class="mr-2"></span>Checklist
+                  </a>
+                  <a href="epssdemo.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-epss" class="mr-2"></span>CVSS vs EPSS
+                  </a>
+                  <a href="encryption.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-encryption" class="mr-2"></span>Encryption
+                  </a>
+                  <a href="fingerprint.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-fp" class="mr-2"></span>Fingerprinting
+                  </a>
+                  <a href="jwt.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-jwt" class="mr-2"></span>JWT Decoder
+                  </a>
+                  <a href="modcat.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-modcat" class="mr-2"></span>PRS MODCAT
+                  </a>
+                  <a href="shamir.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-shamir" class="mr-2"></span>Shamir's Visualizer
+                  </a>
+                  <a href="dashboard.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-dashboard" class="mr-2"></span>Threat Intel
+                  </a>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+    </nav>
 
     <!-- Header - Dark Mode -->
     <header class="bg-gray-900 shadow-sm border-b border-gray-800">
@@ -854,15 +950,14 @@
 
 
     <script>
-        // Set the current year in the footer
+      document.addEventListener('DOMContentLoaded', () => {
+        // --- 1. Page-Specific Roadmap Logic ---
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
-        // --- Filter Logic ---
         const filterVendorContainer = document.getElementById('filter-container-vendor');
         const filterLevelContainer = document.getElementById('filter-container-level');
         const certTriggers = document.querySelectorAll('.cert-trigger');
        
-
         let currentVendorFilter = 'all';
         let currentLevelFilter = 'all';
 
@@ -876,19 +971,16 @@
 
                 if (vendorMatch && levelMatch) {
                     card.classList.remove('hidden');
-                    // Force re-flow for transition
                     card.style.display = 'flex'; 
                 } else {
                     card.classList.add('hidden');
-                    // Use timeout to allow transition to play before display:none
                     setTimeout(() => {
                         if (card.classList.contains('hidden')) {
                             card.style.display = 'none';
                         }
-                    }, 300); // Match transition duration
+                    }, 300); 
                 }
             });
-            // Restore display for items that are no longer hidden
             certTriggers.forEach(card => {
                 if (!card.classList.contains('hidden')) {
                     card.style.display = 'flex';
@@ -902,10 +994,6 @@
             filterVendorContainer.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             e.target.classList.add('active');
             currentVendorFilter = e.target.dataset.filter;
-            
-            // REMOVED: Show/Hide GIAC Info Box logic
-            // if (currentVendorFilter === 'giac') { ... }
-
             applyFilters();
         });
 
@@ -915,24 +1003,21 @@
             filterLevelContainer.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             e.target.classList.add('active');
             currentLevelFilter = e.target.dataset.filter;
-
             applyFilters();
         });
 
-        // --- Modal Logic ---
+        // Modal Logic
         const modalOverlay = document.getElementById('modal-overlay');
         const modalContent = document.getElementById('modal-content');
         const modalCloseBtn = document.getElementById('modal-close-btn');
         const certList = document.getElementById('cert-list');
-
-        // Modal content fields
         const modalName = document.getElementById('modal-name');
         const modalPrice = document.getElementById('modal-price');
         const modalVendorTag = document.getElementById('modal-vendor-tag');
         const modalLevelTag = document.getElementById('modal-level-tag');
         const modalDescription = document.getElementById('modal-description');
         const modalNotes = document.getElementById('modal-notes');
-        const modalLink = document.getElementById('modal-link'); // NEW
+        const modalLink = document.getElementById('modal-link'); 
 
         certList.addEventListener('click', (e) => {
             const trigger = e.target.closest('.cert-trigger');
@@ -941,91 +1026,123 @@
             e.preventDefault(); 
             const data = trigger.dataset;
 
-            // Populate modal
             modalName.textContent = data.name;
             modalPrice.textContent = data.price;
             modalDescription.textContent = data.description;
             modalNotes.textContent = data.notes;
-            modalLevelTag.textContent = data.levelRaw; // Use the "raw" level name
-            modalLink.href = data.link; // NEW
+            modalLevelTag.textContent = data.levelRaw; 
+            modalLink.href = data.link; 
 
-            // Clear old vendor classes
-            modalContent.className = 'modal-content'; // Reset to base class first
-            // modalContent.classList.remove('modal-comptia', 'modal-isc2', 'modal-giac', 'modal-isaca', 'modal-offsec', 'modal-platform');
-            modalPrice.className = 'mt-2 sm:mt-0 sm:ml-4 flex-shrink-0 rounded-full px-4 py-1 text-lg font-bold'; // Reset price classes
-            // modalPrice.classList.remove('text-blue-700', 'bg-blue-100', 'text-green-700', 'bg-green-100', 'text-red-700', 'bg-red-100', 'text-yellow-700', 'bg-yellow-100', 'text-gray-800', 'bg-gray-100', 'text-purple-700', 'bg-purple-100');
-            modalVendorTag.className = 'inline-block rounded-full px-3 py-1 text-sm font-medium'; // Reset vendor tag classes
-            // modalVendorTag.classList.remove('tag-comptia', 'tag-isc2', 'tag-giac', 'tag-isaca', 'tag-offsec', 'tag-platform');
+            modalContent.className = 'modal-content'; 
+            modalPrice.className = 'mt-2 sm:mt-0 sm:ml-4 flex-shrink-0 rounded-full px-4 py-1 text-lg font-bold'; 
+            modalVendorTag.className = 'inline-block rounded-full px-3 py-1 text-sm font-medium'; 
             
-            // Clear and set level tag styles
-            modalLevelTag.className = 'inline-block rounded-full px-3 py-1 text-sm font-medium'; // Reset level tag classes
-            // modalLevelTag.classList.remove('tag-basic', 'tag-intermediate', 'tag-advanced');
-            if (data.level === 'basic') {
-                modalLevelTag.classList.add('tag-basic');
-            } else if (data.level === 'intermediate') {
-                modalLevelTag.classList.add('tag-intermediate');
-            } else if (data.level === 'advanced') {
-                modalLevelTag.classList.add('tag-advanced');
-            }
+            modalLevelTag.className = 'inline-block rounded-full px-3 py-1 text-sm font-medium'; 
+            if (data.level === 'basic') { modalLevelTag.classList.add('tag-basic'); } 
+            else if (data.level === 'intermediate') { modalLevelTag.classList.add('tag-intermediate'); } 
+            else if (data.level === 'advanced') { modalLevelTag.classList.add('tag-advanced'); }
 
-            // Set new vendor-specific styles
             if (data.vendor === 'comptia') {
                 modalContent.classList.add('modal-comptia');
-                modalPrice.classList.add('text-blue-200', 'bg-blue-900'); // Dark mode adjusted
+                modalPrice.classList.add('text-blue-200', 'bg-blue-900'); 
                 modalVendorTag.classList.add('tag-comptia');
                 modalVendorTag.textContent = 'CompTIA';
             } else if (data.vendor === 'isc2') {
                 modalContent.classList.add('modal-isc2');
-                modalPrice.classList.add('text-green-200', 'bg-green-900'); // Dark mode adjusted
+                modalPrice.classList.add('text-green-200', 'bg-green-900'); 
                 modalVendorTag.classList.add('tag-isc2');
                 modalVendorTag.textContent = '(ISC)²';
             } else if (data.vendor === 'giac') {
                 modalContent.classList.add('modal-giac');
-                modalPrice.classList.add('text-red-200', 'bg-red-900'); // Dark mode adjusted
+                modalPrice.classList.add('text-red-200', 'bg-red-900'); 
                 modalVendorTag.classList.add('tag-giac');
                 modalVendorTag.textContent = 'GIAC';
             } else if (data.vendor === 'isaca') {
                 modalContent.classList.add('modal-isaca');
-                modalPrice.classList.add('text-yellow-200', 'bg-yellow-900'); // Dark mode adjusted
+                modalPrice.classList.add('text-yellow-200', 'bg-yellow-900'); 
                 modalVendorTag.classList.add('tag-isaca');
                 modalVendorTag.textContent = 'ISACA';
             } else if (data.vendor === 'offsec') {
                 modalContent.classList.add('modal-offsec');
-                modalPrice.classList.add('text-gray-200', 'bg-gray-700'); // Dark mode adjusted
+                modalPrice.classList.add('text-gray-200', 'bg-gray-700'); 
                 modalVendorTag.classList.add('tag-offsec');
                 modalVendorTag.textContent = 'OffSec';
             } else if (data.vendor === 'platform') {
                 modalContent.classList.add('modal-platform');
-                modalPrice.classList.add('text-purple-200', 'bg-purple-900'); // Dark mode adjusted
+                modalPrice.classList.add('text-purple-200', 'bg-purple-900'); 
                 modalVendorTag.classList.add('tag-platform');
                 modalVendorTag.textContent = 'Cloud & Platform';
             }
             
-            // --- NEW: Gemini Study Plan Logic ---
-            // Clear previous results and hide loader
-            
-            // NEW: Show the modal
             modalOverlay.classList.remove('hidden');
         });
 
-        // Function to close the modal
-        const closeModal = () => {
-            modalOverlay.classList.add('hidden');
-        };
-
-        // Close modal events
+        const closeModal = () => { modalOverlay.classList.add('hidden'); };
         modalCloseBtn.addEventListener('click', closeModal);
-        modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) {
-                closeModal();
+        modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) { closeModal(); } });
+
+        applyFilters(); 
+
+        // --- 2. Render ALL Icons (Nav only needed here) ---
+        if (window.lucide) {
+            lucide.createIcons({
+                icons: {
+                    // All Nav Icons
+                    'nav-home': lucide.Home,
+                    'nav-guides-trigger': lucide.BookOpen,
+                    'nav-tools-trigger': lucide.Briefcase,
+                    'nav-guides-chevron': lucide.ChevronDown,
+                    'nav-tools-chevron': lucide.ChevronDown,
+                    'nav-cloud': lucide.Cloud,
+                    'nav-roadmap': lucide.Map, // <-- Included for nav
+                    'nav-phishing': lucide.Fish,
+                    'nav-sast': lucide.FileSearch,
+                    'nav-threat': lucide.ShieldAlert,
+                    'nav-checklist': lucide.ListChecks,
+                    'nav-epss': lucide.Activity, 
+                    'nav-encryption': lucide.Lock,
+                    'nav-fp': lucide.Fingerprint,
+                    'nav-jwt': lucide.KeyRound,
+                    'nav-modcat': lucide.Guitar,
+                    'nav-shamir': lucide.Share2,
+                    'nav-dashboard': lucide.LayoutDashboard,
+                },
+                attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
+            });
+        }
+
+        // --- 3. Add Nav Dropdown Logic ---
+        const dropdownButtons = document.querySelectorAll('.group > button');
+        dropdownButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const dropdownMenu = e.currentTarget.nextElementSibling;
+                // Close all other open dropdowns
+                document.querySelectorAll('.group .absolute').forEach(menu => {
+                    if (menu !== dropdownMenu) {
+                        menu.classList.add('opacity-0', 'invisible');
+                        menu.classList.remove('opacity-100', 'visible');
+                    }
+                });
+                // Toggle the current dropdown
+                dropdownMenu.classList.toggle('opacity-0');
+                dropdownMenu.classList.toggle('invisible');
+                dropdownMenu.classList.toggle('opacity-100');
+                dropdownMenu.classList.toggle('visible');
+            });
+        });
+
+        // Close dropdowns if clicking outside
+        window.addEventListener('click', (e) => {
+            if (!e.target.closest('.group')) {
+                document.querySelectorAll('.group .absolute').forEach(menu => {
+                    menu.classList.add('opacity-0', 'invisible');
+                    menu.classList.remove('opacity-100', 'visible');
+                });
             }
         });
 
-        // Initialize view
-        applyFilters();
-
+      }); // End DOMContentLoaded
     </script>
 
 </body>
 </html>
-

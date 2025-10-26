@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shamir's Secret Sharing Visualizer</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         html.invisible { opacity: 0; transition: opacity 0.5s; }
         html { font-family: 'Inter', sans-serif; }
+        ::selection { background: #2563eb; color: #fff; }
         .share-pill {
             cursor: pointer;
             transition: all 0.2s ease-in-out;
@@ -17,127 +20,229 @@
         .share-pill:hover {
             transform: scale(1.05);
         }
+         /* Ensure dropdown content is above other elements */
+        .group .absolute {
+          z-index: 50;
+        }
     </style>
 </head>
-<body class="bg-gray-950 text-gray-200 flex items-center justify-center min-h-screen p-4 sm:p-8 font-sans">
-    <div class="w-full max-w-7xl mx-auto bg-gray-900 shadow-2xl rounded-2xl p-6 sm:p-8 border border-gray-800">
-        <header class="mb-6 pb-4 border-b border-gray-800">
-            <h1 class="text-3xl sm:text-4xl font-bold text-white text-center">Shamir's Secret Sharing Visualizer</h1>
-            <p class="text-center text-blue-300 mt-2">Visualize how a secret can be split and reconstructed using polynomials.</p>
-        </header>
+<body class="bg-gray-950 text-gray-200 min-h-screen flex flex-col font-sans"> <!-- Adjusted body classes for nav -->
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Controls and Data Section -->
-            <div class="flex flex-col space-y-6">
-                <!-- Inputs Card -->
-                <div class="bg-gray-800 p-5 rounded-lg border border-gray-700">
-                    <h2 class="text-xl font-semibold mb-4 text-blue-400">1. Configuration</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div>
-                            <label for="secret" class="block text-gray-300 text-sm font-bold mb-2">Secret (S)</label>
-                            <input type="number" id="secret" value="150" class="shadow-sm appearance-none bg-gray-700 border border-gray-600 rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <div>
-                            <label for="threshold" class="block text-gray-300 text-sm font-bold mb-2">Threshold (k)</label>
-                            <input type="number" id="threshold" value="3" min="2" class="shadow-sm appearance-none bg-gray-700 border border-gray-600 rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <div>
-                            <label for="totalShares" class="block text-gray-300 text-sm font-bold mb-2">Total Shares (n)</label>
-                            <input type="number" id="totalShares" value="6" min="2" class="shadow-sm appearance-none bg-gray-700 border border-gray-600 rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                    </div>
-                    <button id="generateBtn" class="mt-4 w-full bg-blue-700 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300">
-                        Generate Polynomial & Shares
-                    </button>
-                </div>
+    <!-- 
+      NAV BAR FOR "TOOLS & DEMOS" PAGES
+      - "Home" is inactive.
+      - "Guides & Case Studies" is inactive.
+      - "Tools & Demos" is ACTIVE.
+    -->
+    <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
+        <div class="w-full flex items-center justify-center px-6 py-3">
+           <!-- Main navigation container -->
+           <div class="flex flex-wrap justify-center space-x-4">
+            
+            <!-- Home Link (Inactive) -->
+            <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
+              <span id="nav-home" class="mr-1"></span>Home
+            </a>
 
-                <!-- Shares Display -->
-                <div class="flex-grow flex flex-col space-y-4">
-                    <div>
-                        <h2 class="text-xl font-semibold text-blue-400">2. Available Shares</h2>
-                        <div id="availableShares" class="bg-gray-950 p-3 rounded-md border border-gray-700 min-h-[100px] flex flex-wrap gap-2">
-                            <p class="text-gray-500 text-sm w-full">Click shares to select them for reconstruction.</p>
-                        </div>
-                    </div>
-                    <div>
-                        <h2 class="text-xl font-semibold text-blue-400">3. Selected Shares for Reconstruction</h2>
-                        <div id="selectedShares" class="bg-gray-950/50 p-3 rounded-md border-2 border-dashed border-blue-800 min-h-[100px] flex flex-wrap gap-2">
-                             <p class="text-blue-400 text-sm w-full">Selected shares will appear here.</p>
-                        </div>
-                    </div>
+            <!-- Guides & Case Studies Dropdown (Inactive) -->
+            <div class="relative group">
+              <!-- Dropdown Trigger -->
+              <button class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
+                <span id="nav-guides-trigger" class="mr-1"></span>
+                Guides & Case Studies
+                <span id="nav-guides-chevron" class="ml-1"></span>
+              </button>
+              
+              <!-- Dropdown Menu -->
+              <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <div class="py-1" role="menu" aria-orientation="vertical">
+                  <a href="cloud.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-cloud" class="mr-2"></span>Cloud
+                  </a>
+                  <a href="cyber_roadmap.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-roadmap" class="mr-2"></span>Cyber Roadmap
+                  </a>
+                  <a href="phishing.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-phishing" class="mr-2"></span>Phishing
+                  </a>
+                  <a href="sast.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-sast" class="mr-2"></span>SAST
+                  </a>
+                  <a href="threatmodel.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-threat" class="mr-2"></span>Threat Model
+                  </a>
                 </div>
-
-                <!-- Reconstruction Card -->
-                <div class="bg-gray-800 p-5 rounded-lg border border-gray-700">
-                     <h2 class="text-xl font-semibold mb-4 text-blue-400">4. Reconstruct Secret</h2>
-                    <button id="reconstructBtn" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300" disabled>
-                        Reconstruct Secret
-                    </button>
-                    <div id="reconstructionResult" class="mt-4 text-lg text-center font-bold p-3 rounded-lg bg-gray-700 text-gray-200 min-h-[50px]">
-                        Result will be shown here.
-                    </div>
-                </div>
+              </div>
             </div>
 
-            <!-- Visualization Section -->
-            <div class="flex flex-col items-center justify-center bg-gray-800 p-4 rounded-lg border border-gray-700">
-                <h2 class="text-xl font-semibold mb-4 text-blue-400">Polynomial Visualization</h2>
-                <canvas id="polynomialCanvas" class="w-full h-auto aspect-video border border-gray-600 rounded-md bg-gray-950"></canvas>
-                <div class="mt-4 text-sm text-gray-400 flex justify-center space-x-4">
-                    <span><span class="inline-block w-3 h-3 bg-red-500 rounded-full"></span> Secret</span>
-                    <span><span class="inline-block w-3 h-3 bg-blue-500 rounded-full"></span> Available Share</span>
-                    <span><span class="inline-block w-3 h-3 bg-green-500 rounded-full"></span> Selected Share</span>
+            <!-- Tools & Demos Dropdown (ACTIVE) -->
+            <div class="relative group">
+              <!-- Dropdown Trigger -->
+               <button class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition">
+                <span id="nav-tools-trigger" class="mr-1"></span>
+                Tools & Demos
+                <span id="nav-tools-chevron" class="ml-1"></span>
+              </button>
+              
+              <!-- Dropdown Menu -->
+              <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <div class="py-1" role="menu" aria-orientation="vertical">
+                  <a href="checklist.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-checklist" class="mr-2"></span>Checklist
+                  </a>
+                  <a href="epssdemo.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-epss" class="mr-2"></span>CVSS vs EPSS
+                  </a>
+                  <a href="encryption.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-encryption" class="mr-2"></span>Encryption
+                  </a>
+                  <a href="fingerprint.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-fp" class="mr-2"></span>Fingerprinting
+                  </a>
+                  <a href="jwt.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-jwt" class="mr-2"></span>JWT Decoder
+                  </a>
+                  <a href="modcat.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-modcat" class="mr-2"></span>PRS MODCAT
+                  </a>
+                  <a href="shamir.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-shamir" class="mr-2"></span>Shamir's Visualizer
+                  </a>
+                  <a href="dashboard.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-dashboard" class="mr-2"></span>Threat Intel
+                  </a>
                 </div>
-                 <!-- Dynamic Explanation Log -->
-                <div id="explanationLog" class="mt-4 w-full bg-indigo-900/40 p-4 rounded-lg border border-indigo-700 text-indigo-200 text-sm">
-                   Welcome! Press "Generate" to begin.
-                </div>
-            </div>
-        </div>
-
-        <!-- Explanatory Text Section -->
-        <div class="mt-10 pt-6 border-t border-gray-800 space-y-8">
-            <div class="text-center">
-                <h2 class="text-3xl font-bold text-white">How It Works: The Intuition Behind the Magic</h2>
-                <p class="mt-2 max-w-3xl mx-auto text-gray-400">This tool demonstrates Shamir's Secret Sharing, a cryptographic algorithm by Adi Shamir. It solves a critical problem: how do you secure vital information without a single point of failure?</p>
+              </div>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- The Problem Card -->
-                <div class="bg-gray-800 p-6 rounded-xl border border-amber-500/50">
-                    <h4 class="text-xl font-semibold text-amber-400 mb-3">The Problem: The "Key Under the Doormat" Dilemma</h4>
-                    <div class="space-y-3 text-gray-300">
-                        <p>Imagine a treasure chest key. Hiding it creates a single point of failure. If you lose it, or the person holding it is unavailable, the treasure is lost. Cutting it in half doesn't work.</p>
-                        <p>Shamir's scheme splits a "key" (the secret number) into multiple parts, called <strong>shares</strong>, with two special properties:</p>
-                        <ol class="list-decimal list-inside space-y-1 pl-2">
-                            <li>A specific number of shares (the <strong>threshold `k`</strong>) must combine to recreate the key.</li>
-                            <li>Anyone with fewer shares has absolutely no information about the key.</li>
-                        </ol>
+          </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content Wrapper -->
+    <main class="flex-1 flex items-center justify-center p-4 sm:p-8">
+        <div class="w-full max-w-7xl mx-auto bg-gray-900 shadow-2xl rounded-2xl p-6 sm:p-8 border border-gray-800">
+            <header class="mb-6 pb-4 border-b border-gray-800">
+                <h1 class="text-3xl sm:text-4xl font-bold text-white text-center">Shamir's Secret Sharing Visualizer</h1>
+                <p class="text-center text-blue-300 mt-2">Visualize how a secret can be split and reconstructed using polynomials.</p>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Controls and Data Section -->
+                <div class="flex flex-col space-y-6">
+                    <!-- Inputs Card -->
+                    <div class="bg-gray-800 p-5 rounded-lg border border-gray-700">
+                        <h2 class="text-xl font-semibold mb-4 text-blue-400">1. Configuration</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label for="secret" class="block text-gray-300 text-sm font-bold mb-2">Secret (S)</label>
+                                <input type="number" id="secret" value="150" class="shadow-sm appearance-none bg-gray-700 border border-gray-600 rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label for="threshold" class="block text-gray-300 text-sm font-bold mb-2">Threshold (k)</label>
+                                <input type="number" id="threshold" value="3" min="2" class="shadow-sm appearance-none bg-gray-700 border border-gray-600 rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label for="totalShares" class="block text-gray-300 text-sm font-bold mb-2">Total Shares (n)</label>
+                                <input type="number" id="totalShares" value="6" min="2" class="shadow-sm appearance-none bg-gray-700 border border-gray-600 rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                        <button id="generateBtn" class="mt-4 w-full bg-blue-700 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300">
+                            Generate Polynomial & Shares
+                        </button>
+                    </div>
+
+                    <!-- Shares Display -->
+                    <div class="flex-grow flex flex-col space-y-4">
+                        <div>
+                            <h2 class="text-xl font-semibold text-blue-400">2. Available Shares</h2>
+                            <div id="availableShares" class="bg-gray-950 p-3 rounded-md border border-gray-700 min-h-[100px] flex flex-wrap gap-2">
+                                <p class="text-gray-500 text-sm w-full">Click shares to select them for reconstruction.</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-semibold text-blue-400">3. Selected Shares for Reconstruction</h2>
+                            <div id="selectedShares" class="bg-gray-950/50 p-3 rounded-md border-2 border-dashed border-blue-800 min-h-[100px] flex flex-wrap gap-2">
+                                 <p class="text-blue-400 text-sm w-full">Selected shares will appear here.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reconstruction Card -->
+                    <div class="bg-gray-800 p-5 rounded-lg border border-gray-700">
+                         <h2 class="text-xl font-semibold mb-4 text-blue-400">4. Reconstruct Secret</h2>
+                        <button id="reconstructBtn" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300" disabled>
+                            Reconstruct Secret
+                        </button>
+                        <div id="reconstructionResult" class="mt-4 text-lg text-center font-bold p-3 rounded-lg bg-gray-700 text-gray-200 min-h-[50px]">
+                            Result will be shown here.
+                        </div>
                     </div>
                 </div>
 
-                <!-- The Solution Card -->
-                <div class="bg-gray-800 p-6 rounded-xl border border-sky-500/50">
-                    <h4 class="text-xl font-semibold text-sky-400 mb-3">The Solution: High School Math!</h4>
-                    <div class="space-y-3 text-gray-300">
-                        <p>The solution uses a simple geometric fact: <span class="font-semibold text-white">"It takes two points to define a unique line, three points to define a unique parabola, and so on."</span></p>
-                        <ul class="list-disc list-inside space-y-1 pl-2">
-                            <li><strong>The Secret is a Point:</strong> The secret number is the y-intercept of a graph (the red dot at x=0).</li>
-                            <li><strong>A Random Curve is Drawn:</strong> The algorithm generates a random polynomial (a curve) of degree `k-1` that passes through the secret point.</li>
-                            <li><strong>Shares are Other Points:</strong> The shares given out are just other points on that same secret curve.</li>
-                        </ul>
-                        <p>To find the secret, you just need enough points (`k`) to uniquely identify the curve. With too few points, the secret is perfectly hidden among infinite possibilities.</p>
+                <!-- Visualization Section -->
+                <div class="flex flex-col items-center justify-center bg-gray-800 p-4 rounded-lg border border-gray-700">
+                    <h2 class="text-xl font-semibold mb-4 text-blue-400">Polynomial Visualization</h2>
+                    <canvas id="polynomialCanvas" class="w-full h-auto aspect-video border border-gray-600 rounded-md bg-gray-950"></canvas>
+                    <div class="mt-4 text-sm text-gray-400 flex justify-center space-x-4">
+                        <span><span class="inline-block w-3 h-3 bg-red-500 rounded-full"></span> Secret</span>
+                        <span><span class="inline-block w-3 h-3 bg-blue-500 rounded-full"></span> Available Share</span>
+                        <span><span class="inline-block w-3 h-3 bg-green-500 rounded-full"></span> Selected Share</span>
+                    </div>
+                     <!-- Dynamic Explanation Log -->
+                    <div id="explanationLog" class="mt-4 w-full bg-indigo-900/40 p-4 rounded-lg border border-indigo-700 text-indigo-200 text-sm">
+                       Welcome! Press "Generate" to begin.
                     </div>
                 </div>
             </div>
-        </div>
 
-    </div>
+            <!-- Explanatory Text Section -->
+            <div class="mt-10 pt-6 border-t border-gray-800 space-y-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-white">How It Works: The Intuition Behind the Magic</h2>
+                    <p class="mt-2 max-w-3xl mx-auto text-gray-400">This tool demonstrates Shamir's Secret Sharing, a cryptographic algorithm by Adi Shamir. It solves a critical problem: how do you secure vital information without a single point of failure?</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- The Problem Card -->
+                    <div class="bg-gray-800 p-6 rounded-xl border border-amber-500/50">
+                        <h4 class="text-xl font-semibold text-amber-400 mb-3">The Problem: The "Key Under the Doormat" Dilemma</h4>
+                        <div class="space-y-3 text-gray-300">
+                            <p>Imagine a treasure chest key. Hiding it creates a single point of failure. If you lose it, or the person holding it is unavailable, the treasure is lost. Cutting it in half doesn't work.</p>
+                            <p>Shamir's scheme splits a "key" (the secret number) into multiple parts, called <strong>shares</strong>, with two special properties:</p>
+                            <ol class="list-decimal list-inside space-y-1 pl-2">
+                                <li>A specific number of shares (the <strong>threshold `k`</strong>) must combine to recreate the key.</li>
+                                <li>Anyone with fewer shares has absolutely no information about the key.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- The Solution Card -->
+                    <div class="bg-gray-800 p-6 rounded-xl border border-sky-500/50">
+                        <h4 class="text-xl font-semibold text-sky-400 mb-3">The Solution: High School Math!</h4>
+                        <div class="space-y-3 text-gray-300">
+                            <p>The solution uses a simple geometric fact: <span class="font-semibold text-white">"It takes two points to define a unique line, three points to define a unique parabola, and so on."</span></p>
+                            <ul class="list-disc list-inside space-y-1 pl-2">
+                                <li><strong>The Secret is a Point:</strong> The secret number is the y-intercept of a graph (the red dot at x=0).</li>
+                                <li><strong>A Random Curve is Drawn:</strong> The algorithm generates a random polynomial (a curve) of degree `k-1` that passes through the secret point.</li>
+                                <li><strong>Shares are Other Points:</strong> The shares given out are just other points on that same secret curve.</li>
+                            </ul>
+                            <p>To find the secret, you just need enough points (`k`) to uniquely identify the curve. With too few points, the secret is perfectly hidden among infinite possibilities.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer - Removed for standalone app feel -->
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- 1. Page-Specific Shamir Logic ---
             document.documentElement.classList.remove('invisible');
-            // --- DOM Elements ---
+            
             const secretInput = document.getElementById('secret');
             const thresholdInput = document.getElementById('threshold');
             const totalSharesInput = document.getElementById('totalShares');
@@ -150,21 +255,11 @@
             const canvas = document.getElementById('polynomialCanvas');
             const ctx = canvas.getContext('2d');
 
-            // --- State ---
-            let state = {
-                secret: null,
-                coefficients: [],
-                allShares: [],
-                selectedShares: [],
-                threshold: 0
-            };
+            let state = { secret: null, coefficients: [], allShares: [], selectedShares: [], threshold: 0 };
 
-            // --- Core Logic ---
             function generatePolynomial(secret, k) {
                 const coeffs = [secret];
-                for (let i = 1; i < k; i++) {
-                    coeffs.push(Math.floor(Math.random() * 21) - 10);
-                }
+                for (let i = 1; i < k; i++) { coeffs.push(Math.floor(Math.random() * 21) - 10); }
                 return coeffs;
             }
 
@@ -175,41 +270,23 @@
             function reconstructSecret(shares) {
                 let sum = 0;
                 for (let i = 0; i < shares.length; i++) {
-                    const xi = shares[i].x;
-                    const yi = shares[i].y;
+                    const xi = shares[i].x; const yi = shares[i].y;
                     let product = 1;
                     for (let j = 0; j < shares.length; j++) {
-                        if (i !== j) {
-                            const xj = shares[j].x;
-                            product *= xj / (xj - xi);
-                        }
+                        if (i !== j) { const xj = shares[j].x; product *= xj / (xj - xi); }
                     }
                     sum += yi * product;
                 }
                 return Math.round(sum);
             }
 
-            // --- Event Handlers ---
             generateBtn.addEventListener('click', () => {
                 const secret = parseInt(secretInput.value, 10);
                 const k = parseInt(thresholdInput.value, 10);
                 const n = parseInt(totalSharesInput.value, 10);
-
-                if (isNaN(secret) || isNaN(k) || isNaN(n) || k < 2 || n < k) {
-                    alert('Please enter valid numbers. Ensure n >= k and k >= 2.');
-                    return;
-                }
-
-                state.secret = secret;
-                state.threshold = k;
-                state.coefficients = generatePolynomial(secret, k);
-                state.allShares = [];
-                for (let i = 1; i <= n; i++) {
-                    state.allShares.push({
-                        x: i,
-                        y: evaluatePolynomial(i, state.coefficients)
-                    });
-                }
+                if (isNaN(secret) || isNaN(k) || isNaN(n) || k < 2 || n < k) { alert('Please enter valid numbers. Ensure n >= k and k >= 2.'); return; }
+                state.secret = secret; state.threshold = k; state.coefficients = generatePolynomial(secret, k); state.allShares = [];
+                for (let i = 1; i <= n; i++) { state.allShares.push({ x: i, y: evaluatePolynomial(i, state.coefficients) }); }
                 state.selectedShares = [];
                 explanationLog.innerHTML = `<strong class="text-indigo-100">Generated!</strong> A random polynomial of degree <strong>${k - 1}</strong> was created. The secret (${secret}) is hidden as the y-intercept. Now, select at least <strong>${k}</strong> shares to try and find it.`;
                 updateUI();
@@ -222,142 +299,105 @@
                     explanationLog.innerHTML = `<strong class="text-red-200">Failed.</strong> You only selected <strong>${state.selectedShares.length}</strong> shares, but the threshold is <strong>${state.threshold}</strong>. With too few points, the original curve cannot be uniquely determined, so the secret is safe!`;
                     return;
                 }
-
                 const reconstructed = reconstructSecret(state.selectedShares);
                 reconstructionResult.textContent = `Reconstructed Secret: ${reconstructed}`;
                 const success = reconstructed === state.secret;
                 reconstructionResult.className = `mt-4 text-lg text-center font-bold p-3 rounded-lg ${success ? 'bg-green-900/50 text-green-300' : 'bg-red-900/50 text-red-300'}`;
-                 if(success){
-                    explanationLog.innerHTML = `<strong class="text-green-200">Success!</strong> With <strong>${state.selectedShares.length}</strong> shares (which is >= k), you were able to perfectly reconstruct the original polynomial and find the secret at x=0.`;
-                } else {
-                    explanationLog.innerHTML = `<strong class="text-red-200">Error.</strong> Reconstruction failed. This can happen due to floating-point precision issues with large numbers.`;
+                explanationLog.innerHTML = success ? `<strong class="text-green-200">Success!</strong> With <strong>${state.selectedShares.length}</strong> shares (which is >= k), you were able to perfectly reconstruct the original polynomial and find the secret at x=0.` : `<strong class="text-red-200">Error.</strong> Reconstruction failed. This can happen due to floating-point precision issues with large numbers.`;
+            });
+
+            function updateUI() { renderShares(); drawCanvas(); reconstructBtn.disabled = false; reconstructionResult.textContent = 'Result will be shown here.'; reconstructionResult.className = 'mt-4 text-lg text-center font-bold p-3 rounded-lg bg-gray-700 text-gray-200'; }
+            function renderShares() {
+                availableSharesContainer.innerHTML = ''; selectedSharesContainer.innerHTML = '';
+                const available = state.allShares.filter(s => !state.selectedShares.find(ss => ss.x === s.x));
+                if (available.length === 0) { availableSharesContainer.innerHTML = '<p class="text-gray-500 text-sm w-full">All shares selected.</p>'; } 
+                else { available.forEach(share => { const pill = createSharePill(share, false); pill.addEventListener('click', () => selectShare(share)); availableSharesContainer.appendChild(pill); }); }
+                if (state.selectedShares.length === 0) { selectedSharesContainer.innerHTML = '<p class="text-blue-400 text-sm w-full">Selected shares will appear here.</p>'; } 
+                else { state.selectedShares.forEach(share => { const pill = createSharePill(share, true); pill.addEventListener('click', () => deselectShare(share)); selectedSharesContainer.appendChild(pill); }); }
+            }
+            function createSharePill(share, isSelected) { const pill = document.createElement('div'); pill.className = `share-pill font-mono text-sm py-1 px-3 rounded-full shadow ${isSelected ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200'}`; pill.textContent = `(${share.x}, ${share.y})`; return pill; }
+            function selectShare(share) { state.selectedShares.push(share); state.selectedShares.sort((a,b) => a.x - b.x); updateUI(); }
+            function deselectShare(share) { state.selectedShares = state.selectedShares.filter(s => s.x !== share.x); updateUI(); }
+            function drawCanvas() {
+                const dpr = window.devicePixelRatio || 1; const rect = canvas.getBoundingClientRect(); canvas.width = rect.width * dpr; canvas.height = rect.height * dpr; ctx.scale(dpr, dpr);
+                const width = rect.width; const height = rect.height; ctx.clearRect(0, 0, width, height);
+                if (state.secret === null) return;
+                const allPoints = [...state.allShares, {x: 0, y: state.secret}]; const xCoords = allPoints.map(p => p.x); const yCoords = allPoints.map(p => p.y);
+                const xMin = Math.min(...xCoords) - 1; const xMax = Math.max(...xCoords) + 1; const yMin = Math.min(...yCoords); const yMax = Math.max(...yCoords);
+                const yRange = yMax - yMin; const yPadding = yRange * 0.2 || 10; const view = { xMin, xMax, yMin: yMin - yPadding, yMax: yMax + yPadding };
+                const mapX = (x) => (x - view.xMin) / (view.xMax - view.xMin) * width; const mapY = (y) => height - (y - view.yMin) / (view.yMax - view.yMin) * height;
+                ctx.strokeStyle = '#4a5568'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(mapX(view.xMin), mapY(0)); ctx.lineTo(mapX(view.xMax), mapY(0)); ctx.moveTo(mapX(0), mapY(view.yMin)); ctx.lineTo(mapX(0), mapY(view.yMax)); ctx.stroke();
+                if(state.coefficients.length > 0){
+                    ctx.strokeStyle = '#fb923c'; ctx.lineWidth = 2; ctx.beginPath();
+                    for (let px = 0; px < width; px++) { const x = (px / width) * (view.xMax - view.xMin) + view.xMin; const y = evaluatePolynomial(x, state.coefficients); if (px === 0) ctx.moveTo(mapX(x), mapY(y)); else ctx.lineTo(mapX(x), mapY(y)); }
+                    ctx.stroke();
+                }
+                const drawPoint = (x, y, color) => { ctx.fillStyle = color; ctx.beginPath(); ctx.arc(mapX(x), mapY(y), 5, 0, Math.PI * 2); ctx.fill(); };
+                const available = state.allShares.filter(s => !state.selectedShares.find(ss => ss.x === s.x));
+                available.forEach(p => drawPoint(p.x, p.y, '#3b82f6')); state.selectedShares.forEach(p => drawPoint(p.x, p.y, '#22c55e')); drawPoint(0, state.secret, '#ef4444');
+            }
+            window.addEventListener('resize', drawCanvas);
+            generateBtn.click(); 
+
+            // --- 2. Render ALL Icons (Nav only needed here) ---
+            if (window.lucide) {
+                lucide.createIcons({
+                    icons: {
+                        // All Nav Icons
+                        'nav-home': lucide.Home,
+                        'nav-guides-trigger': lucide.BookOpen,
+                        'nav-tools-trigger': lucide.Briefcase,
+                        'nav-guides-chevron': lucide.ChevronDown,
+                        'nav-tools-chevron': lucide.ChevronDown,
+                        'nav-cloud': lucide.Cloud,
+                        'nav-roadmap': lucide.Map, 
+                        'nav-phishing': lucide.Fish,
+                        'nav-sast': lucide.FileSearch,
+                        'nav-threat': lucide.ShieldAlert,
+                        'nav-checklist': lucide.ListChecks,
+                        'nav-epss': lucide.Activity, 
+                        'nav-encryption': lucide.Lock,
+                        'nav-fp': lucide.Fingerprint,
+                        'nav-jwt': lucide.KeyRound,
+                        'nav-modcat': lucide.Guitar,
+                        'nav-shamir': lucide.Share2, // <-- Included for nav
+                        'nav-dashboard': lucide.LayoutDashboard,
+                    },
+                    attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
+                });
+            }
+
+            // --- 3. Add Nav Dropdown Logic ---
+            const dropdownButtons = document.querySelectorAll('.group > button');
+            dropdownButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const dropdownMenu = e.currentTarget.nextElementSibling;
+                    // Close all other open dropdowns
+                    document.querySelectorAll('.group .absolute').forEach(menu => {
+                        if (menu !== dropdownMenu) {
+                            menu.classList.add('opacity-0', 'invisible');
+                            menu.classList.remove('opacity-100', 'visible');
+                        }
+                    });
+                    // Toggle the current dropdown
+                    dropdownMenu.classList.toggle('opacity-0');
+                    dropdownMenu.classList.toggle('invisible');
+                    dropdownMenu.classList.toggle('opacity-100');
+                    dropdownMenu.classList.toggle('visible');
+                });
+            });
+
+            // Close dropdowns if clicking outside
+            window.addEventListener('click', (e) => {
+                if (!e.target.closest('.group')) {
+                    document.querySelectorAll('.group .absolute').forEach(menu => {
+                        menu.classList.add('opacity-0', 'invisible');
+                        menu.classList.remove('opacity-100', 'visible');
+                    });
                 }
             });
 
-            // --- UI Update Functions ---
-            function updateUI() {
-                renderShares();
-                drawCanvas();
-                reconstructBtn.disabled = false;
-                reconstructionResult.textContent = 'Result will be shown here.';
-                reconstructionResult.className = 'mt-4 text-lg text-center font-bold p-3 rounded-lg bg-gray-700 text-gray-200';
-            }
-
-            function renderShares() {
-                availableSharesContainer.innerHTML = '';
-                selectedSharesContainer.innerHTML = '';
-
-                const available = state.allShares.filter(s => !state.selectedShares.find(ss => ss.x === s.x));
-
-                if (available.length === 0) {
-                     availableSharesContainer.innerHTML = '<p class="text-gray-500 text-sm w-full">All shares selected.</p>';
-                } else {
-                    available.forEach(share => {
-                        const pill = createSharePill(share, false);
-                        pill.addEventListener('click', () => selectShare(share));
-                        availableSharesContainer.appendChild(pill);
-                    });
-                }
-                
-                if (state.selectedShares.length === 0) {
-                     selectedSharesContainer.innerHTML = '<p class="text-blue-400 text-sm w-full">Selected shares will appear here.</p>';
-                } else {
-                    state.selectedShares.forEach(share => {
-                        const pill = createSharePill(share, true);
-                        pill.addEventListener('click', () => deselectShare(share));
-                        selectedSharesContainer.appendChild(pill);
-                    });
-                }
-            }
-
-            function createSharePill(share, isSelected) {
-                const pill = document.createElement('div');
-                pill.className = `share-pill font-mono text-sm py-1 px-3 rounded-full shadow ${isSelected ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200'}`;
-                pill.textContent = `(${share.x}, ${share.y})`;
-                return pill;
-            }
-
-            function selectShare(share) {
-                state.selectedShares.push(share);
-                state.selectedShares.sort((a,b) => a.x - b.x);
-                updateUI();
-            }
-
-            function deselectShare(share) {
-                state.selectedShares = state.selectedShares.filter(s => s.x !== share.x);
-                updateUI();
-            }
-
-            // --- Canvas Drawing Logic ---
-            function drawCanvas() {
-                const dpr = window.devicePixelRatio || 1;
-                const rect = canvas.getBoundingClientRect();
-                canvas.width = rect.width * dpr;
-                canvas.height = rect.height * dpr;
-                ctx.scale(dpr, dpr);
-                const width = rect.width;
-                const height = rect.height;
-
-                ctx.clearRect(0, 0, width, height);
-
-                if (state.secret === null) return;
-
-                const allPoints = [...state.allShares, {x: 0, y: state.secret}];
-                const xCoords = allPoints.map(p => p.x);
-                const yCoords = allPoints.map(p => p.y);
-                const xMin = Math.min(...xCoords) - 1;
-                const xMax = Math.max(...xCoords) + 1;
-                const yMin = Math.min(...yCoords);
-                const yMax = Math.max(...yCoords);
-                const yRange = yMax - yMin;
-                const yPadding = yRange * 0.2 || 10;
-                
-                const view = { xMin, xMax, yMin: yMin - yPadding, yMax: yMax + yPadding };
-
-                const mapX = (x) => (x - view.xMin) / (view.xMax - view.xMin) * width;
-                const mapY = (y) => height - (y - view.yMin) / (view.yMax - view.yMin) * height;
-
-                // Draw Axes
-                ctx.strokeStyle = '#4a5568'; // gray-600
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.moveTo(mapX(view.xMin), mapY(0));
-                ctx.lineTo(mapX(view.xMax), mapY(0));
-                ctx.moveTo(mapX(0), mapY(view.yMin));
-                ctx.lineTo(mapX(0), mapY(view.yMax));
-                ctx.stroke();
-
-                if(state.coefficients.length > 0){
-                    ctx.strokeStyle = '#fb923c'; // orange-400
-                    ctx.lineWidth = 2;
-                    ctx.beginPath();
-                    for (let px = 0; px < width; px++) {
-                        const x = (px / width) * (view.xMax - view.xMin) + view.xMin;
-                        const y = evaluatePolynomial(x, state.coefficients);
-                        if (px === 0) ctx.moveTo(mapX(x), mapY(y));
-                        else ctx.lineTo(mapX(x), mapY(y));
-                    }
-                    ctx.stroke();
-                }
-
-                const drawPoint = (x, y, color) => {
-                    ctx.fillStyle = color;
-                    ctx.beginPath();
-                    ctx.arc(mapX(x), mapY(y), 5, 0, Math.PI * 2);
-                    ctx.fill();
-                };
-
-                const available = state.allShares.filter(s => !state.selectedShares.find(ss => ss.x === s.x));
-                available.forEach(p => drawPoint(p.x, p.y, '#3b82f6')); // blue-500
-                state.selectedShares.forEach(p => drawPoint(p.x, p.y, '#22c55e')); // green-500
-                drawPoint(0, state.secret, '#ef4444'); // red-500
-            }
-
-            window.addEventListener('resize', drawCanvas);
-            generateBtn.click(); 
-        });
+        }); // End DOMContentLoaded
     </script>
 </body>
 </html>
-
-
