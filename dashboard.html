@@ -37,25 +37,100 @@
     input[type="date"]::-webkit-calendar-picker-indicator {
       filter: invert(1);
     }
+     /* Ensure dropdown content is above other elements */
+    .group .absolute {
+      z-index: 50;
+    }
   </style>
 </head>
 <body class="bg-gray-950 text-white min-h-screen flex flex-col">
-  <!-- Navigation Bar -->
-  <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-30">
+  <!-- 
+    NAV BAR FOR "TOOLS & DEMOS" PAGES
+    - "Home" is inactive.
+    - "Guides & Case Studies" is inactive.
+    - "Tools & Demos" is ACTIVE.
+  -->
+  <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
       <div class="w-full flex items-center justify-center px-6 py-3">
+         <!-- Main navigation container -->
          <div class="flex flex-wrap justify-center space-x-4">
-          <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-home" class="mr-1"></span>Home</a>
-          <a href="phishing.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-phishing" class="mr-1"></span>Phishing</a>
-          <a href="cloud.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-cloud" class="mr-1"></span>Cloud</a>
-          <a href="sast.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-sast" class="mr-1"></span>SAST</a>
-          <a href="threatmodel.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-threat" class="mr-1"></span>Threat Model</a>
-          <a href="checklist.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-checklist" class="mr-1"></span>Checklist</a>
-          <a href="jwt.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-jwt" class="mr-1"></span>JWT Decoder</a>
-          <a href="encryption.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-encryption" class="mr-1"></span>Encryption</a>
-          <a href="fingerprint.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-fp" class="mr-1"></span>Fingerprinting</a>
-          <a href="epssdemo.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-epss" class="mr-1"></span>CVSS vs EPSS</a>
-          <a href="dashboard.html" class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition"><span id="nav-dashboard" class="mr-1"></span>Threat Intel</a>
-          <a href="modcat.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-modcat" class="mr-1"></span>PRS MODCAT</a>
+          
+          <!-- Home Link (Inactive) -->
+          <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
+            <span id="nav-home" class="mr-1"></span>Home
+          </a>
+
+          <!-- Guides & Case Studies Dropdown (Inactive) -->
+          <div class="relative group">
+            <!-- Dropdown Trigger -->
+            <button class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
+              <span id="nav-guides-trigger" class="mr-1"></span>
+              Guides & Case Studies
+              <span id="nav-guides-chevron" class="ml-1"></span>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+              <div class="py-1" role="menu" aria-orientation="vertical">
+                <a href="cloud.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-cloud" class="mr-2"></span>Cloud
+                </a>
+                <a href="cyber_roadmap.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-roadmap" class="mr-2"></span>Cyber Roadmap
+                </a>
+                <a href="phishing.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-phishing" class="mr-2"></span>Phishing
+                </a>
+                <a href="sast.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-sast" class="mr-2"></span>SAST
+                </a>
+                <a href="threatmodel.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-threat" class="mr-2"></span>Threat Model
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tools & Demos Dropdown (ACTIVE) -->
+          <div class="relative group">
+            <!-- Dropdown Trigger -->
+             <button class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition">
+              <span id="nav-tools-trigger" class="mr-1"></span>
+              Tools & Demos
+              <span id="nav-tools-chevron" class="ml-1"></span>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+              <div class="py-1" role="menu" aria-orientation="vertical">
+                <a href="checklist.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-checklist" class="mr-2"></span>Checklist
+                </a>
+                <a href="epssdemo.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-epss" class="mr-2"></span>CVSS vs EPSS
+                </a>
+                <a href="encryption.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-encryption" class="mr-2"></span>Encryption
+                </a>
+                <a href="fingerprint.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-fp" class="mr-2"></span>Fingerprinting
+                </a>
+                <a href="jwt.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-jwt" class="mr-2"></span>JWT Decoder
+                </a>
+                <a href="modcat.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-modcat" class="mr-2"></span>PRS MODCAT
+                </a>
+                <a href="shamir.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-shamir" class="mr-2"></span>Shamir's Visualizer
+                </a>
+                <a href="dashboard.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-dashboard" class="mr-2"></span>Threat Intel
+                </a>
+              </div>
+            </div>
+          </div>
+          
         </div>
       </div>
   </nav>
@@ -169,21 +244,20 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // --- 1. Page-Specific Dashboard Logic ---
       const fetchBtn = document.getElementById('fetch-btn');
       const downloadBtn = document.getElementById('download-btn');
       const loadingState = document.getElementById('loading-state');
       const startDateInput = document.getElementById('start-date');
       const endDateInput = document.getElementById('end-date');
 
-      // --- CHART INSTANCE HOLDERS ---
       let vulnScatterChart = null;
       let vulnsByTypeChart = null;
       let attackVectorChart = null;
       let topVendorsChart = null;
       let cvssMetricsRadarChart = null;
-      let lastApiData = null; // Variable to store raw API data
+      let lastApiData = null; 
 
-      // --- INITIAL SETUP ---
       const setDefaultDates = () => {
         const endDate = new Date();
         const startDate = new Date();
@@ -192,13 +266,12 @@
         startDateInput.value = startDate.toISOString().split('T')[0];
       };
 
-      // --- API & DATA HANDLING ---
       const downloadJsonData = () => {
         if (!lastApiData) {
             console.error("No data available to download.");
             return;
         }
-        const dataStr = JSON.stringify(lastApiData, null, 2); // Pretty print JSON
+        const dataStr = JSON.stringify(lastApiData, null, 2); 
         const dataBlob = new Blob([dataStr], {type: "application/json"});
         const url = URL.createObjectURL(dataBlob);
         const link = document.createElement('a');
@@ -232,12 +305,11 @@
 
           const allVulnerabilities = [];
           let startIndex = 0;
-          const resultsPerPage = 2000; // Max allowed by NVD API
+          const resultsPerPage = 2000; 
           const maxResults = 5000;
           let totalResults = 0;
           let hasMorePages = true;
 
-          // Convert dates to ISO format for the API, ensuring end date includes the full day
           const startDateISO = new Date(startDateValue).toISOString();
           const endDateISO = new Date(new Date(endDateValue).setUTCHours(23, 59, 59, 999)).toISOString();
 
@@ -456,24 +528,81 @@
           });
       };
       
+      // Event Listeners (Page Specific)
       fetchBtn.addEventListener('click', fetchAndDisplayData);
       downloadBtn.addEventListener('click', downloadJsonData);
       
+      // Initial Setup
       setDefaultDates();
       fetchAndDisplayData();
 
-      lucide.createIcons({
-        icons: {
-          'nav-linkedin': lucide.Linkedin, 'nav-github': lucide.Github, 'nav-home': lucide.Home, 'nav-threat': lucide.ShieldAlert, 'nav-checklist': lucide.ListChecks, 'nav-jwt': lucide.KeyRound, 'nav-fp': lucide.Fingerprint, 'nav-epss': lucide.Activity, 'nav-dashboard': lucide.LayoutDashboard, 'refresh-icon': lucide.RefreshCw, 'download-icon': lucide.Download
-        },
-        attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
-      });
+      // --- 2. Render ALL Icons (Nav + Page) ---
+      if (window.lucide) {
+        lucide.createIcons({
+          icons: {
+              // All Nav Icons
+              'nav-home': lucide.Home,
+              'nav-guides-trigger': lucide.BookOpen,
+              'nav-tools-trigger': lucide.Briefcase,
+              'nav-guides-chevron': lucide.ChevronDown,
+              'nav-tools-chevron': lucide.ChevronDown,
+              'nav-cloud': lucide.Cloud,
+              'nav-roadmap': lucide.Map,
+              'nav-phishing': lucide.Fish,
+              'nav-sast': lucide.FileSearch,
+              'nav-threat': lucide.ShieldAlert,
+              'nav-checklist': lucide.ListChecks,
+              'nav-epss': lucide.Activity, 
+              'nav-encryption': lucide.Lock,
+              'nav-fp': lucide.Fingerprint,
+              'nav-jwt': lucide.KeyRound,
+              'nav-modcat': lucide.Guitar,
+              'nav-shamir': lucide.Share2,
+              'nav-dashboard': lucide.LayoutDashboard, // <-- Included for nav
+
+              // Page-specific icons
+              'refresh-icon': lucide.RefreshCw, 
+              'download-icon': lucide.Download
+          },
+          attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
+        });
       
-      document.querySelector('#refresh-icon > svg')?.setAttribute('color', 'white');
-      document.querySelector('#download-icon > svg')?.setAttribute('color', 'white');
+        // Override color for specific button icons
+        document.querySelector('#refresh-icon > svg')?.setAttribute('color', 'white');
+        document.querySelector('#download-icon > svg')?.setAttribute('color', 'white');
+      }
+
+      // --- 3. Add Nav Dropdown Logic ---
+      const dropdownButtons = document.querySelectorAll('.group > button');
+      dropdownButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          const dropdownMenu = e.currentTarget.nextElementSibling;
+          // Close all other open dropdowns
+          document.querySelectorAll('.group .absolute').forEach(menu => {
+            if (menu !== dropdownMenu) {
+              menu.classList.add('opacity-0', 'invisible');
+              menu.classList.remove('opacity-100', 'visible');
+            }
+          });
+          // Toggle the current dropdown
+          dropdownMenu.classList.toggle('opacity-0');
+          dropdownMenu.classList.toggle('invisible');
+          dropdownMenu.classList.toggle('opacity-100');
+          dropdownMenu.classList.toggle('visible');
+        });
+      });
+
+      // Close dropdowns if clicking outside
+      window.addEventListener('click', (e) => {
+        if (!e.target.closest('.group')) {
+          document.querySelectorAll('.group .absolute').forEach(menu => {
+            menu.classList.add('opacity-0', 'invisible');
+            menu.classList.remove('opacity-100', 'visible');
+          });
+        }
+      });
+
     });
   </script>
 </body>
 </html>
-
-
