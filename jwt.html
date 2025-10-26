@@ -23,31 +23,107 @@
     .jwt-part-signature { color: #38bdf8; } /* sky-400 */
     .view-toggle-active { background-color: #3b82f6; color: white; }
     .view-toggle-inactive { background-color: #1f2937; color: #9ca3af; }
+    /* Ensure dropdown content is above other elements */
+    .group .absolute {
+      z-index: 50;
+    }
   </style>
 </head>
 <body class="bg-gray-950 text-white min-h-screen flex flex-col">
-  <!-- Navigation Bar -->
-  <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-30">
+  <!-- 
+    NAV BAR FOR "TOOLS & DEMOS" PAGES
+    - "Home" is inactive.
+    - "Guides & Case Studies" is inactive.
+    - "Tools & Demos" is ACTIVE.
+  -->
+  <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
       <div class="w-full flex items-center justify-center px-6 py-3">
+         <!-- Main navigation container -->
          <div class="flex flex-wrap justify-center space-x-4">
-          <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-home" class="mr-1"></span>Home</a>
-          <a href="phishing.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-phishing" class="mr-1"></span>Phishing</a>
-          <a href="cloud.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-cloud" class="mr-1"></span>Cloud</a>
-          <a href="sast.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-sast" class="mr-1"></span>SAST</a>
-          <a href="threatmodel.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-threat" class="mr-1"></span>Threat Model</a>
-          <a href="checklist.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-checklist" class="mr-1"></span>Checklist</a>
-          <a href="jwt.html" class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition"><span id="nav-jwt" class="mr-1"></span>JWT Decoder</a>
-          <a href="encryption.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-encryption" class="mr-1"></span>Encryption</a>
-          <a href="fingerprint.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-fp" class="mr-1"></span>Fingerprinting</a>
-          <a href="epssdemo.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-epss" class="mr-1"></span>CVSS vs EPSS</a>
-          <a href="dashboard.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-dashboard" class="mr-1"></span>Threat Intel</a>
-          <a href="modcat.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-modcat" class="mr-1"></span>PRS MODCAT</a>
+          
+          <!-- Home Link (Inactive) -->
+          <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
+            <span id="nav-home" class="mr-1"></span>Home
+          </a>
+
+          <!-- Guides & Case Studies Dropdown (Inactive) -->
+          <div class="relative group">
+            <!-- Dropdown Trigger -->
+            <button class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
+              <span id="nav-guides-trigger" class="mr-1"></span>
+              Guides & Case Studies
+              <span id="nav-guides-chevron" class="ml-1"></span>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+              <div class="py-1" role="menu" aria-orientation="vertical">
+                <a href="cloud.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-cloud" class="mr-2"></span>Cloud
+                </a>
+                <a href="cyber_roadmap.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-roadmap" class="mr-2"></span>Cyber Roadmap
+                </a>
+                <a href="phishing.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-phishing" class="mr-2"></span>Phishing
+                </a>
+                <a href="sast.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-sast" class="mr-2"></span>SAST
+                </a>
+                <a href="threatmodel.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-threat" class="mr-2"></span>Threat Model
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tools & Demos Dropdown (ACTIVE) -->
+          <div class="relative group">
+            <!-- Dropdown Trigger -->
+            <button class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition">
+              <span id="nav-tools-trigger" class="mr-1"></span>
+              Tools & Demos
+              <span id="nav-tools-chevron" class="ml-1"></span>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+              <div class="py-1" role="menu" aria-orientation="vertical">
+                <a href="checklist.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-checklist" class="mr-2"></span>Checklist
+                </a>
+                <a href="epssdemo.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-epss" class="mr-2"></span>CVSS vs EPSS
+                </a>
+                <a href="encryption.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-encryption" class="mr-2"></span>Encryption
+                </a>
+                <a href="fingerprint.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-fp" class="mr-2"></span>Fingerprinting
+                </a>
+                <a href="jwt.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-jwt" class="mr-2"></span>JWT Decoder
+                </a>
+                <a href="modcat.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-modcat" class="mr-2"></span>PRS MODCAT
+                </a>
+                <a href="shamir.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-shamir" class="mr-2"></span>Shamir's Visualizer
+                </a>
+                <a href="dashboard.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-dashboard" class="mr-2"></span>Threat Intel
+                </a>
+              </div>
+            </div>
+          </div>
+          
         </div>
       </div>
   </nav>
 
   <!-- Header -->
   <header class="bg-gradient-to-r from-blue-900 to-gray-900 py-10 px-4 text-center shadow-lg">
+    <!-- ... existing header content ... -->
     <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">JWT Decoder & Verifier</h1>
     <p class="max-w-xl mx-auto text-gray-200 text-lg">
       An interactive tool to decode JSON Web Tokens and verify their signatures.
@@ -70,6 +146,7 @@
 
   <!-- Main Content -->
   <main class="flex-1 px-4 py-10 max-w-5xl mx-auto w-full">
+    <!-- ... existing main content ... -->
     <div class="bg-blue-900/50 border border-blue-700 text-blue-200 px-4 py-3 rounded-lg relative mb-8 flex items-center" role="alert">
       <span id="info-icon" class="mr-3 shrink-0"></span>
       <div>
@@ -151,6 +228,7 @@
 
     <!-- How to find a JWT section -->
     <section class="mt-12 bg-gray-900 p-6 rounded-lg shadow-lg">
+        <!-- ... existing tutorial content ... -->
         <h3 class="text-2xl font-semibold text-blue-400 mb-4 flex items-center">
             <span id="tutorial-icon" class="mr-3"></span>
             Tutorial: Finding a JWT in the Wild
@@ -207,7 +285,7 @@
   </footer>
 
   <script>
-    // --- UTILITY FUNCTIONS & DOM ELEMENTS ---
+    // --- JWT UTILITY FUNCTIONS & DOM ELEMENTS ---
     const getEl = (id) => document.getElementById(id);
     const jwtInput = getEl('jwt-input');
     const jwtPartsEl = getEl('jwt-parts');
@@ -219,13 +297,13 @@
     const secretInput = getEl('secret-input');
     const signatureResultEl = getEl('signature-result');
 
-    // --- STATE ---
+    // --- JWT STATE ---
     let isSecretBase64 = false;
 
-    // --- CONSTANTS ---
+    // --- JWT CONSTANTS ---
     const exampleJwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhdXRoMHwxMjM0NTY3ODkwIiwibmFtZSI6IkNoYW5kbGVyIFByaW5jZSIsImFkbWluIjp0cnVlLCJpYXQiOjE3MjU3Mjc2ODB9.M-22A_zHk1k-tJt2x932XQyRDYwJkU-x2bO_s6Y6s2g';
 
-    // --- CORE LOGIC ---
+    // --- JWT CORE LOGIC ---
     function b64UrlDecode(str) {
       let output = str.replace(/-/g, '+').replace(/_/g, '/');
       switch (output.length % 4) {
@@ -261,7 +339,17 @@
     
     function copyToClipboard(text, buttonId) {
       if (!text) return;
-      navigator.clipboard.writeText(text).then(() => {
+      // Use execCommand for broader compatibility in restricted environments
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'absolute';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        
         const button = getEl(buttonId);
         if (button) {
           const originalText = button.textContent;
@@ -272,9 +360,9 @@
               button.classList.remove('text-green-400');
           }, 2000);
         }
-      }).catch(err => {
+      } catch (err) {
         console.error('Failed to copy text: ', err);
-      });
+      }
     }
 
     async function verifySignature(encodedHeader, encodedPayload, signature, secret, useBase64) {
@@ -410,44 +498,97 @@
       decodeJwt();
     });
     
-    // --- INITIALIZATION ---
+    // --- INITIALIZATION (Combined) ---
     document.addEventListener('DOMContentLoaded', () => {
+      // --- 1. Run JWT Page Logic ---
       setupViewToggle('header-table-btn', 'header-json-btn', 'header-output-table', 'header-output-json');
       setupViewToggle('payload-table-btn', 'payload-json-btn', 'payload-output-table', 'payload-output-json');
       
       jwtInput.value = exampleJwt;
       decodeJwt();
       
-      lucide.createIcons({
-        icons: {
-          'nav-linkedin': lucide.Linkedin,
-          'nav-github': lucide.Github,
-          'nav-home': lucide.Home,
-          'nav-jwt': lucide.KeyRound,
-          'nav-fp': lucide.Fingerprint,
-          'nav-epss': lucide.Activity,
-          'info-icon': lucide.Info,
-          'tutorial-icon': lucide.BookOpen,
-          'warning-icon': lucide.ShieldAlert,
-          'clear-jwt-icon': lucide.X,
-        },
-        attrs: { color: "#facc15", size: 24, strokeWidth: 2 }
-      });
+      // --- 2. Render ALL Icons (Nav + Page) ---
+      if (window.lucide) {
+        lucide.createIcons({
+          icons: {
+            // All Nav Icons
+            'nav-home': lucide.Home,
+            'nav-guides-trigger': lucide.BookOpen,
+            'nav-tools-trigger': lucide.Briefcase,
+            'nav-guides-chevron': lucide.ChevronDown,
+            'nav-tools-chevron': lucide.ChevronDown,
+            'nav-cloud': lucide.Cloud,
+            'nav-roadmap': lucide.Map,
+            'nav-phishing': lucide.Fish,
+            'nav-sast': lucide.FileSearch,
+            'nav-threat': lucide.ShieldAlert,
+            'nav-checklist': lucide.ListChecks,
+            'nav-epss': lucide.Activity,
+            'nav-encryption': lucide.Lock,
+            'nav-fp': lucide.Fingerprint,
+            'nav-jwt': lucide.KeyRound,
+            'nav-modcat': lucide.Guitar,
+            'nav-shamir': lucide.Share2,
+            'nav-dashboard': lucide.LayoutDashboard,
+            
+            // JWT Page-specific icons
+            'info-icon': lucide.Info,
+            'tutorial-icon': lucide.BookOpen,
+            'warning-icon': lucide.ShieldAlert,
+            'clear-jwt-icon': lucide.X,
+            
+            // Kept just in case
+            'nav-linkedin': lucide.Linkedin, 
+            'nav-github': lucide.Github     
+          },
+          attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 } // Default color blue
+        });
+      }
 
-      // Override colors for specific icons
+      // --- 3. Run JWT Icon Color Overrides ---
+      // Override colors for *specific* page icons (not nav icons)
       const infoIcon = getEl('info-icon');
       if(infoIcon) infoIcon.setAttribute('color', '#38bdf8');
       const tutorialIcon = getEl('tutorial-icon');
       if(tutorialIcon) tutorialIcon.setAttribute('color', '#38bdf8');
+      const warningIcon = getEl('warning-icon');
+      if(warningIcon) warningIcon.setAttribute('color', '#facc15'); // Set warning to yellow
       const clearJwtIcon = getEl('clear-jwt-icon');
       if(clearJwtIcon) {
-          clearJwtIcon.setAttribute('color', '#f87171');
+          clearJwtIcon.setAttribute('color', '#f87171'); // Set clear to red
           clearJwtIcon.setAttribute('size', 16);
       }
+      
+      // --- 4. Add Nav Dropdown Logic ---
+      const dropdownButtons = document.querySelectorAll('.group > button');
+      dropdownButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          const dropdownMenu = e.currentTarget.nextElementSibling;
+          // Close all other open dropdowns
+          document.querySelectorAll('.group .absolute').forEach(menu => {
+            if (menu !== dropdownMenu) {
+              menu.classList.add('opacity-0', 'invisible');
+              menu.classList.remove('opacity-100', 'visible');
+            }
+          });
+          // Toggle the current dropdown
+          dropdownMenu.classList.toggle('opacity-0');
+          dropdownMenu.classList.toggle('invisible');
+          dropdownMenu.classList.toggle('opacity-100');
+          dropdownMenu.classList.toggle('visible');
+        });
+      });
 
+      // Close dropdowns if clicking outside
+      window.addEventListener('click', (e) => {
+        if (!e.target.closest('.group')) {
+          document.querySelectorAll('.group .absolute').forEach(menu => {
+            menu.classList.add('opacity-0', 'invisible');
+            menu.classList.remove('opacity-100', 'visible');
+          });
+        }
+      });
     });
   </script>
 </body>
 </html>
-
-

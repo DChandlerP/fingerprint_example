@@ -82,25 +82,101 @@
       opacity: 1;
       transform: translateY(0);
     }
+
+    /* Ensure dropdown content is above other elements */
+    .group .absolute {
+      z-index: 50;
+    }
   </style>
 </head>
 <body class="bg-gray-950 text-white min-h-screen flex flex-col">
-  <!-- Navigation Bar -->
-<nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-30">
+  <!-- 
+    NAV BAR FOR "GUIDES & CASE STUDIES" PAGES
+    - "Home" is inactive.
+    - "Guides & Case Studies" is ACTIVE.
+    - "Tools & Demos" is inactive.
+  -->
+  <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
       <div class="w-full flex items-center justify-center px-6 py-3">
+         <!-- Main navigation container -->
          <div class="flex flex-wrap justify-center space-x-4">
-          <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-home" class="mr-1"></span>Home</a>
-          <a href="phishing.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-phishing" class="mr-1"></span>Phishing</a>
-          <a href="cloud.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-cloud" class="mr-1"></span>Cloud</a>
-          <a href="sast.html" class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition"><span id="nav-sast" class="mr-1"></span>SAST</a>
-          <a href="threatmodel.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-threat" class="mr-1"></span>Threat Model</a>
-          <a href="checklist.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-checklist" class="mr-1"></span>Checklist</a>
-          <a href="jwt.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-jwt" class="mr-1"></span>JWT Decoder</a>
-          <a href="encryption.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-encryption" class="mr-1"></span>Encryption</a>
-          <a href="fingerprint.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-fp" class="mr-1"></span>Fingerprinting</a>
-          <a href="epssdemo.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-epss" class="mr-1"></span>CVSS vs EPSS</a>
-          <a href="dashboard.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-dashboard" class="mr-1"></span>Threat Intel</a>
-          <a href="modcat.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition"><span id="nav-modcat" class="mr-1"></span>PRS MODCAT</a>
+          
+          <!-- Home Link (Inactive) -->
+          <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
+            <span id="nav-home" class="mr-1"></span>Home
+          </a>
+
+          <!-- Guides & Case Studies Dropdown (ACTIVE) -->
+          <div class="relative group">
+            <!-- Dropdown Trigger -->
+            <button class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition">
+              <span id="nav-guides-trigger" class="mr-1"></span>
+              Guides & Case Studies
+              <span id="nav-guides-chevron" class="ml-1"></span>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+              <div class="py-1" role="menu" aria-orientation="vertical">
+                <a href="cloud.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-cloud" class="mr-2"></span>Cloud
+                </a>
+                <a href="cyber_roadmap.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-roadmap" class="mr-2"></span>Cyber Roadmap
+                </a>
+                <a href="phishing.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-phishing" class="mr-2"></span>Phishing
+                </a>
+                <a href="sast.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-sast" class="mr-2"></span>SAST
+                </a>
+                <a href="threatmodel.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-threat" class="mr-2"></span>Threat Model
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tools & Demos Dropdown (Inactive) -->
+          <div class="relative group">
+            <!-- Dropdown Trigger -->
+            <button class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
+              <span id="nav-tools-trigger" class="mr-1"></span>
+              Tools & Demos
+              <span id="nav-tools-chevron" class="ml-1"></span>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+              <div class="py-1" role="menu" aria-orientation="vertical">
+                <a href="checklist.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-checklist" class="mr-2"></span>Checklist
+                </a>
+                <a href="epssdemo.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-epss" class="mr-2"></span>CVSS vs EPSS
+                </a>
+                <a href="encryption.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-encryption" class="mr-2"></span>Encryption
+                </a>
+                <a href="fingerprint.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-fp" class="mr-2"></span>Fingerprinting
+                </a>
+                <a href="jwt.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-jwt" classs="mr-2"></span>JWT Decoder
+                </a>
+                <a href="modcat.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-modcat" class="mr-2"></span>PRS MODCAT
+                </a>
+                <a href="shamir.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-shamir" class="mr-2"></span>Shamir's Visualizer
+                </a>
+                <a href="dashboard.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-dashboard" class="mr-2"></span>Threat Intel
+                </a>
+              </div>
+            </div>
+          </div>
+          
         </div>
       </div>
   </nav>
@@ -119,6 +195,7 @@
       
       <!-- SQL Injection Section -->
       <section id="sql-injection" class="fade-in-section">
+        <!-- ... existing section content ... -->
         <div class="flex items-center mb-4">
           <span id="icon-sql" class="text-blue-400 mr-3"></span>
           <h2 class="text-3xl font-semibold text-blue-400">Case Study: SQL Injection in Java/Spring</h2>
@@ -156,6 +233,7 @@
 
       <!-- HTTPS Section -->
       <section id="unencrypted-traffic" class="fade-in-section">
+        <!-- ... existing section content ... -->
         <div class="flex items-center mb-4">
           <span id="icon-http" class="text-blue-400 mr-3"></span>
           <h2 class="text-3xl font-semibold text-blue-400">Case Study: "Traffic is not Encrypted (HTTP)"</h2>
@@ -194,6 +272,7 @@
       </section>
        <!-- Other Examples Section -->
       <section id="other-false-positives" class="fade-in-section">
+          <!-- ... existing section content ... -->
           <div class="flex items-center mb-4">
               <span id="icon-other" class="text-blue-400 mr-3"></span>
               <h2 class="text-3xl font-semibold text-blue-400">Other Common False Positives</h2>
@@ -216,6 +295,7 @@
 
       <!-- File Path Analysis Section -->
       <section id="file-path-analysis" class="fade-in-section">
+          <!-- ... existing section content ... -->
           <div class="flex items-center mb-4">
               <span id="icon-path" class="text-blue-400 mr-3"></span>
               <h2 class="text-3xl font-semibold text-blue-400">Leveraging File Path Analysis for Triage</h2>
@@ -284,6 +364,7 @@
 
       <!-- Statistical Sampling Section -->
       <section id="statistical-sampling" class="fade-in-section">
+          <!-- ... existing section content ... -->
           <div class="flex items-center mb-4">
               <span id="icon-calc" class="text-blue-400 mr-3"></span>
               <h2 class="text-3xl font-semibold text-blue-400">Tackling High-Volume Findings with Statistical Sampling</h2>
@@ -372,23 +453,46 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      lucide.createIcons({
-        icons: {
-          'nav-linkedin': lucide.Linkedin, 'nav-github': lucide.Github, 'nav-home': lucide.Home, 'nav-threat': lucide.ShieldAlert, 'nav-checklist': lucide.ListChecks, 'nav-jwt': lucide.KeyRound, 'nav-fp': lucide.Fingerprint, 'nav-epss': lucide.Activity, 'nav-dashboard': lucide.LayoutDashboard, 'nav-sast': lucide.FileSearch,
-          'icon-sql': lucide.Database,
-          'icon-http': lucide.Server,
-          'icon-other': lucide.ListChecks,
-          'icon-calc': lucide.Calculator,
-          'icon-path': lucide.FileCode,
-          'nav-phishing': lucide.Fish,
-          'nav-cloud': lucide.Cloud,
-          'nav-encryption': lucide.Lock,
-          'nav-modcat': lucide.FileText
-        },
-        attrs: { color: "#38bdf8", size: 32, strokeWidth: 2 }
-      });
+      // --- 1. Render ALL Icons (Nav + Page) ---
+      if (window.lucide) {
+        lucide.createIcons({
+          icons: {
+            // All Nav Icons
+            'nav-home': lucide.Home,
+            'nav-guides-trigger': lucide.BookOpen,
+            'nav-tools-trigger': lucide.Briefcase,
+            'nav-guides-chevron': lucide.ChevronDown,
+            'nav-tools-chevron': lucide.ChevronDown,
+            'nav-cloud': lucide.Cloud,
+            'nav-roadmap': lucide.Map,
+            'nav-phishing': lucide.Fish,
+            'nav-sast': lucide.FileSearch,
+            'nav-threat': lucide.ShieldAlert,
+            'nav-checklist': lucide.ListChecks,
+            'nav-epss': lucide.Activity,
+            'nav-encryption': lucide.Lock,
+            'nav-fp': lucide.Fingerprint,
+            'nav-jwt': lucide.KeyRound,
+            'nav-modcat': lucide.Guitar,
+            'nav-shamir': lucide.Share2,
+            'nav-dashboard': lucide.LayoutDashboard,
+            
+            // SAST Page-specific icons
+            'icon-sql': lucide.Database,
+            'icon-http': lucide.Server,
+            'icon-other': lucide.ListChecks,
+            'icon-calc': lucide.Calculator,
+            'icon-path': lucide.FileCode,
+            
+            // Kept just in case
+            'nav-linkedin': lucide.Linkedin, 
+            'nav-github': lucide.Github
+          },
+          attrs: { color: "#38bdf8", size: 32, strokeWidth: 2 }
+        });
+      }
 
-      // --- Sample Size Calculator Logic ---
+      // --- 2. Sample Size Calculator Logic ---
       const populationEl = document.getElementById('population');
       const confidenceEl = document.getElementById('confidence');
       const marginEl = document.getElementById('margin');
@@ -401,76 +505,119 @@
         const p = 0.5; // Use 0.5 for the most conservative sample size
 
         if (isNaN(N) || N <= 0) {
-            sampleSizeEl.textContent = "N/A";
+            if(sampleSizeEl) sampleSizeEl.textContent = "N/A";
             return;
         }
         const n0 = (Z * Z * p * (1 - p)) / (e * e);
         const n = n0 / (1 + (n0 - 1) / N);
-        sampleSizeEl.textContent = Math.ceil(n);
+        if(sampleSizeEl) sampleSizeEl.textContent = Math.ceil(n);
       };
       
-      populationEl.addEventListener('input', calculateSampleSize);
-      confidenceEl.addEventListener('change', calculateSampleSize);
-      marginEl.addEventListener('change', calculateSampleSize);
-      calculateSampleSize();
+      if(populationEl) populationEl.addEventListener('input', calculateSampleSize);
+      if(confidenceEl) confidenceEl.addEventListener('change', calculateSampleSize);
+      if(marginEl) marginEl.addEventListener('change', calculateSampleSize);
+      calculateSampleSize(); // Initial calculation
 
-      // --- Scroll to Top Button Logic ---
+      // --- 3. Scroll to Top Button Logic ---
       const scrollTopBtn = document.getElementById('scrollTopBtn');
-      window.addEventListener('scroll', () => {
-          if (window.scrollY > 200) {
-              scrollTopBtn.style.display = 'block';
-              requestAnimationFrame(() => {
-                scrollTopBtn.style.transform = 'translateY(0)';
-              });
-          } else {
-              scrollTopBtn.style.transform = 'translateY(100px)';
-          }
-      });
-      scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+      if (scrollTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 200) {
+                scrollTopBtn.style.display = 'block';
+                requestAnimationFrame(() => {
+                  scrollTopBtn.style.transform = 'translateY(0)';
+                });
+            } else {
+                scrollTopBtn.style.transform = 'translateY(100px)';
+            }
+        });
+        scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+      }
 
-      // --- Copy Button Logic ---
+      // --- 4. Copy Button Logic ---
       document.querySelectorAll('.copy-btn').forEach(button => {
         button.addEventListener('click', () => {
           const code = button.nextElementSibling.innerText;
-          const textarea = document.createElement('textarea');
-          textarea.value = code;
-          document.body.appendChild(textarea);
-          textarea.select();
-          document.execCommand('copy');
-          document.body.removeChild(textarea);
-          
-          button.textContent = 'Copied!';
-          setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+          // Use execCommand for broader compatibility
+          try {
+            const textarea = document.createElement('textarea');
+            textarea.value = code;
+            textarea.style.position = 'absolute';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            
+            button.textContent = 'Copied!';
+            setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+          } catch (err) {
+            console.error('Failed to copy: ', err);
+          }
         });
       });
 
-      // --- Scroll Animation Logic ---
+      // --- 5. Scroll Animation Logic ---
       const sections = document.querySelectorAll('.fade-in-section');
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.1 });
-      sections.forEach(section => observer.observe(section));
+      if (sections.length > 0) {
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1 });
+        sections.forEach(section => observer.observe(section));
+      }
       
-      // --- TOC Active Link Logic ---
+      // --- 6. TOC Active Link Logic ---
       const tocLinks = document.querySelectorAll('.toc a');
-      const tocObserver = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          const id = entry.target.getAttribute('id');
-          const tocLink = document.querySelector(`.toc a[href="#${id}"]`);
-          if (entry.isIntersecting) {
-            tocLinks.forEach(link => link.classList.remove('active'));
-            if(tocLink) tocLink.classList.add('active');
-          }
+      if (tocLinks.length > 0) {
+        const tocObserver = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            const id = entry.target.getAttribute('id');
+            const tocLink = document.querySelector(`.toc a[href="#${id}"]`);
+            if (entry.isIntersecting) {
+              tocLinks.forEach(link => link.classList.remove('active'));
+              if(tocLink) tocLink.classList.add('active');
+            }
+          });
+        }, { rootMargin: '-30% 0px -60% 0px' });
+        
+        document.querySelectorAll('section[id]').forEach(section => {
+          tocObserver.observe(section);
         });
-      }, { rootMargin: '-30% 0px -60% 0px' });
-      
-      document.querySelectorAll('section[id]').forEach(section => {
-        tocObserver.observe(section);
+      }
+
+      // --- 7. Add Nav Dropdown Logic ---
+      const dropdownButtons = document.querySelectorAll('.group > button');
+      dropdownButtons.forEach(button => {
+          button.addEventListener('click', (e) => {
+          const dropdownMenu = e.currentTarget.nextElementSibling;
+          // Close all other open dropdowns
+          document.querySelectorAll('.group .absolute').forEach(menu => {
+              if (menu !== dropdownMenu) {
+              menu.classList.add('opacity-0', 'invisible');
+              menu.classList.remove('opacity-100', 'visible');
+              }
+          });
+          // Toggle the current dropdown
+          dropdownMenu.classList.toggle('opacity-0');
+          dropdownMenu.classList.toggle('invisible');
+          dropdownMenu.classList.toggle('opacity-100');
+          dropdownMenu.classList.toggle('visible');
+          });
+      });
+
+      // Close dropdowns if clicking outside
+      window.addEventListener('click', (e) => {
+          if (!e.target.closest('.group')) {
+          document.querySelectorAll('.group .absolute').forEach(menu => {
+              menu.classList.add('opacity-0', 'invisible');
+              menu.classList.remove('opacity-100', 'visible');
+          });
+          }
       });
     });
   </script>
