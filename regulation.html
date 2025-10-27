@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-950 text-white">
+<head>
+  <!-- Meta tags for character set, viewport, and compatibility -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Page Title -->
+  <title>Cyber Regulation Guide (US/EU)</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Inline Styles -->
+  <style>
+    html { font-family: 'Inter', sans-serif; }
+    ::selection { background: #2563eb; color: #fff; }
+    /* Ensure dropdown content is above other elements */
+    .group .absolute {
+      z-index: 50;
+    }
+  </style>
+</head>
+<body class="bg-gray-950 text-white min-h-screen flex flex-col">
+
+  <!-- Navigation Bar (From portfolio index.html) -->
+ <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
+      <div class="w-full flex items-center justify-center px-6 py-3">
+         <!-- Main navigation container -->
+         <div class="flex flex-wrap justify-center space-x-4">
+          
+          <!-- Home Link (Inactive) -->
+          <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
+            <span id="nav-home" class="mr-1"></span>Home
+          </a>
+
+          <!-- Guides & Case Studies Dropdown (Active Section) -->
+          <div class="relative group">
+            <!-- Dropdown Trigger -->
+            <button class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition">
+              <span id="nav-guides-trigger" class="mr-1"></span>
+              Guides & Case Studies
+              <span id="nav-guides-chevron" class="ml-1"></span>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+              <div class="py-1" role="menu" aria-orientation="vertical">
+                <!-- Active Link -->
+                <a href="regulation.html" class="flex items-center px-4 py-2 text-sm text-white bg-blue-700" role="menuitem">
+                  <span id="nav-regulation" class="mr-2"></span>Regulation (US/EU)
+                </a>
+                <a href="cloud.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-cloud" class="mr-2"></span>Cloud
+                </a>
+                <a href="cyber_roadmap.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-roadmap" class="mr-2"></span>Cyber Roadmap
+                </a>
+                <a href="phishing.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-phishing" class="mr-2"></span>Phishing
+                </a>
+                <a href="sast.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-sast" class="mr-2"></span>SAST
+                </a>
+                <a href="threatmodel.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-threat" class="mr-2"></span>Threat Model
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tools & Demos Dropdown -->
+          <div class="relative group">
+            <!-- Dropdown Trigger -->
+            <button class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
+              <span id="nav-tools-trigger" class="mr-1"></span>
+              Tools & Demos
+              <span id="nav-tools-chevron" class="ml-1"></span>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+              <div class="py-1" role="menu" aria-orientation="vertical">
+                <a href="checklist.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-checklist" class="mr-2"></span>Checklist
+                </a>
+                <a href="epssdemo.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-epss" class="mr-2"></span>CVSS vs EPSS
+                </a>
+                <a href="encryption.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-encryption" class="mr-2"></span>Encryption
+                </a>
+                <a href="fingerprint.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-fp" class="mr-2"></span>Fingerprinting
+                </a>
+                <a href="jwt.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-jwt" class="mr-2"></span>JWT Decoder
+                </a>
+                <a href="modcat.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-modcat" class="mr-2"></span>PRS MODCAT
+                </a>
+                <a href="shamir.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-shamir" class="mr-2"></span>Shamir's Visualizer
+                </a>
+                <a href="dashboard.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <span id="nav-dashboard" class="mr-2"></span>Threat Intel
+                </a>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+  </nav>
+
+  <!-- Main Content (Styled based on reference) -->
+  <main class="flex-1 px-4 py-10 max-w-5xl mx-auto space-y-10">
+    
+    <!-- Introduction Paragraph -->
+    <p class="max-w-3xl mx-auto text-gray-200 text-lg md:text-xl text-center mb-12">
+      The global regulatory landscape presents a stark contrast. The European Union champions a comprehensive, centralized "umbrella" model with sweeping, cross-border mandates, while the United States maintains a "mosaic" system of sector-specific federal laws and varying state-level legislation.
+    </p>
+
+    <!-- Section 1: EU Framework -->
+    <section>
+      <h2 class="text-3xl font-semibold text-blue-400 mb-6 text-center">The European Union (EU) Framework</h2>
+      <div class="space-y-8">
+
+        <!-- GDPR -->
+        <div>
+          <h3 class="text-xl font-semibold text-blue-300 mb-2 flex items-center">
+            <span id="icon-gdpr" class="mr-2"></span>
+            General Data Protection Regulation (GDPR)
+          </h3>
+          <p class="text-gray-200 mb-2">
+            Mandates strong data protection and privacy for all EU citizens, imposing strict security requirements on any organization processing their data, regardless of location.
+          </p>
+          <div class="mb-4">
+            <a href="https://gdpr-info.eu/" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-400 hover:underline opacity-70 hover:opacity-100 transition-opacity">Read the Full Text (gdpr-info.eu) &raquo;</a>
+          </div>
+          <div class="space-y-3">
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Scope & Applicability</h4>
+              <p class="text-gray-300 text-sm mt-1">Applies to any organization (a "controller" or "processor") that processes the personal data of individuals inside the EU. This "extra-territorial" scope (Article 3) means it applies even if the organization has no physical presence in Europe, making it a truly global law.</p>
+              <a href="https://gdpr-info.eu/art-3-gdpr/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline text-xs mt-2 inline-block">Source: GDPR Article 3 &raquo;</a>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Core Principles (Article 5)</h4>
+              <p class="text-gray-300 text-sm mt-1">The foundation of GDPR, Article 5, states all personal data must be processed "lawfully, fairly and in a transparent manner." This principle-based approach governs all other requirements, including security.</p>
+              <a href="https://gdpr-info.eu/art-5-gdpr/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline text-xs mt-2 inline-block">Source: GDPR Article 5 &raquo;</a>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Purpose Limitation & Data Minimisation</h4>
+              <p class="text-gray-300 text-sm mt-1">Two principles from Article 5. Data must be collected for "specified, explicit and legitimate purposes" (Purpose Limitation) and be "adequate, relevant and limited to what is necessary" (Data Minimisation). This restricts collecting excessive data "just in case."</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Accuracy & Storage Limitation</h4>
+              <p class="text-gray-300 text-sm mt-1">Article 5 also requires data to be "accurate and, where necessary, kept up to date" (Accuracy) and "kept in a form which permits identification of data subjects for no longer than is necessary" (Storage Limitation).</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Article 32 (Security of processing)</h4>
+              <p class="text-gray-300 text-sm mt-1">This is the central article for cybersecurity, supporting the Article 5 principle of "integrity and confidentiality." It mandates that controllers and processors implement "appropriate technical and organisational measures" (TOMs) to ensure a level of security appropriate to the risk. This is not a one-size-fits-all rule; the measures must be based on a risk assessment.</p>
+              <a href="https://gdpr-info.eu/art-32-gdpr/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline text-xs mt-2 inline-block">Source: GDPR Article 32 &raquo;</a>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Technical and Organisational Measures (TOMs)</h4>
+              <p class="text-gray-300 text-sm mt-1">These are the specific security controls and policies required by Article 32. 'Technical' measures include encryption, access controls, and firewalls. 'Organisational' measures include security awareness training, incident response plans, and data protection policies.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">State of the Art</h4>
+              <p class="text-gray-300 text-sm mt-1">A key qualifier from Article 32, "state of the art" means security measures must be current with modern technology, industry standards, and practices. This is a moving target; what is "state of the art" today may be obsolete tomorrow, forcing organizations to continuously review and update their controls.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Pseudonymisation & Encryption</h4>
+              <p class="text-gray-300 text-sm mt-1">Explicitly mentioned in Article 32 as examples of appropriate technical measures. Pseudonymisation (replacing identifying data with a reversible token) and encryption (making data unreadable without a key) are critical for protecting data confidentiality and reducing risk.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Data Protection by Design and by Default</h4>
+              <p class="text-gray-300 text-sm mt-1">A core principle from Article 25. 'By Design' means building data protection and security into the earliest stages of a project or system. 'By Default' means the most privacy-friendly settings must be the default for any user.</p>
+              <a href="https://gdpr-info.eu/art-25-gdpr/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline text-xs mt-2 inline-block">Source: GDPR Article 25 &raquo;</a>
+            </div>
+             <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Security Testing</h4>
+              <p class="text-gray-300 text-sm mt-1">Article 32(1)(d) explicitly requires "a process for regularly testing, assessing and evaluating the effectiveness of technical and organisational measures." This codifies the need for vulnerability scanning, penetration testing, and regular security audits.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ePrivacy -->
+        <div>
+          <h3 class="text-xl font-semibold text-blue-300 mb-2 flex items-center">
+            <span id="icon-eprivacy" class="mr-2"></span>
+            ePrivacy Directive (and forthcoming Regulation)
+          </h3>
+          <p class="text-gray-200 mb-2">
+            Often called the "cookie law," this directive governs the confidentiality of electronic communications, tracking technologies, and metadata processing for users within the EU.
+          </p>
+          <div class="mb-4">
+            <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32002L0058" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-400 hover:underline opacity-70 hover:opacity-100 transition-opacity">Read the Full Directive Text (EUR-Lex) &raquo;</a>
+          </div>
+          <div class="space-y-3">
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Scope & Applicability</h4>
+              <p class="text-gray-300 text-sm mt-1">Applies to providers of public electronic communications services (like ISPs, telecom companies, and email providers) and networks in the EU. It also applies to any website or service that stores or accesses information on a user's device (e.g., via cookies).</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Cookie Law / Cookie Consent</h4>
+              <p class="text-gray-300 text-sm mt-1">This refers to Article 5(3) of the directive, which requires organizations to get a user's prior, informed consent *before* storing or accessing any information on their device (e.g., cookies, tracking pixels), unless it's strictly necessary for the service to function.</p>
+              <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32002L0058&from=EN#ss0001-L_2002201EN.01004101.xml" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline text-xs mt-2 inline-block">Source: ePrivacy Directive Article 5 &raquo;</a>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Confidentiality of Communications</h4>
+              <p class="text-gray-300 text-sm mt-1">Article 5(1) establishes a core principle: all electronic communications must be confidential. It prohibits "listening, tapping, storage or other kinds of interception or surveillance" of communications by anyone other than the users involved, unless legally authorized.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Metadata</h4>
+              <p class="text-gray-300 text-sm mt-1">This refers to traffic data (who called whom, when, from where) and location data. Article 6 strictly governs the processing of this data, which is often as sensitive as the communication itself. It can generally only be processed for billing, network management, or with user consent.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Terminal Equipment</h4>
+              <p class="text-gray-300 text-sm mt-1">This is the legal term for a user's device, such as a smartphone, laptop, or IoT device. The ePrivacy Directive is designed to protect the privacy and integrity of this equipment from unauthorized access or storage (e.g., via cookies or spyware).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- NIS2 -->
+        <div>
+          <h3 class="text-xl font-semibold text-blue-300 mb-2 flex items-center">
+            <span id="icon-nis2" class="mr-2"></span>
+            NIS2 Directive (Network and Information Systems 2)
+          </h3>
+          <p class="text-gray-200 mb-2">
+            A broad cybersecurity mandate that widens the scope of "essential and important" entities, requiring them to implement robust risk management and report significant incidents within 24 hours.
+          </p>
+          <div class="mb-4">
+            <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022L2555" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-400 hover:underline opacity-70 hover:opacity-100 transition-opacity">Read the Full Directive Text (EUR-Lex) &raquo;</a>
+          </div>
+           <div class="space-y-3">
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Scope & Applicability</h4>
+              <p class="text-gray-300 text-sm mt-1">Applies to medium and large organizations (based on employee count/turnover) that operate in sectors listed in Annex I ("Essential" entities like energy, transport, health) and Annex II ("Important" entities like digital providers, postal services).</p>
+              <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022L2555#d1e113-46-1" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline text-xs mt-2 inline-block">Source: NIS2 Directive Annexes &raquo;</a>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Essential & Important Entities</h4>
+              <p class="text-gray-300 text-sm mt-1">NIS2 divides critical sectors (defined in Annexes I & II) into two groups. 'Essential' entities (e.g., energy, transport, health) face stricter enforcement and pro-active supervision. 'Important' entities (e.g., postal services, digital providers) face lighter, post-incident supervision.</p>
+            </div>
+             <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Risk Management Measures</h4>
+              <p class="text-gray-300 text-sm mt-1">Article 21 mandates a minimum baseline of 10 security measures, including policies on risk analysis, incident handling, business continuity, supply chain security, cryptography, and vulnerability handling.</p>
+              <a href="httpsm://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022L2555#d1e113-46-1" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline text-xs mt-2 inline-block">Source: NIS2 Directive Article 21 &raquo;</a>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Supply Chain Security</h4>
+              <p class="text-gray-300 text-sm mt-1">A specific component of Article 21, NIS2 requires entities to assess and manage the cybersecurity risks of their direct suppliers and service providers. This includes evaluating the quality of suppliers' own security practices.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Vulnerability Handling & Disclosure</h4>
+              <p class="text-gray-300 text-sm mt-1">Article 21 requires entities to have policies for handling and disclosing vulnerabilities. This is part of a broader push to create a coordinated EU-wide vulnerability registry via the EU-CyCLONe network.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Management Accountability</h4>
+              <p class="text-gray-300 text-sm mt-1">A major change in Article 20. Top management is now required to approve and oversee the implementation of the cybersecurity risk-management measures. They can be held personally liable for failure to comply.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">24-Hour Incident Reporting</h4>
+              <p class="text-gray-300 text-sm mt-1">Article 23 creates a strict two-stage reporting process. Entities must submit an "early warning" of a significant incident to their national CSIRT within 24 hours of awareness, followed by a full "incident notification" within 72 hours.</p>
+              <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022L2555#d1e113-46-1" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline text-xs mt-2 inline-block">Source: NIS2 Directive Article 23 &raquo;</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- CRA -->
+        <div>
+          <h3 class="text-xl font-semibold text-blue-300 mb-2 flex items-center">
+            <span id="icon-cra" class="mr-2"></span>
+            Cyber Resilience Act (CRA)
+          </h3>
+          <p class="text-gray-200 mb-2">
+            This act imposes "secure by design" requirements on manufacturers of all "products with digital elements," mandating vulnerability management and transparency (e.g., SBOMs) throughout the product lifecycle.
+          </p>
+          <div class="mb-4">
+            <a href="https://digital-strategy.ec.europa.eu/en/library/cyber-resilience-act" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-400 hover:underline opacity-70 hover:opacity-100 transition-opacity">Read the Final Adopted Text (digital-strategy.ec.europa.eu) &raquo;</a>
+          </div>
+          <div class="space-y-3">
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Scope & Applicability</h4>
+              <p class="text-gray-300 text-sm mt-1">Applies to "manufacturers" (and by extension, importers and distributors) of "products with digital elements" that are made available on the EU market. This has an extremely broad scope, covering most hardware and software vendors.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Products with Digital Elements</h4>
+              <p class="text-gray-300 text-sm mt-1">This is the broad scope defined in Article 3(1). It covers any software or hardware product and its remote data processing solutions (e.g., a smart-watch and the cloud service it connects to). This applies to everything from IoT devices to desktop software.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Secure by Design</h4>
+              <p class="text-gray-300 text-sm mt-1">A core principle from Article 10 and Annex I. Manufacturers must design, develop, and produce products in accordance with essential security requirements from the start. This includes delivering products without known vulnerabilities and with a secure default configuration.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Vulnerability Management</h4>
+              <p class="text-gray-300 text-sm mt-1">Mandated by Article 10, manufacturers must have policies and procedures to handle and remediate vulnerabilities "without delay" for the product's expected lifetime (or at least 5 years). This ends the "ship it and forget it" model.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Software Bill of Materials (SBOM)</h4>
+              <p class="text-gray-300 text-sm mt-1">Required by Annex I, manufacturers must create and provide an SBOM in a common, machine-readable format (like SPDX or CycloneDX). This is a formal inventory of all software components (including open-source) within the product, enabling users to track vulnerabilities.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">CE Marking</h4>
+              <p class="text-gray-300 text-sm mt-1">The physical "CE" mark (Article 22) that a manufacturer applies to a product. This mark is the manufacturer's formal declaration that the product conforms to all essential requirements of the CRA, allowing it to be legally sold within the EU market.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- EU AI Act -->
+        <div>
+          <h3 class="text-xl font-semibold text-blue-300 mb-2 flex items-center">
+            <span id="icon-ai" class="mr-2"></span>
+            EU AI Act
+          </h3>
+          <p class="text-gray-200 mb-2">
+            The first comprehensive AI law, it uses a risk-based approach to regulate AI systems, enforcing strict accuracy, robustness, and cybersecurity requirements for "high-risk" applications.
+          </p>
+          <div class="mb-4">
+            <a href="https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-400 hover:underline opacity-70 hover:opacity-100 transition-opacity">Read the Final Adopted Text (digital-strategy.ec.europa.eu) &raquo;</a>
+          </div>
+           <div class="space-y-3">
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Scope & Applicability</h4>
+              <p class="text-gray-300 text-sm mt-1">Applies to "providers" (developers) and "deployers" (users) of AI systems that are placed on the EU market or whose output is used in the EU. The obligations are tiered based on the system's risk level (Unacceptable, High, Limited, Minimal).</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Risk-Based Approach (High-Risk)</h4>
+              <p class="text-gray-300 text-sm mt-1">This is the act's core structure (Title III). It applies the strictest rules only to AI systems classified as "high-risk" (defined in Article 6 and Annex III), such as those used in critical infrastructure, medical devices, or law enforcement. Minimal-risk AI (e.g., spam filters) is largely unregulated.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Accuracy, Robustness, and Cybersecurity</h4>
+              <p class="text-gray-300 text-sm mt-1">These are three key requirements for high-risk AI systems under Article 15. Systems must perform at an appropriate level of accuracy, be resilient to errors or inconsistencies ("robustness"), and be secure against attacks throughout their lifecycle.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Adversarial Attack Resilience</h4>
+              <p class="text-gray-300 text-sm mt-1">A key component of "Cybersecurity" under Article 15. The system must be resilient against inputs "designed to cause the model to make a mistake" (e.g., adversarial examples, like a slightly altered image that fools an object detector).</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Data Poisoning / Model Poisoning</h4>
+              <p class="text-gray-300 text-sm mt-1">Also part of "Cybersecurity" under Article 15. This refers to protecting the model and its training data from manipulation, such as an attacker inserting malicious data into the training set to create a hidden backdoor or bias.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Data Governance</h4>
+              <p class="text-gray-300 text-sm mt-1">Article 10 mandates strict requirements for the data used to train high-risk AI. This data must be relevant, representative, and as free of errors and biases as possible. This is critical for preventing discriminatory or inaccurate outcomes.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Traceability & Logs</h4>
+              <p class="text-gray-300 text-sm mt-1">Article 12 requires that high-risk AI systems be designed to automatically record events ("logs") while in operation. This is to ensure a level of traceability to help investigate incidents, audit outcomes, and monitor for unexpected behavior.</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- DPAs -->
+        <div>
+          <h3 class="text-xl font-semibold text-blue-300 mb-2 flex items-center">
+            <span id="icon-dpa" class="mr-2"></span>
+            Enforcement: Data Protection Authorities (DPAs)
+          </h3>
+          <p class="text-gray-200 mb-2">
+            The primary enforcers of data protection law (chiefly GDPR). These are independent public authorities in each EU member state that monitor compliance and handle complaints.
+          </p>
+          <div class="mb-4">
+            <a href="https://edpb.europa.eu/about-edpb/about-edpb/members_en" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-400 hover:underline opacity-70 hover:opacity-100 transition-opacity">List of National DPAs (edpb.europa.eu) &raquo;</a>
+          </div>
+          <div class="space-y-3">
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Role & Powers</h4>
+              <p class="text-gray-300 text-sm mt-1">DPAs are responsible for investigating non-compliance, conducting audits, and issuing corrective measures. Their most notable power (under GDPR Article 83) is the ability to issue administrative fines of up to €20 million or 4% of the company's total worldwide annual revenue, whichever is higher.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">European Data Protection Board (EDPB)</h4>
+              <p class="text-gray-300 text-sm mt-1">This is the overarching EU body composed of the heads of each national DPA. The EDPB's job is to ensure that data protection law (primarily GDPR) is applied consistently across all member states. It issues guidelines, resolves disputes between DPAs, and provides binding opinions.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Section 2: US Framework -->
+    <section>
+      <h2 class="text-3xl font-semibold text-blue-400 mb-6 text-center">The United States (US) Framework</h2>
+      <div class="space-y-8">
+
+        <!-- CCPA/CPRA -->
+        <div>
+          <h3 class="text-xl font-semibold text-blue-300 mb-2 flex items-center">
+            <span id="icon-ccpa" class="mr-2"></span>
+            California Consumer Privacy Act (CCPA / CPRA)
+          </h3>
+          <p class="text-gray-200 mb-2">
+            A pioneering state-level privacy law giving consumers rights over their data and creating a "private right of action" that allows citizens to sue companies for data breaches resulting from "unreasonable" security.
+          </p>
+          <div class="mb-4">
+            <a href="https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?sectionNum=1798.100.&lawCode=CIV" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-400 hover:underline opacity-70 hover:opacity-100 transition-opacity">Read the Full Text (CA Civil Code) &raquo;</a>
+          </div>
+          <div class="space-y-3">
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Scope & Applicability</h4>
+              <p class="text-gray-300 text-sm mt-1">Applies to for-profit businesses that "do business in California," collect personal information from CA residents, and meet at least one threshold: (1) >$25M in annual revenue, (2) buy, sell, or share personal info of 100,000+ consumers, or (3) derive 50%+ of revenue from selling/sharing personal info.</p>
+              <a href="https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.140" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline text-xs mt-2 inline-block">Source: CA Civil Code 1798.140 &raquo;</a>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Reasonable Security</h4>
+              <p class="text-gray-300 text-sm mt-1">The critical-and vague-standard from Civil Code 1798.150. The law does *not* define it, but the CA Attorney General has stated it scales with the size and complexity of a business. Court cases often reference established frameworks (like the NIST CSF or CIS Controls) as the expected benchmark.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Private Right of Action (for Data Breaches)</h4>
+              <p class="text-gray-300 text-sm mt-1">The most feared part of CCPA (1798.150). It allows consumers to sue businesses for statutory damages ($100-$750 per consumer, per incident) if their *unencrypted and non-redacted* personal information is breached as a result of the business's failure to maintain reasonable security.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Non-Encrypted & Non-Redacted</h4>
+              <p class="text-gray-300 text-sm mt-1">These are the key "safe harbor" terms. The private right of action for data breaches generally does not apply if the personal information that was breached was encrypted or redacted (obscured). This makes encryption a critical technical control for limiting liability.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Security Risk Assessments</h4>
+              <p class="text-gray-300 text-sm mt-1">A requirement added by the CPRA (1798.185(a)(15)). Businesses whose data processing "presents significant risk to consumers' privacy or security" must conduct and submit (on request) annual cybersecurity audits and risk assessments to the CA Privacy Protection Agency (CPPA).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- HIPAA -->
+        <div>
+          <h3 class="text-xl font-semibold text-blue-300 mb-2 flex items-center">
+            <span id="icon-hipaa" class="mr-2"></span>
+            HIPAA (Health Insurance Portability and Accountability Act)
+          </h3>
+          <p class="text-gray-200 mb-2">
+            This federal law's Security Rule mandates specific administrative, physical, and technical safeguards that all "covered entities" must implement to protect electronic protected health information (e-PHI).
+          </p>
+          <div class="mb-4">
+            <a href="https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164/subpart-C" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-400 hover:underline opacity-70 hover:opacity-100 transition-opacity">Read the Security Rule Text (eCFR) &raquo;</a>
+          </div>
+          <div class="space-y-3">
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Scope & Applicability</h4>
+              <p class="text-gray-300 text-sm mt-1">Applies to "Covered Entities" (health plans, health care providers, and health care clearinghouses) and "Business Associates" (any vendor that creates, receives, maintains, or transmits e-PHI on behalf of a Covered Entity, such as a cloud provider or billing service).</p>
+              <a href="https://www.hhs.gov/hipaa/for-professionals/covered-entities/index.html" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline text-xs mt-2 inline-block">Source: HHS.gov &raquo;</a>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Security Rule</h4>
+              <p class="text-gray-300 text-sm mt-1">This is the portion of HIPAA (45 C.F.R. Part 164, Subpart C) that establishes national standards for protecting e-PHI. It is broken down into Administrative, Physical, and Technical safeguards.</p>
+              <a href="https://www.hhs.gov/hipaa/for-professionals/security/index.html" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline text-xs mt-2 inline-block">Source: HHS.gov Security Rule &raquo;</a>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">e-PHI (Electronic Protected Health Information)</h4>
+              <p class="text-gray-300 text-sm mt-1">This is any individually identifiable health information (as defined in 45 C.F.R. 160.103) that is created, received, maintained, or transmitted in electronic form. The Security Rule *only* applies to e-PHI.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Technical Safeguards</h4>
+              <p class="text-gray-300 text-sm mt-1">Technology-focused controls defined in 164.312 to protect e-PHI. This includes standards for Access Control (unique user IDs), Audit Controls (logging), Integrity (protecting from alteration), and Transmission Security (encryption).</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Administrative Safeguards</h4>
+              <p class="text-gray-300 text-sm mt-1">The policies, procedures, and actions defined in 164.308 to manage security. This is the largest section and includes the requirement to conduct a formal Risk Analysis, create a Risk Management plan, provide Security Awareness Training, and have a Contingency Plan.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Physical Safeguards</h4>
+              <p class="text-gray-300 text-sm mt-1">Physical measures defined in 164.310 to protect facilities and equipment. This includes Facility Access Controls (locks, alarms), Workstation Use policies, Workstation Security (securing devices), and Device/Media Controls (data disposal).</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Access & Audit Controls</h4>
+              <p class="text-gray-300 text-sm mt-1">These are specific Technical Safeguards (164.312(a) & (b)). Access Control requires unique user IDs and procedures for emergency access. Audit Control requires mechanisms to "record and examine activity in information systems" that contain e-PHI.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Transmission Security (Encryption)</h4>
+              <p class="text-gray-300 text-sm mt-1">A Technical Safeguard (164.312(e)) requiring measures to protect e-PHI in transit. Encryption is "addressable," not mandatory. This means an entity must implement it if reasonable; if not, they must document *why* it's not and use an equivalent alternative measure.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SOX -->
+        <div>
+          <h3 class="text-xl font-semibold text-blue-300 mb-2 flex items-center">
+            <span id="icon-sox" class="mr-2"></span>
+            Sarbanes-Oxley Act (SOX)
+          </h3>
+          <p class="text-gray-200 mb-2">
+            A federal law enacted to prevent accounting fraud. For IT, it mandates controls to ensure the accuracy and integrity of financial data, focusing heavily on access controls and change management for financial systems.
+          </p>
+          <div class="mb-4">
+            <a href="https://www.congress.gov/bill/107th-congress/house-bill/3763" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-400 hover:underline opacity-70 hover:opacity-100 transition-opacity">Read the Full Act (Congress.gov) &raquo;</a>
+          </div>
+          <div class="space-y-3">
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Scope & Applicability</h4>
+              <p class="text-gray-300 text-sm mt-1">Applies to all publicly traded companies (those required to file reports with the SEC) in the United States. This also extends to their external auditors who must attest to the company's internal controls.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Section 302 (Corporate Responsibility)</h4>
+              <p class="text-gray-300 text-sm mt-1">Requires that the CEO and CFO personally certify the accuracy of their company's financial statements (e.g., in the 10-K report). This personal liability forces them to ensure the IT controls supporting that data are effective.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Section 404 (Internal Control)</h4>
+              <p class="text-gray-300 text-sm mt-1">The most significant section for IT. It requires management to establish and maintain an "internal control structure" for financial reporting and to assess its effectiveness. This is where IT security controls become auditable SOX controls.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">IT General Controls (ITGC)</h4>
+              <p class="text-gray-300 text-sm mt-1">These are the IT controls that support the Section 404 attestation. They cover areas like: (1) Logical Access (who can log into systems), (2) Change Management (how code is tested and deployed), and (3) IT Operations (backups, incident handling) for any system that can impact financial data.</p>
+              <a href="https://www.isaca.org/resources/isaca-journal/issues/2016/volume-4/understanding-it-general-controls" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline text-xs mt-2 inline-block">Source: ISACA Overview &raquo;</a>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Access Controls & Segregation of Duties (SoD)</h4>
+              <p class="text-gray-300 text-sm mt-1">A critical ITGC. SoD ensures that no single individual has conflicting controls (e.g., the person who can *create* a vendor in the payment system cannot also *approve* a payment). IT systems must be configured to enforce these rules and log all access for auditors.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEC & CISA -->
+        <div>
+          <h3 class="text-xl font-semibold text-blue-300 mb-2 flex items-center">
+            <span id="icon-sec" class="mr-2"></span>
+            SEC & CISA Guidance (Public Companies & Federal Standards)
+          </h3>
+          <p class="text-gray-200 mb-2">
+            New SEC rules mandate public companies disclose "material" cybersecurity incidents within four days, while CISA issues Binding Operational Directives (BODs) to secure federal government systems.
+          </T>
+          <div class="mb-4">
+            <a href="https://www.sec.gov/news/press-release/2023-139" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-400 hover:underline opacity-70 hover:opacity-100 transition-opacity">SEC Final Rule &raquo;</a>
+            <a href="https://www.cisa.gov/resources-tools/directives" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-400 hover:underline opacity-70 hover:opacity-100 transition-opacity ml-4">CISA Directives &raquo;</a>
+          </div>
+          <div class="space-y-3">
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Scope & Applicability</h4>
+              <p class="text-gray-300 text-sm mt-1">The SEC rules (Form 8-K, Reg S-K) apply to all publicly traded companies ("registrants") subject to the Securities Exchange Act of 1934. CISA's Binding Operational Directives (BODs) apply *only* to Federal Civilian Executive Branch (FCEB) agencies.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">"Material" Cybersecurity Incident</h4>
+              <p class="text-gray-300 text-sm mt-1">Defined by the SEC rule (Item 1.05 of Form 8-K), an incident is "material" if "there is a substantial likelihood that a reasonable investor would consider it important" in making an investment decision. This considers both quantitative (financial) and qualitative (reputational) impacts.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Form 8-K (4-Day Reporting)</h4>
+              <p class="text-gray-300 text-sm mt-1">This is the SEC filing form for "current reports." The new rule (Item 1.05) requires public companies to file this form within *four business days* of determining that a cybersecurity incident is material. This is a very aggressive timeline that requires rapid internal assessment.</p>
+              <a href="https://www.sec.gov/news/press-release/2023-139" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline text-xs mt-2 inline-block">Source: SEC.gov Press Release &raquo;</a>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Risk Management & Strategy Disclosure</h4>
+              <p class="text-gray-300 text-sm mt-1">A separate SEC rule (Regulation S-K Item 106) requires companies to annually disclose (in their 10-K report) their processes for assessing and managing cybersecurity risks, as well as describing the board's and management's role in cyber risk oversight.</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+              <h4 class="font-semibold text-blue-300">Binding Operational Directives (BODs)</h4>
+              <p class="text-gray-300 text-sm mt-1">These are compulsory directions from CISA that *only* apply to Federal Civilian Executive Branch (FCEB) agencies. They are not commercial law, but they signal CISA's priorities. A BOD might mandate all federal agencies patch a specific vulnerability (like Log4j) within 14 days, setting a strong precedent for the private sector.</p>
+
+              <a href="https://www.cisa.gov/resources-tools/directives" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline text-xs mt-2 inline-block">Source: CISA.gov Directives &raquo;</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer (Styled based on reference) -->
+  <footer class="bg-gray-900 text-gray-400 text-center py-4 mt-8 rounded-t-xl shadow-inner">
+    © 2025 D. Chandler Prince
+  </footer>
+
+  <!-- Lucide Icons Setup -->
+  <script>
+    // Render Lucide icons
+    lucide.createIcons({
+      icons: {
+        // Page-specific icons
+        'icon-gdpr': lucide.Shield,
+        'icon-eprivacy': lucide.Cookie,
+        'icon-nis2': lucide.Network,
+        'icon-cra': lucide.Cpu,
+        'icon-ai': lucide.BrainCircuit,
+        'icon-dpa': lucide.Gavel,
+        'icon-ccpa': lucide.Database,
+        'icon-hipaa': lucide.HeartPulse,
+        'icon-sox': lucide.Scale,
+        'icon-sec': lucide.Landmark,
+
+        // Nav Bar Icons (from portfolio)
+        'nav-home': lucide.Home,
+        'nav-guides-trigger': lucide.BookOpen,
+        'nav-tools-trigger': lucide.Briefcase,
+        'nav-guides-chevron': lucide.ChevronDown,
+        'nav-tools-chevron': lucide.ChevronDown,
+        'nav-phishing': lucide.Fish, 
+        'nav-cloud': lucide.Cloud,
+        'nav-sast': lucide.FileSearch,
+        'nav-threat': lucide.ShieldAlert,
+        'nav-regulation': lucide.Gavel, // Added this icon
+        'nav-checklist': lucide.ListChecks,
+        'nav-jwt': lucide.KeyRound,
+        'nav-encryption': lucide.Lock, 
+        'nav-fp': lucide.Fingerprint,
+        'nav-epss': lucide.Activity,
+        'nav-dashboard': lucide.LayoutDashboard,
+        'nav-modcat': lucide.Guitar,
+        'nav-roadmap': lucide.Map,
+        'nav-shamir': lucide.Share2
+      },
+      attrs: {
+        color: "#38bdf8", // Using the blue color from the reference file
+        size: 24,
+        strokeWidth: 2
+      }
+    });
+
+    // --- Dropdown Click Handling for Mobile/Touch (from portfolio) ---
+    // Get all dropdown buttons
+    const dropdownButtons = document.querySelectorAll('.group > button');
+
+    dropdownButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        // Find the dropdown menu associated with this button
+        const dropdownMenu = e.currentTarget.nextElementSibling;
+        
+        // Close all other open dropdowns
+        document.querySelectorAll('.group .absolute').forEach(menu => {
+          if (menu !== dropdownMenu) {
+            menu.classList.add('opacity-0', 'invisible');
+            menu.classList.remove('opacity-100', 'visible');
+          }
+        });
+
+        // Toggle the current dropdown
+        dropdownMenu.classList.toggle('opacity-0');
+        dropdownMenu.classList.toggle('invisible');
+        dropdownMenu.classList.toggle('opacity-100');
+        dropdownMenu.classList.toggle('visible');
+      });
+    });
+
+    // Close dropdowns if clicking outside
+    window.addEventListener('click', (e) => {
+      if (!e.target.closest('.group')) {
+        document.querySelectorAll('.group .absolute').forEach(menu => {
+          menu.classList.add('opacity-0', 'invisible');
+          menu.classList.remove('opacity-100', 'visible');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
+
