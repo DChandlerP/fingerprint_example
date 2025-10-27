@@ -1,0 +1,28 @@
+Link Checker report - 2025-10-27 15:24:18
+Total dead/missing: 25
+
+.\checklist.html:23 -> https://fonts.googleapis.com  [dead] status=404 final=https://fonts.googleapis.com/
+.\cloud.html:23 -> https://fonts.googleapis.com  [dead] status=404 final=https://fonts.googleapis.com/
+.\cyber_roadmap.html:12 -> https://fonts.googleapis.com  [dead] status=404 final=https://fonts.googleapis.com/
+.\dashboard.html:25 -> https://fonts.googleapis.com  [dead] status=404 final=https://fonts.googleapis.com/
+.\encryption.html:25 -> https://fonts.googleapis.com  [dead] status=404 final=https://fonts.googleapis.com/
+.\cyber_roadmap.html:13 -> https://fonts.gstatic.com  [dead] status=404 final=https://fonts.gstatic.com/
+.\epssdemo.html:28 -> https://fonts.googleapis.com  [dead] status=404 final=https://fonts.googleapis.com/
+.\fingerprint.html:24 -> https://fonts.googleapis.com  [dead] status=404 final=https://fonts.googleapis.com/
+.\index.html:24 -> https://fonts.googleapis.com  [dead] status=404 final=https://fonts.googleapis.com/
+.\jwt.html:14 -> https://fonts.googleapis.com  [dead] status=404 final=https://fonts.googleapis.com/
+.\modcat.html:23 -> https://fonts.googleapis.com  [dead] status=404 final=https://fonts.googleapis.com/
+.\phishing.html:28 -> https://fonts.googleapis.com  [dead] status=404 final=https://fonts.googleapis.com/
+.\regulation.html:18 -> https://fonts.googleapis.com  [dead] status=404 final=https://fonts.googleapis.com/
+.\index.html:137 -> https://www.linkedin.com/in/chandler-prince-b53b1427/  [dead] status=999 final=https://www.linkedin.com/in/chandler-prince-b53b1427/
+.\phishing.html:29 -> https://fonts.gstatic.com  [dead] status=404 final=https://fonts.gstatic.com/
+.\regulation.html:449 -> https://www.hhs.gov/hipaa/for-professionals/covered-entities/index.html  [dead] status=403 final=https://www.hhs.gov/hipaa/for-professionals/covered-entities/index.html
+.\regulation.html:454 -> https://www.hhs.gov/hipaa/for-professionals/security/index.html  [dead] status=403 final=https://www.hhs.gov/hipaa/for-professionals/security/index.html
+.\regulation.html:493 -> https://www.congress.gov/bill/107th-congress/house-bill/3763  [dead] status=403 final=https://www.congress.gov/bill/107th-congress/house-bill/3763
+.\regulation.html:511 -> https://www.isaca.org/resources/isaca-journal/issues/2016/volume-4/understanding-it-general-controls  [dead] status=403 final=https://www.isaca.org/resources/isaca-journal/issues/2016/volume-4/understanding-it-general-controls
+.\regulation.html:530 -> https://www.sec.gov/news/press-release/2023-139  [dead] status=403 final=https://www.sec.gov/news/press-release/2023-139
+.\regulation.html:545 -> https://www.sec.gov/news/press-release/2023-139  [dead] status=403 final=https://www.sec.gov/news/press-release/2023-139
+.\regulation.html:555 -> https://www.cisa.gov/resources-tools/directives  [dead] status=404 final=https://www.cisa.gov/resources-tools/directives
+.\sast.html:23 -> https://fonts.googleapis.com  [dead] status=404 final=https://fonts.googleapis.com/
+.\shamir.html:10 -> https://fonts.googleapis.com  [dead] status=404 final=https://fonts.googleapis.com/
+.\threatmodel.html:23 -> https://fonts.googleapis.com  [dead] status=404 final=https://fonts.googleapis.com/
