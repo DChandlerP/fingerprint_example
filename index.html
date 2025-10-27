@@ -193,22 +193,34 @@
     <section>
       <h3 class="text-2xl font-semibold text-blue-400 mb-4">Experience Highlights</h3>
       <div class="grid gap-6 md:grid-cols-2">
+        <!-- NEW MCP HIGHLIGHT -->
         <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
           <div class="flex items-center mb-2">
-            <span id="shield-icon" class="mr-2"></span>
-            <span class="text-lg font-semibold text-blue-300">Enterprise Security Leadership</span>
+            <span id="mcp-icon" class="mr-2"></span>
+            <span class="text-lg font-semibold text-blue-300">Secure AI/ML Guidance (MCP)</span>
           </div>
           <p class="text-gray-200 text-sm">
-            Led and mentored multi-disciplinary teams focused on cloud and application security for business units generating multi-billion dollar revenues. Drove enterprise-wide adoption of advanced security tools and best practices, significantly reducing false positives and enhancing threat detection.
+            Authored security guidance for Model Context Protocol (MCP) usage within my business unit. MCP is like a USB-C cable for AI models—it standardizes how context (data, files, etc.) is provided. I identified that most MCP implementations are not secure by default, creating risk. My guidance establishes guardrails to ensure teams can leverage MCP securely.
           </p>
         </div>
+        <!-- EXISTING ISO 27001 HIGHLIGHT -->
         <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
           <div class="flex items-center mb-2">
             <span id="certificate-icon" class="mr-2"></span>
             <span class="text-lg font-semibold text-blue-300">ISO 27001 Certification & Business Enablement</span>
           </div>
           <p class="text-gray-200 text-sm">
-            Spearheaded the ISO 27001 certification for a core Identity and Access Management product by directing detailed threat models and risk analyses with internal security and control groups. Simultaneously, drove crucial updates to information security policy to enable 3rd party identity federation, directly supporting sales and marketing efforts to onboard large clients requiring single sign-on (SSO) capabilities.
+            Spearheaded the ISO 27001 certification for a core Identity and Access Management product by directing detailed threat models and risk analyses. Simultaneously, drove crucial updates to information security policy to enable 3rd party identity federation, directly supporting sales and marketing efforts to onboard large clients requiring single sign-on (SSO) capabilities.
+          </p>
+        </div>
+        <!-- NEW BISO PARTNER HIGHLIGHT -->
+        <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col md:col-span-2">
+          <div class="flex items-center mb-2">
+            <span id="bisopartner-icon" class="mr-2"></span>
+            <span class="text-lg font-semibold text-blue-300">Strategic Security & DevSecOps Partner</span>
+          </div>
+          <p class="text-gray-200 text-sm">
+            Serving in key partnership roles like Product Line Anchor for Ford Pro's cybersecurity (akin to a Deputy BISO) and Product Anchor for a technical product group, I support two major business units (Ford Pro and FCSD). Our large team operates globally from the US and Asia Pacific on a "sun never sets" model. This role extends beyond typical AppSec; we educate, advise, and partner with teams to drive key DevSecOps initiatives. This includes helping teams prioritize SCA findings to achieve automated dependency updates, partnering on JFrog Curation and container scanning rollouts, integrating DAST, reducing SAST false positives, and remediating code secrets. My teams also solve complex cloud security problems related to WAFs, load balancers, and proxies, acting as problem-solvers who partner with SMEs across the business.
           </p>
         </div>
       </div>
@@ -351,16 +363,21 @@
     <section>
       <h3 class="text-2xl font-semibold text-blue-400 mb-4">Certifications</h3>
       <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-        <div class="bg-gray-900 rounded-lg shadow p-3 flex flex-col items-center">
+        <!-- ISC2 Certification Card - Linked -->
+        <a href="https://www.credly.com/users/david-prince.a4e8f529/badges#credly" target="_blank" rel="noopener" class="bg-gray-900 rounded-lg shadow p-3 flex flex-col items-center transition duration-300 ease-in-out transform hover:scale-105 hover:bg-gray-800">
           <span id="isc2-icon" class="mb-2"></span>
           <span class="text-blue-200 font-semibold text-sm">ISC²</span>
           <span class="text-gray-300 text-xs text-center">CISSP, CCSP</span>
-        </div>
-        <div class="bg-gray-900 rounded-lg shadow p-3 flex flex-col items-center">
+        </a>
+        
+        <!-- CompTIA Certification Card - Linked -->
+        <a href="https://www.credly.com/users/david-prince.a4e8f529/badges#credly" target="_blank" rel="noopener" class="bg-gray-900 rounded-lg shadow p-3 flex flex-col items-center transition duration-300 ease-in-out transform hover:scale-105 hover:bg-gray-800">
           <span id="comp-icon" class="mb-2"></span>
           <span class="text-blue-200 font-semibold text-sm">CompTIA</span>
           <span class="text-gray-300 text-xs text-center">Linux+, Security+, PenTest+, CySA+, CASP+, SecurityX</span>
-        </div>
+        </a>
+        
+        <!-- ITIL Certification Card - Not Linked -->
         <div class="bg-gray-900 rounded-lg shadow p-3 flex flex-col items-center">
           <span id="itil-icon" class="mb-2"></span>
           <span class="text-blue-200 font-semibold text-sm">ITIL</span>
@@ -382,8 +399,10 @@
       icons: {
         'github-icon': lucide.Github,
         'linkedin-icon': lucide.Linkedin,
-        'shield-icon': lucide.ShieldCheck,
+        // 'shield-icon': lucide.ShieldCheck, // Original icon, replaced
         'certificate-icon': lucide.BadgeCheck,
+        'mcp-icon': lucide.Usb, // New icon for MCP
+        'bisopartner-icon': lucide.Puzzle, // New icon for BISO Partner
         'fingerprint-icon': lucide.Fingerprint,
         'epss-icon': lucide.Activity,
         'jwt-icon': lucide.KeyRound,
@@ -481,4 +500,5 @@
   </script>
 </body>
 </html>
+
 

@@ -44,6 +44,42 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
         }
         
+        /* NEW: Styles for the filter dropdown */
+        .filter-select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.25em;
+            padding-right: 2.5rem; /* Make space for arrow */
+            
+            padding: 0.5rem 1rem;
+            border-radius: 9999px; /* pill shape */
+            font-weight: 500;
+            background-color: #1f2937; /* gray-800 */
+            color: #9ca3af; /* gray-400 */
+            transition: all 0.2s ease;
+            border: 2px solid #374151; /* gray-700 */
+            cursor: pointer;
+        }
+        .filter-select:hover {
+            background-color: #374151; /* gray-700 */
+            color: #d1d5db; /* gray-300 */
+        }
+        .filter-select.active {
+            background-color: #1d4ed8; /* blue-700 */
+            color: #ffffff;
+            border-color: #1d4ed8; /* blue-700 */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        }
+        .filter-select option {
+            background-color: #1f2937; /* gray-800 */
+            color: #d1d5db; /* gray-300 */
+        }
+        
         /* Styles for the certification list items - Dark Mode */
         .cert-trigger {
             display: flex;
@@ -138,6 +174,14 @@
         .tag-intermediate { background-color: #78350f; color: #fde68a; } /* amber-900 / amber-200 */
         .tag-advanced { background-color: #831843; color: #fbcfe8; } /* pink-900 / pink-200 */
         
+        /* NEW: DoD Role tag color */
+        .tag-role {
+            background-color: #374151; /* gray-700 */
+            color: #e5e7eb; /* gray-200 */
+            font-family: monospace;
+            font-size: 0.75rem; /* text-xs */
+        }
+        
         /* Vendor-specific modal border colors */
         .modal-comptia { border-top-color: #3b82f6; } /* blue-500 */
         .modal-isc2 { border-top-color: #22c55e; } /* green-500 */
@@ -173,6 +217,28 @@
             margin-bottom: 0;
             overflow: hidden;
             pointer-events: none;
+        }
+        /* NEW: Info box list styling */
+        .info-box ul {
+            list-style-type: disc;
+            list-style-position: inside;
+            padding-left: 0.5rem;
+        }
+        .info-box li {
+            margin-top: 0.5rem;
+        }
+        .info-box strong {
+            color: #d1d5db; /* gray-300 */
+        }
+        /* NEW: Info box ordered list styling */
+        .info-box ol {
+            list-style-type: decimal;
+            list-style-position: outside;
+            padding-left: 1.25rem; /* pl-5 */
+        }
+        .info-box ol > li::marker {
+            color: #60a5fa; /* blue-400 */
+            font-weight: 600;
         }
 
         /* Modal Official Link Button - Dark Mode */
@@ -294,16 +360,40 @@
     <header class="bg-gray-900 shadow-sm border-b border-gray-800">
         <div class="container mx-auto max-w-4xl px-6 py-5">
             <h1 class="text-3xl font-bold text-gray-50">Cybersecurity Certification Roadmap</h1> <!-- Brighter text -->
-            <p class="mt-2 text-lg text-gray-400">Your guide to the top certifications. Filter by provider and level, or click any cert for details.</p>
+            <p class="mt-2 text-lg text-gray-400">Your guide to top certifications, aligned with DoD 8140 work roles. Filter by provider, level, or role, or click any cert for details.</p>
         </div>
     </header>
 
     <!-- Main Content -->
     <main class="container mx-auto max-w-4xl px-6 py-12">
         
+        <!-- NEW: Common Paths Info Box -->
+        <div class="info-box">
+            <h3 class="font-bold text-lg text-gray-200">Common Certification Paths (DoD 8140 Aligned)</h3>
+            <p class="mt-2">Use these common paths as a guide. This list is now aligned with DoD 8140 proficiency levels (Basic, Intermediate, Advanced) and work roles.</p>
+            <ol class="mt-4 space-y-3">
+                <li><strong>Budget-Friendly Path:</strong> For those on a budget, the <a href="https://www.comptia.org" target="_blank" rel="noopener noreferrer">CompTIA</a> ecosystem is the most cost-effective. Security+ alone qualifies for 20+ Basic/Intermediate 8140 roles.
+                    <br><strong>Path:</strong> Security+ → CySA+ / PenTest+ → CASP+
+                </li>
+                <li><strong>Cyber Defense (Blue Team):</strong> For roles like "Cyber Defense Analyst [511]" or "Incident Responder [531]".
+                    <br><strong>Path:</strong> Security+ → CySA+ / Cisco CyberOps / GSEC → GCIH / GCFA
+                </li>
+                <li><strong>Offensive Ops (Red Team):</strong> For roles like "Exploitation Analyst [121]" or "Vulnerability Assessment Analyst [541]".
+                    <br><strong>Path:</strong> Security+ → PenTest+ / GPEN → OSCP
+                </li>
+                <li><strong>Management & GRC:</strong> For roles like "Information Systems Security Manager (ISSM) [722]" or "Security Control Assessor [612]".
+                    <br><strong>Path:</strong> Security+ → CGRC / CISA → CISSP / CISM
+                </li>
+            </ol>
+            <p class="mt-4 pl-4 border-l-4 border-gray-700 italic text-gray-400">
+                Many professionals, even outside of government work, find the DoD 8140 framework to be one of the most well-researched, publicly available guides for mapping certifications to specific industry work roles.
+            </p>
+        </div>
+        
         <!-- Filter Buttons -->
         <div class="flex flex-col gap-4 mb-8">
-            <div id="filter-container-vendor" class="flex flex-wrap gap-3">
+            <!-- Vendor Filter -->
+            <div id="filter-container-vendor" class="flex flex-wrap gap-3 items-center">
                 <span class="font-medium text-gray-400 self-center">Provider:</span> <!-- Adjusted text color -->
                 <button class="filter-btn active" data-filter="all">All</button>
                 <button class="filter-btn" data-filter="comptia">CompTIA</button>
@@ -313,18 +403,36 @@
                 <button class="filter-btn" data-filter="offsec">OffSec</button>
                 <button class="filter-btn" data-filter="platform">Cloud & Platform</button>
             </div>
-            <div id="filter-container-level" class="flex flex-wrap gap-3">
+            <!-- Level Filter -->
+            <div id="filter-container-level" class="flex flex-wrap gap-3 items-center">
                 <span class="font-medium text-gray-400 self-center">Level:</span> <!-- Adjusted text color -->
                 <button class="filter-btn active" data-filter="all">All</button>
                 <button class="filter-btn" data-filter="basic">Basic</button>
                 <button class="filter-btn" data-filter="intermediate">Intermediate</button>
                 <button class="filter-btn" data-filter="advanced">Advanced</button>
             </div>
+            <!-- NEW: DoD 8140 Role Filter -->
+            <div id="filter-container-role" class="flex flex-wrap gap-3 items-center">
+                <span class="font-medium text-gray-400 self-center">DoD 8140 Role:</span>
+                <select id="filter-role-select" class="filter-select">
+                    <option value="all">All Work Roles</option>
+                    <option value="Baseline">Baseline / Broad</option>
+                    <option value="511">511: Cyber Defense Analyst</option>
+                    <option value="531">531: Incident Responder</option>
+                    <option value="541">541: Vulnerability Assmt Analyst</option>
+                    <option value="121">121: Exploitation Analyst</option>
+                    <option value="211">211: Forensics Analyst</option>
+                    <option value="451">451: System Administrator</option>
+                    <option value="461">461: Systems Security Analyst</option>
+                    <option value="612">612: Security Control Assessor</option>
+                    <option value="631">631: Info Systems Security Dev</option>
+                    <option value="651">651: Enterprise Architect</option>
+                    <option value="652">652: Security Architect</option>
+                    <option value="722">722: Info Systems Security Mgr</option>
+                    <option value="801">801: Program Manager</option>
+                </select>
+            </div>
         </div>
-
-        <!-- GIAC Info Box (MOVED and made permanently visible) -->
-        <!-- This div is now at the END of the main section, after the cert list -->
-
 
         <!-- Certification List -->
         <div id="cert-list" class="flex flex-col gap-4">
@@ -337,6 +445,7 @@
             data-level-raw="Entry | Core | Intermediate | Specialization | Expert"
             data-description="Full description here."
             data-notes="*Any notes here."
+            data-roles="Comma,separated,list,of,8140,roles"
             -->
 
             <!-- (ISC)² Certified in Cybersecurity (CC) -->
@@ -346,57 +455,92 @@
                 data-description="The premier entry-level certification. Provides a foundational understanding of cybersecurity concepts, principles, and best practices."
                 data-notes="*(ISC)² often offers the exam and training for free as part of a promotion. Standard price is ~$199."
                 data-vendor-color="modal-isc2"
-                data-link="https://www.isc2.org/certifications/cc">
+                data-link="https://www.isc2.org/certifications/cc"
+                data-roles="Baseline">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² Certified in Cybersecurity (CC)</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² Certified in Cybersecurity (CC)</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-isc2 px-3 py-0.5 text-sm font-medium">(ISC)²</span>
                         <span class="inline-block rounded-full tag-basic px-3 py-0.5 text-sm font-medium">Basic</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-green-400 flex-shrink-0">Free*</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-green-400 flex-shrink-0">Free*</span>
             </a>
-            
-            <!-- GIAC Foundational Cybersecurity Technologies (GFACT) -->
-            <a href="#" class="cert-trigger" data-vendor="giac" data-level="basic" data-level-raw="Entry"
-                data-name="GIAC Foundational Cybersecurity Technologies (GFACT)"
-                data-price="See Notes*"
-                data-description="Validates foundational knowledge of core computing concepts, including hardware, software, networking, and basic security."
-                data-notes="*Price is for the exam attempt only (~$999). Associated SANS training (~$8,000+) is highly recommended and separate."
-                data-vendor-color="modal-giac"
-                data-link="https://www.giac.org/certifications/foundational-cybersecurity-technologies-gfact/">
-                <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Foundational Cybersecurity Technologies (GFACT)</span> <!-- Brighter text -->
-                    <div class="mt-1 flex flex-wrap gap-2">
-                        <span class="inline-block rounded-full tag-giac px-3 py-0.5 text-sm font-medium">GIAC</span>
-                        <span class="inline-block rounded-full tag-basic px-3 py-0.5 text-sm font-medium">Basic</span>
-                    </div>
-                </div>
-                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span> <!-- Brighter price -->
-            </a>
-
+    
             <!-- CompTIA A+ -->
-            <!-- (REMOVED) -->
-            
-            <!-- CompTIA Network+ -->
-            <!-- (REMOVED) -->
-            
-            <!-- CompTIA Security+ -->
             <a href="#" class="cert-trigger" data-vendor="comptia" data-level="basic" data-level-raw="Core"
-                data-name="CompTIA Security+"
-                data-price="$425"
-                data-description="The global benchmark for baseline cybersecurity skills. Establishes the core knowledge required for any cybersecurity role, covering threats, attacks, and vulnerabilities."
-                data-notes=""
+                data-name="CompTIA A+"
+                data-price="$246 (per exam)"
+                data-description="The industry standard for establishing a career in IT. Covers a broad range of hardware, software, and troubleshooting topics."
+                data-notes="*Requires passing two exams (Core 1 and Core 2). This is the foundational cert for most IT roles."
                 data-vendor-color="modal-comptia"
-                data-link="https://www.comptia.org/certifications/security">
+                data-link="https://www.comptia.org/certifications/a"
+                data-roles="411">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">CompTIA Security+</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">CompTIA A+</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-comptia px-3 py-0.5 text-sm font-medium">CompTIA</span>
                         <span class="inline-block rounded-full tag-basic px-3 py-0.5 text-sm font-medium">Basic</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-blue-400 flex-shrink-0">$425</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-blue-400 flex-shrink-0">$246 (x2)*</span>
+            </a>
+
+            <!-- CompTIA Network+ -->
+            <a href="#" class="cert-trigger" data-vendor="comptia" data-level="basic" data-level-raw="Core"
+                data-name="CompTIA Network+"
+                data-price="$358"
+                data-description="Validates the essential skills needed to confidently design, configure, manage, and troubleshoot wired and wireless networks."
+                data-notes="A key foundation for IT infrastructure, often taken after A+ and before Security+."
+                data-vendor-color="modal-comptia"
+                data-link="https://www.comptia.org/certifications/network"
+                data-roles="411, 441, 451">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">CompTIA Network+</span>
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-comptia px-3 py-0.5 text-sm font-medium">CompTIA</span>
+                        <span class="inline-block rounded-full tag-basic px-3 py-0.5 text-sm font-medium">Basic</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-blue-400 flex-shrink-0">$358</span>
+            </a>
+
+            <!-- CompTIA Linux+ -->
+            <a href="#" class="cert-trigger" data-vendor="comptia" data-level="basic" data-level-raw="Specialization"
+                data-name="CompTIA Linux+"
+                data-price="$358"
+                data-description="Validates the competencies required of an early career systems administrator supporting Linux systems."
+                data-notes="A key cert for any role managing Linux servers, which is a core part of many cybersecurity and IT infrastructure roles."
+                data-vendor-color="modal-comptia"
+                data-link="https://www.comptia.org/certifications/linux"
+                data-roles="451">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">CompTIA Linux+</span>
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-comptia px-3 py-0.5 text-sm font-medium">CompTIA</span>
+                        <span class="inline-block rounded-full tag-basic px-3 py-0.5 text-sm font-medium">Basic</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-blue-400 flex-shrink-0">$358</span>
+            </a>
+
+            <!-- CompTIA Security+ -->
+            <a href="#" class="cert-trigger" data-vendor="comptia" data-level="basic" data-level-raw="Core"
+                data-name="CompTIA Security+"
+                data-price="$425"
+                data-description="The global benchmark for baseline cybersecurity skills. Establishes the core knowledge required for any cybersecurity role, covering threats, attacks, and vulnerabilities."
+                data-notes="The single most common baseline certification for DoD 8140, qualifying for over 20 work roles."
+                data-vendor-color="modal-comptia"
+                data-link="https://www.comptia.org/certifications/security"
+                data-roles="Baseline, 411, 431, 441, 451, 461, 511, 521, 531, 541, 612, 722, 752, 801, 802, 804, 805">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">CompTIA Security+</span>
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-comptia px-3 py-0.5 text-sm font-medium">CompTIA</span>
+                        <span class="inline-block rounded-full tag-basic px-3 py-0.5 text-sm font-medium">Basic</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-blue-400 flex-shrink-0">$425</span>
             </a>
 
             <!-- Microsoft Certified: Security, Compliance, and Identity Fundamentals (SC-900) -->
@@ -406,51 +550,16 @@
                 data-description="A foundational cert covering the fundamentals of security, compliance, and identity (SCI) across Microsoft's cloud-based and related services."
                 data-notes="Price is for the exam attempt. This is a great starting point for anyone who will be working in a Microsoft 365 or Azure environment."
                 data-vendor-color="modal-platform"
-                data-link="https://learn.microsoft.com/en-us/certifications/exams/sc-900/">
+                data-link="https://learn.microsoft.com/en-us/certifications/exams/sc-900/"
+                data-roles="Baseline">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">Microsoft Certified: Security... (SC-900)</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">Microsoft Certified: Security... (SC-900)</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-platform px-3 py-0.5 text-sm font-medium">Cloud & Platform</span>
                         <span class="inline-block rounded-full tag-basic px-3 py-0.5 text-sm font-medium">Basic</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-purple-400 flex-shrink-0">$99</span> <!-- Brighter price -->
-            </a>
-
-            <!-- ISACA CISA -->
-            <a href="#" class="cert-trigger" data-vendor="isaca" data-level="advanced" data-level-raw="Specialization"
-                data-name="ISACA CISA"
-                data-price="$575 / $760*"
-                data-description="The global standard for professionals who audit, control, monitor, and assess an organization's information technology and business systems."
-                data-notes="*Price is for ISACA Members / Non-Members. Requires 5 years of experience in IS audit, control, or security."
-                data-vendor-color="modal-isaca"
-                data-link="https://www.isaca.org/credentialing/cisa">
-                <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">ISACA CISA</span> <!-- Brighter text -->
-                    <div class="mt-1 flex flex-wrap gap-2">
-                        <span class="inline-block rounded-full tag-isaca px-3 py-0.5 text-sm font-medium">ISACA</span>
-                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
-                    </div>
-                </div>
-                <span class="text-lg font-bold text-yellow-400 flex-shrink-0">$575 / $760*</span> <!-- Brighter price -->
-            </a>
-
-            <!-- ISACA CISM -->
-            <a href="#" class="cert-trigger" data-vendor="isaca" data-level="advanced" data-level-raw="Expert"
-                data-name="ISACA CISM"
-                data-price="$575 / $760*"
-                data-description="A management-focused certification for professionals who design, build, and manage enterprise information security programs."
-                data-notes="*Price is for ISACA Members / Non-Members. Requires 5 years of experience in information security management."
-                data-vendor-color="modal-isaca"
-                data-link="https://www.isaca.org/credentialing/cism">
-                <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">ISACA CISM</span> <!-- Brighter text -->
-                    <div class="mt-1 flex flex-wrap gap-2">
-                        <span class="inline-block rounded-full tag-isaca px-3 py-0.5 text-sm font-medium">ISACA</span>
-                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
-                    </div>
-                </div>
-                <span class="text-lg font-bold text-yellow-400 flex-shrink-0">$575 / $760*</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-purple-400 flex-shrink-0">$99</span>
             </a>
 
             <!-- (ISC)² SSCP -->
@@ -460,15 +569,16 @@
                 data-description="For IT administrators, managers, and network security professionals with hands-on technical security skills. A great step after foundational certs."
                 data-notes="*Requires 1 year of paid work experience."
                 data-vendor-color="modal-isc2"
-                data-link="https://www.isc2.org/certifications/sscp">
+                data-link="https://www.isc2.org/certifications/sscp"
+                data-roles="451, 441, 521, 612">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² SSCP</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² SSCP</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-isc2 px-3 py-0.5 text-sm font-medium">(ISC)²</span>
                         <span class="inline-block rounded-full tag-intermediate px-3 py-0.5 text-sm font-medium">Intermediate</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-green-400 flex-shrink-0">$249</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-green-400 flex-shrink-0">$249</span>
             </a>
             
             <!-- (ISC)² CGRC -->
@@ -478,15 +588,16 @@
                 data-description="Focuses on Governance, Risk, and Compliance (GRC). Validates skills in authorizing and maintaining information systems, and managing risk."
                 data-notes="*Requires 2 years of paid work experience. Formerly the (ISC)² CAP."
                 data-vendor-color="modal-isc2"
-                data-link="https://www.isc2.org/certifications/cgrc">
+                data-link="https://www.isc2.org/certifications/cgrc"
+                data-roles="611, 612, 722">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² CGRC</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² CGRC</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-isc2 px-3 py-0.5 text-sm font-medium">(ISC)²</span>
                         <span class="inline-block rounded-full tag-intermediate px-3 py-0.5 text-sm font-medium">Intermediate</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-green-400 flex-shrink-0">$599</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-green-400 flex-shrink-0">$599</span>
             </a>
 
             <!-- Cisco Certified CyberOps Associate -->
@@ -496,15 +607,73 @@
                 data-description="Focuses on the skills needed for a Security Operations Center (SOC) Analyst. Covers incident response, digital forensics, and threat detection."
                 data-notes="Price is for the exam attempt. This is a direct competitor to CompTIA's CySA+ and is highly respected for SOC roles."
                 data-vendor-color="modal-platform"
-                data-link="https://www.cisco.com/c/en/us/training-events/training-certifications/certifications/associate/cyberops-associate.html">
+                data-link="https://www.cisco.com/c/en/us/training-events/training-certifications/certifications/associate/cyberops-associate.html"
+                data-roles="511, 531">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">Cisco Certified CyberOps Associate</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">Cisco Certified CyberOps Associate</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-platform px-3 py-0.5 text-sm font-medium">Cloud & Platform</span>
                         <span class="inline-block rounded-full tag-intermediate px-3 py-0.5 text-sm font-medium">Intermediate</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-purple-400 flex-shrink-0">$300</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-purple-400 flex-shrink-0">$300</span>
+            </a>
+
+            <!-- RE-ADDED: CompTIA Cloud+ -->
+            <a href="#" class="cert-trigger" data-vendor="platform" data-level="intermediate" data-level-raw="Intermediate"
+                data-name="CompTIA Cloud+"
+                data-price="$358"
+                data-description="Validates the skills needed to deploy and automate secure cloud environments. Covers cloud infrastructure, management, and security, remaining vendor-neutral."
+                data-notes="A strong, vendor-neutral foundation before specializing in AWS, Azure, or GCP."
+                data-vendor-color="modal-platform"
+                data-link="https://www.comptia.org/certifications/cloud"
+                data-roles="441, 451, 521, 612, 651, 652">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">CompTIA Cloud+</span>
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-platform px-3 py-0.5 text-sm font-medium">Cloud & Platform</span>
+                        <span class="inline-block rounded-full tag-intermediate px-3 py-0.5 text-sm font-medium">Intermediate</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-purple-400 flex-shrink-0">$358</span>
+            </a>
+
+            <!-- RE-ADDED: Microsoft Certified: Security Operations Analyst Associate (SC-200) -->
+            <a href="#" class="cert-trigger" data-vendor="platform" data-level="intermediate" data-level-raw="Intermediate"
+                data-name="Microsoft Certified: Security Operations Analyst Associate (SC-200)"
+                data-price="$165"
+                data-description="A key cert for SOC Analysts. Validates skills to investigate, respond to, and hunt for threats using Microsoft Sentinel, Microsoft Defender XDR, and Defender for Cloud."
+                data-notes="Price is for the exam attempt. A direct competitor to CySA+ for roles in a Microsoft ecosystem."
+                data-vendor-color="modal-platform"
+                data-link="https://learn.microsoft.com/en-us/certifications/exams/sc-200/"
+                data-roles="511, 531">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">Microsoft Certified: Security... (SC-200)</span>
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-platform px-3 py-0.5 text-sm font-medium">Cloud & Platform</span>
+                        <span class="inline-block rounded-full tag-intermediate px-3 py-0.5 text-sm font-medium">Intermediate</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-purple-400 flex-shrink-0">$165</span>
+            </a>
+
+            <!-- RE-ADDED: Microsoft Certified: Identity and Access Administrator Associate (SC-300) -->
+            <a href="#" class="cert-trigger" data-vendor="platform" data-level="intermediate" data-level-raw="Intermediate"
+                data-name="Microsoft Certified: Identity and Access Administrator Associate (SC-300)"
+                data-price="$165"
+                data-description="Validates skills in designing, implementing, and operating an organization's identity and access management (IAM) systems using Microsoft Entra ID."
+                data-notes="Price is for the exam attempt. A critical cert for managing identity, the new security perimeter."
+                data-vendor-color="modal-platform"
+                data-link="https://learn.microsoft.com/en-us/certifications/exams/sc-300/"
+                data-roles="451, 652">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">Microsoft Certified: Identity... (SC-300)</span>
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-platform px-3 py-0.5 text-sm font-medium">Cloud & Platform</span>
+                        <span class="inline-block rounded-full tag-intermediate px-3 py-0.5 text-sm font-medium">Intermediate</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-purple-400 flex-shrink-0">$165</span>
             </a>
 
             <!-- GIAC Security Essentials (GSEC) -->
@@ -514,51 +683,130 @@
                 data-description="A key foundational cert validating hands-on skills in IT systems, security tasks, and core security concepts."
                 data-notes="*Price is for the exam attempt only (~$999). Associated SANS training (~$8,000+) is highly recommended and separate."
                 data-vendor-color="modal-giac"
-                data-link="https://www.giac.org/certifications/security-essentials-gsec/">
+                data-link="https://www.giac.org/certifications/security-essentials-gsec/"
+                data-roles="451, 511, 521, 531, 612, 722">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Security Essentials (GSEC)</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Security Essentials (GSEC)</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-giac px-3 py-0.5 text-sm font-medium">GIAC</span>
                         <span class="inline-block rounded-full tag-intermediate px-3 py-0.5 text-sm font-medium">Intermediate</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span>
             </a>
             
             <!-- CompTIA CySA+ -->
-            <a href="#" class="cert-trigger" data-vendor="comptia" data-level="advanced" data-level-raw="Specialization"
+            <a href="#" class="cert-trigger" data-vendor="comptia" data-level="intermediate" data-level-raw="Specialization"
                 data-name="CompTIA CySA+"
                 data-price="$425"
                 data-description="A 'Blue Team' cert focusing on threat detection, vulnerability analysis, and incident response. Validates security analytics and monitoring."
-                data-notes=""
+                data-notes="A common next step after Security+ for defensive roles."
                 data-vendor-color="modal-comptia"
-                data-link="https://www.comptia.org/certifications/cybersecurity-analyst">
+                data-link="https://www.comptia.org/certifications/cybersecurity-analyst"
+                data-roles="511, 531, 541, 211, 221, 461">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">CompTIA CySA+</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">CompTIA CySA+</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-comptia px-3 py-0.5 text-sm font-medium">CompTIA</span>
-                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                        <span class="inline-block rounded-full tag-intermediate px-3 py-0.5 text-sm font-medium">Intermediate</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-blue-400 flex-shrink-0">$425</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-blue-400 flex-shrink-0">$425</span>
             </a>
             
             <!-- CompTIA PenTest+ -->
-            <a href="#" class="cert-trigger" data-vendor="comptia" data-level="advanced" data-level-raw="Specialization"
+            <a href="#" class="cert-trigger" data-vendor="comptia" data-level="intermediate" data-level-raw="Specialization"
                 data-name="CompTIA PenTest+"
                 data-price="$425"
                 data-description="A 'Red Team' cert that validates your ability to plan, scope, and perform penetration tests and vulnerability assessments."
-                data-notes=""
+                data-notes="A common next step after Security+ for offensive roles."
                 data-vendor-color="modal-comptia"
-                data-link="https://www.comptia.org/certifications/pentest">
+                data-link="https://www.comptia.org/certifications/pentest"
+                data-roles="121, 541">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">CompTIA PenTest+</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">CompTIA PenTest+</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-comptia px-3 py-0.5 text-sm font-medium">CompTIA</span>
+                        <span class="inline-block rounded-full tag-intermediate px-3 py-0.5 text-sm font-medium">Intermediate</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-blue-400 flex-shrink-0">$425</span>
+            </a>
+
+            <!-- RE-ADDED: ISACA CISA -->
+            <a href="#" class="cert-trigger" data-vendor="isaca" data-level="advanced" data-level-raw="Specialization"
+                data-name="ISACA CISA"
+                data-price="$575 / $760*"
+                data-description="The global standard for professionals who audit, control, monitor, and assess an organization's information technology and business systems."
+                data-notes="*Price is for ISACA Members / Non-Members. Requires 5 years of experience in IS audit, control, or security."
+                data-vendor-color="modal-isaca"
+                data-link="https://www.isaca.org/credentialing/cisa"
+                data-roles="612, 805">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">ISACA CISA</span>
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-isaca px-3 py-0.5 text-sm font-medium">ISACA</span>
                         <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-blue-400 flex-shrink-0">$425</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-yellow-400 flex-shrink-0">$575 / $760*</span>
+            </a>
+
+            <!-- RE-ADDED: ISACA CISM -->
+            <a href="#" class="cert-trigger" data-vendor="isaca" data-level="advanced" data-level-raw="Expert"
+                data-name="ISACA CISM"
+                data-price="$575 / $760*"
+                data-description="A management-focused certification for professionals who design, build, and manage enterprise information security programs."
+                data-notes="*Price is for ISACA Members / Non-Members. Requires 5 years of experience in information security management."
+                data-vendor-color="modal-isaca"
+                data-link="https://www.isaca.org/credentialing/cism"
+                data-roles="722, 801, 804">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">ISACA CISM</span>
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-isaca px-3 py-0.5 text-sm font-medium">ISACA</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-yellow-400 flex-shrink-0">$575 / $760*</span>
+            </a>
+
+            <!-- RE-ADDED: ISACA CRISC -->
+            <a href="#" class="cert-trigger" data-vendor="isaca" data-level="advanced" data-level-raw="Specialization"
+                data-name="ISACA CRISC"
+                data-price="$575 / $760*"
+                data-description="Focuses on enterprise risk management. Validates expertise in identifying, assessing, and managing IT risk and implementing information systems controls."
+                data-notes="*Price is for ISACA Members / Non-Members. Requires 3 years of experience in IT risk and IS control."
+                data-vendor-color="modal-isaca"
+                data-link="https://www.isaca.org/credentialing/crisc"
+                data-roles="612, 722, 801">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">ISACA CRISC</span>
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-isaca px-3 py-0.5 text-sm font-medium">ISACA</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-yellow-400 flex-shrink-0">$575 / $760*</span>
+            </a>
+
+            <!-- RE-ADDED: ISACA CGEIT -->
+            <a href="#" class="cert-trigger" data-vendor="isaca" data-level="advanced" data-level-raw="Expert"
+                data-name="ISACA CGEIT"
+                data-price="$575 / $760*"
+                data-description="An advanced cert for IT governance. Validates expertise in managing and governing an enterprise's IT framework to achieve business goals."
+                data-notes="*Price is for ISACA Members / Non-Members. Requires 5 years of experience in IT governance."
+                data-vendor-color="modal-isaca"
+                data-link="https://www.isaca.org/credentialing/cgeit"
+                data-roles="651, 722, 801">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">ISACA CGEIT</span>
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-isaca px-3 py-0.5 text-sm font-medium">ISACA</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-yellow-400 flex-shrink-0">$575 / $760*</span>
             </a>
 
             <!-- (ISC)² CCSP -->
@@ -568,15 +816,16 @@
                 data-description="The premier cloud security certification. Validates skills to design, manage, and secure data, applications, and infrastructure in the cloud."
                 data-notes="*Requires 5 years of IT experience, 3 of which must be in information security and 1 in cloud security."
                 data-vendor-color="modal-isc2"
-                data-link="https://www.isc2.org/certifications/ccsp">
+                data-link="https://www.isc2.org/certifications/ccsp"
+                data-roles="631, 651, 652">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² CCSP</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² CCSP</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-isc2 px-3 py-0.5 text-sm font-medium">(ISC)²</span>
                         <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-green-400 flex-shrink-0">$599</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-green-400 flex-shrink-0">$599</span>
             </a>
             
             <!-- (ISC)² CSSLP -->
@@ -586,69 +835,111 @@
                 data-description="For professionals involved in the software development lifecycle (SDLC). Validates skills in application security and writing secure code."
                 data-notes="*Requires 4 years of paid work experience in the SDLC."
                 data-vendor-color="modal-isc2"
-                data-link="https://www.isc2.org/certifications/csslp">
+                data-link="https://www.isc2.org/certifications/csslp"
+                data-roles="631, 461">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² CSSLP</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² CSSLP</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-isc2 px-3 py-0.5 text-sm font-medium">(ISC)²</span>
                         <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-green-400 flex-shrink-0">$599</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-green-400 flex-shrink-0">$599</span>
             </a>
 
-            <!-- Microsoft Certified: Azure Security Engineer Associate (AZ-500) -->
+            <!-- RE-ADDED: Microsoft Certified: Azure Security Engineer Associate (AZ-500) -->
             <a href="#" class="cert-trigger" data-vendor="platform" data-level="advanced" data-level-raw="Advanced"
                 data-name="Microsoft Certified: Azure Security Engineer Associate (AZ-500)"
                 data-price="$165"
                 data-description="Validates subject matter expertise in implementing security controls, maintaining the security posture, and identifying and remediating vulnerabilities in Azure."
                 data-notes="Price is for the exam attempt. This is the core hands-on cert for securing Azure environments. Despite 'Associate' in the name, it is an advanced-level cert."
                 data-vendor-color="modal-platform"
-                data-link="https://learn.microsoft.com/en-us/certifications/exams/az-500/">
+                data-link="https://learn.microsoft.com/en-us/certifications/exams/az-500/"
+                data-roles="652, 521, 631">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">Microsoft Certified: Azure Security... (AZ-500)</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">Microsoft Certified: Azure Security... (AZ-500)</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-platform px-3 py-0.5 text-sm font-medium">Cloud & Platform</span>
                         <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-purple-400 flex-shrink-0">$165</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-purple-400 flex-shrink-0">$165</span>
             </a>
 
-            <!-- AWS Certified Security - Specialty -->
+            <!-- RE-ADDED: AWS Certified Security - Specialty -->
             <a href="#" class="cert-trigger" data-vendor="platform" data-level="advanced" data-level-raw="Advanced"
                 data-name="AWS Certified Security - Specialty"
                 data-price="$300"
                 data-description="Validates expertise in creating and implementing security solutions in the AWS cloud. Covers data protection, infrastructure security, incident response, and more."
                 data-notes="Price is for the exam attempt. This is the premier security certification for AWS, the world's largest cloud provider. Requires at least 2 years of hands-on AWS experience."
                 data-vendor-color="modal-platform"
-                data-link="https://aws.amazon.com/certification/certified-security-specialty/">
+                data-link="https://aws.amazon.com/certification/certified-security-specialty/"
+                data-roles="652, 521, 631">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">AWS Certified Security - Specialty</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">AWS Certified Security - Specialty</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-platform px-3 py-0.5 text-sm font-medium">Cloud & Platform</span>
                         <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-purple-400 flex-shrink-0">$300</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-purple-400 flex-shrink-0">$300</span>
             </a>
 
-            <!-- Google Cloud Certified: Professional Cloud Security Engineer -->
+            <!-- RE-ADDED: Google Cloud Certified: Professional Cloud Security Engineer -->
             <a href="#" class="cert-trigger" data-vendor="platform" data-level="advanced" data-level-raw="Advanced"
                 data-name="Google Cloud Certified: Professional Cloud Security Engineer"
                 data-price="$200"
                 data-description="Validates expertise in designing, developing, and managing a secure infrastructure on Google Cloud Platform using Google's security technologies."
                 data-notes="Price is for the exam attempt. This is the premier security certification for the GCP ecosystem."
                 data-vendor-color="modal-platform"
-                data-link="https://cloud.google.com/certification/cloud-security-engineer">
+                data-link="httpsD://cloud.google.com/certification/cloud-security-engineer"
+                data-roles="652, 521, 631">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">Google Cloud Certified: Professional...</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">Google Cloud Certified: Professional...</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-platform px-3 py-0.5 text-sm font-medium">Cloud & Platform</span>
                         <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-purple-400 flex-shrink-0">$200</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-purple-400 flex-shrink-0">$200</span>
+            </a>
+
+            <!-- RE-ADDED: Microsoft Certified: Cybersecurity Architect Expert (SC-100) -->
+            <a href="#" class="cert-trigger" data-vendor="platform" data-level="advanced" data-level-raw="Expert"
+                data-name="Microsoft Certified: Cybersecurity Architect Expert (SC-100)"
+                data-price="$165*"
+                data-description="An expert-level cert for designing comprehensive cybersecurity strategies and solutions using Zero Trust principles and Microsoft's security stack."
+                data-notes="*Price is for the exam attempt. Requires first passing one of: AZ-500, SC-200, or SC-300."
+                data-vendor-color="modal-platform"
+                data-link="https://learn.microsoft.com/en-us/certifications/exams/sc-100/"
+                data-roles="651, 652">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">Microsoft Certified: Cybersecurity... (SC-100)</span>
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-platform px-3 py-0.5 text-sm font-medium">Cloud & Platform</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-purple-400 flex-shrink-0">$165*</span>
+            </a>
+            
+            <!-- Cisco CCNP Security -->
+            <a href="#" class="cert-trigger" data-vendor="platform" data-level="advanced" data-level-raw="Advanced"
+                data-name="Cisco CCNP Security"
+                data-price="$400 + $300*"
+                data-description="An advanced certification for security engineers. Requires passing a core exam and one concentration exam, proving expertise in network, cloud, and content security."
+                data-notes="*Price is for the required core exam (~$400) and one concentration exam (~$300). Common in DoD 'Cyber IT' roles."
+                data-vendor-color="modal-platform"
+                data-link="https://www.cisco.com/c/en/us/training-events/training-certifications/certifications/professional/ccnp-security.html"
+                data-roles="441, 451, 652">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">Cisco CCNP Security</span>
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-platform px-3 py-0.5 text-sm font-medium">Cloud & Platform</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-purple-400 flex-shrink-0">$400 + $300*</span>
             </a>
 
             <!-- GIAC Certified Incident Handler (GCIH) -->
@@ -658,15 +949,16 @@
                 data-description="Validates your ability to detect, respond to, and resolve computer security incidents. Covers attack techniques, vectors, and incident handling."
                 data-notes="*Price is for the exam attempt only (~$999). Associated SANS training (~$8,000+) is highly recommended and separate."
                 data-vendor-color="modal-giac"
-                data-link="https://www.giac.org/certifications/certified-incident-handler-gcih/">
+                data-link="https://www.giac.org/certifications/certified-incident-handler-gcih/"
+                data-roles="531, 541, 211, 221">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Certified Incident Handler (GCIH)</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Certified Incident Handler (GCIH)</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-giac px-3 py-0.5 text-sm font-medium">GIAC</span>
                         <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span>
             </a>
             
             <!-- GIAC Certified Intrusion Analyst (GCIA) -->
@@ -676,15 +968,16 @@
                 data-description="Validates skills in network traffic analysis, intrusion detection, and network security operations. Focuses on understanding and defending against attacks."
                 data-notes="*Price is for the exam attempt only (~$999). Associated SANS training (~$8,000+) is highly recommended and separate."
                 data-vendor-color="modal-giac"
-                data-link="https://www.giac.org/certifications/certified-intrusion-analyst-gcia/">
+                data-link="https://www.giac.org/certifications/certified-intrusion-analyst-gcia/"
+                data-roles="511, 521">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Certified Intrusion Analyst (GCIA)</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Certified Intrusion Analyst (GCIA)</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-giac px-3 py-0.5 text-sm font-medium">GIAC</span>
                         <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span>
             </a>
             
             <!-- GIAC Certified Penetration Tester (GPEN) -->
@@ -694,15 +987,16 @@
                 data-description="A 'Red Team' cert validating your ability to perform penetration tests. Covers methodology, vulnerability assessment, and reporting."
                 data-notes="*Price is for the exam attempt only (~$999). Associated SANS training (~$8,000+) is highly recommended and separate."
                 data-vendor-color="modal-giac"
-                data-link="https://www.giac.org/certifications/penetration-tester-gpen/">
+                data-link="https://www.giac.org/certifications/penetration-tester-gpen/"
+                data-roles="121, 541">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Certified Penetration Tester (GPEN)</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Certified Penetration Tester (GPEN)</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-giac px-3 py-0.5 text-sm font-medium">GIAC</span>
                         <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span>
             </a>
             
             <!-- GIAC Web Application Penetration Tester (GWAPT) -->
@@ -712,15 +1006,16 @@
                 data-description="Focuses specifically on web application security. Validates skills in finding, exploiting, and defending web vulnerabilities."
                 data-notes="*Price is for the exam attempt only (~$999). Associated SANS training (~$8,000+) is highly recommended and separate."
                 data-vendor-color="modal-giac"
-                data-link="https://www.giac.org/certifications/web-application-penetration-tester-gwapt/">
+                data-link="https://www.giac.org/certifications/web-application-penetration-tester-gwapt/"
+                data-roles="541, 631">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Web Application Penetration Tester (GWAPT)</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Web Application Penetration Tester (GWAPT)</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-giac px-3 py-0.5 text-sm font-medium">GIAC</span>
                         <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span>
             </a>
             
             <!-- GIAC Certified Forensic Analyst (GCFA) -->
@@ -730,15 +1025,35 @@
                 data-description="Focuses on Digital Forensics & Incident Response (DFIR). Covers advanced memory forensics, threat hunting, and incident response."
                 data-notes="*Price is for the exam attempt only (~$999). Associated SANS training (~$8,000+) is highly recommended and separate."
                 data-vendor-color="modal-giac"
-                data-link="https://www.giac.org/certifications/certified-forensic-analyst-gcfa/">
+                data-link="https://www.giac.org/certifications/certified-forensic-analyst-gcfa/"
+                data-roles="211, 531">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Certified Forensic Analyst (GCFA)</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Certified Forensic Analyst (GCFA)</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-giac px-3 py-0.5 text-sm font-medium">GIAC</span>
                         <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span>
+            </a>
+            
+            <!-- GIAC Certified Forensic Examiner (GCFE) -->
+            <a href="#" class="cert-trigger" data-vendor="giac" data-level="advanced" data-level-raw="Specialization"
+                data-name="GIAC Certified Forensic Examiner (GCFE)"
+                data-price="See Notes*"
+                data-description="Focuses specifically on Windows computer forensics. Validates skills in collecting and analyzing data from Windows systems."
+                data-notes="*Price is for the exam attempt only (~$999). Associated SANS training (~$8,000+) is highly recommended and separate. Often paired with GCFA."
+                data-vendor-color="modal-giac"
+                data-link="https://www.giac.org/certifications/certified-forensic-examiner-gcfe/"
+                data-roles="211">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Certified Forensic Examiner (GCFE)</span>
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-giac px-3 py-0.5 text-sm font-medium">GIAC</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span>
             </a>
             
             <!-- GIAC Reverse Engineering Malware (GREM) -->
@@ -748,15 +1063,16 @@
                 data-description="An expert-level cert for malware analysts. Validates skills in reverse-engineering malicious code (viruses, worms, trojans)."
                 data-notes="*Price is for the exam attempt only (~$999). Associated SANS training (~$8,000+) is highly recommended and separate."
                 data-vendor-color="modal-giac"
-                data-link="https://www.giac.org/certifications/reverse-engineering-malware-grem/">
+                data-link="https://www.giac.org/certifications/reverse-engineering-malware-grem/"
+                data-roles="211">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Reverse Engineering Malware (GREM)</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Reverse Engineering Malware (GREM)</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-giac px-3 py-0.5 text-sm font-medium">GIAC</span>
                         <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span>
             </a>
 
             <!-- Offensive Security OSCP -->
@@ -766,33 +1082,54 @@
                 data-description="A notoriously difficult, fully hands-on certification. Proves your ability to compromise a series of vulnerable machines in a 24-hour, proctored exam."
                 data-notes="*Price includes the PEN-200 course, 90 days of lab access, and one exam attempt."
                 data-vendor-color="modal-offsec"
-                data-link="https://www.offsec.com/courses/pen-200/">
+                data-link="https://www.offsec.com/courses/pen-200/"
+                data-roles="121, 541">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">Offensive Security OSCP</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">Offensive Security OSCP</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-offsec px-3 py-0.5 text-sm font-medium">OffSec</span>
                         <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-gray-200 flex-shrink-0">$1,749*</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-gray-200 flex-shrink-0">$1,749*</span>
             </a>
 
-            <!-- CompTIA SecurityX -->
+            <!-- GIAC Exploit Researcher and Advanced Penetration Tester (GXPN) -->
+            <a href="#" class="cert-trigger" data-vendor="giac" data-level="advanced" data-level-raw="Expert"
+                data-name="GIAC Exploit Researcher and Advanced Penetration Tester (GXPN)"
+                data-price="See Notes*"
+                data-description="An expert-level 'Red Team' cert focused on advanced penetration testing techniques, exploit development, and bypassing security controls."
+                data-notes="*Price is for the exam attempt only (~$999). Associated SANS training (~$8,000+) is highly recommended and separate. A step beyond GPEN/OSCP."
+                data-vendor-color="modal-giac"
+                data-link="https://www.giac.org/certifications/exploit-researcher-and-advanced-penetration-tester-gxpn/"
+                data-roles="121, 541">
+                <div class="flex-1 min-w-0 mr-4">
+                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Exploit Researcher... (GXPN)</span>
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <span class="inline-block rounded-full tag-giac px-3 py-0.5 text-sm font-medium">GIAC</span>
+                        <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
+                    </div>
+                </div>
+                <span class="text-lg font-bold text-red-400 flex-shrink-0">See Notes*</span>
+            </a>
+
+            <!-- CompTIA SecurityX (CASP+) -->
             <a href="#" class="cert-trigger" data-vendor="comptia" data-level="advanced" data-level-raw="Expert"
                 data-name="CompTIA SecurityX (CASP+)"
                 data-price="$494"
                 data-description="The expert-level certification for enterprise security architects. Validates advanced skills in security engineering, risk, and architecture."
                 data-notes="*Formerly known as CASP+."
                 data-vendor-color="modal-comptia"
-                data-link="https://www.comptia.org/certifications/comptia-advanced-security-practitioner">
+                data-link="https://www.comptia.org/certifications/comptia-advanced-security-practitioner"
+                data-roles="461, 531, 631, 651, 652, 722, 723, 801, 802">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">CompTIA SecurityX (CASP+)</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">CompTIA SecurityX (CASP+)</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-comptia px-3 py-0.5 text-sm font-medium">CompTIA</span>
                         <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-blue-400 flex-shrink-0">$494</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-blue-400 flex-shrink-0">$494</span>
             </a>
 
             <!-- (ISC)² CISSP -->
@@ -802,15 +1139,16 @@
                 data-description="The gold standard in cybersecurity. Validates deep technical and managerial competence to design and manage an organization's security program."
                 data-notes="*Requires 5 years of cumulative, paid work experience."
                 data-vendor-color="modal-isc2"
-                data-link="https://www.isc2.org/certifications/cissp">
+                data-link="https://www.isc2.org/certifications/cissp"
+                data-roles="651, 652, 722, 801, 802">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² CISSP</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² CISSP</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-isc2 px-3 py-0.5 text-sm font-medium">(ISC)²</span>
                         <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-green-400 flex-shrink-0">$749</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-green-400 flex-shrink-0">$749</span>
             </a>
             
             <!-- (ISC)² ISSAP (CISSP Concentration) -->
@@ -820,15 +1158,16 @@
                 data-description="CISSP Concentration for Architects. Validates skills in designing and managing security architecture. A 'post-CISSP' expert cert."
                 data-notes="*Requires an active CISSP certification in good standing."
                 data-vendor-color="modal-isc2"
-                data-link="https://www.isc2.org/certifications/issap">
+                data-link="https://www.isc2.org/certifications/issap"
+                data-roles="651">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² ISSAP (CISSP Concentration)</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² ISSAP (CISSP Concentration)</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-isc2 px-3 py-0.5 text-sm font-medium">(ISC)²</span>
                         <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-green-400 flex-shrink-0">$599</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-green-400 flex-shrink-0">$599</span>
             </a>
             
             <!-- (ISC)² ISSEP (CISSP Concentration) -->
@@ -838,15 +1177,16 @@
                 data-description="CISSP Concentration for Engineers. Validates skills in security engineering and integration. A 'post-CISSP' expert cert."
                 data-notes="*Requires an active CISSP certification in good standing."
                 data-vendor-color="modal-isc2"
-                data-link="https://www.isc2.org/certifications/issep">
+                data-link="https://www.isc2.org/certifications/issep"
+                data-roles="631, 651">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² ISSEP (CISSP Concentration)</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² ISSEP (CISSP Concentration)</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-isc2 px-3 py-0.5 text-sm font-medium">(ISC)²</span>
                         <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-green-400 flex-shrink-0">$599</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-green-400 flex-shrink-0">$599</span>
             </a>
             
             <!-- (ISC)² ISSMP (CISSP Concentration) -->
@@ -856,15 +1196,16 @@
                 data-description="CISSP Concentration for Managers. Validates skills in establishing and managing security programs. A 'post-CISSP' expert cert."
                 data-notes="*Requires an active CISSP certification in good standing."
                 data-vendor-color="modal-isc2"
-                data-link="https://www.isc2.org/certifications/issmp">
+                data-link="https://www.isc2.org/certifications/issmp"
+                data-roles="722, 801">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² ISSMP (CISSP Concentration)</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">(ISC)² ISSMP (CISSP Concentration)</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-isc2 px-3 py-0.5 text-sm font-medium">(ISC)²</span>
                         <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-green-400 flex-shrink-0">$599</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-green-400 flex-shrink-0">$599</span>
             </a>
             
             <!-- GIAC Security Expert (GSE) -->
@@ -874,28 +1215,29 @@
                 data-description="The pinnacle of GIAC certifications, demonstrating a mastery of a broad range of cybersecurity skills. Requires passing multiple exams and a hands-on lab."
                 data-notes="*Not a single exam. This is a cumulative, expert-level credential. Price varies significantly."
                 data-vendor-color="modal-giac"
-                data-link="https://www.giac.org/certifications/security-expert-gse/">
+                data-link="https://www.giac.org/certifications/security-expert-gse/"
+                data-roles="Advanced (Multiple roles)">
                 <div class="flex-1 min-w-0 mr-4">
-                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Security Expert (GSE)</span> <!-- Brighter text -->
+                    <span class="font-semibold text-lg text-gray-50 block truncate">GIAC Security Expert (GSE)</span>
                     <div class="mt-1 flex flex-wrap gap-2">
                         <span class="inline-block rounded-full tag-giac px-3 py-0.5 text-sm font-medium">GIAC</span>
                         <span class="inline-block rounded-full tag-advanced px-3 py-0.5 text-sm font-medium">Advanced</span>
                     </div>
                 </div>
-                <span class="text-lg font-bold text-red-400 flex-shrink-0">Varies*</span> <!-- Brighter price -->
+                <span class="text-lg font-bold text-red-400 flex-shrink-0">Varies*</span>
             </a>
 
 
         </div> <!-- /#cert-list -->
 
-        <!-- GIAC Info Box (MOVED HERE) -->
+        <!-- GIAC Info Box -->
         <div id="giac-info-box" class="info-box mt-12">
-            <h3 class="font-bold text-lg text-gray-200">A Note on GIAC & SANS Pricing</h3> <!-- Adjusted text color -->
-            <p class="mt-2 text-gray-400"> <!-- Adjusted text color -->
+            <h3 class="font-bold text-lg text-gray-200">A Note on GIAC & SANS Pricing</h3>
+            <p class="mt-2 text-gray-400">
                 The prices listed for GIAC certifications are for the <strong>exam attempt only</strong>. 
                 GIAC exams are open-book and designed to be taken after completing their associated SANS training courses, which cost several thousand dollars (e.g., $8,000+).
             </p>
-            <p class="mt-2 text-gray-400"> <!-- Adjusted text color -->
+            <p class="mt-2 text-gray-400">
                 It's very challenging, but possible, to "challenge" the exam without the course. SANS also offers a <a href="https://www.sans.org/work-study-program/" target="_blank" rel="noopener noreferrer" class="text-blue-400 underline hover:text-blue-300">Work Study Program</a> (assisting at courses for a deep discount) and <a href="https://www.sans.org/scholarship-academies/" target="_blank" rel="noopener noreferrer" class="text-blue-400 underline hover:text-blue-300">scholarship academies</a> that can significantly reduce or cover these costs.
             </p>
         </div>
@@ -908,7 +1250,7 @@
             <p class="mt-1 text-sm">This site is not affiliated with or endorsed by CompTIA, (ISC)², GIAC, ISACA, Offensive Security, Microsoft, AWS, Google, or Cisco.</p>
             <!-- UPDATED DISCLAIMER -->
             <p class="mt-2 text-sm">
-                <strong>Note on Exclusions:</strong> This list focuses on globally-recognized certifications. Certs from EC-Council are intentionally omitted as they have fallen out of favor with much of the infosec community. Additionally, smaller providers mentioned in the DoD 8140 are excluded as they are not well-recognized outside of the US.
+                <strong>Note on Exclusions:</strong> This list is not exhaustive but is aligned with common roles in the DoD 8140 Cyber Workforce Framework (DCWF). Certs from EC-Council are intentionally omitted as they have fallen out of favor with much of the infosec community.
             </p>
         </div>
     </footer>
@@ -917,13 +1259,13 @@
     <div id="modal-overlay" class="modal-overlay hidden">
         <div id="modal-content" class="modal-content">
             <!-- Close Button -->
-            <button id="modal-close-btn" class="modal-close-button"> <!-- Applied class -->
+            <button id="modal-close-btn" class="modal-close-button">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
             
             <!-- Header -->
             <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4">
-                <h2 id="modal-name" class="text-2xl font-bold pr-10">Cert Name</h2> <!-- Removed text-gray-900 -->
+                <h2 id="modal-name" class="text-2xl font-bold pr-10">Cert Name</h2>
                 <span id="modal-price" class="mt-2 sm:mt-0 sm:ml-4 flex-shrink-0 rounded-full px-4 py-1 text-lg font-bold"></span>
             </div>
             
@@ -934,14 +1276,19 @@
             </div>
 
             <!-- Description -->
-            <p id="modal-description" class="mt-4">Full description goes here.</p> <!-- Removed text-gray-700 -->
+            <p id="modal-description" class="mt-4">Full description goes here.</p>
             
             <!-- Notes -->
-            <p id="modal-notes" class="mt-3 text-sm font-medium"></p> <!-- Removed text-gray-600 -->
+            <p id="modal-notes" class="mt-3 text-sm font-medium"></p>
+            
+            <!-- NEW: DoD 8140 Roles -->
+            <div id="modal-roles-container" class="mt-4">
+                <!-- JS will populate this -->
+            </div>
 
             <!-- Official Link Button -->
             <div class="mt-6">
-                <a id="modal-link" href="#" target="_blank" rel="noopener noreferrer" class="official-link-btn"> <!-- Applied class -->
+                <a id="modal-link" href="#" target="_blank" rel="noopener noreferrer" class="official-link-btn">
                     View Official Page
                 </a>
             </div>
@@ -956,20 +1303,33 @@
 
         const filterVendorContainer = document.getElementById('filter-container-vendor');
         const filterLevelContainer = document.getElementById('filter-container-level');
+        const filterRoleSelect = document.getElementById('filter-role-select'); // NEW
         const certTriggers = document.querySelectorAll('.cert-trigger');
        
         let currentVendorFilter = 'all';
         let currentLevelFilter = 'all';
+        let currentRoleFilter = 'all'; // NEW
 
         function applyFilters() {
+            let hasActiveFilter = currentVendorFilter !== 'all' || currentLevelFilter !== 'all' || currentRoleFilter !== 'all';
+            
+            // NEW: Add 'active' class to dropdown if it's filtering
+            if (currentRoleFilter !== 'all') {
+                filterRoleSelect.classList.add('active');
+            } else {
+                filterRoleSelect.classList.remove('active');
+            }
+            
             certTriggers.forEach(card => {
                 const vendor = card.dataset.vendor;
                 const level = card.dataset.level;
+                const roles = card.dataset.roles ? card.dataset.roles.split(',').map(r => r.trim()) : []; // NEW
 
                 const vendorMatch = (currentVendorFilter === 'all' || vendor === currentVendorFilter);
                 const levelMatch = (currentLevelFilter === 'all' || level === currentLevelFilter);
+                const roleMatch = (currentRoleFilter === 'all' || roles.includes(currentRoleFilter)); // NEW
 
-                if (vendorMatch && levelMatch) {
+                if (vendorMatch && levelMatch && roleMatch) { // UPDATED
                     card.classList.remove('hidden');
                     card.style.display = 'flex'; 
                 } else {
@@ -981,13 +1341,17 @@
                     }, 300); 
                 }
             });
-            certTriggers.forEach(card => {
-                if (!card.classList.contains('hidden')) {
-                    card.style.display = 'flex';
-                }
-            });
+            // This timeout ensures that items being un-hidden are displayed correctly
+            setTimeout(() => {
+                certTriggers.forEach(card => {
+                    if (!card.classList.contains('hidden')) {
+                        card.style.display = 'flex';
+                    }
+                });
+            }, 0);
         }
 
+        // Vendor Filter Event
         filterVendorContainer.addEventListener('click', (e) => {
             if (!e.target.classList.contains('filter-btn')) return;
             
@@ -997,12 +1361,20 @@
             applyFilters();
         });
 
+        // Level Filter Event
         filterLevelContainer.addEventListener('click', (e) => {
             if (!e.target.classList.contains('filter-btn')) return;
             
             filterLevelContainer.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             e.target.classList.add('active');
+PLAYA:
             currentLevelFilter = e.target.dataset.filter;
+            applyFilters();
+        });
+
+        // NEW: Role Filter Event
+        filterRoleSelect.addEventListener('change', (e) => {
+            currentRoleFilter = e.target.value;
             applyFilters();
         });
 
@@ -1018,6 +1390,7 @@
         const modalDescription = document.getElementById('modal-description');
         const modalNotes = document.getElementById('modal-notes');
         const modalLink = document.getElementById('modal-link'); 
+        const modalRolesContainer = document.getElementById('modal-roles-container'); // NEW
 
         certList.addEventListener('click', (e) => {
             const trigger = e.target.closest('.cert-trigger');
@@ -1033,15 +1406,19 @@
             modalLevelTag.textContent = data.levelRaw; 
             modalLink.href = data.link; 
 
+            // Clear previous dynamic content
             modalContent.className = 'modal-content'; 
             modalPrice.className = 'mt-2 sm:mt-0 sm:ml-4 flex-shrink-0 rounded-full px-4 py-1 text-lg font-bold'; 
             modalVendorTag.className = 'inline-block rounded-full px-3 py-1 text-sm font-medium'; 
-            
             modalLevelTag.className = 'inline-block rounded-full px-3 py-1 text-sm font-medium'; 
+            modalRolesContainer.innerHTML = ''; // NEW
+
+            // Set Level Tag
             if (data.level === 'basic') { modalLevelTag.classList.add('tag-basic'); } 
             else if (data.level === 'intermediate') { modalLevelTag.classList.add('tag-intermediate'); } 
             else if (data.level === 'advanced') { modalLevelTag.classList.add('tag-advanced'); }
 
+            // Set Vendor Tag & Colors
             if (data.vendor === 'comptia') {
                 modalContent.classList.add('modal-comptia');
                 modalPrice.classList.add('text-blue-200', 'bg-blue-900'); 
@@ -1072,6 +1449,22 @@
                 modalPrice.classList.add('text-purple-200', 'bg-purple-900'); 
                 modalVendorTag.classList.add('tag-platform');
                 modalVendorTag.textContent = 'Cloud & Platform';
+            }
+            
+            // NEW: Populate DoD 8140 Roles
+            if (data.roles) {
+                modalRolesContainer.innerHTML = '<h3 class="text-lg font-semibold mt-4 mb-2 text-gray-50">Common DoD 8140 Work Roles:</h3>';
+                const tagsWrapper = document.createElement('div');
+                tagsWrapper.className = 'flex flex-wrap gap-2';
+                
+                const roles = data.roles.split(',').map(r => r.trim());
+                roles.forEach(role => {
+                    const tag = document.createElement('span');
+                    tag.textContent = role;
+                    tag.className = 'inline-block rounded-full tag-role px-3 py-1 text-xs font-medium';
+                    tagsWrapper.appendChild(tag);
+                });
+                modalRolesContainer.appendChild(tagsWrapper);
             }
             
             modalOverlay.classList.remove('hidden');
@@ -1146,3 +1539,4 @@
 
 </body>
 </html>
+

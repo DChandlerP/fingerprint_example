@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- 
+      This Content Security Policy is a bit more permissive to allow necessary external resources.
+      - 'unsafe-inline' is used for scripts and styles, which is common but less secure than using nonces or hashes.
+      - connect-src is limited to the specific APIs we need.
+    -->
     <meta http-equiv="Content-Security-Policy" content="
     default-src 'self'; 
     script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; 
@@ -35,6 +40,18 @@
        /* Ensure dropdown content is above other elements */
       .group .absolute {
         z-index: 50;
+      }
+      /* Custom style for error messages */
+      .error-box {
+        background-color: theme('colors.gray.900');
+        border: 1px solid theme('colors.red.800');
+        padding: theme('spacing.8');
+        border-radius: theme('borderRadius.lg');
+        text-align: center;
+      }
+      .error-text {
+        color: theme('colors.red.400');
+        font-size: theme('fontSize.lg');
       }
     </style>
 </head>
@@ -148,6 +165,7 @@
             </div>
         </section>
 
+        <!-- Input Section -->
         <section class="mb-8 flex flex-col sm:flex-row gap-4 max-w-5xl mx-auto">
             <input type="text" id="vulnId" 
                    class="flex-grow bg-gray-800 text-white border-2 border-gray-700 rounded-lg px-4 py-3 text-lg focus:border-blue-400 focus:ring-0 outline-none transition" 
@@ -159,6 +177,7 @@
             </button>
         </section>
 
+        <!-- Results container -->
         <div id="results-container" class="max-w-5xl mx-auto"></div>
         
     </main>
@@ -170,6 +189,14 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- 0. NEW: Cache and Validation Regex ---
+            // Memoization cache for storing results (max 30 items)
+            const memoCache = new Map();
+            // Regex to validate CVE format (CVE-YYYY-NNNN...N)
+            const cveRegex = /^CVE-\d{4}-\d{4,}$/i;
+            // Regex to detect potentially malicious characters
+            const maliciousRegex = /[<>]/;
+
             // --- 1. Page-Specific EPSS/CVSS Logic ---
             const metricTooltips = {
                 attackVector: 'This metric reflects the context by which vulnerability exploitation is possible. The more remote an attacker can be to exploit the vulnerability, the higher the score.',
@@ -185,14 +212,45 @@
             };
             
             async function fetchVulnComparison() {
-                const cveId = document.getElementById('vulnId').value.trim();
+                let cveIdInput = document.getElementById('vulnId').value.trim();
                 const resultsContainer = document.getElementById('results-container');
                 
-                if (!cveId) {
+                // --- NEW: Malicious Input Check ---
+                if (maliciousRegex.test(cveIdInput)) {
+                    resultsContainer.innerHTML = `<div class="error-box"><p class="error-text">Nice try! But this input only speaks CVE. 😉</p></div>`;
+                    return;
+                }
+
+                // --- NEW: Improved Validation Check ---
+                if (!cveIdInput) {
                     resultsContainer.innerHTML = `<p class="text-center text-red-400">Please enter a CVE ID.</p>`;
                     return;
                 }
 
+                // Normalize to uppercase for consistent caching and API calls
+                const cveId = cveIdInput.toUpperCase();
+
+                if (!cveRegex.test(cveId)) {
+                    let hint = 'Please enter a valid CVE ID (e.g., CVE-2024-3094).';
+                    if (cveId.toLowerCase().startsWith('cve') && cveId.includes('-')) {
+                        hint = 'Hint: The format is CVE-YYYY-NNNN, with at least 4 digits after the year.';
+                    } else if (cveId.includes('-') && !cveId.startsWith('CVE-')) {
+                        hint = "Hint: Make sure to include the 'CVE-' prefix.";
+                    } else if (cveId.includes(' ')) {
+                        hint = 'Hint: CVE IDs do not contain spaces. Use hyphens (e.g., CVE-YYYY-NNNN).';
+                    }
+                    
+                    resultsContainer.innerHTML = `<p class="text-center text-red-400">${hint}</p>`;
+                    return;
+                }
+
+                // --- NEW: Memoization Check ---
+                if (memoCache.has(cveId)) {
+                    resultsContainer.innerHTML = memoCache.get(cveId);
+                    return; // Found in cache, we're done!
+                }
+
+                // --- Original logic continues if not in cache ---
                 resultsContainer.innerHTML = `<div class="text-center p-12 bg-gray-900 rounded-lg border border-gray-800"><p class="text-2xl animate-pulse">Fetching data for ${cveId}...</p></div>`;
                 const nvdUrl = `https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=${cveId}`;
                 const epssUrl = `https://api.first.org/data/v1/epss?cve=${cveId}`;
@@ -229,10 +287,22 @@
                     if (epssResult.status === 'fulfilled' && epssResult.value.data?.length > 0) {
                         epssData = epssResult.value.data[0];
                     }
+                    
+                    // Render the results
                     renderResults(cveId, cveDetails, cvssData, epssData);
+
+                    // --- NEW: Add to cache ---
+                    memoCache.set(cveId, resultsContainer.innerHTML);
+                    // Enforce cache size limit
+                    if (memoCache.size > 30) {
+                        // delete the first (oldest) key
+                        memoCache.delete(memoCache.keys().next().value);
+                    }
+                    // --- End cache logic ---
+
                 } catch (error) {
                     console.error('Fetch error:', error);
-                    resultsContainer.innerHTML = `<p class="text-center text-red-400">An unexpected error occurred.</p>`;
+                    resultsContainer.innerHTML = `<div class="error-box"><p class="error-text">An unexpected error occurred while fetching data. Please try again.</p></div>`;
                 }
             }
 
@@ -344,7 +414,7 @@
                         if (val === 'HIGH') return 'bg-green-800/60 border border-green-700 text-green-300';
                         break;
                     case 'User Interaction':
-                        if (val === 'NONE') return 'bg-red-900/50 border border-red-700 text-red-300';
+                        if (val === 'NONE') return 'bg-red-9G00/50 border border-red-700 text-red-300';
                         if (val === 'REQUIRED') return 'bg-green-800/60 border border-green-700 text-green-300';
                         break;
                     case 'Scope':
