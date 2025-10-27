@@ -22,7 +22,6 @@
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -44,32 +43,21 @@
   </style>
 </head>
 <body class="bg-gray-950 text-white min-h-screen flex flex-col">
-  <!-- 
-    NAV BAR FOR "TOOLS & DEMOS" PAGES
-    - "Home" is inactive.
-    - "Guides & Case Studies" is inactive.
-    - "Tools & Demos" is ACTIVE.
-  -->
   <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
       <div class="w-full flex items-center justify-center px-6 py-3">
-         <!-- Main navigation container -->
          <div class="flex flex-wrap justify-center space-x-4">
           
-          <!-- Home Link (Inactive) -->
           <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
             <span id="nav-home" class="mr-1"></span>Home
           </a>
 
-          <!-- Guides & Case Studies Dropdown (Inactive) -->
           <div class="relative group">
-            <!-- Dropdown Trigger -->
             <button class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
               <span id="nav-guides-trigger" class="mr-1"></span>
               Guides & Case Studies
               <span id="nav-guides-chevron" class="ml-1"></span>
             </button>
             
-            <!-- Dropdown Menu -->
             <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
               <div class="py-1" role="menu" aria-orientation="vertical">
                 <a href="cloud.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
@@ -91,16 +79,13 @@
             </div>
           </div>
 
-          <!-- Tools & Demos Dropdown (ACTIVE) -->
           <div class="relative group">
-            <!-- Dropdown Trigger -->
-             <button class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition">
+            <button class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition">
               <span id="nav-tools-trigger" class="mr-1"></span>
               Tools & Demos
               <span id="nav-tools-chevron" class="ml-1"></span>
             </button>
             
-            <!-- Dropdown Menu -->
             <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
               <div class="py-1" role="menu" aria-orientation="vertical">
                 <a href="checklist.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
@@ -135,7 +120,6 @@
       </div>
   </nav>
 
-  <!-- Header -->
   <header class="bg-gradient-to-r from-blue-900 to-gray-900 py-10 px-4 text-center shadow-lg">
     <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">Live Threat Intelligence Dashboard</h1>
     <p class="max-w-2xl mx-auto text-gray-200 text-lg">
@@ -143,10 +127,8 @@
     </p>
   </header>
 
-  <!-- Main Content -->
   <main class="flex-1 px-4 py-10 max-w-7xl mx-auto w-full space-y-8">
     
-    <!-- Action Section -->
     <section class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800 flex flex-col items-center">
         <div class="flex flex-col md:flex-row items-center justify-center gap-4 w-full">
             <div class="flex items-center gap-2">
@@ -172,7 +154,6 @@
        <p class="text-xs text-gray-500 mt-3">Fetches all vulnerabilities in the selected date range, up to a maximum of 5,000.</p>
     </section>
 
-    <!-- Key Metrics -->
     <section class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
       <div class="bg-gray-900 p-5 rounded-xl shadow-lg border border-gray-800">
         <h3 class="text-blue-400 font-semibold text-lg">Vulnerabilities with CVSS Scores</h3>
@@ -188,7 +169,6 @@
       </div>
     </section>
 
-    <!-- Charts Grid -->
     <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
         <h3 class="text-xl font-semibold text-blue-400 mb-1">Vulnerability Severity Over Time</h3>
@@ -206,7 +186,6 @@
       </div>
     </section>
 
-    <!-- New Charts Grid -->
     <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
         <div class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
             <h3 class="text-xl font-semibold text-blue-400 mb-1">Attack Vector Distribution</h3>
@@ -230,9 +209,13 @@
             </div>
         </div>
         <div class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800 flex flex-col">
-            <h3 class="text-xl font-semibold text-blue-400 mb-1">Common Terms in Descriptions</h3>
-            <p class="text-sm text-gray-400 mb-4">Frequently used words in CVE descriptions.</p>
-            <div id="wordCloudContainer" class="chart-container flex-1 w-full h-full"></div>
+            <h3 class="text-xl font-semibold text-blue-400 mb-1">Top 10 Highest Severity Findings</h3>
+            <p class="text-sm text-gray-400 mb-4">Highest CVSS scores, with most recent shown first in case of ties.</p>
+            <div class="flex-1 overflow-y-auto" style="max-height: 320px;">
+                <ul id="top-findings-list" class="space-y-2 pr-2">
+                    <li class="text-gray-500">No findings to display.</li>
+                </ul>
+            </div>
         </div>
     </section>
     
@@ -257,6 +240,43 @@
       let topVendorsChart = null;
       let cvssMetricsRadarChart = null;
       let lastApiData = null; 
+
+      const commonCweMap = {
+          'CWE-20': 'Improper Input Validation',
+          'CWE-22': 'Path Traversal',
+          'CWE-74': 'Improper Neutralization',
+          'CWE-78': 'OS Command Injection',
+          'CWE-79': 'Cross-site Scripting (XSS)',
+          'CWE-89': 'SQL Injection',
+          'CWE-94': 'Code Injection',
+          'CWE-119': 'Buffer Overflow',
+          'CWE-125': 'Out-of-bounds Read',
+          'CWE-200': 'Information Exposure',
+          'CWE-256': 'Plaintext Password',
+          'CWE-269': 'Improper Privilege',
+          'CWE-284': 'Improper Access Control',
+          'CWE-306': 'Missing Authentication',
+          'CWE-352': 'CSRF',
+          'CWE-416': 'Use After Free',
+          'CWE-434': 'Unrestricted Upload',
+          'CWE-502': 'Deserialization',
+          'CWE-787': 'Out-of-bounds Write',
+          'CWE-862': 'Missing Authorization'
+      };
+
+      const getWeaknessName = (weaknessValue) => {
+          if (weaknessValue === 'N/A') return 'N/A';
+          // Check if it's in our map
+          if (commonCweMap[weaknessValue]) {
+              return commonCweMap[weaknessValue];
+          }
+          // If it's not an ID (e.g., it's already a full name), return it
+          if (!weaknessValue.startsWith('CWE-')) {
+              return weaknessValue;
+          }
+          // It's a CWE-ID not in our map, just return the ID
+          return weaknessValue;
+      };
 
       const setDefaultDates = () => {
         const endDate = new Date();
@@ -353,6 +373,7 @@
                 .map(item => {
                     const cve = item.cve;
                     const cvssV31 = cve.metrics.cvssMetricV31?.[0];
+                    // The 'type' here is the raw value from the API (e.g., "CWE-79" or "Improper Neutralization...")
                     const weakness = cve.weaknesses?.[0]?.description.find(d => d.lang === 'en')?.value || 'N/A';
                     return { id: cve.id, date: cve.published, cvss: cvssV31 ? cvssV31.cvssData.baseScore : null, type: weakness, original: item };
                 })
@@ -380,15 +401,19 @@
           // --- 1. DATA PROCESSING ---
           const totalVulns = transformedData.length;
           const avgCvss = totalVulns > 0 ? (transformedData.reduce((acc, v) => acc + v.cvss, 0) / totalVulns).toFixed(1) : 'N/A';
+          
+          // --- UPDATED: Use helper to get clean names for typeCounts ---
           const typeCounts = transformedData.reduce((acc, v) => {
-              if (v.type !== 'N/A') acc[v.type] = (acc[v.type] || 0) + 1;
+              const weaknessName = getWeaknessName(v.type); // Use the helper here
+              if (weaknessName !== 'N/A') acc[weaknessName] = (acc[weaknessName] || 0) + 1;
               return acc;
           }, {});
+          
           const topWeakness = Object.keys(typeCounts).length > 0 ? Object.keys(typeCounts).reduce((a, b) => typeCounts[a] > typeCounts[b] ? a : b) : 'N/A';
           
           document.getElementById('total-vulns').textContent = totalVulns;
           document.getElementById('avg-cvss').textContent = avgCvss;
-          document.getElementById('top-weakness').textContent = topWeakness;
+          document.getElementById('top-weakness').textContent = topWeakness; // This now uses the clean name
 
           const scatterData = {
               critical: transformedData.filter(v => v.cvss >= 9.0),
@@ -396,6 +421,8 @@
               medium: transformedData.filter(v => v.cvss >= 4.0 && v.cvss < 7.0),
               low: transformedData.filter(v => v.cvss < 4.0),
           };
+          
+          // This now uses keys from typeCounts, which are the clean names
           const sortedTypes = Object.entries(typeCounts).sort(([,a],[,b]) => b-a).slice(0, 5);
           
           const attackVectorCounts = vulnerabilities.reduce((acc, { cve }) => {
@@ -436,15 +463,20 @@
               return acc;
           }, {});
           
-          const stopWords = new Set(['a','an','the','and','or','in','of','to','for','on','with','is','was','were','it','that','this','from','by','as','at','which','what','who','when','where','why','how','an','the','and','or','but','if','so','then','thus','http','https']);
-          const allDescriptions = vulnerabilities.map(({ cve }) => cve.descriptions.find(d => d.lang === 'en')?.value || '').join(' ');
-          const wordCounts = allDescriptions.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").split(/\s+/).reduce((acc, word) => {
-              if (word && !stopWords.has(word) && isNaN(word)) { acc[word] = (acc[word] || 0) + 1; }
-              return acc;
-          }, {});
-          const wordCloudData = Object.entries(wordCounts).sort(([, a], [, b]) => b - a).slice(0, 100).map(([text, weight]) => [text, Math.log2(weight + 1) * 5]);
+          // --- NEW: Process data for Top 10 Findings card ---
+          const topFindings = transformedData
+              .sort((a, b) => {
+                  if (a.cvss !== b.cvss) {
+                      return b.cvss - a.cvss; // Primary sort: CVSS score descending
+                  }
+                  return new Date(b.date) - new Date(a.date); // Secondary sort: Date descending
+              })
+              .slice(0, 10);
+          
+          // --- REMOVED: Word cloud data processing ---
 
-          renderCharts({ scatterData, sortedTypes, attackVectorData, attackVectorCounts, topVendors, radarMetrics, wordCloudData });
+          // Pass new `topFindings` data to render function
+          renderCharts({ scatterData, sortedTypes, attackVectorData, attackVectorCounts, topVendors, radarMetrics, topFindings });
       };
 
       const renderCharts = (chartData) => {
@@ -473,6 +505,7 @@
           const ctxType = document.getElementById('vulnsByTypeChart').getContext('2d');
           vulnsByTypeChart = new Chart(ctxType, {
               type: 'doughnut',
+              // Labels are now the clean names from chartData.sortedTypes
               data: { labels: chartData.sortedTypes.map(t => t[0]), datasets: [{ data: chartData.sortedTypes.map(t => t[1]), backgroundColor: ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6'], borderColor: '#111827' }]},
               options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { padding: 15 } } } }
           });
@@ -517,15 +550,33 @@
               options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { r: { pointLabels: { font: { size: 10 } }, ticks: { display: false } } } }
           });
 
-          WordCloud(document.getElementById('wordCloudContainer'), { 
-              list: chartData.wordCloudData,
-              gridSize: Math.round(16 * document.getElementById('wordCloudContainer').offsetWidth / 1024),
-              weightFactor: 1,
-              fontFamily: 'Inter, sans-serif',
-              color: 'random-light',
-              backgroundColor: '#111827',
-              rotateRatio: 0.5,
-          });
+          // --- NEW: Render Top 10 Findings List ---
+          const findingsListEl = document.getElementById('top-findings-list');
+          findingsListEl.innerHTML = ''; // Clear previous/default content
+          if (chartData.topFindings.length > 0) {
+              chartData.topFindings.forEach(cve => {
+                  const score = cve.cvss.toFixed(1);
+                  let scoreColor = 'text-green-400';
+                  if (score >= 9.0) scoreColor = 'text-red-500';
+                  else if (score >= 7.0) scoreColor = 'text-orange-500';
+                  else if (score >= 4.0) scoreColor = 'text-yellow-400';
+
+                  const itemHtml = `
+                    <li class="flex justify-between items-center py-2 border-b border-gray-800 last:border-b-0">
+                      <div class="flex-1 min-w-0">
+                        <a href="https://nvd.nist.gov/vuln/detail/${cve.id}" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-blue-300 hover:underline truncate" title="${cve.id}">
+                          ${cve.id}
+                        </a>
+                        <p class="text-xs text-gray-400">${new Date(cve.date).toLocaleDateString()}</p>
+                      </div>
+                      <span class="text-lg font-bold ml-4 ${scoreColor}">${score}</span>
+                    </li>
+                  `;
+                  findingsListEl.innerHTML += itemHtml;
+              });
+          } else {
+              findingsListEl.innerHTML = '<li class="text-gray-500">No findings to display.</li>';
+          }
       };
       
       // Event Listeners (Page Specific)
