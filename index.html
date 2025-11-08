@@ -1,30 +1,31 @@
 <!DOCTYPE html>
 <html lang="en" class="bg-gray-950 text-white">
 <head>
-  <!-- ... (Existing meta tags and head content) ... -->
+
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self'; 
-    script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; 
-    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
-    font-src 'self' https://fonts.gstatic.com; 
-    connect-src 'self' https://services.nvd.nist.gov https://api.first.org; 
+    script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://static.cloudflareinsights.com; 
+    style-src 'self' 'unsafe-inline'; 
+    font-src 'self'; 
+    connect-src 'self' https://services.nvd.nist.gov https://api.first.org https://unpkg.com; 
     object-src 'none'; 
-    frame-ancestors 'self'; 
     base-uri 'self';
-">
-<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-<meta http-equiv="X-Content-Type-Options" content="nosniff">
-<meta name="referrer-policy" content="strict-origin-when-cross-origin">
-<meta http-equiv="Permissions-Policy" content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">
+  ">
+  <meta http-equiv="Strict-Transport-Security" content="max-age=63072000; includeSubDomains; preload">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer-policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>D. Chandler Prince | Cybersecurity Leader & Product Strategist</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  
   <style>
-    html { font-family: 'Inter', sans-serif; }
+    /* The 'Inter' font reference is removed. 
+      The browser will now use its default 'sans-serif' font. 
+    */
+    html { font-family: sans-serif; }
     ::selection { background: #2563eb; color: #fff; }
     /* Ensure dropdown content is above other elements */
     .group .absolute {
@@ -74,6 +75,9 @@
                 <a href="threatmodel.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <span id="nav-threat" class="mr-2"></span>Threat Model
                 </a>
+                <a href="fair.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-fair" class="mr-2"></span>FAIR Risk Scoring
+                  </a>
               </div>
             </div>
           </div>
@@ -479,8 +483,7 @@
         'nav-roadmap': lucide.Map,
         'nav-shamir': lucide.Share2,
         'nav-regulation': lucide.Gavel,
-        'nav-linkedin': lucide.Linkedin, 
-        'nav-github': lucide.Github,
+        
         
         // --- Certification Icons ---
         'isc2-icon': lucide.Award,
@@ -570,4 +573,5 @@
   </script>
 </body>
 </html>
+
 
