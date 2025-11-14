@@ -16,15 +16,13 @@
 <meta name="referrer-policy" content="strict-origin-when-cross-origin">
 <meta http-equiv="Permissions-Policy" content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale-1">
   <title>Investigating SAST Findings | D. Chandler Prince</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   
   <style>
-    html { font-family: 'Inter', sans-serif; }
+    /* html { font-family: 'Inter', sans-serif; } */
     ::selection { background: #2563eb; color: #fff; }
     
     /* Styles for code blocks and copy button */
@@ -90,12 +88,6 @@
   </style>
 </head>
 <body class="bg-gray-950 text-white min-h-screen flex flex-col">
-  <!-- 
-    NAV BAR FOR "GUIDES & CASE STUDIES" PAGES
-    - "Home" is inactive.
-    - "Guides & Case Studies" is ACTIVE.
-    - "Tools & Demos" is inactive.
-  -->
   <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
       <div class="w-full flex items-center justify-center px-6 py-3">
          <!-- Main navigation container -->
@@ -109,7 +101,7 @@
           <!-- Guides & Case Studies Dropdown (ACTIVE) -->
           <div class="relative group">
             <!-- Dropdown Trigger -->
-            <button class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition">
+            <button class="flex items-center px-3 py-1 rounded text-white font-semibold transition">
               <span id="nav-guides-trigger" class="mr-1"></span>
               Guides & Case Studies
               <span id="nav-guides-chevron" class="ml-1"></span>
@@ -139,6 +131,10 @@
                 <a href="fair.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                     <span id="nav-fair" class="mr-2"></span>FAIR Risk Scoring
                   </a>
+                  <a href="sdlc.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                      <span id="nav-sdlc" class="mr-2"></span>Secure SDLC
+                  </a>
+              </div>
             </div>
           </div>
 
@@ -167,7 +163,7 @@
                   <span id="nav-fp" class="mr-2"></span>Fingerprinting
                 </a>
                 <a href="jwt.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-jwt" classs="mr-2"></span>JWT Decoder
+                  <span id="nav-jwt" class="mr-2"></span>JWT Decoder
                 </a>
                 <a href="modcat.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <span id="nav-modcat" class="mr-2"></span>PRS MODCAT
@@ -178,6 +174,9 @@
                 <a href="dashboard.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <span id="nav-dashboard" class="mr-2"></span>Threat Intel
                 </a>
+                <a href="string.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <span id="nav-stringart" class="mr-2"></span>String Art
+                  </a>
               </div>
             </div>
           </div>
@@ -255,7 +254,7 @@
                   <span class="text-yellow-400">Service Mesh / Reverse Proxy</span> &rarr; 
                   <span class="text-red-400">Application (HTTP)</span>
               </p>
-              <p class="text-sm mt-2 text-gray-400">TLS is terminated at the Load Balancer or Gateway. All internal traffic from that point on is within a trusted network.</p>
+              <p class="text-sm mt-2 text-gray-400">TLS is terminated at the Load Balancer or Gateway. All internal traffic from that point on is in a trusted network.</p>
           </div>
         </div>
 
@@ -481,6 +480,10 @@
             'nav-modcat': lucide.Guitar,
             'nav-shamir': lucide.Share2,
             'nav-dashboard': lucide.LayoutDashboard,
+            'nav-regulation': lucide.Gavel, // Added from your new nav snippet
+            'nav-fair': lucide.Banknote, // Added from your new nav snippet
+            'nav-sdlc': lucide.IterationCcw, // Added from your new nav snippet
+            'nav-stringart': lucide.GalleryVertical, // Added from your new nav snippet
             
             // SAST Page-specific icons
             'icon-sql': lucide.Database,
@@ -489,9 +492,7 @@
             'icon-calc': lucide.Calculator,
             'icon-path': lucide.FileCode,
             
-            // Kept just in case
-            'nav-linkedin': lucide.Linkedin, 
-            'nav-github': lucide.Github
+
           },
           attrs: { color: "#38bdf8", size: 32, strokeWidth: 2 }
         });
