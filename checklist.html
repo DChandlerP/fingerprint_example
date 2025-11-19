@@ -4,8 +4,8 @@
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self'; 
     script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; 
-    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
-    font-src 'self' https://fonts.gstatic.com; 
+    style-src 'self' 'unsafe-inline'; 
+    font-src 'self'; 
     connect-src 'self' https://services.nvd.nist.gov https://api.first.org; 
     object-src 'none'; 
     frame-ancestors 'self'; 
@@ -20,10 +20,8 @@
   <title>Security Checklist Generator | D. Chandler Prince</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    html { font-family: 'Inter', sans-serif; }
+    html { font-family: sans-serif; }
     ::selection { background: #2563eb; color: #fff; }
     .checklist-item {
       display: flex;
