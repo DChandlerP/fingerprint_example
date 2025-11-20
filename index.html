@@ -33,7 +33,7 @@
     }
   </style>
 </head>
-<body class="bg-gray-950 text-white min-h-screen flex flex-col">
+<body class="bg-gray-950 text-white min-h-screen flex flex-col" hidden>
   <!-- Navigation Bar -->
  <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
       <div class="w-full flex items-center justify-center px-6 py-3">
@@ -576,8 +576,11 @@
       });
     });
 
+    // Unhide the body after the initial script runs to prevent FOUC
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.removeAttribute('hidden');
+    });
+
   </script>
 </body>
 </html>
-
-
