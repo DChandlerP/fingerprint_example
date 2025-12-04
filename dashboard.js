@@ -1,5 +1,6 @@
 import Chart from 'chart.js/auto';
 import 'chartjs-adapter-date-fns';
+import { createIcons, RefreshCw, Download } from 'lucide';
 
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. Page-Specific Dashboard Logic ---
@@ -364,70 +365,17 @@ document.addEventListener('DOMContentLoaded', () => {
     setDefaultDates();
     fetchAndDisplayData();
 
-    // --- 2. Render ALL Icons (Nav + Page) ---
-    if (window.lucide) {
-        lucide.createIcons({
-            icons: {
-                // All Nav Icons
-                'nav-home': lucide.Home,
-                'nav-guides-trigger': lucide.BookOpen,
-                'nav-tools-trigger': lucide.Briefcase,
-                'nav-guides-chevron': lucide.ChevronDown,
-                'nav-tools-chevron': lucide.ChevronDown,
-                'nav-cloud': lucide.Cloud,
-                'nav-roadmap': lucide.Map,
-                'nav-phishing': lucide.Fish,
-                'nav-sast': lucide.FileSearch,
-                'nav-threat': lucide.ShieldAlert,
-                'nav-checklist': lucide.ListChecks,
-                'nav-epss': lucide.Activity,
-                'nav-encryption': lucide.Lock,
-                'nav-fp': lucide.Fingerprint,
-                'nav-jwt': lucide.KeyRound,
-                'nav-modcat': lucide.Guitar,
-                'nav-shamir': lucide.Share2,
-                'nav-dashboard': lucide.LayoutDashboard, // <-- Included for nav
-
-                // Page-specific icons
-                'refresh-icon': lucide.RefreshCw,
-                'download-icon': lucide.Download
-            },
-            attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
-        });
-
-        // Override color for specific button icons
-        document.querySelector('#refresh-icon > svg')?.setAttribute('color', 'white');
-        document.querySelector('#download-icon > svg')?.setAttribute('color', 'white');
-    }
-
-    // --- 3. Add Nav Dropdown Logic ---
-    const dropdownButtons = document.querySelectorAll('.group > button');
-    dropdownButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            const dropdownMenu = e.currentTarget.nextElementSibling;
-            // Close all other open dropdowns
-            document.querySelectorAll('.group .absolute').forEach(menu => {
-                if (menu !== dropdownMenu) {
-                    menu.classList.add('opacity-0', 'invisible');
-                    menu.classList.remove('opacity-100', 'visible');
-                }
-            });
-            // Toggle the current dropdown
-            dropdownMenu.classList.toggle('opacity-0');
-            dropdownMenu.classList.toggle('invisible');
-            dropdownMenu.classList.toggle('opacity-100');
-            dropdownMenu.classList.toggle('visible');
-        });
+    // --- 2. Render Page Specific Icons ---
+    createIcons({
+        icons: {
+            'refresh-icon': RefreshCw,
+            'download-icon': Download
+        },
+        attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
     });
 
-    // Close dropdowns if clicking outside
-    window.addEventListener('click', (e) => {
-        if (!e.target.closest('.group')) {
-            document.querySelectorAll('.group .absolute').forEach(menu => {
-                menu.classList.add('opacity-0', 'invisible');
-                menu.classList.remove('opacity-100', 'visible');
-            });
-        }
-    });
+    // Override color for specific button icons
+    document.querySelector('#refresh-icon > svg')?.setAttribute('color', 'white');
+    document.querySelector('#download-icon > svg')?.setAttribute('color', 'white');
 
 });

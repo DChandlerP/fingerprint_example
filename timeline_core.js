@@ -1,4 +1,4 @@
-import { createIcons, icons, Home, BookOpen, Briefcase, ChevronDown, Fish, Cloud, FileSearch, ShieldAlert, ListChecks, KeyRound, Lock, Fingerprint, Activity, LayoutDashboard, Guitar, Map, Share2, Gavel, Flag, Globe, Banknote, IterationCcw, GalleryVertical } from 'lucide';
+import { createIcons, Home, BookOpen, Briefcase, ChevronDown, Fish, Cloud, FileSearch, ShieldAlert, ListChecks, KeyRound, Lock, Fingerprint, Activity, LayoutDashboard, Guitar, Map, Share2, Gavel, Flag, Globe, Banknote, IterationCcw, GalleryVertical, ArrowRight } from 'lucide';
 
 export function initTimeline(timelineData) {
     // --- DOM Elements ---
@@ -13,6 +13,11 @@ export function initTimeline(timelineData) {
     const modalImpact = document.getElementById('modalImpact');
     const modalIcon = document.getElementById('modalIcon');
     const modalType = document.getElementById('modalType');
+
+    // Define icons used in the timeline
+    const timelineIcons = {
+        Home, BookOpen, Briefcase, ChevronDown, Fish, Cloud, FileSearch, ShieldAlert, ListChecks, KeyRound, Lock, Fingerprint, Activity, LayoutDashboard, Guitar, Map, Share2, Gavel, Flag, Globe, Banknote, IterationCcw, GalleryVertical, ArrowRight
+    };
 
     // --- Logic ---
     function renderTimeline(filter = 'all') {
@@ -61,7 +66,7 @@ export function initTimeline(timelineData) {
             `;
             timelineContainer.appendChild(el);
         });
-        createIcons({ icons: icons });
+        createIcons({ icons: timelineIcons });
         observeItems();
 
         // Add event listeners to new buttons
@@ -113,7 +118,7 @@ export function initTimeline(timelineData) {
             modalIcon.className = "w-5 h-5 text-indigo-400";
         }
         modal.classList.remove('hidden');
-        createIcons({ icons: icons });
+        createIcons({ icons: timelineIcons });
         setTimeout(() => {
             modalBackdrop.classList.remove('opacity-0');
             modalPanel.classList.remove('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
@@ -139,35 +144,4 @@ export function initTimeline(timelineData) {
     }
 
     renderTimeline('all');
-
-    // --- Nav Icons & Dropdown Logic ---
-    createIcons({
-        icons: {
-            'nav-home': Home, 'nav-guides-trigger': BookOpen, 'nav-tools-trigger': Briefcase,
-            'nav-guides-chevron': ChevronDown, 'nav-tools-chevron': ChevronDown, 'nav-phishing': Fish,
-            'nav-cloud': Cloud, 'nav-sast': FileSearch, 'nav-threat': ShieldAlert,
-            'nav-checklist': ListChecks, 'nav-jwt': KeyRound, 'nav-encryption': Lock,
-            'nav-fp': Fingerprint, 'nav-epss': Activity, 'nav-dashboard': LayoutDashboard,
-            'nav-modcat': Guitar, 'nav-roadmap': Map, 'nav-shamir': Share2,
-            'nav-regulation': Gavel, 'nav-privacy': Flag, 'nav-eu-privacy': Globe,
-            'nav-fair': Banknote, 'nav-sdlc': IterationCcw, 'nav-stringart': GalleryVertical,
-        },
-        attrs: { color: "#38bdf8", size: 20, strokeWidth: 2 }
-    });
-
-    const dropdownButtons = document.querySelectorAll('.group > button');
-    dropdownButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            const dropdownMenu = e.currentTarget.nextElementSibling;
-            document.querySelectorAll('.group .absolute').forEach(menu => {
-                if (menu !== dropdownMenu) menu.classList.add('opacity-0', 'invisible');
-            });
-            dropdownMenu.classList.toggle('opacity-0');
-            dropdownMenu.classList.toggle('invisible');
-        });
-    });
-
-    window.addEventListener('click', (e) => {
-        if (!e.target.closest('.group')) document.querySelectorAll('.group .absolute').forEach(menu => menu.classList.add('opacity-0', 'invisible'));
-    });
 }

@@ -1,5 +1,6 @@
 import CryptoJS from 'crypto-js';
 import { JSEncrypt } from 'jsencrypt';
+import { createIcons, FlaskConical, ShieldOff, Sparkles, Key, Hash, Waves, WifiOff, RouteOff, BrainCircuit, Dices } from 'lucide';
 
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. Page-Specific Encryption Logic ---
@@ -198,75 +199,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial Calls
     updateAvalanche();
 
-    // --- 2. Render ALL Icons (Nav + Page) ---
-    if (window.lucide) {
-        lucide.createIcons({
-            icons: {
-                // All Nav Icons
-                'nav-home': lucide.Home,
-                'nav-guides-trigger': lucide.BookOpen,
-                'nav-tools-trigger': lucide.Briefcase,
-                'nav-guides-chevron': lucide.ChevronDown,
-                'nav-tools-chevron': lucide.ChevronDown,
-                'nav-cloud': lucide.Cloud,
-                'nav-roadmap': lucide.Map,
-                'nav-phishing': lucide.Fish,
-                'nav-sast': lucide.FileSearch,
-                'nav-threat': lucide.ShieldAlert,
-                'nav-checklist': lucide.ListChecks,
-                'nav-epss': lucide.Activity,
-                'nav-encryption': lucide.Lock, // <-- Included for nav
-                'nav-fp': lucide.Fingerprint,
-                'nav-jwt': lucide.KeyRound,
-                'nav-modcat': lucide.Guitar,
-                'nav-shamir': lucide.Share2,
-                'nav-dashboard': lucide.LayoutDashboard,
-
-                // Page-specific icons
-                'playground-icon': lucide.FlaskConical,
-                'shield-off-icon': lucide.ShieldOff,
-                'future-icon': lucide.Sparkles,
-                'des-icon': lucide.Key,
-                'hash-icon': lucide.Hash,
-                'rc4-icon': lucide.Waves,
-                'ssl-icon': lucide.ShieldOff,
-                'wep-icon': lucide.WifiOff,
-                'pptp-icon': lucide.RouteOff,
-                'quantum-icon': lucide.BrainCircuit,
-                'prng-icon': lucide.Dices
-            },
-            attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
-        });
-    }
-
-    // --- 3. Add Nav Dropdown Logic ---
-    const dropdownButtons = document.querySelectorAll('.group > button');
-    dropdownButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            const dropdownMenu = e.currentTarget.nextElementSibling;
-            // Close all other open dropdowns
-            document.querySelectorAll('.group .absolute').forEach(menu => {
-                if (menu !== dropdownMenu) {
-                    menu.classList.add('opacity-0', 'invisible');
-                    menu.classList.remove('opacity-100', 'visible');
-                }
-            });
-            // Toggle the current dropdown
-            dropdownMenu.classList.toggle('opacity-0');
-            dropdownMenu.classList.toggle('invisible');
-            dropdownMenu.classList.toggle('opacity-100');
-            dropdownMenu.classList.toggle('visible');
-        });
-    });
-
-    // Close dropdowns if clicking outside
-    window.addEventListener('click', (e) => {
-        if (!e.target.closest('.group')) {
-            document.querySelectorAll('.group .absolute').forEach(menu => {
-                menu.classList.add('opacity-0', 'invisible');
-                menu.classList.remove('opacity-100', 'visible');
-            });
-        }
+    // --- 2. Render Page Specific Icons ---
+    createIcons({
+        icons: {
+            'playground-icon': FlaskConical,
+            'shield-off-icon': ShieldOff,
+            'future-icon': Sparkles,
+            'des-icon': Key,
+            'hash-icon': Hash,
+            'rc4-icon': Waves,
+            'ssl-icon': ShieldOff,
+            'wep-icon': WifiOff,
+            'pptp-icon': RouteOff,
+            'quantum-icon': BrainCircuit,
+            'prng-icon': Dices
+        },
+        attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
     });
 
 });

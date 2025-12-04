@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" class="bg-gray-950 text-white">
+
 <head>
-  <meta http-equiv="Content-Security-Policy" content="
+    <meta http-equiv="Content-Security-Policy" content="
     default-src 'self'; 
     script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; 
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
@@ -11,222 +12,213 @@
     frame-ancestors 'self'; 
     base-uri 'self';
 ">
-<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-<meta http-equiv="X-Content-Type-Options" content="nosniff">
-<meta name="referrer-policy" content="strict-origin-when-cross-origin">
-<meta http-equiv="Permissions-Policy" content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Interactive Threat Model | D. Chandler Prince</title>
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer-policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy"
+        content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Interactive Threat Model | D. Chandler Prince</title>
 
 </head>
+
 <body hidden class="bg-gray-950 text-white min-h-screen flex flex-col">
-  <site-nav></site-nav>
+    <site-nav></site-nav>
 
-  <header class="bg-gradient-to-r from-blue-900 to-gray-900 py-10 px-4 text-center shadow-lg">
-    <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">Interactive Threat Modeling</h1>
-    <p class="max-w-3xl mx-auto text-gray-200 text-lg">
-      Explore different methodologies for identifying, evaluating, and mitigating security threats in system design.
-    </p>
-  </header>
+    <header class="bg-gradient-to-r from-blue-900 to-gray-900 py-10 px-4 text-center shadow-lg">
+        <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">Interactive Threat Modeling</h1>
+        <p class="max-w-3xl mx-auto text-gray-200 text-lg">
+            Explore different methodologies for identifying, evaluating, and mitigating security threats in system
+            design.
+        </p>
+    </header>
 
-  <main class="flex-1 px-4 py-10 max-w-7xl mx-auto w-full space-y-12">
-    <section class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
-      <div class="flex items-center gap-4 mb-4"><span id="stride-icon"></span><h2 class="text-2xl font-bold text-blue-300">STRIDE Threat Model Example</h2></div>
-      <p class="text-gray-300 mb-6">This is a simplified Data Flow Diagram (DFD) for a User Authentication Service. Click on a component (like the User, Web App, or Database) to see potential threats based on the STRIDE methodology.</p>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-        <div id="diagram-container" class="relative">
-            <svg id="diagram" viewBox="0 0 400 300" class="w-full h-auto">
-                <line class="connector" x1="60" y1="150" x2="160" y2="150" marker-end="url(#arrow)"></line>
-                <line class="connector" x1="240" y1="150" x2="340" y2="150" marker-end="url(#arrow)"></line>
-                <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4b5563"></path></marker></defs>
-                <g id="user" class="diagram-component"><rect x="10" y="125" width="100" height="50" fill="#1e3a8a" rx="10"></rect><text x="60" y="155" fill="white" text-anchor="middle" font-weight="bold">User</text></g>
-                <g id="webapp" class="diagram-component"><rect x="150" y="125" width="100" height="50" fill="#1e3a8a" rx="10"></rect><text x="200" y="155" fill="white" text-anchor="middle" font-weight="bold">Web App</text></g>
-                <g id="database" class="diagram-component"><rect x="290" y="125" width="100" height="50" fill="#1e3a8a" rx="10"></rect><text x="340" y="155" fill="white" text-anchor="middle" font-weight="bold">Database</text></g>
-            </svg>
-        </div>
-        <div id="threat-output" class="bg-gray-950 p-6 rounded-lg border border-gray-700 min-h-[300px]">
-          <p class="text-gray-400 text-center">Click a diagram component to view its threats.</p>
-        </div>
-      </div>
-    </section>
+    <main class="flex-1 px-4 py-10 max-w-7xl mx-auto w-full space-y-12">
+        <section class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
+            <div class="flex items-center gap-4 mb-4"><span id="stride-icon"></span>
+                <h2 class="text-2xl font-bold text-blue-300">STRIDE Threat Model Example</h2>
+            </div>
+            <p class="text-gray-300 mb-6">This is a simplified Data Flow Diagram (DFD) for a User Authentication
+                Service. Click on a component (like the User, Web App, or Database) to see potential threats based on
+                the STRIDE methodology.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div id="diagram-container" class="relative">
+                    <svg id="diagram" viewBox="0 0 400 300" class="w-full h-auto">
+                        <line class="connector" x1="60" y1="150" x2="160" y2="150" marker-end="url(#arrow)"></line>
+                        <line class="connector" x1="240" y1="150" x2="340" y2="150" marker-end="url(#arrow)"></line>
+                        <defs>
+                            <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                                orient="auto-start-reverse">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#4b5563"></path>
+                            </marker>
+                        </defs>
+                        <g id="user" class="diagram-component">
+                            <rect x="10" y="125" width="100" height="50" fill="#1e3a8a" rx="10"></rect><text x="60"
+                                y="155" fill="white" text-anchor="middle" font-weight="bold">User</text>
+                        </g>
+                        <g id="webapp" class="diagram-component">
+                            <rect x="150" y="125" width="100" height="50" fill="#1e3a8a" rx="10"></rect><text x="200"
+                                y="155" fill="white" text-anchor="middle" font-weight="bold">Web App</text>
+                        </g>
+                        <g id="database" class="diagram-component">
+                            <rect x="290" y="125" width="100" height="50" fill="#1e3a8a" rx="10"></rect><text x="340"
+                                y="155" fill="white" text-anchor="middle" font-weight="bold">Database</text>
+                        </g>
+                    </svg>
+                </div>
+                <div id="threat-output" class="bg-gray-950 p-6 rounded-lg border border-gray-700 min-h-[300px]">
+                    <p class="text-gray-400 text-center">Click a diagram component to view its threats.</p>
+                </div>
+            </div>
+        </section>
 
-    <section class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
-        <div class="flex items-center gap-4 mb-4"><span id="pasta-icon"></span><h2 class="text-2xl font-bold text-blue-300">PASTA Threat Model Example</h2></div>
-        <p class="text-gray-300 mb-6">PASTA (Process for Attack Simulation and Threat Analysis) is a risk-centric methodology that aligns business objectives with security requirements. It involves seven stages to provide a deeper, attacker-centric view of threats.</p>
-        <div class="space-y-4">
-            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-blue-300">Stage I: Define Business Objectives</h3><p class="text-gray-400 text-sm">Identify the primary goals of the application. For our User Authentication Service, objectives are: Securely authenticate users, protect Personally Identifiable Information (PII), and maintain 99.9% uptime.</p></div>
-            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-blue-300">Stage II: Define the Technical Scope</h3><p class="text-gray-400 text-sm">Map out the technologies in use: A React frontend, a Node.js backend API, a PostgreSQL database, all hosted on AWS. Data flows over HTTPS.</p></div>
-            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-blue-300">Stage III: Application Decomposition</h3><p class="text-gray-400 text-sm">Break down the application into its core components and trust boundaries, similar to the DFD in the STRIDE example. Identify entry points (login forms, API endpoints) and data stores (user database, session store).</p></div>
-            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-blue-300">Stage IV: Threat Analysis</h3><p class="text-gray-400 text-sm">Analyze known vulnerabilities and threat intelligence relevant to the tech stack (e.g., known Node.js library vulnerabilities, common attacks against PostgreSQL).</p></div>
-            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-blue-300">Stage V: Vulnerability & Weakness Analysis</h3><p class="text-gray-400 text-sm">Correlate application components with known threats. For example, identify a lack of rate limiting on the login endpoint (a weakness) and correlate it with the threat of credential stuffing (from Stage IV).</p></div>
-            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-blue-300">Stage VI: Attack Modeling</h3><p class="text-gray-400 text-sm">Simulate attacks based on the vulnerabilities identified. Create an attack tree for an attacker to achieve the goal of "Steal User Credentials". This might involve exploiting a SQL injection flaw found in Stage V.</p></div>
-            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-blue-300">Stage VII: Risk & Impact Analysis</h3><p class="text-gray-400 text-sm">Calculate the business impact of a successful attack. A credential stuffing attack could lead to account takeovers, resulting in reputational damage and financial loss. The impact of a PII breach would be high due to regulatory fines (e.g., GDPR). This stage helps prioritize which threats to fix first based on business risk.</p></div>
-        </div>
-    </section>
+        <section class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
+            <div class="flex items-center gap-4 mb-4"><span id="pasta-icon"></span>
+                <h2 class="text-2xl font-bold text-blue-300">PASTA Threat Model Example</h2>
+            </div>
+            <p class="text-gray-300 mb-6">PASTA (Process for Attack Simulation and Threat Analysis) is a risk-centric
+                methodology that aligns business objectives with security requirements. It involves seven stages to
+                provide a deeper, attacker-centric view of threats.</p>
+            <div class="space-y-4">
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h3 class="font-semibold text-lg text-blue-300">Stage I: Define Business Objectives</h3>
+                    <p class="text-gray-400 text-sm">Identify the primary goals of the application. For our User
+                        Authentication Service, objectives are: Securely authenticate users, protect Personally
+                        Identifiable Information (PII), and maintain 99.9% uptime.</p>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h3 class="font-semibold text-lg text-blue-300">Stage II: Define the Technical Scope</h3>
+                    <p class="text-gray-400 text-sm">Map out the technologies in use: A React frontend, a Node.js
+                        backend API, a PostgreSQL database, all hosted on AWS. Data flows over HTTPS.</p>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h3 class="font-semibold text-lg text-blue-300">Stage III: Application Decomposition</h3>
+                    <p class="text-gray-400 text-sm">Break down the application into its core components and trust
+                        boundaries, similar to the DFD in the STRIDE example. Identify entry points (login forms, API
+                        endpoints) and data stores (user database, session store).</p>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h3 class="font-semibold text-lg text-blue-300">Stage IV: Threat Analysis</h3>
+                    <p class="text-gray-400 text-sm">Analyze known vulnerabilities and threat intelligence relevant to
+                        the tech stack (e.g., known Node.js library vulnerabilities, common attacks against PostgreSQL).
+                    </p>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h3 class="font-semibold text-lg text-blue-300">Stage V: Vulnerability & Weakness Analysis</h3>
+                    <p class="text-gray-400 text-sm">Correlate application components with known threats. For example,
+                        identify a lack of rate limiting on the login endpoint (a weakness) and correlate it with the
+                        threat of credential stuffing (from Stage IV).</p>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h3 class="font-semibold text-lg text-blue-300">Stage VI: Attack Modeling</h3>
+                    <p class="text-gray-400 text-sm">Simulate attacks based on the vulnerabilities identified. Create an
+                        attack tree for an attacker to achieve the goal of "Steal User Credentials". This might involve
+                        exploiting a SQL injection flaw found in Stage V.</p>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h3 class="font-semibold text-lg text-blue-300">Stage VII: Risk & Impact Analysis</h3>
+                    <p class="text-gray-400 text-sm">Calculate the business impact of a successful attack. A credential
+                        stuffing attack could lead to account takeovers, resulting in reputational damage and financial
+                        loss. The impact of a PII breach would be high due to regulatory fines (e.g., GDPR). This stage
+                        helps prioritize which threats to fix first based on business risk.</p>
+                </div>
+            </div>
+        </section>
 
-    <section class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
-        <div class="flex items-center gap-4 mb-4"><span id="compare-icon"></span><h2 class="text-2xl font-bold text-blue-300">Choosing the Right Methodology</h2></div>
-        <p class="text-gray-300 mb-6">Different methodologies excel in different contexts. Here’s a comparison to help you decide which approach is best for your needs.</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
-            <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/driversecurity/threat-modeling-for-drivers#the-stride-approach-to-threat-categorization" target="_blank" rel="noopener noreferrer" class="block transition-all duration-200 hover:scale-[1.03] hover:shadow-lg rounded-lg">
-                <div class="bg-gray-800 p-4 rounded-lg h-full"><h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span id="stride-icon2"></span>STRIDE</h3><p class="text-gray-400 mt-2">A mnemonic-based approach focused on identifying common software security threats.</p><p class="mt-3 text-sm"><strong class="text-gray-200">Best for:</strong> Developer-focused, systematic brainstorming. Great for initial analysis of applications and identifying a broad range of common vulnerabilities.</p></div>
-            </a>
-            
-            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span id="pasta-icon2"></span>PASTA</h3><p class="text-gray-400 mt-2">A seven-stage, risk-centric methodology that aligns security with business objectives.</p><p class="mt-3 text-sm"><strong class="text-gray-200">Best for:</strong> Mature organizations or critical applications where aligning security effort with business impact is key. It is comprehensive but more time-intensive.</p></div>
-            
-            <a href="https://threatmodeler.com/innovation-lab/vast/" target="_blank" rel="noopener noreferrer" class="block transition-all duration-200 hover:scale-[1.03] hover:shadow-lg rounded-lg">
-                <div class="bg-gray-800 p-4 rounded-lg h-full"><h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span id="vast-icon"></span>VAST</h3><p class="text-gray-400 mt-2">A methodology focused on integrating threat modeling into Agile and DevOps pipelines.</p><p class="mt-3 text-sm"><strong class="text-gray-200">Best for:</strong> Teams practicing CI/CD and DevOps. It provides actionable outputs for developers and scales across an organization.</p></div>
-            </a>
-            
-            <a href="https://linddun.org/" target="_blank" rel="noopener noreferrer" class="block transition-all duration-200 hover:scale-[1.03] hover:shadow-lg rounded-lg">
-                <div class="bg-gray-800 p-4 rounded-lg h-full"><h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span id="linddun-icon"></span>LINDDUN</h3><p class="text-gray-400 mt-2">A privacy-focused methodology that identifies privacy-specific threats.</p><p class="mt-3 text-sm"><strong class="text-gray-200">Best for:</strong> Applications that handle Personally Identifiable Information (PII) or need to comply with privacy regulations like GDPR or CCPA.</p></div>
-            </a>
-            
-            <a href="https://www.ncsc.gov.uk/collection/risk-management/using-attack-trees-to-understand-cyber-security-risk" target="_blank" rel="noopener noreferrer" class="block transition-all duration-200 hover:scale-[1.03] hover:shadow-lg rounded-lg">
-                <div class="bg-gray-800 p-4 rounded-lg h-full"><h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span id="attacktree-icon"></span>Attack Trees</h3><p class="text-gray-400 mt-2">A visual method of breaking down an attacker's goal into smaller, achievable steps.</p><p class="mt-3 text-sm"><strong class="text-gray-200">Best for:</strong> Deep-diving into specific, high-risk threats. Excellent for visualizing complex attack paths and identifying potential mitigation points.</p></div>
-            </a>
-            
-            <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/driversecurity/threat-modeling-for-drivers#the-dread-approach-to-threat-assessment" target="_blank" rel="noopener noreferrer" class="block transition-all duration-200 hover:scale-[1.03] hover:shadow-lg rounded-lg">
-                <div class="bg-gray-800 p-4 rounded-lg h-full"><h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span id="dread-icon"></span>DREAD</h3><p class="text-gray-400 mt-2">A risk-rating model used to prioritize threats (Damage, Reproducibility, Exploitability, Affected users, Discoverability).</p><p class="mt-3 text-sm"><strong class="text-gray-200">Best for:</strong> Quickly ranking and prioritizing threats found using another methodology like STRIDE. It's less of a full methodology and more of a prioritization tool.</p></div>
-            </a>
-        </div>
-    </section>
-  </main>
-  
-  <site-footer></site-footer>
+        <section class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
+            <div class="flex items-center gap-4 mb-4"><span id="compare-icon"></span>
+                <h2 class="text-2xl font-bold text-blue-300">Choosing the Right Methodology</h2>
+            </div>
+            <p class="text-gray-300 mb-6">Different methodologies excel in different contexts. Here’s a comparison to
+                help you decide which approach is best for your needs.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // --- 1. Page-Specific Logic ---
-        const threatData = {
-            user: {
-                name: 'User',
-                threats: [
-                    { type: 'Spoofing', scenario: 'An attacker impersonates a legitimate user by stealing their credentials through a phishing attack.', mitigation: 'Implement Multi-Factor Authentication (MFA). Educate users on phishing.' },
-                    { type: 'Tampering', scenario: 'A malicious user attempts to tamper with data sent from their client, such as changing their user ID in a hidden form field.', mitigation: 'Perform all validation and authorization checks on the server-side, never trust client-side data.' },
-                    { type: 'Repudiation', scenario: 'A user performs a critical action (e.g., deleting data) and later claims they never did it.', mitigation: 'Implement comprehensive audit logging for all sensitive actions, including user ID, timestamp, and IP address.' },
-                ]
-            },
-            webapp: {
-                name: 'Web App',
-                threats: [
-                    { type: 'Information Disclosure', scenario: 'An error message reveals sensitive system information, such as a database schema or internal file paths.', mitigation: 'Configure the server to show generic error messages to users and log detailed errors internally.' },
-                    { type: 'Denial of Service', scenario: 'An attacker floods the login endpoint with requests, overwhelming the server and preventing legitimate users from logging in.', mitigation: 'Implement rate limiting and consider a Web Application Firewall (WAF) to block malicious IPs.' },
-                    { type: 'Elevation of Privilege', scenario: 'A flaw in session management allows a regular user to access administrative endpoints by guessing URLs.', mitigation: 'Enforce strict, role-based access control (RBAC) on all server-side endpoints.' },
-                ]
-            },
-            database: {
-                name: 'Database',
-                threats: [
-                    { type: 'Spoofing', scenario: 'An attacker uses stolen application credentials from a configuration file to connect to the database directly.', mitigation: 'Use a secrets management system (e.g., AWS Secrets Manager, HashiCorp Vault) instead of hardcoding credentials.' },
-                    { type: 'Tampering', scenario: 'A SQL Injection vulnerability allows an attacker to modify or delete records in the database.', mitigation: 'Use parameterized queries (prepared statements) for all database interactions.' },
-                    { type: 'Information Disclosure', scenario: 'The database is not encrypted at rest, and an attacker who gains access to the server\'s file system can read the raw data files.', mitigation: 'Enable Transparent Data Encryption (TDE) on the database server.' },
-                ]
-            }
-        };
-
-        const diagram = document.getElementById('diagram');
-        const threatOutput = document.getElementById('threat-output');
-
-        function displayThreats(componentId) {
-            const data = threatData[componentId];
-            if (!data) return;
-
-            let html = `<h4 class="text-lg font-semibold text-blue-300 mb-3">Threats for: ${data.name}</h4>`;
-            
-            data.threats.forEach(threat => {
-                html += `
-                    <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 mb-3">
-                        <p class="font-bold text-blue-300"><span class="font-mono bg-blue-900 px-2 py-1 rounded text-sm">${threat.type[0]}</span> ${threat.type}</p>
-                        <p class="mt-2 text-gray-300"><span class="font-semibold text-gray-100">Scenario:</span> ${threat.scenario}</p>
-                        <p class="mt-2 text-gray-300"><span class="font-semibold text-gray-100">Mitigation:</span> ${threat.mitigation}</p>
+                <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/driversecurity/threat-modeling-for-drivers#the-stride-approach-to-threat-categorization"
+                    target="_blank" rel="noopener noreferrer"
+                    class="block transition-all duration-200 hover:scale-[1.03] hover:shadow-lg rounded-lg">
+                    <div class="bg-gray-800 p-4 rounded-lg h-full">
+                        <h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span
+                                id="stride-icon2"></span>STRIDE</h3>
+                        <p class="text-gray-400 mt-2">A mnemonic-based approach focused on identifying common software
+                            security threats.</p>
+                        <p class="mt-3 text-sm"><strong class="text-gray-200">Best for:</strong> Developer-focused,
+                            systematic brainstorming. Great for initial analysis of applications and identifying a broad
+                            range of common vulnerabilities.</p>
                     </div>
-                `;
-            });
-            threatOutput.innerHTML = html;
-        }
+                </a>
 
-        if(diagram) {
-            diagram.addEventListener('click', (e) => {
-                const component = e.target.closest('.diagram-component');
-                if (component) {
-                    displayThreats(component.id);
-                }
-            });
-        }
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span
+                            id="pasta-icon2"></span>PASTA</h3>
+                    <p class="text-gray-400 mt-2">A seven-stage, risk-centric methodology that aligns security with
+                        business objectives.</p>
+                    <p class="mt-3 text-sm"><strong class="text-gray-200">Best for:</strong> Mature organizations or
+                        critical applications where aligning security effort with business impact is key. It is
+                        comprehensive but more time-intensive.</p>
+                </div>
 
-        // --- 2. Render ALL Icons (Nav + Page) ---
-        if (window.lucide) {
-            lucide.createIcons({
-            icons: {
-                // All Nav Icons
-                'nav-home': lucide.Home,
-                'nav-guides-trigger': lucide.BookOpen,
-                'nav-tools-trigger': lucide.Briefcase,
-                'nav-guides-chevron': lucide.ChevronDown,
-                'nav-tools-chevron': lucide.ChevronDown,
-                'nav-cloud': lucide.Cloud,
-                'nav-roadmap': lucide.Map,
-                'nav-phishing': lucide.Fish,
-                'nav-sast': lucide.FileSearch,
-                'nav-threat': lucide.ShieldAlert,
-                'nav-checklist': lucide.ListChecks,
-                'nav-epss': lucide.Activity,
-                'nav-encryption': lucide.Lock,
-                'nav-fp': lucide.Fingerprint,
-                'nav-jwt': lucide.KeyRound,
-                'nav-modcat': lucide.Guitar,
-                'nav-shamir': lucide.Share2,
-                'nav-dashboard': lucide.LayoutDashboard,
+                <a href="https://threatmodeler.com/innovation-lab/vast/" target="_blank" rel="noopener noreferrer"
+                    class="block transition-all duration-200 hover:scale-[1.03] hover:shadow-lg rounded-lg">
+                    <div class="bg-gray-800 p-4 rounded-lg h-full">
+                        <h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span
+                                id="vast-icon"></span>VAST</h3>
+                        <p class="text-gray-400 mt-2">A methodology focused on integrating threat modeling into Agile
+                            and DevOps pipelines.</p>
+                        <p class="mt-3 text-sm"><strong class="text-gray-200">Best for:</strong> Teams practicing CI/CD
+                            and DevOps. It provides actionable outputs for developers and scales across an organization.
+                        </p>
+                    </div>
+                </a>
 
-                // Page-specific icons
-                'stride-icon': lucide.Target, 
-                'pasta-icon': lucide.ClipboardList, 
-                'compare-icon': lucide.Scaling,
-                'stride-icon2': lucide.Target, 
-                'pasta-icon2': lucide.ClipboardList, 
-                'vast-icon': lucide.GitMerge, 
-                'linddun-icon': lucide.ShieldQuestion, 
-                'attacktree-icon': lucide.GitFork, 
-                'dread-icon': lucide.Calculator
-            },
-            attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
-            });
-        }
+                <a href="https://linddun.org/" target="_blank" rel="noopener noreferrer"
+                    class="block transition-all duration-200 hover:scale-[1.03] hover:shadow-lg rounded-lg">
+                    <div class="bg-gray-800 p-4 rounded-lg h-full">
+                        <h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span
+                                id="linddun-icon"></span>LINDDUN</h3>
+                        <p class="text-gray-400 mt-2">A privacy-focused methodology that identifies privacy-specific
+                            threats.</p>
+                        <p class="mt-3 text-sm"><strong class="text-gray-200">Best for:</strong> Applications that
+                            handle Personally Identifiable Information (PII) or need to comply with privacy regulations
+                            like GDPR or CCPA.</p>
+                    </div>
+                </a>
 
-        // --- 3. Add Nav Dropdown Logic ---
-        const dropdownButtons = document.querySelectorAll('.group > button');
-        dropdownButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-            const dropdownMenu = e.currentTarget.nextElementSibling;
-            // Close all other open dropdowns
-            document.querySelectorAll('.group .absolute').forEach(menu => {
-                if (menu !== dropdownMenu) {
-                menu.classList.add('opacity-0', 'invisible');
-                menu.classList.remove('opacity-100', 'visible');
-                }
-            });
-            // Toggle the current dropdown
-            dropdownMenu.classList.toggle('opacity-0');
-            dropdownMenu.classList.toggle('invisible');
-            dropdownMenu.classList.toggle('opacity-100');
-            dropdownMenu.classList.toggle('visible');
-            });
-        });
+                <a href="https://www.ncsc.gov.uk/collection/risk-management/using-attack-trees-to-understand-cyber-security-risk"
+                    target="_blank" rel="noopener noreferrer"
+                    class="block transition-all duration-200 hover:scale-[1.03] hover:shadow-lg rounded-lg">
+                    <div class="bg-gray-800 p-4 rounded-lg h-full">
+                        <h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span
+                                id="attacktree-icon"></span>Attack Trees</h3>
+                        <p class="text-gray-400 mt-2">A visual method of breaking down an attacker's goal into smaller,
+                            achievable steps.</p>
+                        <p class="mt-3 text-sm"><strong class="text-gray-200">Best for:</strong> Deep-diving into
+                            specific, high-risk threats. Excellent for visualizing complex attack paths and identifying
+                            potential mitigation points.</p>
+                    </div>
+                </a>
 
-        // Close dropdowns if clicking outside
-        window.addEventListener('click', (e) => {
-            if (!e.target.closest('.group')) {
-            document.querySelectorAll('.group .absolute').forEach(menu => {
-                menu.classList.add('opacity-0', 'invisible');
-                menu.classList.remove('opacity-100', 'visible');
-            });
-            }
-        });
-    });
-  </script>
-<script type="module" src="/main.js"></script>
+                <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/driversecurity/threat-modeling-for-drivers#the-dread-approach-to-threat-assessment"
+                    target="_blank" rel="noopener noreferrer"
+                    class="block transition-all duration-200 hover:scale-[1.03] hover:shadow-lg rounded-lg">
+                    <div class="bg-gray-800 p-4 rounded-lg h-full">
+                        <h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span
+                                id="dread-icon"></span>DREAD</h3>
+                        <p class="text-gray-400 mt-2">A risk-rating model used to prioritize threats (Damage,
+                            Reproducibility, Exploitability, Affected users, Discoverability).</p>
+                        <p class="mt-3 text-sm"><strong class="text-gray-200">Best for:</strong> Quickly ranking and
+                            prioritizing threats found using another methodology like STRIDE. It's less of a full
+                            methodology and more of a prioritization tool.</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <site-footer></site-footer>
+
+    <script type="module" src="/threatmodel.js"></script>
+    <script type="module" src="/main.js"></script>
 </body>
+
 </html>

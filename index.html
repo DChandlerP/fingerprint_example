@@ -369,40 +369,8 @@
 
   <site-footer></site-footer>
 
+  <script type="module" src="/index.js"></script>
   <script type="module" src="/main.js"></script>
-  <script>
-    // --- NEW SCRIPT for Expandable Cards ---
-    const toggleButtons = document.querySelectorAll('.expand-toggle');
-
-    toggleButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const card = button.closest('[data-expandable-card]'); // Find the parent card
-        const fullText = card.querySelector('.full-text');
-        const buttonText = button.querySelector('span:first-child');
-        const iconDown = card.querySelector('.expand-icon-down');
-        const iconUp = card.querySelector('.expand-icon-up');
-
-        const isExpanded = fullText.classList.contains('max-h-screen'); // Check for expansion class
-
-        if (isExpanded) {
-          // Collapse
-          fullText.classList.remove('max-h-screen', 'opacity-100');
-          fullText.classList.add('max-h-0', 'opacity-0');
-          buttonText.textContent = 'Read more';
-          iconDown.classList.remove('hidden');
-          iconUp.classList.add('hidden');
-        } else {
-          // Expand
-          fullText.classList.remove('max-h-0', 'opacity-0');
-          // Use max-h-screen as a simple "auto" equivalent for animation
-          fullText.classList.add('max-h-screen', 'opacity-100');
-          buttonText.textContent = 'Show less';
-          iconDown.classList.add('hidden');
-          iconUp.classList.remove('hidden');
-        }
-      });
-    });
-  </script>
 </body>
 
 </html>
