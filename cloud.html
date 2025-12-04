@@ -1,25 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" class="bg-gray-950 text-white">
+
 <head>
-  <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self'; 
-    script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; 
-    style-src 'self' 'unsafe-inline'; 
-    font-src 'self'; 
-    connect-src 'self' https://services.nvd.nist.gov https://api.first.org; 
-    object-src 'none'; 
-    frame-ancestors 'self'; 
-    base-uri 'self';
-">
-<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-<meta http-equiv="X-Content-Type-Options" content="nosniff">
-<meta name="referrer-policy" content="strict-origin-when-cross-origin">
-<meta http-equiv="Permissions-Policy" content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer-policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy"
+    content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cloud Misconfiguration Explorer | D. Chandler Prince</title>
 
 </head>
+
 <body hidden class="bg-gray-950 text-white min-h-screen flex flex-col">
   <!-- 
     NAV BAR FOR "GUIDES & CASE STUDIES" PAGES
@@ -31,9 +24,11 @@
 
   <!-- Header -->
   <header class="bg-gradient-to-r from-blue-900 to-gray-900 py-10 px-4 text-center shadow-lg">
-    <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">Interactive Cloud Misconfiguration Explorer</h1>
+    <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">Interactive Cloud Misconfiguration
+      Explorer</h1>
     <p class="max-w-2xl mx-auto text-gray-200 text-lg md:text-xl">
-      A hands-on guide to common cloud security pitfalls. Click a component in the architecture diagram to analyze a potential misconfiguration.
+      A hands-on guide to common cloud security pitfalls. Click a component in the architecture diagram to analyze a
+      potential misconfiguration.
     </p>
   </header>
 
@@ -43,57 +38,58 @@
       <section class="bg-gray-900 p-6 rounded-xl shadow-lg">
         <h3 class="text-2xl font-semibold text-blue-400 mb-4 text-center">Sample Web Application Architecture</h3>
         <div id="diagram-container" class="w-full flex justify-center items-center">
-            <!-- SVG Diagram -->
-            <svg id="cloud-diagram" viewBox="0 0 800 500" class="max-w-full">
-                <!-- VPC -->
-                <rect x="10" y="10" width="780" height="480" rx="15" fill="none" stroke="#4b5563" stroke-width="3" stroke-dasharray="10 5"/>
-                <text x="400" y="40" text-anchor="middle" class="text-lg font-bold" fill="#6b7280">VPC</text>
+          <!-- SVG Diagram -->
+          <svg id="cloud-diagram" viewBox="0 0 800 500" class="max-w-full">
+            <!-- VPC -->
+            <rect x="10" y="10" width="780" height="480" rx="15" fill="none" stroke="#4b5563" stroke-width="3"
+              stroke-dasharray="10 5" />
+            <text x="400" y="40" text-anchor="middle" class="text-lg font-bold" fill="#6b7280">VPC</text>
 
-                <!-- Internet Gateway -->
-                <g id="component-igw" class="diagram-component">
-                    <rect x="50" y="220" width="100" height="60" rx="8" class="component-shape"></rect>
-                    <text x="100" y="255" text-anchor="middle" class="component-label">Internet Gateway</text>
-                </g>
+            <!-- Internet Gateway -->
+            <g id="component-igw" class="diagram-component">
+              <rect x="50" y="220" width="100" height="60" rx="8" class="component-shape"></rect>
+              <text x="100" y="255" text-anchor="middle" class="component-label">Internet Gateway</text>
+            </g>
 
-                <!-- Public Subnet -->
-                <rect x="200" y="60" width="580" height="190" rx="10" fill="#111827" stroke="#374151" stroke-width="2"/>
-                <text x="230" y="85" fill="#6b7280" class="font-semibold">Public Subnet</text>
+            <!-- Public Subnet -->
+            <rect x="200" y="60" width="580" height="190" rx="10" fill="#111827" stroke="#374151" stroke-width="2" />
+            <text x="230" y="85" fill="#6b7280" class="font-semibold">Public Subnet</text>
 
-                <!-- Private Subnet -->
-                <rect x="200" y="260" width="580" height="190" rx="10" fill="#111827" stroke="#374151" stroke-width="2"/>
-                <text x="230" y="285" fill="#6b7280" class="font-semibold">Private Subnet</text>
+            <!-- Private Subnet -->
+            <rect x="200" y="260" width="580" height="190" rx="10" fill="#111827" stroke="#374151" stroke-width="2" />
+            <text x="230" y="285" fill="#6b7280" class="font-semibold">Private Subnet</text>
 
-                <!-- EC2 Instance -->
-                <g id="component-ec2" class="diagram-component">
-                    <rect x="400" y="120" width="120" height="70" rx="8" class="component-shape"></rect>
-                    <text x="460" y="150" text-anchor="middle" class="component-label">EC2 Instance</text>
-                    <text x="460" y="170" text-anchor="middle" class="component-label">(Web Server)</text>
-                </g>
+            <!-- EC2 Instance -->
+            <g id="component-ec2" class="diagram-component">
+              <rect x="400" y="120" width="120" height="70" rx="8" class="component-shape"></rect>
+              <text x="460" y="150" text-anchor="middle" class="component-label">EC2 Instance</text>
+              <text x="460" y="170" text-anchor="middle" class="component-label">(Web Server)</text>
+            </g>
 
-                <!-- Security Group -->
-                <g id="component-sg" class="diagram-component">
-                    <rect x="240" y="120" width="120" height="70" rx="8" class="component-shape"></rect>
-                    <text x="300" y="155" text-anchor="middle" class="component-label">Security Group</text>
-                </g>
-                
-                <!-- S3 Bucket -->
-                <g id="component-s3" class="diagram-component">
-                    <rect x="350" y="320" width="120" height="70" rx="8" class="component-shape"></rect>
-                    <text x="410" y="355" text-anchor="middle" class="component-label">S3 Bucket</text>
-                </g>
-                
-                <!-- IAM Role -->
-                 <g id="component-iam" class="diagram-component">
-                    <rect x="550" y="320" width="120" height="70" rx="8" class="component-shape"></rect>
-                    <text x="610" y="355" text-anchor="middle" class="component-label">IAM Role</text>
-                </g>
+            <!-- Security Group -->
+            <g id="component-sg" class="diagram-component">
+              <rect x="240" y="120" width="120" height="70" rx="8" class="component-shape"></rect>
+              <text x="300" y="155" text-anchor="middle" class="component-label">Security Group</text>
+            </g>
 
-                <!-- Connectors -->
-                <line x1="150" y1="250" x2="270" y2="190" stroke="#4b5563" stroke-width="2"/>
-                <line x1="360" y1="155" x2="400" y2="155" stroke="#4b5563" stroke-width="2"/>
-                <path d="M 480 190 C 480 250, 450 320, 410 320" stroke="#4b5563" stroke-width="2" fill="none" />
-                 <path d="M 490 190 C 520 250, 550 320, 580 320" stroke="#4b5563" stroke-width="2" fill="none" />
-            </svg>
+            <!-- S3 Bucket -->
+            <g id="component-s3" class="diagram-component">
+              <rect x="350" y="320" width="120" height="70" rx="8" class="component-shape"></rect>
+              <text x="410" y="355" text-anchor="middle" class="component-label">S3 Bucket</text>
+            </g>
+
+            <!-- IAM Role -->
+            <g id="component-iam" class="diagram-component">
+              <rect x="550" y="320" width="120" height="70" rx="8" class="component-shape"></rect>
+              <text x="610" y="355" text-anchor="middle" class="component-label">IAM Role</text>
+            </g>
+
+            <!-- Connectors -->
+            <line x1="150" y1="250" x2="270" y2="190" stroke="#4b5563" stroke-width="2" />
+            <line x1="360" y1="155" x2="400" y2="155" stroke="#4b5563" stroke-width="2" />
+            <path d="M 480 190 C 480 250, 450 320, 410 320" stroke="#4b5563" stroke-width="2" fill="none" />
+            <path d="M 490 190 C 520 250, 550 320, 580 320" stroke="#4b5563" stroke-width="2" fill="none" />
+          </svg>
         </div>
       </section>
 
@@ -104,7 +100,8 @@
           <!-- Content will be injected here by JavaScript -->
           <div id="initial-message" class="text-center py-16 text-gray-500">
             <span id="icon-click" class="mx-auto mb-2"></span>
-            <p class="font-semibold">Click an interactive component in the diagram to learn about a common misconfiguration.</p>
+            <p class="font-semibold">Click an interactive component in the diagram to learn about a common
+              misconfiguration.</p>
           </div>
         </div>
       </section>
@@ -114,166 +111,8 @@
   <!-- Footer -->
   <site-footer></site-footer>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // --- 1. Page-Specific Cloud Diagram Logic ---
-      const misconfigurationData = {
-        'component-igw': {
-          title: 'Internet Gateway',
-          misconfiguration: 'Lack of a Web Application Firewall (WAF) at the network edge.',
-          risk: 'Without a WAF, malicious web traffic (like SQL injection, Cross-Site Scripting) can travel directly from the internet to the EC2 instance. This bypasses a critical layer of defense, forcing the application itself to be the sole protector against common web exploits.',
-          remediation: 'Implement a WAF (like AWS WAF) and associate it with the Application Load Balancer or API Gateway handling the ingress traffic. Configure it with managed rule sets (e.g., for the OWASP Top 10) and custom rules to block known bad traffic patterns before they ever reach your application.'
-        },
-        'component-sg': {
-          title: 'Security Group',
-          misconfiguration: 'Overly Permissive Ingress Rule (`0.0.0.0/0` on Port 22/SSH).',
-          risk: 'Exposing SSH to the entire internet makes the instance a prime target for brute-force attacks, automated scanning, and credential stuffing, which can lead to a full system compromise.',
-          remediation: 'Restrict the source IP range to a known, trusted address (e.g., a corporate VPN or a specific bastion host). For production systems, avoid direct SSH access entirely in favor of using a session manager service (like AWS SSM Session Manager).'
-        },
-        'component-s3': {
-          title: 'S3 Bucket',
-          misconfiguration: 'Publicly Accessible Bucket.',
-          risk: 'Critical risk of sensitive data exposure. If the bucket contains user data, intellectual property, or configuration files, making it public can lead to massive data breaches, compliance violations (GDPR, CCPA), and reputational damage.',
-          remediation: `
-            <ul class="list-decimal">
-              <li><strong>Enable Block Public Access (BPA):</strong> This is a top-level account setting that acts as the primary defense.</li>
-              <li><strong>Apply Restrictive Bucket Policies:</strong> Ensure the bucket policy does not contain statements that allow anonymous principals (\`"Principal": "*"\`).</li>
-              <li><strong>Use IAM Access Analyzer:</strong> Continuously monitor for and be alerted to any publicly accessible S3 buckets.</li>
-            </ul>
-          `
-        },
-        'component-iam': {
-          title: 'IAM Role',
-          misconfiguration: 'Overly Permissive Role with Wildcard Permissions (`"Action": "*:*"`)',
-          risk: 'Violates the principle of least privilege. If the EC2 instance is compromised, an attacker can inherit these god-like permissions to access, modify, or destroy any resource in the entire cloud account.',
-          remediation: "Create a fine-grained IAM policy that only grants the specific permissions the application needs to function. For example, if the application only needs to read objects from a specific S3 bucket, the policy should only allow the `s3:GetObject` action on that specific bucket's ARN."
-        },
-        'component-ec2': {
-          title: 'EC2 Instance',
-          misconfiguration: 'Exposed Instance Metadata Service (IMDSv1).',
-          risk: 'The instance metadata service can be accessed by any process running on the instance to retrieve temporary credentials. If a Server-Side Request Forgery (SSRF) vulnerability exists in the web application, an attacker can exploit it to query the metadata service and steal the IAM role credentials.',
-          remediation: `
-            <ul class="list-decimal">
-              <li><strong>Enforce IMDSv2:</strong> This version requires a session-oriented approach with a secret token, which protects against basic SSRF attacks.</li>
-              <li><strong>Firewall Rules:</strong> Apply local firewall rules (iptables) on the instance itself to prevent the web server process from being able to reach the metadata endpoint (\`169.254.169.254\`).</li>
-            </ul>
-          `
-        }
-      };
-
-      const diagram = document.getElementById('cloud-diagram');
-      const analysisContent = document.getElementById('analysis-content');
-      const initialMessage = document.getElementById('initial-message');
-      const components = diagram.querySelectorAll('.diagram-component');
-
-      function displayInfo(componentId) {
-        const data = misconfigurationData[componentId];
-        if (!data) return;
-
-        initialMessage.classList.add('hidden');
-        
-        analysisContent.innerHTML = `
-          <h4 class="text-xl font-bold text-blue-300">${data.title}</h4>
-          <div class="space-y-4">
-            <div>
-              <h5 class="font-semibold text-blue-400 flex items-center"><span class="mr-2" id="icon-misconfig"></span>Misconfiguration</h5>
-              <p class="pl-7 border-l-2 border-gray-700 ml-2.5 text-gray-200">${data.misconfiguration}</p>
-            </div>
-            <div>
-              <h5 class="font-semibold text-red-400 flex items-center"><span class="mr-2" id="icon-risk"></span>Risk</h5>
-              <p class="pl-7 border-l-2 border-gray-700 ml-2.5 text-gray-200">${data.risk}</p>
-            </div>
-            <div>
-              <h5 class="font-semibold text-green-400 flex items-center"><span class="mr-2" id="icon-remediation"></span>Remediation</h5>
-              <div class="pl-7 border-l-2 border-gray-700 ml-2.5 text-gray-200">${data.remediation}</div>
-            </div>
-          </div>
-        `;
-        
-        lucide.createIcons({
-            icons: {
-                'icon-misconfig': lucide.AlertTriangle,
-                'icon-risk': lucide.ShieldAlert,
-                'icon-remediation': lucide.ShieldCheck,
-            },
-            attrs: { strokeWidth: 2, size: 20 }
-        });
-      }
-
-      components.forEach(component => {
-        if (misconfigurationData[component.id]) {
-            component.addEventListener('click', () => {
-                components.forEach(c => c.classList.remove('active'));
-                component.classList.add('active');
-                displayInfo(component.id);
-            });
-        }
-      });
-      
-      // --- 2. Render ALL Icons (Nav + Page) ---
-      if (window.lucide) {
-        lucide.createIcons({
-          icons: {
-              // All Nav Icons
-              'nav-home': lucide.Home,
-              'nav-guides-trigger': lucide.BookOpen,
-              'nav-tools-trigger': lucide.Briefcase,
-              'nav-guides-chevron': lucide.ChevronDown,
-              'nav-tools-chevron': lucide.ChevronDown,
-              'nav-cloud': lucide.Cloud, // <-- Included for nav
-              'nav-roadmap': lucide.Map,
-              'nav-phishing': lucide.Fish,
-              'nav-sast': lucide.FileSearch,
-              'nav-threat': lucide.ShieldAlert,
-              'nav-checklist': lucide.ListChecks,
-              'nav-epss': lucide.Activity, 
-              'nav-encryption': lucide.Lock,
-              'nav-fp': lucide.Fingerprint,
-              'nav-jwt': lucide.KeyRound,
-              'nav-modcat': lucide.Guitar,
-              'nav-shamir': lucide.Share2,
-              'nav-dashboard': lucide.LayoutDashboard,
-
-              // Page-specific icons
-              'icon-click': lucide.MousePointerClick
-              // Icons for misconfig details are rendered dynamically in displayInfo
-          },
-          attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
-        });
-      }
-
-      // --- 3. Add Nav Dropdown Logic ---
-      const dropdownButtons = document.querySelectorAll('.group > button');
-      dropdownButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-          const dropdownMenu = e.currentTarget.nextElementSibling;
-          // Close all other open dropdowns
-          document.querySelectorAll('.group .absolute').forEach(menu => {
-            if (menu !== dropdownMenu) {
-              menu.classList.add('opacity-0', 'invisible');
-              menu.classList.remove('opacity-100', 'visible');
-            }
-          });
-          // Toggle the current dropdown
-          dropdownMenu.classList.toggle('opacity-0');
-          dropdownMenu.classList.toggle('invisible');
-          dropdownMenu.classList.toggle('opacity-100');
-          dropdownMenu.classList.toggle('visible');
-        });
-      });
-
-      // Close dropdowns if clicking outside
-      window.addEventListener('click', (e) => {
-        if (!e.target.closest('.group')) {
-          document.querySelectorAll('.group .absolute').forEach(menu => {
-            menu.classList.add('opacity-0', 'invisible');
-            menu.classList.remove('opacity-100', 'visible');
-          });
-        }
-      });
-
-    });
-  </script>
-<script type="module" src="/main.js"></script>
+  <script type="module" src="/cloud.js"></script>
+  <script type="module" src="/main.js"></script>
 </body>
+
 </html>
