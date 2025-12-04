@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +22,7 @@
                         },
                         // Legislation Color (Teal/Emerald)
                         emerald: { // Note: Tailwind includes emerald by default
-                            450: '#10b981', 
+                            450: '#10b981',
                         },
                         // Jurisprudence Color (Indigo/Blue)
                         indigo: {
@@ -37,12 +38,13 @@
     </script>
 
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- CDN Removed in favor of ES Module import -->
 
     <style>
         body {
             font-family: sans-serif;
         }
+
         /* Timeline Central Line */
         .timeline-line::before {
             content: '';
@@ -59,7 +61,8 @@
         /* Mobile Timeline Line adjustment */
         @media (max-width: 768px) {
             .timeline-line::before {
-                left: 24px; /* Align with icons on left */
+                left: 24px;
+                /* Align with icons on left */
             }
         }
 
@@ -69,6 +72,7 @@
             transform: translateY(20px);
             transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
+
         .timeline-item.visible {
             opacity: 1;
             transform: translateY(0);
@@ -78,18 +82,22 @@
         ::-webkit-scrollbar {
             width: 8px;
         }
+
         ::-webkit-scrollbar-track {
-            background: #030712; 
+            background: #030712;
         }
+
         ::-webkit-scrollbar-thumb {
-            background: #374151; 
+            background: #374151;
             border-radius: 4px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
-            background: #4b5563; 
+            background: #4b5563;
         }
     </style>
 </head>
+
 <body hidden class="bg-gray-950 text-gray-200 min-h-screen flex flex-col">
 
     <!-- Navigation Bar -->
@@ -98,21 +106,28 @@
     <!-- Main Content -->
     <main class="flex-1 pt-12 pb-20 px-4 sm:px-6">
         <div class="max-w-5xl mx-auto">
-            
+
             <!-- Intro Section -->
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">United States Privacy Landscape</h2>
-                <p class="text-gray-400 max-w-2xl mx-auto mb-8">From the "Third-Party Doctrine" to the USA FREEDOM Act, explore the evolution of American surveillance law and constitutional rights.</p>
-                
+                <p class="text-gray-400 max-w-2xl mx-auto mb-8">From the "Third-Party Doctrine" to the USA FREEDOM Act,
+                    explore the evolution of American surveillance law and constitutional rights.</p>
+
                 <!-- Filters -->
                 <div class="inline-flex bg-gray-900 p-1 rounded-xl border border-gray-800 shadow-lg">
-                    <button onclick="filterTimeline('all')" class="filter-btn px-5 py-2 rounded-lg text-sm font-medium transition-all bg-indigo-600 text-white shadow-md" data-filter="all">
+                    <button onclick="filterTimeline('all')"
+                        class="filter-btn px-5 py-2 rounded-lg text-sm font-medium transition-all bg-indigo-600 text-white shadow-md"
+                        data-filter="all">
                         All Events
                     </button>
-                    <button onclick="filterTimeline('law')" class="filter-btn px-5 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition-all" data-filter="law">
+                    <button onclick="filterTimeline('law')"
+                        class="filter-btn px-5 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition-all"
+                        data-filter="law">
                         US Legislation
                     </button>
-                    <button onclick="filterTimeline('case')" class="filter-btn px-5 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition-all" data-filter="case">
+                    <button onclick="filterTimeline('case')"
+                        class="filter-btn px-5 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition-all"
+                        data-filter="case">
                         Court Cases
                     </button>
                 </div>
@@ -135,23 +150,28 @@
     <site-footer></site-footer>
 
     <!-- Modal -->
-    <div id="detailsModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div id="detailsModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog"
+        aria-modal="true">
         <div class="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity opacity-0" id="modalBackdrop"></div>
-        
+
         <div class="fixed inset-0 z-10 overflow-y-auto">
             <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
-                <div class="relative transform overflow-hidden rounded-2xl bg-gray-900 border border-gray-800 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" id="modalPanel">
-                    
+                <div class="relative transform overflow-hidden rounded-2xl bg-gray-900 border border-gray-800 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                    id="modalPanel">
+
                     <div class="relative">
                         <!-- Header/Banner -->
-                        <div class="h-32 bg-gradient-to-r from-gray-800 to-gray-900 p-6 flex items-end" id="modalHeaderBg">
+                        <div class="h-32 bg-gradient-to-r from-gray-800 to-gray-900 p-6 flex items-end"
+                            id="modalHeaderBg">
                             <div class="absolute top-4 right-4">
-                                <button onclick="closeModal()" class="text-gray-400 hover:text-white bg-black/20 hover:bg-black/40 rounded-full p-1 transition-colors">
+                                <button onclick="closeModal()"
+                                    class="text-gray-400 hover:text-white bg-black/20 hover:bg-black/40 rounded-full p-1 transition-colors">
                                     <i data-lucide="x" class="w-5 h-5"></i>
                                 </button>
                             </div>
                             <div>
-                                <span id="modalYear" class="inline-block px-2 py-1 rounded text-xs font-bold bg-black/30 text-white backdrop-blur-md mb-2"></span>
+                                <span id="modalYear"
+                                    class="inline-block px-2 py-1 rounded text-xs font-bold bg-black/30 text-white backdrop-blur-md mb-2"></span>
                                 <h3 class="text-2xl font-bold text-white" id="modalTitle"></h3>
                             </div>
                         </div>
@@ -162,9 +182,9 @@
                                 <i id="modalIcon" class="w-5 h-5"></i>
                                 <span id="modalType" class="text-sm font-medium uppercase tracking-wide"></span>
                             </div>
-                            
+
                             <p class="text-gray-300 leading-relaxed mb-6" id="modalDesc"></p>
-                            
+
                             <div class="bg-gray-950/50 rounded-xl p-4 border border-gray-800">
                                 <h4 class="text-sm font-semibold text-white mb-2 flex items-center">
                                     <i data-lucide="zap" class="w-4 h-4 mr-2 text-yellow-500"></i>
@@ -176,7 +196,9 @@
 
                         <!-- Footer -->
                         <div class="bg-gray-900 px-6 py-4 sm:flex sm:flex-row-reverse border-t border-gray-800">
-                            <button type="button" onclick="closeModal()" class="inline-flex w-full justify-center rounded-lg bg-gray-800 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 sm:ml-3 sm:w-auto transition-colors border border-gray-700">Close Details</button>
+                            <button type="button" onclick="closeModal()"
+                                class="inline-flex w-full justify-center rounded-lg bg-gray-800 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 sm:ml-3 sm:w-auto transition-colors border border-gray-700">Close
+                                Details</button>
                         </div>
                     </div>
                 </div>
@@ -184,7 +206,9 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import * as lucide from 'lucide';
+
         // --- US Specific Data Source ---
         const timelineData = [
             {
@@ -346,7 +370,7 @@
         // --- DOM Elements ---
         const timelineContainer = document.getElementById('timeline-container');
         const filterBtns = document.querySelectorAll('.filter-btn');
-        
+
         // --- Modal Elements ---
         const modal = document.getElementById('detailsModal');
         const modalBackdrop = document.getElementById('modalBackdrop');
@@ -359,12 +383,12 @@
         const modalType = document.getElementById('modalType');
 
         // --- Logic ---
-        
+
         function renderTimeline(filter = 'all') {
             timelineContainer.innerHTML = '';
-            
-            const filteredData = filter === 'all' 
-                ? timelineData 
+
+            const filteredData = filter === 'all'
+                ? timelineData
                 : timelineData.filter(item => item.type === filter);
 
             if (filteredData.length === 0) {
@@ -380,7 +404,7 @@
                 const sideClass = isLeft ? 'md:flex-row-reverse' : 'md:flex-row';
                 const textAlignment = isLeft ? 'md:text-right' : 'md:text-left';
                 const alignStart = isLeft ? 'md:items-end' : 'md:items-start';
-                
+
                 // Colors based on type
                 const colorClass = item.type === 'law' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' : 'text-indigo-400 bg-indigo-500/10 border-indigo-500/20';
                 const btnClass = item.type === 'law' ? 'text-emerald-400 hover:bg-emerald-500/20' : 'text-indigo-400 hover:bg-indigo-500/20';
@@ -388,7 +412,7 @@
 
                 const el = document.createElement('div');
                 el.className = `timeline-item flex flex-row ${sideClass} items-center justify-between w-full mb-8`;
-                
+
                 // Inner HTML
                 el.innerHTML = `
                     <!-- Spacer for Layout Balance -->
@@ -420,8 +444,8 @@
             });
 
             // Initialize Icons
-            lucide.createIcons();
-            
+            lucide.createIcons({ icons: lucide.icons });
+
             // Trigger animations
             observeItems();
         }
@@ -429,7 +453,7 @@
         function filterTimeline(type) {
             // Update Active Button State
             filterBtns.forEach(btn => {
-                if(btn.dataset.filter === type) {
+                if (btn.dataset.filter === type) {
                     btn.classList.remove('bg-transparent', 'text-gray-400');
                     btn.classList.add('bg-indigo-600', 'text-white', 'shadow-md');
                 } else {
@@ -439,6 +463,7 @@
             });
             renderTimeline(type);
         }
+        window.filterTimeline = filterTimeline;
 
         // --- Animation Observer ---
         function observeItems() {
@@ -456,7 +481,7 @@
         }
 
         // --- Modal Functions ---
-        window.openDetails = function(id) {
+        window.openDetails = function (id) {
             const item = timelineData.find(d => d.id === id);
             if (!item) return;
 
@@ -464,11 +489,11 @@
             modalTitle.innerText = item.title;
             modalDesc.innerText = item.fullDesc;
             modalImpact.innerText = item.impact;
-            
+
             // Icon and Type setup
             modalIcon.setAttribute('data-lucide', item.icon);
             modalType.innerText = item.type === 'law' ? 'Legislation' : 'Supreme Court Case';
-            
+
             // Dynamic Coloring
             if (item.type === 'law') {
                 modalType.className = "text-sm font-medium uppercase tracking-wide text-emerald-400";
@@ -479,7 +504,7 @@
             }
 
             modal.classList.remove('hidden');
-            lucide.createIcons(); // Refresh modal icon
+            lucide.createIcons({ icons: lucide.icons }); // Refresh modal icon
 
             // Animate In
             setTimeout(() => {
@@ -488,10 +513,10 @@
             }, 10);
         };
 
-        window.closeModal = function() {
+        window.closeModal = function () {
             modalBackdrop.classList.add('opacity-0');
             modalPanel.classList.add('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
-            
+
             setTimeout(() => {
                 modal.classList.add('hidden');
             }, 300);
@@ -505,57 +530,56 @@
         });
 
         // --- Initial Render ---
-        document.addEventListener('DOMContentLoaded', () => {
-            renderTimeline('all');
+        renderTimeline('all');
 
-            // --- Nav Bar Icons & Logic ---
-            lucide.createIcons({
-              icons: {
-                'nav-home': lucide.Home,
-                'nav-guides-trigger': lucide.BookOpen,
-                'nav-tools-trigger': lucide.Briefcase,
-                'nav-guides-chevron': lucide.ChevronDown,
-                'nav-tools-chevron': lucide.ChevronDown,
-                'nav-phishing': lucide.Fish, 
-                'nav-cloud': lucide.Cloud,
-                'nav-sast': lucide.FileSearch,
-                'nav-threat': lucide.ShieldAlert,
-                'nav-checklist': lucide.ListChecks,
-                'nav-jwt': lucide.KeyRound,
-                'nav-encryption': lucide.Lock, 
-                'nav-fp': lucide.Fingerprint,
-                'nav-epss': lucide.Activity,
-                'nav-dashboard': lucide.LayoutDashboard,
-                'nav-modcat': lucide.Guitar,
-                'nav-roadmap': lucide.Map,
-                'nav-shamir': lucide.Share2,
-                'nav-regulation': lucide.Gavel,
-                'nav-privacy': lucide.Flag,
-                'nav-eu-privacy': lucide.Globe, // New icon for this page
-                'nav-fair': lucide.Banknote,
-                'nav-sdlc': lucide.IterationCcw,
-                'nav-stringart': lucide.GalleryVertical,
-              },
-              attrs: { color: "#38bdf8", size: 20, strokeWidth: 2 }
-            });
+        // --- Nav Bar Icons & Logic ---
+        lucide.createIcons({
+            icons: {
+                'nav-home': lucide.icons.Home,
+                'nav-guides-trigger': lucide.icons.BookOpen,
+                'nav-tools-trigger': lucide.icons.Briefcase,
+                'nav-guides-chevron': lucide.icons.ChevronDown,
+                'nav-tools-chevron': lucide.icons.ChevronDown,
+                'nav-phishing': lucide.icons.Fish,
+                'nav-cloud': lucide.icons.Cloud,
+                'nav-sast': lucide.icons.FileSearch,
+                'nav-threat': lucide.icons.ShieldAlert,
+                'nav-checklist': lucide.icons.ListChecks,
+                'nav-jwt': lucide.icons.KeyRound,
+                'nav-encryption': lucide.icons.Lock,
+                'nav-fp': lucide.icons.Fingerprint,
+                'nav-epss': lucide.icons.Activity,
+                'nav-dashboard': lucide.icons.LayoutDashboard,
+                'nav-modcat': lucide.icons.Guitar,
+                'nav-roadmap': lucide.icons.Map,
+                'nav-shamir': lucide.icons.Share2,
+                'nav-regulation': lucide.icons.Gavel,
+                'nav-privacy': lucide.icons.Flag,
+                'nav-eu-privacy': lucide.icons.Globe, // New icon for this page
+                'nav-fair': lucide.icons.Banknote,
+                'nav-sdlc': lucide.icons.IterationCcw,
+                'nav-stringart': lucide.icons.GalleryVertical,
+            },
+            attrs: { color: "#38bdf8", size: 20, strokeWidth: 2 }
+        });
 
-            const dropdownButtons = document.querySelectorAll('.group > button');
-            dropdownButtons.forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const dropdownMenu = e.currentTarget.nextElementSibling;
-                    document.querySelectorAll('.group .absolute').forEach(menu => {
-                        if (menu !== dropdownMenu) menu.classList.add('opacity-0', 'invisible');
-                    });
-                    dropdownMenu.classList.toggle('opacity-0');
-                    dropdownMenu.classList.toggle('invisible');
+        const dropdownButtons = document.querySelectorAll('.group > button');
+        dropdownButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const dropdownMenu = e.currentTarget.nextElementSibling;
+                document.querySelectorAll('.group .absolute').forEach(menu => {
+                    if (menu !== dropdownMenu) menu.classList.add('opacity-0', 'invisible');
                 });
+                dropdownMenu.classList.toggle('opacity-0');
+                dropdownMenu.classList.toggle('invisible');
             });
-            window.addEventListener('click', (e) => {
-                if (!e.target.closest('.group')) document.querySelectorAll('.group .absolute').forEach(menu => menu.classList.add('opacity-0', 'invisible'));
-            });
+        });
+        window.addEventListener('click', (e) => {
+            if (!e.target.closest('.group')) document.querySelectorAll('.group .absolute').forEach(menu => menu.classList.add('opacity-0', 'invisible'));
         });
 
     </script>
-<script type="module" src="/main.js"></script>
+    <script type="module" src="/main.js"></script>
 </body>
+
 </html>

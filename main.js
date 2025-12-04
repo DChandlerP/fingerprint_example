@@ -14,7 +14,8 @@ class SiteNav extends HTMLElement {
          <div class="flex flex-wrap justify-center space-x-4">
           
           <!-- Home Link -->
-          <a href="index.html" class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition">
+
+          <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
             <i data-lucide="home" class="mr-1 w-4 h-4"></i>Home
           </a>
 
