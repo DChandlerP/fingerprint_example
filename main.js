@@ -81,7 +81,7 @@ class SiteNav extends HTMLElement {
                   <i data-lucide="list-checks" class="mr-2 w-4 h-4"></i>Checklist
                 </a>
                 <a href="epssdemo.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <i data-lucide="activity" class="mr-2 w-4 h-4"></i>CVSS vs EPSS
+                  <i data-lucide="target" class="mr-2 w-4 h-4"></i>CVSS vs EPSS
                 </a>
                 <a href="encryption.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="lock" class="mr-2 w-4 h-4"></i>Encryption
@@ -102,7 +102,7 @@ class SiteNav extends HTMLElement {
                   <i data-lucide="layout-dashboard" class="mr-2 w-4 h-4"></i>Threat Intel
                 </a>
                  <a href="string.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <i data-lucide="network" class="mr-2 w-4 h-4"></i>String Art
+                    <i data-lucide="palette" class="mr-2 w-4 h-4"></i>String Art
                   </a>
               </div>
             </div>
