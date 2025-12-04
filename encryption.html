@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" class="bg-gray-950 text-white">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- ADDED: Content Security Policy -->
-<meta http-equiv="Content-Security-Policy" content="
+  <meta http-equiv="Content-Security-Policy" content="
     default-src 'self'; 
     script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; 
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
@@ -14,15 +15,15 @@
     frame-ancestors 'self'; 
     base-uri 'self';
 ">
-<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-<meta http-equiv="X-Content-Type-Options" content="nosniff">
-<meta name="referrer-policy" content="strict-origin-when-cross-origin">
-<meta http-equiv="Permissions-Policy" content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">  <title>Interactive Cryptography Playground | D. Chandler Prince</title>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.3.2/jsencrypt.min.js"></script>
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer-policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy"
+    content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">
+  <title>Interactive Cryptography Playground | D. Chandler Prince</title>
 
 </head>
+
 <body hidden class="bg-gray-950 text-white min-h-screen flex flex-col">
   <!-- 
     NAV BAR FOR "TOOLS & DEMOS" PAGES
@@ -39,93 +40,195 @@
       A hands-on tool to explore the fundamentals of modern and historical cryptography.
     </p>
   </header>
-  
+
   <!-- Main Content -->
   <main class="flex-1 px-4 py-10 max-w-7xl mx-auto w-full space-y-8">
-    
+
     <!-- Playground Section -->
     <section class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
-        <div class="flex items-center gap-4 mb-6">
-            <span id="playground-icon"></span>
-            <h2 class="text-2xl font-bold text-blue-300">Cryptography Playground</h2>
-        </div>
-        <p class="text-gray-300 mb-4">
-            Cryptography is the practice and study of techniques for secure communication in the presence of third parties. This playground lets you interact with several key cryptographic concepts. Use the dropdown below to select a function and experiment with it.
-        </p>
-        <div class="mb-6">
-            <label for="crypto-select" class="block font-semibold text-lg text-blue-300 mb-2">Select a Cryptographic Function:</label>
-            <select id="crypto-select" class="w-full bg-gray-800 border border-gray-700 text-white rounded-md p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                <option value="aes" selected>AES (Symmetric Encryption)</option>
-                <option value="rsa">RSA (Asymmetric Encryption)</option>
-                <option value="hash">Cryptographic Hashing</option>
-                <option value="sign">Digital Signatures</option>
-            </select>
-        </div>
+      <div class="flex items-center gap-4 mb-6">
+        <span id="playground-icon"></span>
+        <h2 class="text-2xl font-bold text-blue-300">Cryptography Playground</h2>
+      </div>
+      <p class="text-gray-300 mb-4">
+        Cryptography is the practice and study of techniques for secure communication in the presence of third parties.
+        This playground lets you interact with several key cryptographic concepts. Use the dropdown below to select a
+        function and experiment with it.
+      </p>
+      <div class="mb-6">
+        <label for="crypto-select" class="block font-semibold text-lg text-blue-300 mb-2">Select a Cryptographic
+          Function:</label>
+        <select id="crypto-select"
+          class="w-full bg-gray-800 border border-gray-700 text-white rounded-md p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <option value="aes" selected>AES (Symmetric Encryption)</option>
+          <option value="rsa">RSA (Asymmetric Encryption)</option>
+          <option value="hash">Cryptographic Hashing</option>
+          <option value="sign">Digital Signatures</option>
+        </select>
+      </div>
 
-        <!-- AES Section -->
-        <div id="aes-section" class="crypto-section space-y-4">
-            <h3 class="text-xl font-semibold text-white">AES (Advanced Encryption Standard)</h3>
-            <p class="text-gray-400">AES is a symmetric encryption algorithm, meaning the same key is used for both encryption and decryption. It is the standard for encrypting data at rest and is widely used across the industry for its security and performance.</p>
-            <blockquote class="bg-gray-800 border-l-4 border-blue-400 p-4 rounded-r-lg">
-                <p class="text-gray-300 italic"><strong>Where is this used?</strong> You see AES in action when you encrypt a file on your computer (like with FileVault or BitLocker), connect to a secure Wi-Fi network (WPA2/3), or use a VPN.</p>
-            </blockquote>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="space-y-2"><label for="aes-plaintext" class="font-semibold text-blue-300">Plaintext</label><textarea id="aes-plaintext" class="w-full h-32 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter text to encrypt..."></textarea></div>
-                <div class="space-y-2"><label for="aes-ciphertext" class="font-semibold text-blue-300">Ciphertext</label><textarea id="aes-ciphertext" class="w-full h-32 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter text to decrypt..."></textarea></div>
-            </div>
-            <div class="flex items-end gap-4">
-                <div class="flex-grow space-y-2"><label for="aes-key" class="font-semibold text-blue-300">Secret Key</label><input type="text" id="aes-key" class="w-full bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter a secret key..."></div>
-                <button id="aes-generate-key-btn" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-md text-white font-semibold transition shadow-md flex items-center">Generate Key</button>
-            </div>
-            <div class="flex gap-4"><button id="aes-encrypt-btn" class="flex-1 px-6 py-3 bg-blue-700 hover:bg-blue-600 rounded-md text-white font-semibold transition shadow-lg">Encrypt</button><button id="aes-decrypt-btn" class="flex-1 px-6 py-3 bg-green-700 hover:bg-green-600 rounded-md text-white font-semibold transition shadow-lg">Decrypt</button></div>
-            <div class="space-y-2"><label for="aes-decryptedtext" class="font-semibold text-blue-300">Result</label><textarea id="aes-decryptedtext" class="w-full h-24 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" readonly placeholder="Result will appear here..."></textarea></div>
+      <!-- AES Section -->
+      <div id="aes-section" class="crypto-section space-y-4">
+        <h3 class="text-xl font-semibold text-white">AES (Advanced Encryption Standard)</h3>
+        <p class="text-gray-400">AES is a symmetric encryption algorithm, meaning the same key is used for both
+          encryption and decryption. It is the standard for encrypting data at rest and is widely used across the
+          industry for its security and performance.</p>
+        <blockquote class="bg-gray-800 border-l-4 border-blue-400 p-4 rounded-r-lg">
+          <p class="text-gray-300 italic"><strong>Where is this used?</strong> You see AES in action when you encrypt a
+            file on your computer (like with FileVault or BitLocker), connect to a secure Wi-Fi network (WPA2/3), or use
+            a VPN.</p>
+        </blockquote>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2"><label for="aes-plaintext"
+              class="font-semibold text-blue-300">Plaintext</label><textarea id="aes-plaintext"
+              class="w-full h-32 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Enter text to encrypt..."></textarea></div>
+          <div class="space-y-2"><label for="aes-ciphertext"
+              class="font-semibold text-blue-300">Ciphertext</label><textarea id="aes-ciphertext"
+              class="w-full h-32 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Enter text to decrypt..."></textarea></div>
         </div>
+        <div class="flex items-end gap-4">
+          <div class="flex-grow space-y-2"><label for="aes-key" class="font-semibold text-blue-300">Secret
+              Key</label><input type="text" id="aes-key"
+              class="w-full bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Enter a secret key..."></div>
+          <button id="aes-generate-key-btn"
+            class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-md text-white font-semibold transition shadow-md flex items-center">Generate
+            Key</button>
+        </div>
+        <div class="flex gap-4"><button id="aes-encrypt-btn"
+            class="flex-1 px-6 py-3 bg-blue-700 hover:bg-blue-600 rounded-md text-white font-semibold transition shadow-lg">Encrypt</button><button
+            id="aes-decrypt-btn"
+            class="flex-1 px-6 py-3 bg-green-700 hover:bg-green-600 rounded-md text-white font-semibold transition shadow-lg">Decrypt</button>
+        </div>
+        <div class="space-y-2"><label for="aes-decryptedtext"
+            class="font-semibold text-blue-300">Result</label><textarea id="aes-decryptedtext"
+            class="w-full h-24 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            readonly placeholder="Result will appear here..."></textarea></div>
+      </div>
 
-        <!-- RSA Section -->
-        <div id="rsa-section" class="crypto-section space-y-4 hidden">
-            <h3 class="text-xl font-semibold text-white">RSA (Rivest–Shamir–Adleman)</h3>
-            <p class="text-gray-400">RSA is an asymmetric algorithm that uses a pair of keys: a public key for encryption and a private key for decryption. The public key can be shared freely, while the private key must be kept secret. This allows anyone to send an encrypted message, but only the intended recipient can decrypt it.</p>
-            <blockquote class="bg-gray-800 border-l-4 border-blue-400 p-4 rounded-r-lg">
-                <p class="text-gray-300 italic"><strong>Where is this used?</strong> RSA is a cornerstone of asymmetric (public-key) cryptography. Your browser uses it to secure websites with HTTPS, establishing a secure connection by exchanging a symmetric key that's been encrypted with the server's public key.</p>
-            </blockquote>
-            <button id="rsa-generate-btn" class="w-full px-6 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-md text-white font-semibold transition shadow-lg mb-4">Generate RSA Key Pair (2048-bit)</button>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="space-y-2"><label for="rsa-public-key" class="font-semibold text-blue-300">Public Key</label><textarea id="rsa-public-key" class="w-full h-48 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" readonly placeholder="Public key will appear here..."></textarea></div>
-                <div class="space-y-2"><label for="rsa-private-key" class="font-semibold text-blue-300">Private Key</label><textarea id="rsa-private-key" class="w-full h-48 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" readonly placeholder="Private key will appear here..."></textarea></div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="space-y-2"><label for="rsa-plaintext" class="font-semibold text-blue-300">Plaintext</label><textarea id="rsa-plaintext" class="w-full h-32 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter text to encrypt..."></textarea></div>
-                <div class="space-y-2"><label for="rsa-ciphertext" class="font-semibold text-blue-300">Ciphertext</label><textarea id="rsa-ciphertext" class="w-full h-32 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter text to decrypt..."></textarea></div>
-            </div>
-            <div class="flex gap-4"><button id="rsa-encrypt-btn" class="flex-1 px-6 py-3 bg-blue-700 hover:bg-blue-600 rounded-md text-white font-semibold transition shadow-lg">Encrypt with Public Key</button><button id="rsa-decrypt-btn" class="flex-1 px-6 py-3 bg-green-700 hover:bg-green-600 rounded-md text-white font-semibold transition shadow-lg">Decrypt with Private Key</button></div>
-            <div class="space-y-2"><label for="rsa-result" class="font-semibold text-blue-300">Result</label><textarea id="rsa-result" class="w-full h-24 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" readonly placeholder="Result will appear here..."></textarea></div>
+      <!-- RSA Section -->
+      <div id="rsa-section" class="crypto-section space-y-4 hidden">
+        <h3 class="text-xl font-semibold text-white">RSA (Rivest–Shamir–Adleman)</h3>
+        <p class="text-gray-400">RSA is an asymmetric algorithm that uses a pair of keys: a public key for encryption
+          and a private key for decryption. The public key can be shared freely, while the private key must be kept
+          secret. This allows anyone to send an encrypted message, but only the intended recipient can decrypt it.</p>
+        <blockquote class="bg-gray-800 border-l-4 border-blue-400 p-4 rounded-r-lg">
+          <p class="text-gray-300 italic"><strong>Where is this used?</strong> RSA is a cornerstone of asymmetric
+            (public-key) cryptography. Your browser uses it to secure websites with HTTPS, establishing a secure
+            connection by exchanging a symmetric key that's been encrypted with the server's public key.</p>
+        </blockquote>
+        <button id="rsa-generate-btn"
+          class="w-full px-6 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-md text-white font-semibold transition shadow-lg mb-4">Generate
+          RSA Key Pair (2048-bit)</button>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2"><label for="rsa-public-key" class="font-semibold text-blue-300">Public
+              Key</label><textarea id="rsa-public-key"
+              class="w-full h-48 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              readonly placeholder="Public key will appear here..."></textarea></div>
+          <div class="space-y-2"><label for="rsa-private-key" class="font-semibold text-blue-300">Private
+              Key</label><textarea id="rsa-private-key"
+              class="w-full h-48 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              readonly placeholder="Private key will appear here..."></textarea></div>
         </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2"><label for="rsa-plaintext"
+              class="font-semibold text-blue-300">Plaintext</label><textarea id="rsa-plaintext"
+              class="w-full h-32 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Enter text to encrypt..."></textarea></div>
+          <div class="space-y-2"><label for="rsa-ciphertext"
+              class="font-semibold text-blue-300">Ciphertext</label><textarea id="rsa-ciphertext"
+              class="w-full h-32 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Enter text to decrypt..."></textarea></div>
+        </div>
+        <div class="flex gap-4"><button id="rsa-encrypt-btn"
+            class="flex-1 px-6 py-3 bg-blue-700 hover:bg-blue-600 rounded-md text-white font-semibold transition shadow-lg">Encrypt
+            with Public Key</button><button id="rsa-decrypt-btn"
+            class="flex-1 px-6 py-3 bg-green-700 hover:bg-green-600 rounded-md text-white font-semibold transition shadow-lg">Decrypt
+            with Private Key</button></div>
+        <div class="space-y-2"><label for="rsa-result" class="font-semibold text-blue-300">Result</label><textarea
+            id="rsa-result"
+            class="w-full h-24 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            readonly placeholder="Result will appear here..."></textarea></div>
+      </div>
 
-        <!-- Hashing Section -->
-        <div id="hash-section" class="crypto-section space-y-6 hidden">
-             <h3 class="text-xl font-semibold text-white">Cryptographic Hashing</h3>
-            <p class="text-gray-400">A hash function is a one-way function that takes an input of any size and produces a fixed-size string of characters, which is a hash. It is computationally infeasible to reverse the process to find the original input. This is used to verify data integrity and for password storage.</p>
-            <blockquote class="bg-gray-800 border-l-4 border-blue-400 p-4 rounded-r-lg">
-                <p class="text-gray-300 italic"><strong>Where is this used?</strong> Hashing is used to verify data integrity. When you download a file, the provided checksum (like SHA-256) is a hash. You can hash the downloaded file on your end to ensure it wasn't corrupted or tampered with. It's also used to securely store passwords.</p>
-            </blockquote>
-            <div class="space-y-2"><label for="hash-input" class="font-semibold text-blue-300">Input Text</label><textarea id="hash-input" class="w-full h-24 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter text to hash..."></textarea></div>
-            <div class="flex flex-wrap gap-4"><button id="hash-md5-btn" class="flex-1 px-4 py-2 bg-red-700 hover:bg-red-600 rounded-md text-white font-semibold transition shadow-md">MD5 (Insecure)</button><button id="hash-sha1-btn" class="flex-1 px-4 py-2 bg-yellow-600 hover:bg-yellow-500 rounded-md text-white font-semibold transition shadow-md">SHA-1 (Weak)</button><button id="hash-sha256-btn" class="flex-1 px-4 py-2 bg-green-700 hover:bg-green-600 rounded-md text-white font-semibold transition shadow-md">SHA-256 (Secure)</button><button id="hash-sha512-btn" class="flex-1 px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded-md text-white font-semibold transition shadow-md">SHA-512 (Secure)</button></div>
-            <div class="space-y-2"><label for="hash-output" class="font-semibold text-blue-300">Hash Output</label><textarea id="hash-output" class="w-full h-20 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" readonly placeholder="Hash result will appear here..."></textarea></div>
-            <div class="bg-gray-800 p-4 rounded-lg border border-gray-700"><h3 class="text-lg font-semibold text-blue-300 mb-2">Avalanche Effect Visualizer (SHA-256)</h3><p class="text-sm text-gray-400 mb-4">Notice how changing a single character completely and unpredictably changes the resulting hash. This is a critical property of secure hash functions.</p><div class="space-y-4"><div><label for="avalanche-input1" class="font-semibold text-gray-300">Original Text</label><input type="text" id="avalanche-input1" class="w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" value="Hello World"><p id="avalanche-hash1" class="mono text-xs mt-1 break-all text-gray-400"></p></div><div><label for="avalanche-input2" class="font-semibold text-gray-300">Modified Text (change one character)</label><input type="text" id="avalanche-input2" class="w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" value="hello World"><p id="avalanche-hash2" class="mono text-xs mt-1 break-all"></p></div></div></div>
+      <!-- Hashing Section -->
+      <div id="hash-section" class="crypto-section space-y-6 hidden">
+        <h3 class="text-xl font-semibold text-white">Cryptographic Hashing</h3>
+        <p class="text-gray-400">A hash function is a one-way function that takes an input of any size and produces a
+          fixed-size string of characters, which is a hash. It is computationally infeasible to reverse the process to
+          find the original input. This is used to verify data integrity and for password storage.</p>
+        <blockquote class="bg-gray-800 border-l-4 border-blue-400 p-4 rounded-r-lg">
+          <p class="text-gray-300 italic"><strong>Where is this used?</strong> Hashing is used to verify data integrity.
+            When you download a file, the provided checksum (like SHA-256) is a hash. You can hash the downloaded file
+            on your end to ensure it wasn't corrupted or tampered with. It's also used to securely store passwords.</p>
+        </blockquote>
+        <div class="space-y-2"><label for="hash-input" class="font-semibold text-blue-300">Input Text</label><textarea
+            id="hash-input"
+            class="w-full h-24 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="Enter text to hash..."></textarea></div>
+        <div class="flex flex-wrap gap-4"><button id="hash-md5-btn"
+            class="flex-1 px-4 py-2 bg-red-700 hover:bg-red-600 rounded-md text-white font-semibold transition shadow-md">MD5
+            (Insecure)</button><button id="hash-sha1-btn"
+            class="flex-1 px-4 py-2 bg-yellow-600 hover:bg-yellow-500 rounded-md text-white font-semibold transition shadow-md">SHA-1
+            (Weak)</button><button id="hash-sha256-btn"
+            class="flex-1 px-4 py-2 bg-green-700 hover:bg-green-600 rounded-md text-white font-semibold transition shadow-md">SHA-256
+            (Secure)</button><button id="hash-sha512-btn"
+            class="flex-1 px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded-md text-white font-semibold transition shadow-md">SHA-512
+            (Secure)</button></div>
+        <div class="space-y-2"><label for="hash-output" class="font-semibold text-blue-300">Hash Output</label><textarea
+            id="hash-output"
+            class="w-full h-20 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            readonly placeholder="Hash result will appear here..."></textarea></div>
+        <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+          <h3 class="text-lg font-semibold text-blue-300 mb-2">Avalanche Effect Visualizer (SHA-256)</h3>
+          <p class="text-sm text-gray-400 mb-4">Notice how changing a single character completely and unpredictably
+            changes the resulting hash. This is a critical property of secure hash functions.</p>
+          <div class="space-y-4">
+            <div><label for="avalanche-input1" class="font-semibold text-gray-300">Original Text</label><input
+                type="text" id="avalanche-input1"
+                class="w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                value="Hello World">
+              <p id="avalanche-hash1" class="mono text-xs mt-1 break-all text-gray-400"></p>
+            </div>
+            <div><label for="avalanche-input2" class="font-semibold text-gray-300">Modified Text (change one
+                character)</label><input type="text" id="avalanche-input2"
+                class="w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                value="hello World">
+              <p id="avalanche-hash2" class="mono text-xs mt-1 break-all"></p>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <!-- Digital Signature Section -->
-        <div id="sign-section" class="crypto-section space-y-4 hidden">
-            <h3 class="text-xl font-semibold text-white">Digital Signatures</h3>
-            <p class="text-gray-400">A digital signature is a mathematical scheme for verifying the authenticity of digital messages or documents. It provides a recipient with reason to believe that the message was created by a known sender (authentication), that the sender cannot deny having sent the message (non-repudiation), and that the message was not altered in transit (integrity).</p>
-            <blockquote class="bg-gray-800 border-l-4 border-blue-400 p-4 rounded-r-lg">
-                <p class="text-gray-300 italic"><strong>Where is this used?</strong> Your operating system uses digital signatures to verify that a software update is from the authentic developer (like Apple or Microsoft) and hasn't been tampered with by a malicious actor.</p>
-            </blockquote>
-            <div class="space-y-2"><label for="sign-message" class="font-semibold text-blue-300">Message to Sign</label><textarea id="sign-message" class="w-full h-32 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Enter a message..."></textarea></div>
-            <div class="flex gap-4"><button id="sign-btn" class="flex-1 px-6 py-3 bg-blue-700 hover:bg-blue-600 rounded-md text-white font-semibold transition shadow-lg">Sign with Private Key</button><button id="verify-btn" class="flex-1 px-6 py-3 bg-green-700 hover:bg-green-600 rounded-md text-white font-semibold transition shadow-lg">Verify with Public Key</button></div>
-            <div class="space-y-2"><label for="sign-signature" class="font-semibold text-blue-300">Generated Signature (Base64)</label><textarea id="sign-signature" class="w-full h-24 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Signature will be generated here..."></textarea></div>
-            <div id="verify-result" class="p-4 rounded-md text-center font-bold"></div>
-        </div>
+      <!-- Digital Signature Section -->
+      <div id="sign-section" class="crypto-section space-y-4 hidden">
+        <h3 class="text-xl font-semibold text-white">Digital Signatures</h3>
+        <p class="text-gray-400">A digital signature is a mathematical scheme for verifying the authenticity of digital
+          messages or documents. It provides a recipient with reason to believe that the message was created by a known
+          sender (authentication), that the sender cannot deny having sent the message (non-repudiation), and that the
+          message was not altered in transit (integrity).</p>
+        <blockquote class="bg-gray-800 border-l-4 border-blue-400 p-4 rounded-r-lg">
+          <p class="text-gray-300 italic"><strong>Where is this used?</strong> Your operating system uses digital
+            signatures to verify that a software update is from the authentic developer (like Apple or Microsoft) and
+            hasn't been tampered with by a malicious actor.</p>
+        </blockquote>
+        <div class="space-y-2"><label for="sign-message" class="font-semibold text-blue-300">Message to
+            Sign</label><textarea id="sign-message"
+            class="w-full h-32 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="Enter a message..."></textarea></div>
+        <div class="flex gap-4"><button id="sign-btn"
+            class="flex-1 px-6 py-3 bg-blue-700 hover:bg-blue-600 rounded-md text-white font-semibold transition shadow-lg">Sign
+            with Private Key</button><button id="verify-btn"
+            class="flex-1 px-6 py-3 bg-green-700 hover:bg-green-600 rounded-md text-white font-semibold transition shadow-lg">Verify
+            with Public Key</button></div>
+        <div class="space-y-2"><label for="sign-signature" class="font-semibold text-blue-300">Generated Signature
+            (Base64)</label><textarea id="sign-signature"
+            class="w-full h-24 bg-gray-800 border border-gray-700 rounded-md p-2 text-white mono focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="Signature will be generated here..."></textarea></div>
+        <div id="verify-result" class="p-4 rounded-md text-center font-bold"></div>
+      </div>
     </section>
 
     <!-- Weak & Deprecated Cryptography Section -->
@@ -135,308 +238,79 @@
         <h2 class="text-2xl font-bold text-red-400">Weak & Deprecated Cryptography</h2>
       </div>
       <p class="text-gray-300 mb-6">
-        As technology advances, cryptographic algorithms and protocols that were once considered secure can become vulnerable. It's crucial to understand why certain methods are no longer recommended for use. Below are examples of algorithms and protocols that are now considered weak or deprecated due to known vulnerabilities.
+        As technology advances, cryptographic algorithms and protocols that were once considered secure can become
+        vulnerable. It's crucial to understand why certain methods are no longer recommended for use. Below are examples
+        of algorithms and protocols that are now considered weak or deprecated due to known vulnerabilities.
       </p>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- List of deprecated items -->
-        <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-red-300 flex items-center gap-2"><span id="des-icon"></span>DES/3DES</h3><p class="text-gray-400 text-sm">Small key size (56-bit) makes it vulnerable to brute-force attacks with modern hardware.</p></div>
-        <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-red-300 flex items-center gap-2"><span id="hash-icon"></span>MD5/SHA-1</h3><p class="text-gray-400 text-sm">Vulnerable to collision attacks, meaning different inputs can produce the same hash.</p></div>
-        <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-red-300 flex items-center gap-2"><span id="rc4-icon"></span>RC4</h3><p class="text-gray-400 text-sm">Has several biases and vulnerabilities that can be exploited to recover the key.</p></div>
-        <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-red-300 flex items-center gap-2"><span id="ssl-icon"></span>SSL v2/v3</h3><p class="text-gray-400 text-sm">Susceptible to attacks like POODLE. Superseded by the more secure TLS protocols.</p></div>
-        <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-red-300 flex items-center gap-2"><span id="wep-icon"></span>WEP</h3><p class="text-gray-400 text-sm">Contained serious design flaws that allow for key recovery in minutes.</p></div>
-        <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-red-300 flex items-center gap-2"><span id="pptp-icon"></span>PPTP</h3><p class="text-gray-400 text-sm">Known vulnerabilities in its authentication protocols make it insecure for VPNs.</p></div>
+        <div class="bg-gray-800 p-4 rounded-lg">
+          <h3 class="font-semibold text-lg text-red-300 flex items-center gap-2"><span id="des-icon"></span>DES/3DES
+          </h3>
+          <p class="text-gray-400 text-sm">Small key size (56-bit) makes it vulnerable to brute-force attacks with
+            modern hardware.</p>
+        </div>
+        <div class="bg-gray-800 p-4 rounded-lg">
+          <h3 class="font-semibold text-lg text-red-300 flex items-center gap-2"><span id="hash-icon"></span>MD5/SHA-1
+          </h3>
+          <p class="text-gray-400 text-sm">Vulnerable to collision attacks, meaning different inputs can produce the
+            same hash.</p>
+        </div>
+        <div class="bg-gray-800 p-4 rounded-lg">
+          <h3 class="font-semibold text-lg text-red-300 flex items-center gap-2"><span id="rc4-icon"></span>RC4</h3>
+          <p class="text-gray-400 text-sm">Has several biases and vulnerabilities that can be exploited to recover the
+            key.</p>
+        </div>
+        <div class="bg-gray-800 p-4 rounded-lg">
+          <h3 class="font-semibold text-lg text-red-300 flex items-center gap-2"><span id="ssl-icon"></span>SSL v2/v3
+          </h3>
+          <p class="text-gray-400 text-sm">Susceptible to attacks like POODLE. Superseded by the more secure TLS
+            protocols.</p>
+        </div>
+        <div class="bg-gray-800 p-4 rounded-lg">
+          <h3 class="font-semibold text-lg text-red-300 flex items-center gap-2"><span id="wep-icon"></span>WEP</h3>
+          <p class="text-gray-400 text-sm">Contained serious design flaws that allow for key recovery in minutes.</p>
+        </div>
+        <div class="bg-gray-800 p-4 rounded-lg">
+          <h3 class="font-semibold text-lg text-red-300 flex items-center gap-2"><span id="pptp-icon"></span>PPTP</h3>
+          <p class="text-gray-400 text-sm">Known vulnerabilities in its authentication protocols make it insecure for
+            VPNs.</p>
+        </div>
       </div>
     </section>
 
     <!-- Future of Cryptography Section -->
     <section class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
-        <div class="flex items-center gap-4 mb-4">
-            <span id="future-icon"></span>
-            <h2 class="text-2xl font-bold text-green-400">The Future of Cryptography</h2>
+      <div class="flex items-center gap-4 mb-4">
+        <span id="future-icon"></span>
+        <h2 class="text-2xl font-bold text-green-400">The Future of Cryptography</h2>
+      </div>
+      <p class="text-gray-300 mb-6">
+        The field of cryptography is constantly evolving to counter new threats, especially the rise of quantum
+        computing, which threatens to break many of our current encryption standards.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-gray-800 p-4 rounded-lg">
+          <h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span
+              id="quantum-icon"></span>Post-Quantum Cryptography (PQC)</h3>
+          <p class="text-gray-400 text-sm">Developing new algorithms (like lattice-based or hash-based cryptography)
+            that are secure against attacks from both classical and quantum computers.</p>
         </div>
-        <p class="text-gray-300 mb-6">
-            The field of cryptography is constantly evolving to counter new threats, especially the rise of quantum computing, which threatens to break many of our current encryption standards.
-        </p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span id="quantum-icon"></span>Post-Quantum Cryptography (PQC)</h3><p class="text-gray-400 text-sm">Developing new algorithms (like lattice-based or hash-based cryptography) that are secure against attacks from both classical and quantum computers.</p></div>
-            <div class="bg-gray-800 p-4 rounded-lg"><h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span id="prng-icon"></span>Homomorphic Encryption</h3><p class="text-gray-400 text-sm">Allows computation on encrypted data without decrypting it first. This could revolutionize cloud computing privacy by allowing services to process sensitive data while it remains encrypted.</p></div>
+        <div class="bg-gray-800 p-4 rounded-lg">
+          <h3 class="font-semibold text-lg text-green-300 flex items-center gap-2"><span
+              id="prng-icon"></span>Homomorphic Encryption</h3>
+          <p class="text-gray-400 text-sm">Allows computation on encrypted data without decrypting it first. This could
+            revolutionize cloud computing privacy by allowing services to process sensitive data while it remains
+            encrypted.</p>
         </div>
+      </div>
     </section>
   </main>
-  
+
   <site-footer></site-footer>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // --- 1. Page-Specific Encryption Logic ---
-      const getEl = (id) => document.getElementById(id);
-      
-      const cryptoSelect = getEl('crypto-select');
-      const cryptoSections = document.querySelectorAll('.crypto-section');
-      
-      // AES Elements
-      const aesPlaintext = getEl('aes-plaintext');
-      const aesCiphertext = getEl('aes-ciphertext');
-      const aesKey = getEl('aes-key');
-      const aesEncryptBtn = getEl('aes-encrypt-btn');
-      const aesDecryptBtn = getEl('aes-decrypt-btn');
-      const aesDecryptedtext = getEl('aes-decryptedtext');
-      const aesGenerateKeyBtn = getEl('aes-generate-key-btn');
-
-      // RSA Elements
-      const rsaGenerateBtn = getEl('rsa-generate-btn');
-      const rsaPublicKey = getEl('rsa-public-key');
-      const rsaPrivateKey = getEl('rsa-private-key');
-      const rsaPlaintext = getEl('rsa-plaintext');
-      const rsaCiphertext = getEl('rsa-ciphertext');
-      const rsaEncryptBtn = getEl('rsa-encrypt-btn');
-      const rsaDecryptBtn = getEl('rsa-decrypt-btn');
-      const rsaResult = getEl('rsa-result');
-      
-      // Hashing Elements
-      const hashInput = getEl('hash-input');
-      const hashOutput = getEl('hash-output');
-      const hashMd5Btn = getEl('hash-md5-btn');
-      const hashSha1Btn = getEl('hash-sha1-btn');
-      const hashSha256Btn = getEl('hash-sha256-btn');
-      const hashSha512Btn = getEl('hash-sha512-btn');
-      
-      // Avalanche Elements
-      const avalancheInput1 = getEl('avalanche-input1');
-      const avalancheHash1 = getEl('avalanche-hash1');
-      const avalancheInput2 = getEl('avalanche-input2');
-      const avalancheHash2 = getEl('avalanche-hash2');
-
-      // Digital Signature Elements
-      const signMessage = getEl('sign-message');
-      const signSignature = getEl('sign-signature');
-      const signBtn = getEl('sign-btn');
-      const verifyBtn = getEl('verify-btn');
-      const verifyResult = getEl('verify-result');
-
-      // Section Switching Logic
-      cryptoSelect.addEventListener('change', (e) => {
-        const selectedValue = e.target.value;
-        cryptoSections.forEach(section => {
-            if (section.id === `${selectedValue}-section`) {
-                section.classList.remove('hidden');
-            } else {
-                section.classList.add('hidden');
-            }
-        });
-      });
-
-      // AES Functions
-      const aesEncrypt = (text, key) => {
-        try {
-          const salt = CryptoJS.lib.WordArray.random(128 / 8);
-          const key256 = CryptoJS.PBKDF2(key, salt, { keySize: 256 / 32, iterations: 1000 });
-          const iv = CryptoJS.lib.WordArray.random(128 / 8);
-          const encrypted = CryptoJS.AES.encrypt(text, key256, { iv: iv, padding: CryptoJS.pad.Pkcs7, mode: CryptoJS.mode.CBC });
-          return salt.toString() + "::" + iv.toString() + "::" + encrypted.toString();
-        } catch (e) {
-          console.error("AES Encryption Error:", e);
-          return "Encryption failed.";
-        }
-      };
-
-      const aesDecrypt = (transitmessage, key) => {
-        try {
-          const parts = transitmessage.split('::');
-          if (parts.length !== 3) return "Decryption Failed: Invalid format.";
-          const salt = CryptoJS.enc.Hex.parse(parts[0]);
-          const iv = CryptoJS.enc.Hex.parse(parts[1]);
-          const ciphertext = parts[2];
-          const key256 = CryptoJS.PBKDF2(key, salt, { keySize: 256 / 32, iterations: 1000 });
-          const decrypted = CryptoJS.AES.decrypt(ciphertext, key256, { iv: iv, padding: CryptoJS.pad.Pkcs7, mode: CryptoJS.mode.CBC });
-          const decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
-          return decryptedText || 'Decryption Failed. Please check your key.';
-        } catch (e) {
-          console.error("AES Decryption Error:", e);
-          return "Decryption failed. Ensure format is correct.";
-        }
-      };
-
-      const generateAesKey = () => {
-        const rawKey = CryptoJS.lib.WordArray.random(256 / 8);
-        return CryptoJS.enc.Hex.stringify(rawKey);
-      }
-
-      // RSA Functions
-      const rsaGenerateKeys = () => {
-        const crypt = new JSEncrypt({ default_key_size: 2048 });
-        rsaPublicKey.value = crypt.getPublicKey();
-        rsaPrivateKey.value = crypt.getPrivateKey();
-      };
-      
-      const rsaEncrypt = (text, publicKey) => {
-        if (!publicKey) return "Please generate a key pair first.";
-        const crypt = new JSEncrypt();
-        crypt.setPublicKey(publicKey);
-        const encrypted = crypt.encrypt(text);
-        return encrypted || "Encryption failed. Message may be too long for RSA key size.";
-      };
-      
-      const rsaDecrypt = (ciphertext, privateKey) => {
-        if (!privateKey) return "Please generate a key pair first.";
-        const crypt = new JSEncrypt();
-        crypt.setPrivateKey(privateKey);
-        const decrypted = crypt.decrypt(ciphertext);
-        return decrypted || "Decryption failed. Check ciphertext and private key.";
-      };
-
-      // Hashing Functions
-      const hash = (text, algo) => {
-        return algo(text).toString();
-      };
-      
-      // Avalanche Effect Logic
-      const updateAvalanche = () => {
-        const text1 = avalancheInput1.value;
-        const text2 = avalancheInput2.value;
-        const hash1 = CryptoJS.SHA256(text1).toString();
-        const hash2 = CryptoJS.SHA256(text2).toString();
-        
-        avalancheHash1.textContent = hash1;
-        
-        let diffHtml = '';
-        for (let i = 0; i < hash2.length; i++) {
-            if (i >= hash1.length || hash1[i] !== hash2[i]) {
-                diffHtml += `<span class="hash-diff">${hash2[i]}</span>`;
-            } else {
-                diffHtml += hash2[i];
-            }
-        }
-        avalancheHash2.innerHTML = diffHtml;
-      };
-
-      // Digital Signature Functions
-      const signMessageFunc = (message, privateKey) => {
-        if (!privateKey) {
-            alert("Please generate an RSA key pair in the RSA tab first.");
-            return "";
-        }
-        const crypt = new JSEncrypt();
-        crypt.setPrivateKey(privateKey);
-        const signature = crypt.sign(message, CryptoJS.SHA256, "sha256");
-        return signature || "Signing failed.";
-      };
-      
-      const verifyMessageFunc = (message, signature, publicKey) => {
-        if (!publicKey) return { valid: false, message: "Please generate an RSA key pair in the RSA tab first." };
-        const crypt = new JSEncrypt();
-        crypt.setPublicKey(publicKey);
-        const isValid = crypt.verify(message, signature, CryptoJS.SHA256);
-        return {
-          valid: isValid,
-          message: isValid ? "Signature is valid." : "Signature is INVALID."
-        };
-      };
-      
-      // Event Listeners (Page Specific)
-      aesEncryptBtn.addEventListener('click', () => {
-        const plaintext = aesPlaintext.value;
-        const key = aesKey.value;
-        if (plaintext && key) aesCiphertext.value = aesEncrypt(plaintext, key);
-      });
-      aesDecryptBtn.addEventListener('click', () => {
-        const ciphertext = aesCiphertext.value;
-        const key = aesKey.value;
-        if (ciphertext && key) aesDecryptedtext.value = aesDecrypt(ciphertext, key);
-      });
-      aesGenerateKeyBtn.addEventListener('click', () => aesKey.value = generateAesKey());
-      rsaGenerateBtn.addEventListener('click', rsaGenerateKeys);
-      rsaEncryptBtn.addEventListener('click', () => rsaCiphertext.value = rsaEncrypt(rsaPlaintext.value, rsaPublicKey.value));
-      rsaDecryptBtn.addEventListener('click', () => rsaResult.value = rsaDecrypt(rsaCiphertext.value, rsaPrivateKey.value));
-      hashMd5Btn.addEventListener('click', () => hashOutput.value = hash(hashInput.value, CryptoJS.MD5));
-      hashSha1Btn.addEventListener('click', () => hashOutput.value = hash(hashInput.value, CryptoJS.SHA1));
-      hashSha256Btn.addEventListener('click', () => hashOutput.value = hash(hashInput.value, CryptoJS.SHA256));
-      hashSha512Btn.addEventListener('click', () => hashOutput.value = hash(hashInput.value, CryptoJS.SHA512));
-      avalancheInput1.addEventListener('input', updateAvalanche);
-      avalancheInput2.addEventListener('input', updateAvalanche);
-      signBtn.addEventListener('click', () => signSignature.value = signMessageFunc(signMessage.value, rsaPrivateKey.value));
-      verifyBtn.addEventListener('click', () => {
-        const result = verifyMessageFunc(signMessage.value, signSignature.value, rsaPublicKey.value);
-        verifyResult.textContent = result.message;
-        verifyResult.className = `p-4 rounded-md text-center font-bold ${result.valid ? 'bg-green-800 text-green-200' : 'bg-red-800 text-red-200'}`;
-      });
-
-      // Initial Calls
-      updateAvalanche();
-      
-      // --- 2. Render ALL Icons (Nav + Page) ---
-      if (window.lucide) {
-        lucide.createIcons({
-          icons: {
-              // All Nav Icons
-              'nav-home': lucide.Home,
-              'nav-guides-trigger': lucide.BookOpen,
-              'nav-tools-trigger': lucide.Briefcase,
-              'nav-guides-chevron': lucide.ChevronDown,
-              'nav-tools-chevron': lucide.ChevronDown,
-              'nav-cloud': lucide.Cloud,
-              'nav-roadmap': lucide.Map,
-              'nav-phishing': lucide.Fish,
-              'nav-sast': lucide.FileSearch,
-              'nav-threat': lucide.ShieldAlert,
-              'nav-checklist': lucide.ListChecks,
-              'nav-epss': lucide.Activity, 
-              'nav-encryption': lucide.Lock, // <-- Included for nav
-              'nav-fp': lucide.Fingerprint,
-              'nav-jwt': lucide.KeyRound,
-              'nav-modcat': lucide.Guitar,
-              'nav-shamir': lucide.Share2,
-              'nav-dashboard': lucide.LayoutDashboard,
-
-              // Page-specific icons
-              'playground-icon': lucide.FlaskConical, 
-              'shield-off-icon': lucide.ShieldOff, 
-              'future-icon': lucide.Sparkles,
-              'des-icon': lucide.Key, 
-              'hash-icon': lucide.Hash, 
-              'rc4-icon': lucide.Waves, 
-              'ssl-icon': lucide.ShieldOff, 
-              'wep-icon': lucide.WifiOff, 
-              'pptp-icon': lucide.RouteOff, 
-              'quantum-icon': lucide.BrainCircuit, 
-              'prng-icon': lucide.Dices
-          },
-          attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
-        });
-      }
-
-      // --- 3. Add Nav Dropdown Logic ---
-      const dropdownButtons = document.querySelectorAll('.group > button');
-      dropdownButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-          const dropdownMenu = e.currentTarget.nextElementSibling;
-          // Close all other open dropdowns
-          document.querySelectorAll('.group .absolute').forEach(menu => {
-            if (menu !== dropdownMenu) {
-              menu.classList.add('opacity-0', 'invisible');
-              menu.classList.remove('opacity-100', 'visible');
-            }
-          });
-          // Toggle the current dropdown
-          dropdownMenu.classList.toggle('opacity-0');
-          dropdownMenu.classList.toggle('invisible');
-          dropdownMenu.classList.toggle('opacity-100');
-          dropdownMenu.classList.toggle('visible');
-        });
-      });
-
-      // Close dropdowns if clicking outside
-      window.addEventListener('click', (e) => {
-        if (!e.target.closest('.group')) {
-          document.querySelectorAll('.group .absolute').forEach(menu => {
-            menu.classList.add('opacity-0', 'invisible');
-            menu.classList.remove('opacity-100', 'visible');
-          });
-        }
-      });
-
-    });
-  </script>
-<script type="module" src="/main.js"></script>
+  <script type="module" src="/encryption.js"></script>
+  <script type="module" src="/main.js"></script>
 </body>
+
 </html>
