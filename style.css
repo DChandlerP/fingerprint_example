@@ -31,3 +31,444 @@ html {
 .component-label {
   @apply fill-gray-200 text-sm font-semibold pointer-events-none select-none;
 }
+
+/* Cyber Roadmap Styles */
+/* Apply dark mode base from index.html */
+body {
+  background-color: #030712;
+  /* Tailwind gray-950 */
+  color: #d1d5db;
+  /* Tailwind gray-300 */
+}
+
+/* Styles for the filter buttons - Dark Mode */
+.filter-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  /* pill shape */
+  font-weight: 500;
+  background-color: #1f2937;
+  /* gray-800 */
+  color: #9ca3af;
+  /* gray-400 */
+  transition: all 0.2s ease;
+  border: 2px solid #374151;
+  /* gray-700 */
+  cursor: pointer;
+}
+
+.filter-btn:hover {
+  background-color: #374151;
+  /* gray-700 */
+  color: #d1d5db;
+  /* gray-300 */
+}
+
+.filter-btn.active {
+  background-color: #1d4ed8;
+  /* blue-700 */
+  color: #ffffff;
+  border-color: #1d4ed8;
+  /* blue-700 */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+/* NEW: Styles for the filter dropdown */
+.filter-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.25em;
+  padding-right: 2.5rem;
+  /* Make space for arrow */
+
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  /* pill shape */
+  font-weight: 500;
+  background-color: #1f2937;
+  /* gray-800 */
+  color: #9ca3af;
+  /* gray-400 */
+  transition: all 0.2s ease;
+  border: 2px solid #374151;
+  /* gray-700 */
+  cursor: pointer;
+}
+
+.filter-select:hover {
+  background-color: #374151;
+  /* gray-700 */
+  color: #d1d5db;
+  /* gray-300 */
+}
+
+.filter-select.active {
+  background-color: #1d4ed8;
+  /* blue-700 */
+  color: #ffffff;
+  border-color: #1d4ed8;
+  /* blue-700 */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+.filter-select option {
+  background-color: #1f2937;
+  /* gray-800 */
+  color: #d1d5db;
+  /* gray-300 */
+}
+
+/* Styles for the certification list items - Dark Mode */
+.cert-trigger {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  /* 8px */
+  background-color: #111827;
+  /* gray-900 */
+  border: 1px solid #1f2937;
+  /* gray-800 */
+  transition: transform 0.2s ease, border-color 0.2s ease, opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.cert-trigger:hover {
+  transform: translateY(-2px);
+  border-color: #3b82f6;
+  /* blue-500 */
+}
+
+.cert-trigger.hidden {
+  opacity: 0;
+  height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border: none;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Modal Styles - Dark Mode */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(17, 24, 39, 0.8);
+  /* gray-900 with opacity */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.modal-overlay:not(.hidden) {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-content {
+  background-color: #111827;
+  /* gray-900 */
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  transform: scale(0.95);
+  transition: transform 0.3s ease;
+  position: relative;
+  /* For close button positioning */
+  border-top: 4px solid #3b82f6;
+  /* Default border color (blue-500) */
+  color: #d1d5db;
+  /* gray-300 */
+}
+
+.modal-overlay:not(.hidden) .modal-content {
+  transform: scale(1);
+}
+
+.modal-content h2,
+.modal-content h3 {
+  color: #f9fafb;
+  /* gray-50 */
+}
+
+.modal-content p {
+  color: #9ca3af;
+  /* gray-400 */
+}
+
+.modal-content #modal-notes {
+  color: #6b7280;
+  /* gray-500 */
+}
+
+.modal-close-button {
+  /* Added class for styling */
+  position: absolute;
+  top: 0.75rem;
+  /* Adjusted position */
+  right: 1rem;
+  /* Adjusted position */
+  color: #6b7280;
+  /* gray-500 */
+  transition: color 0.2s ease;
+}
+
+.modal-close-button:hover {
+  color: #f9fafb;
+  /* gray-50 */
+}
+
+/* Vendor-specific tag colors - Dark Mode */
+.tag-comptia {
+  background-color: #1e3a8a;
+  color: #bfdbfe;
+}
+
+/* blue-900 / blue-200 */
+.tag-isc2 {
+  background-color: #14532d;
+  color: #bbf7d0;
+}
+
+/* green-900 / green-200 */
+.tag-giac {
+  background-color: #7f1d1d;
+  color: #fecaca;
+}
+
+/* red-900 / red-200 */
+.tag-isaca {
+  background-color: #713f12;
+  color: #fef08a;
+}
+
+/* yellow-900 / yellow-300 */
+.tag-offsec {
+  background-color: #1f2937;
+  color: #e5e7eb;
+}
+
+/* gray-800 / gray-200 */
+.tag-platform {
+  background-color: #581c87;
+  color: #e9d5ff;
+}
+
+/* purple-900 / purple-200 */
+
+/* Level-specific tag colors - Dark Mode */
+.tag-basic {
+  background-color: #312e81;
+  color: #c7d2fe;
+}
+
+/* indigo-900 / indigo-200 */
+.tag-intermediate {
+  background-color: #78350f;
+  color: #fde68a;
+}
+
+/* amber-900 / amber-200 */
+.tag-advanced {
+  background-color: #831843;
+  color: #fbcfe8;
+}
+
+/* pink-900 / pink-200 */
+
+/* NEW: DoD Role tag color */
+.tag-role {
+  background-color: #374151;
+  /* gray-700 */
+  color: #e5e7eb;
+  /* gray-200 */
+  font-family: monospace;
+  font-size: 0.75rem;
+  /* text-xs */
+}
+
+/* Vendor-specific modal border colors */
+.modal-comptia {
+  border-top-color: #3b82f6;
+}
+
+/* blue-500 */
+.modal-isc2 {
+  border-top-color: #22c55e;
+}
+
+/* green-500 */
+.modal-giac {
+  border-top-color: #ef4444;
+}
+
+/* red-500 */
+.modal-isaca {
+  border-top-color: #f59e0b;
+}
+
+/* yellow-500 */
+.modal-offsec {
+  border-top-color: #4b5563;
+}
+
+/* gray-600 - Adjusted for visibility */
+.modal-platform {
+  border-top-color: #a855f7;
+}
+
+/* purple-500 */
+
+/* Info boxes - Dark Mode */
+.info-box {
+  background-color: #1f2937;
+  /* gray-800 */
+  border-left: 4px solid #60a5fa;
+  /* blue-400 */
+  padding: 1rem;
+  border-radius: 0.375rem;
+  /* rounded-md */
+  margin-bottom: 2rem;
+  transition: opacity 0.3s ease;
+  color: #9ca3af;
+  /* gray-400 */
+}
+
+.info-box h3 {
+  color: #e5e7eb;
+  /* gray-200 */
+}
+
+.info-box a {
+  color: #60a5fa;
+  /* blue-400 */
+}
+
+.info-box a:hover {
+  color: #93c5fd;
+  /* blue-300 */
+}
+
+.info-box.hidden {
+  /* No change needed */
+  opacity: 0;
+  height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* NEW: Info box list styling */
+.info-box ul {
+  list-style-type: disc;
+  list-style-position: inside;
+  padding-left: 0.5rem;
+}
+
+.info-box li {
+  margin-top: 0.5rem;
+}
+
+.info-box strong {
+  color: #d1d5db;
+  /* gray-300 */
+}
+
+/* NEW: Info box ordered list styling */
+.info-box ol {
+  list-style-type: decimal;
+  list-style-position: outside;
+  padding-left: 1.25rem;
+  /* pl-5 */
+}
+
+.info-box ol>li::marker {
+  color: #60a5fa;
+  /* blue-400 */
+  font-weight: 600;
+}
+
+/* Modal Official Link Button - Dark Mode */
+.official-link-btn {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  padding: 0.75rem 1.25rem;
+  /* Adjusted padding */
+  border-radius: 0.5rem;
+  /* rounded-lg */
+  font-weight: 600;
+  /* semibold */
+  color: #ffffff;
+  background-color: #1d4ed8;
+  /* blue-700 */
+  transition: background-color 0.2s ease;
+}
+
+.official-link-btn:hover {
+  background-color: #1e40af;
+  /* blue-800 */
+}
+
+/* EU Privacy Timeline Styles */
+.timeline-line::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, transparent, #374151 5%, #374151 95%, transparent);
+  z-index: 0;
+}
+
+@media (max-width: 768px) {
+  .timeline-line::before {
+    left: 24px;
+  }
+}
+
+.timeline-item {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.timeline-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #030712;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4b5563;
+}
