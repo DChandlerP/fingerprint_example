@@ -1,5 +1,5 @@
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
-import * as lucide from 'lucide';
+import { createIcons, Monitor, Globe, Maximize, Clock, Languages, Cpu, HardDrive, Palette, Image, Check } from 'lucide';
 
 document.addEventListener('DOMContentLoaded', () => {
     const fpLoading = document.getElementById('fp-loading');
@@ -8,6 +8,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const fpGrid = document.getElementById('fp-grid');
     const reloadBtn = document.getElementById('reload-fp');
     const copyBtn = document.getElementById('copy-id');
+
+    // Define icons object for createIcons
+    const icons = {
+        monitor: Monitor,
+        globe: Globe,
+        maximize: Maximize,
+        clock: Clock,
+        languages: Languages,
+        cpu: Cpu,
+        'hard-drive': HardDrive,
+        palette: Palette,
+        image: Image,
+        check: Check
+    };
 
     // Helper to create a card
     const createCard = (title, value, iconName, colorClass = 'text-blue-400') => {
@@ -105,8 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Re-initialize icons for the new elements
-            lucide.createIcons({
-                icons: lucide.icons,
+            createIcons({
+                icons: icons,
                 nameAttr: 'data-lucide',
                 attrs: {
                     class: "w-6 h-6"
@@ -138,11 +152,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 // For now, simple alert or console log, or just rely on user knowing it copied
                 const originalIcon = copyBtn.innerHTML;
                 copyBtn.innerHTML = '<i data-lucide="check" class="w-5 h-5 text-green-400"></i>';
-                lucide.createIcons({ icons: lucide.icons, nameAttr: 'data-lucide' });
+                createIcons({ icons: icons, nameAttr: 'data-lucide' });
 
                 setTimeout(() => {
                     copyBtn.innerHTML = originalIcon;
-                    lucide.createIcons({ icons: lucide.icons, nameAttr: 'data-lucide' });
+                    createIcons({ icons: icons, nameAttr: 'data-lucide' });
                 }, 2000);
             });
         });

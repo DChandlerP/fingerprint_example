@@ -1,7 +1,30 @@
 import './style.css';
-import * as lucide from 'lucide';
-window.lucide = lucide;
-import { createIcons, icons } from 'lucide';
+import {
+  createIcons,
+  Home,
+  BookOpen,
+  ChevronDown,
+  Gavel,
+  Flag,
+  Globe,
+  Cloud,
+  Map,
+  Fish,
+  FileSearch,
+  ShieldAlert,
+  Scale,
+  Code2,
+  Briefcase,
+  ListChecks,
+  Target,
+  Lock,
+  Fingerprint,
+  KeyRound,
+  Guitar,
+  Share2,
+  LayoutDashboard,
+  Palette
+} from 'lucide';
 
 // --- Web Components ---
 
@@ -115,7 +138,31 @@ class SiteNav extends HTMLElement {
 
     // Initialize icons within the component
     createIcons({
-      icons,
+      icons: {
+        Home,
+        BookOpen,
+        ChevronDown,
+        Gavel,
+        Flag,
+        Globe,
+        Cloud,
+        Map,
+        Fish,
+        FileSearch,
+        ShieldAlert,
+        Scale,
+        Code2,
+        Briefcase,
+        ListChecks,
+        Target,
+        Lock,
+        Fingerprint,
+        KeyRound,
+        Guitar,
+        Share2,
+        LayoutDashboard,
+        Palette
+      },
       nameAttr: 'data-lucide',
       attrs: {
         class: "w-4 h-4"
@@ -168,15 +215,6 @@ class SiteFooter extends HTMLElement {
 
 customElements.define('site-nav', SiteNav);
 customElements.define('site-footer', SiteFooter);
-
-// Initialize icons for the rest of the page
-createIcons({
-  icons,
-  nameAttr: 'data-lucide',
-  attrs: {
-    class: "w-6 h-6" // Default size for page icons
-  }
-});
 
 // Unhide body when loaded
 document.addEventListener('DOMContentLoaded', () => {

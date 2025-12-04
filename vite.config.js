@@ -9,7 +9,15 @@ export default defineConfig({
                 const name = file.replace(/\.html$/, '');
                 entries[name] = resolve(__dirname, file);
                 return entries;
-            }, {})
+            }, {}),
+            output: {
+                manualChunks: {
+                    'vendor-lucide': ['lucide'],
+                    'vendor-charts': ['chart.js', 'chartjs-adapter-date-fns', 'date-fns'],
+                    'vendor-crypto': ['crypto-js', 'jsencrypt'],
+                    'vendor-fingerprint': ['@fingerprintjs/fingerprintjs']
+                }
+            }
         }
     }
 });

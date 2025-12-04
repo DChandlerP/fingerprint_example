@@ -1,4 +1,4 @@
-import * as lucide from 'lucide';
+import { createIcons, Copy, Download } from 'lucide';
 
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. Page-Specific Checklist Logic ---
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     copyBtn.innerHTML = '<span id="copy-icon" class="mr-1"></span>Copied!';
                     setTimeout(() => {
                         copyBtn.innerHTML = '<span id="copy-icon" class="mr-1"></span>Copy';
-                        lucide.createIcons({ icons: { 'copy-icon': lucide.icons.Copy }, attrs: { color: "#fff", size: 16, strokeWidth: 2.5 } });
+                        createIcons({ icons: { 'copy-icon': Copy }, attrs: { color: "#fff", size: 16, strokeWidth: 2.5 } });
                     }, 2000);
                 })
                 .catch(err => console.error('Failed to copy: ', err));
@@ -168,74 +168,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 2. Render ALL Icons (Nav + Page) ---
-    lucide.createIcons({
-        icons: {
-            // All Nav Icons
-            'nav-home': lucide.icons.Home,
-            'nav-guides-trigger': lucide.icons.BookOpen,
-            'nav-tools-trigger': lucide.icons.Briefcase,
-            'nav-guides-chevron': lucide.icons.ChevronDown,
-            'nav-tools-chevron': lucide.icons.ChevronDown,
-            'nav-cloud': lucide.icons.Cloud,
-            'nav-roadmap': lucide.icons.Map,
-            'nav-phishing': lucide.icons.Fish,
-            'nav-sast': lucide.icons.FileSearch,
-            'nav-threat': lucide.icons.ShieldAlert,
-            'nav-checklist': lucide.icons.ListChecks, // <-- Included for nav
-            'nav-epss': lucide.icons.Activity,
-            'nav-encryption': lucide.icons.Lock,
-            'nav-fp': lucide.icons.Fingerprint,
-            'nav-jwt': lucide.icons.KeyRound,
-            'nav-modcat': lucide.icons.Guitar,
-            'nav-shamir': lucide.icons.Share2,
-            'nav-dashboard': lucide.icons.LayoutDashboard,
-
-            // Page-specific icons
-            'copy-icon': lucide.icons.Copy,
-            'download-icon': lucide.icons.Download,
-        },
-        attrs: {
-            color: "#38bdf8",
-            size: 24,
-            strokeWidth: 2
-        }
-    });
-
     // Override styles for copy/download buttons
-    lucide.createIcons({
-        icons: { 'copy-icon': lucide.icons.Copy, 'download-icon': lucide.icons.Download },
+    createIcons({
+        icons: { 'copy-icon': Copy, 'download-icon': Download },
         attrs: { color: "#fff", size: 16, strokeWidth: 2.5 }
     });
 
     // --- 3. Add Nav Dropdown Logic ---
-    const dropdownButtons = document.querySelectorAll('.group > button');
-    dropdownButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            const dropdownMenu = e.currentTarget.nextElementSibling;
-            // Close all other open dropdowns
-            document.querySelectorAll('.group .absolute').forEach(menu => {
-                if (menu !== dropdownMenu) {
-                    menu.classList.add('opacity-0', 'invisible');
-                    menu.classList.remove('opacity-100', 'visible');
-                }
-            });
-            // Toggle the current dropdown
-            dropdownMenu.classList.toggle('opacity-0');
-            dropdownMenu.classList.toggle('invisible');
-            dropdownMenu.classList.toggle('opacity-100');
-            dropdownMenu.classList.toggle('visible');
-        });
-    });
-
-    // Close dropdowns if clicking outside
-    window.addEventListener('click', (e) => {
-        if (!e.target.closest('.group')) {
-            document.querySelectorAll('.group .absolute').forEach(menu => {
-                menu.classList.add('opacity-0', 'invisible');
-                menu.classList.remove('opacity-100', 'visible');
-            });
-        }
-    });
-
-}); // End DOMContentLoaded
+    // Note: This logic might be redundant if main.js handles it, but keeping it for safety if checklist.js is used standalone or if main.js logic doesn't cover this specific page's needs (though it should).
+    // However, main.js handles .group > button logic.
+    // I will remove the redundant dropdown logic if I am sure main.js covers it.
+    // main.js has the exact same logic. I'll comment it out or remove it to reduce size.
+    // Actually, let's keep it but use the cleaner implementation if needed.
+    // But since main.js is a module and this is a module, they run independently.
+    // If main.js attaches listeners to .group > button, and this does too, we get double listeners.
+    // I will remove the dropdown logic from here as it should be in main.js.
+});

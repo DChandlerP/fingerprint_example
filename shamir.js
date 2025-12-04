@@ -1,5 +1,3 @@
-import * as lucide from 'lucide';
-
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. Page-Specific Shamir Logic ---
     document.documentElement.classList.remove('invisible');
@@ -97,8 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const isSelected = state.selectedShares.find(s => s.x === share.x);
             const card = document.createElement('button');
             card.className = `flex flex-col items-center justify-center p-3 rounded-lg border transition-all duration-200 ${isSelected
-                    ? 'bg-blue-900/40 border-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.3)]'
-                    : 'bg-gray-800 border-gray-700 hover:border-gray-500 hover:bg-gray-750'
+                ? 'bg-blue-900/40 border-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.3)]'
+                : 'bg-gray-800 border-gray-700 hover:border-gray-500 hover:bg-gray-750'
                 }`;
 
             card.innerHTML = `
@@ -142,61 +140,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     window.addEventListener('resize', drawCanvas);
     generateBtn.click();
-
-    // --- 2. Render ALL Icons (Nav only needed here) ---
-    lucide.createIcons({
-        icons: {
-            // All Nav Icons
-            'nav-home': lucide.icons.Home,
-            'nav-guides-trigger': lucide.icons.BookOpen,
-            'nav-tools-trigger': lucide.icons.Briefcase,
-            'nav-guides-chevron': lucide.icons.ChevronDown,
-            'nav-tools-chevron': lucide.icons.ChevronDown,
-            'nav-cloud': lucide.icons.Cloud,
-            'nav-roadmap': lucide.icons.Map,
-            'nav-phishing': lucide.icons.Fish,
-            'nav-sast': lucide.icons.FileSearch,
-            'nav-threat': lucide.icons.ShieldAlert,
-            'nav-checklist': lucide.icons.ListChecks,
-            'nav-epss': lucide.icons.Activity,
-            'nav-encryption': lucide.icons.Lock,
-            'nav-fp': lucide.icons.Fingerprint,
-            'nav-jwt': lucide.icons.KeyRound,
-            'nav-modcat': lucide.icons.Guitar,
-            'nav-shamir': lucide.icons.Share2, // <-- Included for nav
-            'nav-dashboard': lucide.icons.LayoutDashboard,
-        },
-        attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 }
-    });
-
-    // --- 3. Add Nav Dropdown Logic ---
-    const dropdownButtons = document.querySelectorAll('.group > button');
-    dropdownButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            const dropdownMenu = e.currentTarget.nextElementSibling;
-            // Close all other open dropdowns
-            document.querySelectorAll('.group .absolute').forEach(menu => {
-                if (menu !== dropdownMenu) {
-                    menu.classList.add('opacity-0', 'invisible');
-                    menu.classList.remove('opacity-100', 'visible');
-                }
-            });
-            // Toggle the current dropdown
-            dropdownMenu.classList.toggle('opacity-0');
-            dropdownMenu.classList.toggle('invisible');
-            dropdownMenu.classList.toggle('opacity-100');
-            dropdownMenu.classList.toggle('visible');
-        });
-    });
-
-    // Close dropdowns if clicking outside
-    window.addEventListener('click', (e) => {
-        if (!e.target.closest('.group')) {
-            document.querySelectorAll('.group .absolute').forEach(menu => {
-                menu.classList.add('opacity-0', 'invisible');
-                menu.classList.remove('opacity-100', 'visible');
-            });
-        }
-    });
 
 }); // End DOMContentLoaded

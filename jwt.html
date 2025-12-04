@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" class="bg-gray-950 text-white">
+
 <head>
-  
-<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-<meta http-equiv="X-Content-Type-Options" content="nosniff">
-<meta name="referrer-policy" content="strict-origin-when-cross-origin">
-<meta http-equiv="Permissions-Policy" content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">
+
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer-policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy"
+    content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>JWT Decoder | D. Chandler Prince</title>
 
 </head>
+
 <body hidden class="bg-gray-950 text-white min-h-screen flex flex-col">
   <!-- 
     NAV BAR FOR "TOOLS & DEMOS" PAGES
@@ -28,42 +31,51 @@
       An interactive tool to decode JSON Web Tokens and verify their signatures.
     </p>
     <div class="mt-6 max-w-4xl mx-auto grid md:grid-cols-3 gap-4 text-left px-4">
-        <div class="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
-            <h3 class="font-semibold text-lg text-red-400">Header</h3>
-            <p class="text-sm text-gray-300 mt-1">Contains metadata like the token type (JWT) and the signing algorithm used (e.g., HS256).</p>
-        </div>
-        <div class="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
-            <h3 class="font-semibold text-lg text-violet-400">Payload</h3>
-            <p class="text-sm text-gray-300 mt-1">Contains the "claims" or data, such as user ID, name, and permissions, plus token expiration info.</p>
-        </div>
-        <div class="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
-            <h3 class="font-semibold text-lg text-sky-400">Signature</h3>
-            <p class="text-sm text-gray-300 mt-1">A cryptographic signature used to verify that the token is authentic and has not been tampered with.</p>
-        </div>
+      <div class="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
+        <h3 class="font-semibold text-lg text-red-400">Header</h3>
+        <p class="text-sm text-gray-300 mt-1">Contains metadata like the token type (JWT) and the signing algorithm used
+          (e.g., HS256).</p>
+      </div>
+      <div class="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
+        <h3 class="font-semibold text-lg text-violet-400">Payload</h3>
+        <p class="text-sm text-gray-300 mt-1">Contains the "claims" or data, such as user ID, name, and permissions,
+          plus token expiration info.</p>
+      </div>
+      <div class="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
+        <h3 class="font-semibold text-lg text-sky-400">Signature</h3>
+        <p class="text-sm text-gray-300 mt-1">A cryptographic signature used to verify that the token is authentic and
+          has not been tampered with.</p>
+      </div>
     </div>
   </header>
 
   <!-- Main Content -->
   <main class="flex-1 px-4 py-10 max-w-5xl mx-auto w-full">
     <!-- ... existing main content ... -->
-    <div class="bg-blue-900/50 border border-blue-700 text-blue-200 px-4 py-3 rounded-lg relative mb-8 flex items-center" role="alert">
+    <div
+      class="bg-blue-900/50 border border-blue-700 text-blue-200 px-4 py-3 rounded-lg relative mb-8 flex items-center"
+      role="alert">
       <span id="info-icon" class="mr-3 shrink-0"></span>
       <div>
         <strong class="font-bold">For Demo Purposes Only. </strong>
-        <span class="block sm:inline">This tool decodes JWTs entirely within your browser. No data is ever stored or transmitted.</span>
+        <span class="block sm:inline">This tool decodes JWTs entirely within your browser. No data is ever stored or
+          transmitted.</span>
       </div>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       <!-- Left Column: Encoded JWT Input -->
       <section>
         <div class="flex justify-between items-center mb-4">
-            <h3 class="text-2xl font-semibold text-blue-400">Encoded Token</h3>
-            <button id="clear-jwt-btn" class="px-3 py-1 text-sm bg-gray-800 hover:bg-red-900/50 rounded-md text-red-400 font-medium transition-colors flex items-center">
-                <span id="clear-jwt-icon" class="mr-2"></span>Clear
-            </button>
+          <h3 class="text-2xl font-semibold text-blue-400">Encoded Token</h3>
+          <button id="clear-jwt-btn"
+            class="px-3 py-1 text-sm bg-gray-800 hover:bg-red-900/50 rounded-md text-red-400 font-medium transition-colors flex items-center">
+            <span id="clear-jwt-icon" class="mr-2"></span>Clear
+          </button>
         </div>
         <div class="bg-gray-900 p-4 rounded-lg shadow-lg">
-          <textarea id="jwt-input" class="w-full h-48 bg-gray-950 border border-gray-700 rounded-md p-3 text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none" placeholder="Paste your JWT here..."></textarea>
+          <textarea id="jwt-input"
+            class="w-full h-48 bg-gray-950 border border-gray-700 rounded-md p-3 text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
+            placeholder="Paste your JWT here..."></textarea>
           <div id="jwt-parts" class="mt-2 text-xs font-mono break-all"></div>
           <div id="jwt-error" class="text-red-400 mt-2 text-sm hidden"></div>
         </div>
@@ -77,13 +89,17 @@
           <div class="bg-gray-900 p-4 rounded-lg shadow-lg">
             <div class="flex justify-between items-center mb-3">
               <div class="flex rounded-md" role="group">
-                <button type="button" id="header-table-btn" class="view-toggle-btn view-toggle-active px-3 py-1 text-sm font-medium rounded-l-lg">Table</button>
-                <button type="button" id="header-json-btn" class="view-toggle-btn view-toggle-inactive px-3 py-1 text-sm font-medium rounded-r-lg">JSON</button>
+                <button type="button" id="header-table-btn"
+                  class="view-toggle-btn view-toggle-active px-3 py-1 text-sm font-medium rounded-l-lg">Table</button>
+                <button type="button" id="header-json-btn"
+                  class="view-toggle-btn view-toggle-inactive px-3 py-1 text-sm font-medium rounded-r-lg">JSON</button>
               </div>
-              <button id="copy-header-btn" class="px-3 py-1 text-sm bg-gray-700 hover:bg-gray-600 rounded-md text-gray-300 font-medium transition-colors">Copy</button>
+              <button id="copy-header-btn"
+                class="px-3 py-1 text-sm bg-gray-700 hover:bg-gray-600 rounded-md text-gray-300 font-medium transition-colors">Copy</button>
             </div>
             <div id="header-output-table" class="text-sm"></div>
-            <pre id="header-output-json" class="hidden bg-gray-950 p-3 rounded-md text-sm font-mono overflow-auto"></pre>
+            <pre id="header-output-json"
+              class="hidden bg-gray-950 p-3 rounded-md text-sm font-mono overflow-auto"></pre>
           </div>
         </div>
 
@@ -93,33 +109,43 @@
           <div class="bg-gray-900 p-4 rounded-lg shadow-lg">
             <div class="flex justify-between items-center mb-3">
               <div class="flex rounded-md" role="group">
-                  <button type="button" id="payload-table-btn" class="view-toggle-btn view-toggle-active px-3 py-1 text-sm font-medium rounded-l-lg">Table</button>
-                  <button type="button" id="payload-json-btn" class="view-toggle-btn view-toggle-inactive px-3 py-1 text-sm font-medium rounded-r-lg">JSON</button>
+                <button type="button" id="payload-table-btn"
+                  class="view-toggle-btn view-toggle-active px-3 py-1 text-sm font-medium rounded-l-lg">Table</button>
+                <button type="button" id="payload-json-btn"
+                  class="view-toggle-btn view-toggle-inactive px-3 py-1 text-sm font-medium rounded-r-lg">JSON</button>
               </div>
-              <button id="copy-payload-btn" class="px-3 py-1 text-sm bg-gray-700 hover:bg-gray-600 rounded-md text-gray-300 font-medium transition-colors">Copy</button>
+              <button id="copy-payload-btn"
+                class="px-3 py-1 text-sm bg-gray-700 hover:bg-gray-600 rounded-md text-gray-300 font-medium transition-colors">Copy</button>
             </div>
             <div id="payload-output-table" class="text-sm"></div>
-            <pre id="payload-output-json" class="hidden bg-gray-950 p-3 rounded-md text-sm font-mono overflow-auto"></pre>
+            <pre id="payload-output-json"
+              class="hidden bg-gray-950 p-3 rounded-md text-sm font-mono overflow-auto"></pre>
           </div>
         </div>
-        
+
         <!-- Signature Verification -->
         <div>
           <h3 class="text-xl font-semibold text-blue-400 mb-2">Verify Signature</h3>
           <div class="bg-gray-900 p-4 rounded-lg shadow-lg">
-            <textarea id="secret-input" class="w-full bg-gray-950 border border-gray-700 rounded-md p-3 text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none" placeholder="Enter your secret to verify signature" rows="2"></textarea>
+            <textarea id="secret-input"
+              class="w-full bg-gray-950 border border-gray-700 rounded-md p-3 text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
+              placeholder="Enter your secret to verify signature" rows="2"></textarea>
             <div class="flex justify-between items-center mt-3">
-                <div class="flex rounded-md items-center" role="group">
-                    <span class="text-sm font-medium text-gray-400 mr-3">Secret:</span>
-                    <button type="button" id="secret-utf8-btn" class="view-toggle-btn view-toggle-active px-3 py-1 text-sm font-medium rounded-l-lg">UTF-8</button>
-                    <button type="button" id="secret-b64-btn" class="view-toggle-btn view-toggle-inactive px-3 py-1 text-sm font-medium rounded-r-lg">Base64Url</button>
-                </div>
-                <div class="flex space-x-2">
-                    <button id="copy-secret-btn" class="px-3 py-1 text-sm bg-gray-700 hover:bg-gray-600 rounded-md text-gray-300 font-medium transition-colors">Copy</button>
-                    <button id="clear-secret-btn" class="px-3 py-1 text-sm bg-gray-800 hover:bg-red-900/50 rounded-md text-red-400 font-medium transition-colors">Clear</button>
-                </div>
+              <div class="flex rounded-md items-center" role="group">
+                <span class="text-sm font-medium text-gray-400 mr-3">Secret:</span>
+                <button type="button" id="secret-utf8-btn"
+                  class="view-toggle-btn view-toggle-active px-3 py-1 text-sm font-medium rounded-l-lg">UTF-8</button>
+                <button type="button" id="secret-b64-btn"
+                  class="view-toggle-btn view-toggle-inactive px-3 py-1 text-sm font-medium rounded-r-lg">Base64Url</button>
+              </div>
+              <div class="flex space-x-2">
+                <button id="copy-secret-btn"
+                  class="px-3 py-1 text-sm bg-gray-700 hover:bg-gray-600 rounded-md text-gray-300 font-medium transition-colors">Copy</button>
+                <button id="clear-secret-btn"
+                  class="px-3 py-1 text-sm bg-gray-800 hover:bg-red-900/50 rounded-md text-red-400 font-medium transition-colors">Clear</button>
+              </div>
             </div>
-             <div id="signature-result" class="mt-4 text-sm font-semibold flex items-center"></div>
+            <div id="signature-result" class="mt-4 text-sm font-semibold flex items-center"></div>
           </div>
         </div>
       </section>
@@ -127,366 +153,98 @@
 
     <!-- How to find a JWT section -->
     <section class="mt-12 bg-gray-900 p-6 rounded-lg shadow-lg">
-        <!-- ... existing tutorial content ... -->
-        <h3 class="text-2xl font-semibold text-blue-400 mb-4 flex items-center">
-            <span id="tutorial-icon" class="mr-3"></span>
-            Tutorial: Finding a JWT in the Wild
-        </h3>
-        <p class="text-gray-300 mb-4">
-            Many modern websites—like social media platforms, online shopping sites, and project management tools—use JWTs to keep you logged in. You can often find these tokens in your browser's developer tools after you sign in. This guide shows you how.
-        </p>
+      <!-- ... existing tutorial content ... -->
+      <h3 class="text-2xl font-semibold text-blue-400 mb-4 flex items-center">
+        <span id="tutorial-icon" class="mr-3"></span>
+        Tutorial: Finding a JWT in the Wild
+      </h3>
+      <p class="text-gray-300 mb-4">
+        Many modern websites—like social media platforms, online shopping sites, and project management tools—use JWTs
+        to keep you logged in. You can often find these tokens in your browser's developer tools after you sign in. This
+        guide shows you how.
+      </p>
 
-        <div class="bg-yellow-900/30 border border-yellow-700 text-yellow-200 px-4 py-3 rounded-lg relative mb-6 flex items-start" role="alert">
-          <span id="warning-icon" class="mr-3 shrink-0 mt-1"></span>
-          <div>
-            <strong class="font-bold">Security Warning: Your JWT is Sensitive!</strong>
-            <p class="text-sm">A JWT is like a temporary password. Pasting an active token from a site where you are logged in (like your email or social media) into a public, third-party website is a major security risk. If that site is malicious, it could use your token to impersonate you and access your account.</p>
-            <p class="text-sm mt-2">While <strong class="font-semibold">this specific decoder is safe</strong> because all processing happens in your browser (no data is ever sent to a server), you should never paste sensitive tokens into online tools you don't fully trust.</p>
-          </div>
+      <div
+        class="bg-yellow-900/30 border border-yellow-700 text-yellow-200 px-4 py-3 rounded-lg relative mb-6 flex items-start"
+        role="alert">
+        <span id="warning-icon" class="mr-3 shrink-0 mt-1"></span>
+        <div>
+          <strong class="font-bold">Security Warning: Your JWT is Sensitive!</strong>
+          <p class="text-sm">A JWT is like a temporary password. Pasting an active token from a site where you are
+            logged in (like your email or social media) into a public, third-party website is a major security risk. If
+            that site is malicious, it could use your token to impersonate you and access your account.</p>
+          <p class="text-sm mt-2">While <strong class="font-semibold">this specific decoder is safe</strong> because all
+            processing happens in your browser (no data is ever sent to a server), you should never paste sensitive
+            tokens into online tools you don't fully trust.</p>
         </div>
-    
-        <div class="space-y-4 text-gray-200">
-            <div class="flex items-start">
-                <div class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold text-white mr-4">1</div>
-                <p><strong class="font-semibold text-white">Log In to a Website:</strong> Go to any site that requires a login and sign in to your account.</p>
-            </div>
-            <div class="flex items-start">
-                <div class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold text-white mr-4">2</div>
-                <p><strong class="font-semibold text-white">Open Developer Tools:</strong> Press <code class="bg-gray-800 px-2 py-1 rounded-md text-sm font-mono">F12</code> or right-click the page and select "Inspect".</p>
-            </div>
-            <div class="flex items-start">
-                <div class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold text-white mr-4">3</div>
-                <p><strong class="font-semibold text-white">Navigate to Storage:</strong> Find the <strong class="text-white">Application</strong> tab (in Chrome/Edge) or the <strong class="text-white">Storage</strong> tab (in Firefox).</p>
-            </div>
-            <div class="flex items-start">
-                <div class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold text-white mr-4">4</div>
-                <p><strong class="font-semibold text-white">Check Browser Storage:</strong> On the left side, look under <strong class="text-white">Local Storage</strong> and <strong class="text-white">Session Storage</strong>. Click the URL for the site you're on.</p>
-            </div>
-            <div class="flex items-start">
-                <div class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold text-white mr-4">5</div>
-                <p><strong class="font-semibold text-white">Find the Token:</strong> Look for a key named <code class="bg-gray-800 px-2 py-1 rounded-md text-sm font-mono text-violet-300">token</code>, <code class="bg-gray-800 px-2 py-1 rounded-md text-sm font-mono text-violet-300">jwt</code>, <code class="bg-gray-800 px-2 py-1 rounded-md text-sm font-mono text-violet-300">access_token</code>, or similar. The value next to it is the JWT. Copy it.</p>
-            </div>
-            <div class="!mt-6 pl-12">
-                <p class="text-sm text-gray-400"><strong class="font-semibold text-sky-300">Alternative Method:</strong> Sometimes tokens aren't in storage. Check the <strong class="text-white">Network</strong> tab in dev tools. After logging in, look for requests and check their <strong class="text-white">Headers</strong> for an <code class="bg-gray-800 px-1 py-0.5 rounded-md font-mono">Authorization: Bearer ey...</code> header, or check the <strong class="text-white">Response</strong> body for the token.</p>
-            </div>
-             <div class="flex items-start mt-6">
-                <div class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold text-white mr-4">6</div>
-                <p><strong class="font-semibold text-white">Decode Safely:</strong> Paste the token into the <strong class="text-white">"Encoded Token"</strong> box above to see its contents.</p>
-            </div>
+      </div>
+
+      <div class="space-y-4 text-gray-200">
+        <div class="flex items-start">
+          <div
+            class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold text-white mr-4">
+            1</div>
+          <p><strong class="font-semibold text-white">Log In to a Website:</strong> Go to any site that requires a login
+            and sign in to your account.</p>
         </div>
+        <div class="flex items-start">
+          <div
+            class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold text-white mr-4">
+            2</div>
+          <p><strong class="font-semibold text-white">Open Developer Tools:</strong> Press <code
+              class="bg-gray-800 px-2 py-1 rounded-md text-sm font-mono">F12</code> or right-click the page and select
+            "Inspect".</p>
+        </div>
+        <div class="flex items-start">
+          <div
+            class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold text-white mr-4">
+            3</div>
+          <p><strong class="font-semibold text-white">Navigate to Storage:</strong> Find the <strong
+              class="text-white">Application</strong> tab (in Chrome/Edge) or the <strong
+              class="text-white">Storage</strong> tab (in Firefox).</p>
+        </div>
+        <div class="flex items-start">
+          <div
+            class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold text-white mr-4">
+            4</div>
+          <p><strong class="font-semibold text-white">Check Browser Storage:</strong> On the left side, look under
+            <strong class="text-white">Local Storage</strong> and <strong class="text-white">Session Storage</strong>.
+            Click the URL for the site you're on.</p>
+        </div>
+        <div class="flex items-start">
+          <div
+            class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold text-white mr-4">
+            5</div>
+          <p><strong class="font-semibold text-white">Find the Token:</strong> Look for a key named <code
+              class="bg-gray-800 px-2 py-1 rounded-md text-sm font-mono text-violet-300">token</code>, <code
+              class="bg-gray-800 px-2 py-1 rounded-md text-sm font-mono text-violet-300">jwt</code>, <code
+              class="bg-gray-800 px-2 py-1 rounded-md text-sm font-mono text-violet-300">access_token</code>, or
+            similar. The value next to it is the JWT. Copy it.</p>
+        </div>
+        <div class="!mt-6 pl-12">
+          <p class="text-sm text-gray-400"><strong class="font-semibold text-sky-300">Alternative Method:</strong>
+            Sometimes tokens aren't in storage. Check the <strong class="text-white">Network</strong> tab in dev tools.
+            After logging in, look for requests and check their <strong class="text-white">Headers</strong> for an <code
+              class="bg-gray-800 px-1 py-0.5 rounded-md font-mono">Authorization: Bearer ey...</code> header, or check
+            the <strong class="text-white">Response</strong> body for the token.</p>
+        </div>
+        <div class="flex items-start mt-6">
+          <div
+            class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold text-white mr-4">
+            6</div>
+          <p><strong class="font-semibold text-white">Decode Safely:</strong> Paste the token into the <strong
+              class="text-white">"Encoded Token"</strong> box above to see its contents.</p>
+        </div>
+      </div>
     </section>
 
   </main>
-  
+
   <!-- Footer -->
   <site-footer></site-footer>
 
-  <script>
-    // --- JWT UTILITY FUNCTIONS & DOM ELEMENTS ---
-    const getEl = (id) => document.getElementById(id);
-    const jwtInput = getEl('jwt-input');
-    const jwtPartsEl = getEl('jwt-parts');
-    const jwtErrorEl = getEl('jwt-error');
-    const headerTable = getEl('header-output-table');
-    const headerJson = getEl('header-output-json');
-    const payloadTable = getEl('payload-output-table');
-    const payloadJson = getEl('payload-output-json');
-    const secretInput = getEl('secret-input');
-    const signatureResultEl = getEl('signature-result');
-
-    // --- JWT STATE ---
-    let isSecretBase64 = false;
-
-    // --- JWT CONSTANTS ---
-    const exampleJwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhdXRoMHwxMjM0NTY3ODkwIiwibmFtZSI6IkNoYW5kbGVyIFByaW5jZSIsImFkbWluIjp0cnVlLCJpYXQiOjE3MjU3Mjc2ODB9.M-22A_zHk1k-tJt2x932XQyRDYwJkU-x2bO_s6Y6s2g';
-
-    // --- JWT CORE LOGIC ---
-    function b64UrlDecode(str) {
-      let output = str.replace(/-/g, '+').replace(/_/g, '/');
-      switch (output.length % 4) {
-        case 0: break;
-        case 2: output += '=='; break;
-        case 3: output += '='; break;
-        default: throw 'Illegal base64url string!';
-      }
-      return decodeURIComponent(atob(output).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
-    }
-
-    function createClaimsTable(data, parentEl) {
-        parentEl.innerHTML = '';
-        const table = document.createElement('table');
-        table.className = 'w-full text-left border-collapse';
-        const tbody = document.createElement('tbody');
-        Object.entries(data).forEach(([key, value]) => {
-            const row = tbody.insertRow();
-            const keyCell = row.insertCell();
-            const valCell = row.insertCell();
-            keyCell.className = 'py-2 px-3 border-b border-gray-700 text-gray-400 align-top';
-            valCell.className = 'py-2 px-3 border-b border-gray-700 font-mono break-all';
-            keyCell.textContent = key;
-            if (['iat', 'exp', 'nbf'].includes(key) && typeof value === 'number') {
-                 valCell.textContent = `${value} (${new Date(value * 1000).toUTCString()})`;
-            } else {
-                 valCell.textContent = JSON.stringify(value);
-            }
-        });
-        table.appendChild(tbody);
-        parentEl.appendChild(table);
-    }
-    
-    function copyToClipboard(text, buttonId) {
-      if (!text) return;
-      // Use execCommand for broader compatibility in restricted environments
-      try {
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        ta.style.position = 'absolute';
-        ta.style.left = '-9999px';
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        
-        const button = getEl(buttonId);
-        if (button) {
-          const originalText = button.textContent;
-          button.textContent = 'Copied!';
-          button.classList.add('text-green-400');
-          setTimeout(() => {
-              button.textContent = originalText;
-              button.classList.remove('text-green-400');
-          }, 2000);
-        }
-      } catch (err) {
-        console.error('Failed to copy text: ', err);
-      }
-    }
-
-    async function verifySignature(encodedHeader, encodedPayload, signature, secret, useBase64) {
-        if (!secret) {
-            signatureResultEl.innerHTML = '';
-            return;
-        }
-        try {
-            const secretKey = useBase64 ? b64UrlDecode(secret) : secret;
-            const keyData = new TextEncoder().encode(secretKey);
-            const key = await crypto.subtle.importKey(
-                'raw', keyData, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
-            );
-
-            const dataToSign = new TextEncoder().encode(`${encodedHeader}.${encodedPayload}`);
-            const signatureBuffer = await crypto.subtle.sign('HMAC', key, dataToSign);
-
-            let base64UrlSignature = btoa(String.fromCharCode(...new Uint8Array(signatureBuffer)))
-                .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-            
-            if (base64UrlSignature === signature) {
-                signatureResultEl.innerHTML = `<span id="valid-sig-icon" class="mr-2"></span> Signature Valid`;
-                signatureResultEl.className = 'mt-4 text-sm font-semibold flex items-center text-green-400';
-                lucide.createIcons({icons: {'valid-sig-icon': lucide.ShieldCheck}, attrs: {color: "#4ade80", size: 20}});
-            } else {
-                signatureResultEl.innerHTML = `<span id="invalid-sig-icon" class="mr-2"></span> Signature Invalid`;
-                signatureResultEl.className = 'mt-4 text-sm font-semibold flex items-center text-red-400';
-                lucide.createIcons({icons: {'invalid-sig-icon': lucide.ShieldX}, attrs: {color: "#f87171", size: 20}});
-            }
-        } catch (e) {
-            console.error("Signature verification failed:", e);
-            signatureResultEl.innerHTML = `<span id="error-sig-icon" class="mr-2"></span> Verification Error`;
-            signatureResultEl.className = 'mt-4 text-sm font-semibold flex items-center text-red-400';
-            lucide.createIcons({icons: {'error-sig-icon': lucide.ShieldX}, attrs: {color: "#f87171", size: 20}});
-        }
-    }
-    
-    // --- MAIN DECODE FUNCTION ---
-    function decodeJwt() {
-      const token = jwtInput.value;
-      if (!token.trim()) {
-        jwtPartsEl.innerHTML = '';
-        headerTable.innerHTML = '';
-        payloadTable.innerHTML = '';
-        headerJson.textContent = '';
-        payloadJson.textContent = '';
-        signatureResultEl.innerHTML = '';
-        jwtErrorEl.classList.add('hidden');
-        return;
-      }
-      
-      const parts = token.split('.');
-      if (parts.length !== 3) {
-        jwtErrorEl.textContent = 'Invalid JWT structure. A JWT must have three parts separated by dots.';
-        jwtErrorEl.classList.remove('hidden');
-        jwtPartsEl.innerHTML = '';
-        return;
-      }
-      
-      jwtErrorEl.classList.add('hidden');
-      const [encodedHeader, encodedPayload, signature] = parts;
-      
-      jwtPartsEl.innerHTML = `<span class="jwt-part-header">${encodedHeader}</span>.<span class="jwt-part-payload">${encodedPayload}</span>.<span class="jwt-part-signature">${signature}</span>`;
-      
-      try {
-        const header = JSON.parse(b64UrlDecode(encodedHeader));
-        const payload = JSON.parse(b64UrlDecode(encodedPayload));
-        
-        headerJson.textContent = JSON.stringify(header, null, 2);
-        createClaimsTable(header, headerTable);
-        payloadJson.textContent = JSON.stringify(payload, null, 2);
-        createClaimsTable(payload, payloadTable);
-
-        verifySignature(encodedHeader, encodedPayload, signature, secretInput.value, isSecretBase64);
-      } catch (e) {
-        jwtErrorEl.textContent = 'Failed to decode Base64Url or parse JSON. Check token formatting.';
-        jwtErrorEl.classList.remove('hidden');
-        console.error(e);
-      }
-    }
-    
-    // --- EVENT LISTENERS & SETUP ---
-    jwtInput.addEventListener('input', decodeJwt);
-    secretInput.addEventListener('input', decodeJwt);
-    
-    // View Toggles
-    function setupViewToggle(tableBtnId, jsonBtnId, tableId, jsonId) {
-        const tableBtn = getEl(tableBtnId);
-        const jsonBtn = getEl(jsonBtnId);
-        const table = getEl(tableId);
-        const json = getEl(jsonId);
-
-        tableBtn.addEventListener('click', () => {
-            table.classList.remove('hidden');
-            json.classList.add('hidden');
-            tableBtn.classList.replace('view-toggle-inactive', 'view-toggle-active');
-            jsonBtn.classList.replace('view-toggle-active', 'view-toggle-inactive');
-        });
-        jsonBtn.addEventListener('click', () => {
-            json.classList.remove('hidden');
-            table.classList.add('hidden');
-            jsonBtn.classList.replace('view-toggle-inactive', 'view-toggle-active');
-            tableBtn.classList.replace('view-toggle-active', 'view-toggle-inactive');
-        });
-    }
-
-    // Secret encoding toggle
-    const utf8Btn = getEl('secret-utf8-btn');
-    const b64Btn = getEl('secret-b64-btn');
-    utf8Btn.addEventListener('click', () => {
-      isSecretBase64 = false;
-      utf8Btn.classList.replace('view-toggle-inactive', 'view-toggle-active');
-      b64Btn.classList.replace('view-toggle-active', 'view-toggle-inactive');
-      decodeJwt();
-    });
-    b64Btn.addEventListener('click', () => {
-      isSecretBase64 = true;
-      b64Btn.classList.replace('view-toggle-inactive', 'view-toggle-active');
-      utf8Btn.classList.replace('view-toggle-active', 'view-toggle-inactive');
-      decodeJwt();
-    });
-
-    // Button listeners
-    getEl('copy-header-btn').addEventListener('click', () => copyToClipboard(headerJson.textContent, 'copy-header-btn'));
-    getEl('copy-payload-btn').addEventListener('click', () => copyToClipboard(payloadJson.textContent, 'copy-payload-btn'));
-    getEl('copy-secret-btn').addEventListener('click', () => copyToClipboard(secretInput.value, 'copy-secret-btn'));
-    getEl('clear-secret-btn').addEventListener('click', () => {
-      secretInput.value = '';
-      decodeJwt();
-    });
-    getEl('clear-jwt-btn').addEventListener('click', () => {
-      jwtInput.value = '';
-      decodeJwt();
-    });
-    
-    // --- INITIALIZATION (Combined) ---
-    document.addEventListener('DOMContentLoaded', () => {
-      // --- 1. Run JWT Page Logic ---
-      setupViewToggle('header-table-btn', 'header-json-btn', 'header-output-table', 'header-output-json');
-      setupViewToggle('payload-table-btn', 'payload-json-btn', 'payload-output-table', 'payload-output-json');
-      
-      jwtInput.value = exampleJwt;
-      decodeJwt();
-      
-      // --- 2. Render ALL Icons (Nav + Page) ---
-      if (window.lucide) {
-        lucide.createIcons({
-          icons: {
-            // All Nav Icons
-            'nav-home': lucide.Home,
-            'nav-guides-trigger': lucide.BookOpen,
-            'nav-tools-trigger': lucide.Briefcase,
-            'nav-guides-chevron': lucide.ChevronDown,
-            'nav-tools-chevron': lucide.ChevronDown,
-            'nav-cloud': lucide.Cloud,
-            'nav-roadmap': lucide.Map,
-            'nav-phishing': lucide.Fish,
-            'nav-sast': lucide.FileSearch,
-            'nav-threat': lucide.ShieldAlert,
-            'nav-checklist': lucide.ListChecks,
-            'nav-epss': lucide.Activity,
-            'nav-encryption': lucide.Lock,
-            'nav-fp': lucide.Fingerprint,
-            'nav-jwt': lucide.KeyRound,
-            'nav-modcat': lucide.Guitar,
-            'nav-shamir': lucide.Share2,
-            'nav-dashboard': lucide.LayoutDashboard,
-            
-            // JWT Page-specific icons
-            'info-icon': lucide.Info,
-            'tutorial-icon': lucide.BookOpen,
-            'warning-icon': lucide.ShieldAlert,
-            'clear-jwt-icon': lucide.X,
-            
-            // Kept just in case
-            'nav-linkedin': lucide.Linkedin, 
-            'nav-github': lucide.Github     
-          },
-          attrs: { color: "#38bdf8", size: 24, strokeWidth: 2 } // Default color blue
-        });
-      }
-
-      // --- 3. Run JWT Icon Color Overrides ---
-      // Override colors for *specific* page icons (not nav icons)
-      const infoIcon = getEl('info-icon');
-      if(infoIcon) infoIcon.setAttribute('color', '#38bdf8');
-      const tutorialIcon = getEl('tutorial-icon');
-      if(tutorialIcon) tutorialIcon.setAttribute('color', '#38bdf8');
-      const warningIcon = getEl('warning-icon');
-      if(warningIcon) warningIcon.setAttribute('color', '#facc15'); // Set warning to yellow
-      const clearJwtIcon = getEl('clear-jwt-icon');
-      if(clearJwtIcon) {
-          clearJwtIcon.setAttribute('color', '#f87171'); // Set clear to red
-          clearJwtIcon.setAttribute('size', 16);
-      }
-      
-      // --- 4. Add Nav Dropdown Logic ---
-      const dropdownButtons = document.querySelectorAll('.group > button');
-      dropdownButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-          const dropdownMenu = e.currentTarget.nextElementSibling;
-          // Close all other open dropdowns
-          document.querySelectorAll('.group .absolute').forEach(menu => {
-            if (menu !== dropdownMenu) {
-              menu.classList.add('opacity-0', 'invisible');
-              menu.classList.remove('opacity-100', 'visible');
-            }
-          });
-          // Toggle the current dropdown
-          dropdownMenu.classList.toggle('opacity-0');
-          dropdownMenu.classList.toggle('invisible');
-          dropdownMenu.classList.toggle('opacity-100');
-          dropdownMenu.classList.toggle('visible');
-        });
-      });
-
-      // Close dropdowns if clicking outside
-      window.addEventListener('click', (e) => {
-        if (!e.target.closest('.group')) {
-          document.querySelectorAll('.group .absolute').forEach(menu => {
-            menu.classList.add('opacity-0', 'invisible');
-            menu.classList.remove('opacity-100', 'visible');
-          });
-        }
-      });
-    });
-  </script>
-<script type="module" src="/main.js"></script>
+  <script type="module" src="/jwt.js"></script>
+  <script type="module" src="/main.js"></script>
 </body>
+
 </html>
