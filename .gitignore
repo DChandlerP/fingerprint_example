@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Build Output
+dist/
+
+# Environment Variables
+.env
+.env.local
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+
+# Agent
+.gemini/
+
+# Logs
+*.log

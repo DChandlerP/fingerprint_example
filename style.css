@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles from index.html */
+html {
+  font-family: sans-serif;
+}
+
+::selection {
+  background: #2563eb;
+  color: #fff;
+}
+
+/* Ensure dropdown content is above other elements */
+.group .absolute {
+  z-index: 50;
+}
+
+/* Cloud Diagram Styles */
+.component-shape {
+  @apply fill-gray-800 stroke-gray-600 stroke-2 transition-colors duration-200 cursor-pointer;
+}
+
+.diagram-component:hover .component-shape,
+.diagram-component.active .component-shape {
+  @apply fill-blue-900/50 stroke-blue-400;
+}
+
+.component-label {
+  @apply fill-gray-200 text-sm font-semibold pointer-events-none select-none;
+}

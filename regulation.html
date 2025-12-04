@@ -9,127 +9,14 @@
   <title>Cyber Regulation Guide (US/EU)</title>
   
   <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
+
   <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-  
-  
-  <style>
-    html { font-family: sans-serif; }
-    ::selection { background: #2563eb; color: #fff; }
-    /* Ensure dropdown content is above other elements */
-    .group .absolute {
-      z-index: 50;
-    }
-  </style>
+
 </head>
-<body class="bg-gray-950 text-white min-h-screen flex flex-col">
+<body hidden class="bg-gray-950 text-white min-h-screen flex flex-col">
 
   <!-- Navigation Bar (From portfolio index.html) -->
- <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
-      <div class="w-full flex items-center justify-center px-6 py-3">
-         <!-- Main navigation container -->
-         <div class="flex flex-wrap justify-center space-x-4">
-          
-          <!-- Home Link (Inactive) -->
-          <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
-            <span id="nav-home" class="mr-1"></span>Home
-          </a>
-
-          <!-- Guides & Case Studies Dropdown (Active Section) -->
-          <div class="relative group">
-            <!-- Dropdown Trigger -->
-            <button class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition">
-              <span id="nav-guides-trigger" class="mr-1"></span>
-              Guides & Case Studies
-              <span id="nav-guides-chevron" class="ml-1"></span>
-            </button>
-            
-            <!-- Dropdown Menu -->
-            <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-              <div class="py-1" role="menu" aria-orientation="vertical">
-                <!-- Active Link -->
-                <a href="regulation.html" class="flex items-center px-4 py-2 text-sm text-white bg-blue-700" role="menuitem">
-                  <span id="nav-regulation" class="mr-2"></span>Regulation (US/EU)
-                </a>
-                <a href="usprivacytimeline.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-privacy" class="mr-2"></span>US Privacy Timeline
-                </a>
-                <a href="euprivacytimeline.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-eu-privacy" class="mr-2"></span>EU Privacy Timeline
-                </a>
-                <a href="cloud.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-cloud" class="mr-2"></span>Cloud
-                </a>
-                <a href="cyber_roadmap.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-roadmap" class="mr-2"></span>Cyber Roadmap
-                </a>
-                <a href="phishing.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-phishing" class="mr-2"></span>Phishing
-                </a>
-                <a href="sast.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-sast" class="mr-2"></span>SAST
-                </a>
-                <a href="threatmodel.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-threat" class="mr-2"></span>Threat Model
-                </a>
-                <a href="fair.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-fair" class="mr-2"></span>FAIR Risk Scoring
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Tools & Demos Dropdown -->
-          <div class="relative group">
-            <!-- Dropdown Trigger -->
-            <button class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
-              <span id="nav-tools-trigger" class="mr-1"></span>
-              Tools & Demos
-              <span id="nav-tools-chevron" class="ml-1"></span>
-            </button>
-            
-            <!-- Dropdown Menu -->
-            <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-              <div class="py-1" role="menu" aria-orientation="vertical">
-                <a href="checklist.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-checklist" class="mr-2"></span>Checklist
-                </a>
-                <a href="epssdemo.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-epss" class="mr-2"></span>CVSS vs EPSS
-                </a>
-                <a href="encryption.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-encryption" class="mr-2"></span>Encryption
-                </a>
-                <a href="fingerprint.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-fp" class="mr-2"></span>Fingerprinting
-                </a>
-                <a href="jwt.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-jwt" class="mr-2"></span>JWT Decoder
-                </a>
-                <a href="modcat.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-modcat" class="mr-2"></span>PRS MODCAT
-                </a>
-                <a href="shamir.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-shamir" class="mr-2"></span>Shamir's Visualizer
-                </a>
-                <a href="dashboard.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-dashboard" class="mr-2"></span>Threat Intel
-                </a>
-                <a href="string.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-stringart" class="mr-2"></span>String Art
-                </a>
-                <a href="sdlc.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                      <span id="nav-sdlc" class="mr-2"></span>Secure SDLC
-                </a>
-              </div>
-            </div>
-          </div>
-          
-        </div>
-      </div>
-  </nav>
+ <site-nav></site-nav>
 
   <!-- Main Content (Styled based on reference) -->
   <main class="flex-1 px-4 py-10 max-w-5xl mx-auto space-y-10">
@@ -574,92 +461,11 @@
   </main>
 
   <!-- Footer (Styled based on reference) -->
-  <footer class="bg-gray-900 text-gray-400 text-center py-4 mt-8 rounded-t-xl shadow-inner">
-    © 2025 D. Chandler Prince
-  </footer>
+  <site-footer></site-footer>
 
   <!-- Lucide Icons Setup -->
-  <script>
-    // Render Lucide icons
-    lucide.createIcons({
-      icons: {
-        // Page-specific icons
-        'icon-gdpr': lucide.Shield,
-        'icon-eprivacy': lucide.Cookie,
-        'icon-nis2': lucide.Network,
-        'icon-cra': lucide.Cpu,
-        'icon-ai': lucide.BrainCircuit,
-        'icon-dpa': lucide.Gavel,
-        'icon-ccpa': lucide.Database,
-        'icon-hipaa': lucide.HeartPulse,
-        'icon-sox': lucide.Scale,
-        'icon-sec': lucide.Landmark,
-
-        // Nav Bar Icons (from portfolio)
-        'nav-home': lucide.Home,
-        'nav-guides-trigger': lucide.BookOpen,
-        'nav-tools-trigger': lucide.Briefcase,
-        'nav-guides-chevron': lucide.ChevronDown,
-        'nav-tools-chevron': lucide.ChevronDown,
-        'nav-phishing': lucide.Fish, 
-        'nav-cloud': lucide.Cloud,
-        'nav-sast': lucide.FileSearch,
-        'nav-threat': lucide.ShieldAlert,
-        'nav-regulation': lucide.Gavel,
-                'nav-privacy': lucide.Flag,
-                'nav-eu-privacy': lucide.Globe, // Added this icon
-        'nav-checklist': lucide.ListChecks,
-        'nav-jwt': lucide.KeyRound,
-        'nav-encryption': lucide.Lock, 
-        'nav-fp': lucide.Fingerprint,
-        'nav-epss': lucide.Activity,
-        'nav-dashboard': lucide.LayoutDashboard,
-        'nav-modcat': lucide.Guitar,
-        'nav-roadmap': lucide.Map,
-        'nav-shamir': lucide.Share2
-      },
-      attrs: {
-        color: "#38bdf8", // Using the blue color from the reference file
-        size: 24,
-        strokeWidth: 2
-      }
-    });
-
-    // --- Dropdown Click Handling for Mobile/Touch (from portfolio) ---
-    // Get all dropdown buttons
-    const dropdownButtons = document.querySelectorAll('.group > button');
-
-    dropdownButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
-        // Find the dropdown menu associated with this button
-        const dropdownMenu = e.currentTarget.nextElementSibling;
-        
-        // Close all other open dropdowns
-        document.querySelectorAll('.group .absolute').forEach(menu => {
-          if (menu !== dropdownMenu) {
-            menu.classList.add('opacity-0', 'invisible');
-            menu.classList.remove('opacity-100', 'visible');
-          }
-        });
-
-        // Toggle the current dropdown
-        dropdownMenu.classList.toggle('opacity-0');
-        dropdownMenu.classList.toggle('invisible');
-        dropdownMenu.classList.toggle('opacity-100');
-        dropdownMenu.classList.toggle('visible');
-      });
-    });
-
-    // Close dropdowns if clicking outside
-    window.addEventListener('click', (e) => {
-      if (!e.target.closest('.group')) {
-        document.querySelectorAll('.group .absolute').forEach(menu => {
-          menu.classList.add('opacity-0', 'invisible');
-          menu.classList.remove('opacity-100', 'visible');
-        });
-      }
-    });
-  </script>
+  
+<script type="module" src="/main.js"></script>
 </body>
 </html>
 

@@ -1,150 +1,28 @@
-<!DOCTYPE html>
-<html lang="en" class="bg-gray-900 text-white">
-<head>
-  <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self'; 
-    script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; 
-    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
-    font-src 'self' https://fonts.gstatic.com; 
-    connect-src 'self' https://services.nvd.nist.gov https://api.first.org; 
-    object-src 'none'; 
-    frame-ancestors 'self'; 
-    base-uri 'self';
 ">
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer-policy" content="strict-origin-when-cross-origin">
-<meta http-equiv="Permissions-Policy" content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Browser Fingerprinting: A Closer Look</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
-  <style>
-    html { font-family: sans-serif; }
-    ::selection { background: #2563eb; color: #fff; }
-    /* Ensure dropdown content is above other elements */
-    .group .absolute {
-      z-index: 50;
-    }
-  </style>
+<meta http-equiv="Permissions-Policy"
+  content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Browser Fingerprinting: A Closer Look</title>
+
+
+
 </head>
-<body class="bg-gray-900 text-white min-h-screen flex flex-col">
-  <!-- 
-    NAV BAR FOR "TOOLS & DEMOS" PAGES
-    - "Home" is inactive.
-    - "Guides & Case Studies" is inactive.
-    - "Tools & Demos" is ACTIVE.
-  -->
-  <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
-      <div class="w-full flex items-center justify-center px-6 py-3">
-         <!-- Main navigation container -->
-         <div class="flex flex-wrap justify-center space-x-4">
-          
-          <!-- Home Link (Inactive) -->
-          <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
-            <span id="nav-home" class="mr-1"></span>Home
-          </a>
 
-          <!-- Guides & Case Studies Dropdown (Inactive) -->
-          <div class="relative group">
-            <!-- Dropdown Trigger -->
-            <button class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
-              <span id="nav-guides-trigger" class="mr-1"></span>
-              Guides & Case Studies
-              <span id="nav-guides-chevron" class="ml-1"></span>
-            </button>
-            
-            <!-- Dropdown Menu -->
-            <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-              <div class="py-1" role="menu" aria-orientation="vertical">
-                <a href="regulation.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-regulation" class="mr-2"></span>Regulation (US/EU)
-                </a>
-                <a href="usprivacytimeline.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-privacy" class="mr-2"></span>US Privacy Timeline
-                </a>
-                <a href="euprivacytimeline.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-eu-privacy" class="mr-2"></span>EU Privacy Timeline
-                </a>
-                <a href="cloud.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-cloud" class="mr-2"></span>Cloud
-                </a>
-                <a href="cyber_roadmap.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-roadmap" class="mr-2"></span>Cyber Roadmap
-                </a>
-                <a href="phishing.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-phishing" class="mr-2"></span>Phishing
-                </a>
-                <a href="sast.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-sast" class="mr-2"></span>SAST
-                </a>
-                <a href="threatmodel.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-threat" class="mr-2"></span>Threat Model
-                </a>
-                <a href="fair.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-fair" class="mr-2"></span>FAIR Risk Scoring
-                </a>
-                <a href="sdlc.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                      <span id="nav-sdlc" class="mr-2"></span>Secure SDLC
-                </a>
-              </div>
-            </div>
-          </div>
+<body hidden class="bg-gray-900 text-white min-h-screen flex flex-col">
 
-          <!-- Tools & Demos Dropdown (ACTIVE) -->
-          <div class="relative group">
-            <!-- Dropdown Trigger -->
-            <button class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition">
-              <span id="nav-tools-trigger" class="mr-1"></span>
-              Tools & Demos
-              <span id="nav-tools-chevron" class="ml-1"></span>
-            </button>
-            
-            <!-- Dropdown Menu -->
-            <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-              <div class="py-1" role="menu" aria-orientation="vertical">
-                <a href="checklist.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-checklist" class="mr-2"></span>Checklist
-                </a>
-                <a href="epssdemo.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-epss" class="mr-2"></span>CVSS vs EPSS
-                </a>
-                <a href="encryption.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-encryption" class="mr-2"></span>Encryption
-                </a>
-                <a href="fingerprint.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-fp" class="mr-2"></span>Fingerprinting
-                </a>
-                <a href="jwt.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-jwt" class="mr-2"></span>JWT Decoder
-                </a>
-                <a href="modcat.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-modcat" class="mr-2"></span>PRS MODCAT
-                </a>
-                <a href="shamir.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-shamir" class="mr-2"></span>Shamir's Visualizer
-                </a>
-                <a href="dashboard.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-dashboard" class="mr-2"></span>Threat Intel
-                </a>
-                <a href="string.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-stringart" class="mr-2"></span>String Art
-                  </a>
-              </div>
-            </div>
-          </div>
-          
-        </div>
-      </div>
-  </nav>
+  <site-nav></site-nav>
 
   <!-- Header -->
   <header class="bg-gradient-to-r from-blue-800 to-gray-900 py-10 px-4 text-center shadow-lg">
     <!-- ... existing header content ... -->
     <h1 class="text-4xl md:text-5xl font-bold mb-3 text-white">Browser Fingerprinting: A Closer Look</h1>
-    <p class="text-lg md:text-xl text-blue-200 max-w-2xl mx-auto">Understand how your browser's unique fingerprint is created and why it matters for web security.</p>
+    <p class="text-lg md:text-xl text-blue-200 max-w-2xl mx-auto">Understand how your browser's unique
+      fingerprint is
+      created and why it matters for web security.</p>
   </header>
 
   <!-- Main Content -->
@@ -154,7 +32,10 @@
     <section class="bg-gray-800 rounded-xl shadow-md p-6">
       <h2 class="text-2xl font-semibold mb-2 text-blue-400">What is Browser Fingerprinting?</h2>
       <p class="mb-3 text-gray-200">
-        Browser fingerprinting is a technique used to identify and track users online by collecting detailed information about their browser, operating system, and hardware. Unlike cookies, which can be deleted or blocked, a fingerprint is generated from data your browser shares automatically.
+        Browser fingerprinting is a technique used to identify and track users online by collecting detailed
+        information
+        about their browser, operating system, and hardware. Unlike cookies, which can be deleted or blocked, a
+        fingerprint is generated from data your browser shares automatically.
       </p>
       <ul class="list-disc list-inside text-gray-300">
         <li>User agent (browser & version)</li>
@@ -173,15 +54,20 @@
       <ul class="space-y-3">
         <li>
           <span class="font-semibold text-blue-300">Fraud Detection:</span>
-          <span class="text-gray-200">Helps prevent account takeover by detecting logins from new or suspicious devices, even if the correct credentials are used.</span>
+          <span class="text-gray-200">Helps prevent account takeover by detecting logins from new or suspicious
+            devices,
+            even if the correct credentials are used.</span>
         </li>
         <li>
           <span class="font-semibold text-blue-300">Bot Detection:</span>
-          <span class="text-gray-200">Distinguishes between human users and automated bots that may scrape content, create spam accounts, or perform malicious activities.</span>
+          <span class="text-gray-200">Distinguishes between human users and automated bots that may scrape
+            content,
+            create spam accounts, or perform malicious activities.</span>
         </li>
         <li>
           <span class="font-semibold text-blue-300">Improving User Security:</span>
-          <span class="text-gray-200">Enables services to better protect user accounts and prevent unauthorized access.</span>
+          <span class="text-gray-200">Enables services to better protect user accounts and prevent unauthorized
+            access.</span>
         </li>
       </ul>
     </section>
@@ -190,216 +76,54 @@
     <section class="bg-gray-800 rounded-xl shadow-md p-6">
       <h2 class="text-2xl font-semibold mb-4 text-blue-400">Live Demonstration: Your Browser Fingerprint</h2>
       <div id="fp-loading" class="flex items-center justify-center h-24">
-        <svg class="animate-spin h-6 w-6 text-blue-400 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <svg class="animate-spin h-6 w-6 text-blue-400 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+          viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
         </svg>
         <span class="text-blue-300 text-lg">Loading fingerprint...</span>
       </div>
-      <div id="fp-result" class="hidden">
-        <div class="mb-4">
-          <span class="text-lg font-semibold text-gray-100">Your Visitor ID:</span>
-          <span id="fp-id" class="bg-blue-900 text-blue-300 font-mono px-2 py-1 rounded select-all cursor-pointer ml-2"></span>
-          <button id="copy-id" class="ml-2 px-2 py-1 text-xs bg-blue-700 hover:bg-blue-600 rounded text-white focus:outline-none">Copy</button>
+
+      <div id="fp-result" class="hidden space-y-8">
+        <!-- Visitor ID Card -->
+        <div
+          class="bg-gradient-to-r from-blue-900/50 to-gray-900 border border-blue-700/50 rounded-xl p-6 text-center shadow-lg relative overflow-hidden group">
+          <div class="absolute inset-0 bg-blue-600/10 opacity-0 group-hover:opacity-100 transition duration-500">
+          </div>
+          <h3 class="text-blue-300 text-sm font-semibold uppercase tracking-wider mb-2">Your Unique Visitor ID
+          </h3>
+          <div class="flex items-center justify-center space-x-3">
+            <span id="fp-id"
+              class="text-3xl md:text-4xl font-mono font-bold text-white tracking-tight select-all"></span>
+            <button id="copy-id" class="p-2 text-blue-400 hover:text-white hover:bg-blue-600/50 rounded-lg transition"
+              title="Copy ID">
+              <i data-lucide="copy" class="w-5 h-5"></i>
+            </button>
+          </div>
         </div>
-        <div class="mb-4">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="bg-blue-900 text-blue-200">
-                <th class="py-2 px-3 rounded-tl">Data Point</th>
-                <th class="py-2 px-3 rounded-tr">Value</th>
-              </tr>
-            </thead>
-            <tbody id="fp-table" class="bg-gray-700 text-gray-100"></tbody>
-          </table>
+
+        <!-- Data Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="fp-grid">
+          <!-- Cards will be injected here by JS -->
         </div>
-        <button id="reload-fp" class="mt-2 px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold focus:outline-none transition">Generate New Fingerprint</button>
+
+        <div class="text-center">
+          <button id="reload-fp"
+            class="inline-flex items-center px-6 py-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-lg text-blue-300 font-semibold transition shadow-lg hover:shadow-xl hover:text-white group">
+            <i data-lucide="refresh-cw" class="w-5 h-5 mr-2 group-hover:rotate-180 transition duration-500"></i>
+            Regenerate Fingerprint
+          </button>
+        </div>
       </div>
     </section>
   </main>
 
   <!-- Footer -->
-  <footer class="bg-gray-800 text-gray-400 text-center py-4 mt-8 rounded-t-xl shadow-inner">
-    Built for educational purposes.
-  </footer>
+  <site-footer></site-footer>
 
   <!-- Lucide Icons Setup & FingerprintJS Demo -->
-  <script>
-    // Render Lucide icons
-    if (window.lucide) {
-      lucide.createIcons({
-        icons: {
-          // All Nav Icons
-          'nav-home': lucide.Home,
-          'nav-guides-trigger': lucide.BookOpen,
-          'nav-tools-trigger': lucide.Briefcase,
-          'nav-guides-chevron': lucide.ChevronDown,
-          'nav-tools-chevron': lucide.ChevronDown,
-          'nav-cloud': lucide.Cloud,
-          'nav-roadmap': lucide.Map,
-          'nav-phishing': lucide.Fish,
-          'nav-sast': lucide.FileSearch,
-          'nav-threat': lucide.ShieldAlert,
-          'nav-checklist': lucide.ListChecks,
-          'nav-epss': lucide.Activity,
-          'nav-encryption': lucide.Lock,
-          'nav-fp': lucide.Fingerprint,
-          'nav-jwt': lucide.KeyRound,
-          'nav-modcat': lucide.Guitar,
-          'nav-shamir': lucide.Share2,
-          'nav-dashboard': lucide.LayoutDashboard,
-          
-          // Page-specific icons (if any)
-          'nav-linkedin': lucide.Linkedin, // Kept just in case
-          'nav-github': lucide.Github     // Kept just in case
-        },
-        attrs: {
-          color: "#38bdf8",
-          size: 24,
-          strokeWidth: 2
-        }
-      });
-    }
-
-    // --- Dropdown Click Handling for Mobile/Touch ---
-    const dropdownButtons = document.querySelectorAll('.group > button');
-    dropdownButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
-        const dropdownMenu = e.currentTarget.nextElementSibling;
-        
-        // Close all other open dropdowns
-        document.querySelectorAll('.group .absolute').forEach(menu => {
-          if (menu !== dropdownMenu) {
-            menu.classList.add('opacity-0', 'invisible');
-            menu.classList.remove('opacity-100', 'visible');
-          }
-        });
-
-        // Toggle the current dropdown
-        dropdownMenu.classList.toggle('opacity-0');
-        dropdownMenu.classList.toggle('invisible');
-        dropdownMenu.classList.toggle('opacity-100');
-        dropdownMenu.classList.toggle('visible');
-      });
-    });
-
-    // Close dropdowns if clicking outside
-    window.addEventListener('click', (e) => {
-      if (!e.target.closest('.group')) {
-        document.querySelectorAll('.group .absolute').forEach(menu => {
-          menu.classList.add('opacity-0', 'invisible');
-          menu.classList.remove('opacity-100', 'visible');
-        });
-      }
-    });
-
-
-    // --- FingerprintJS Demo Logic ---
-
-    // Utility functions
-    function getBrowserInfo() {
-      // ... existing code ...
-      const ua = navigator.userAgent;
-      let browser = "Unknown", version = "";
-      if (/firefox/i.test(ua)) {
-        browser = "Firefox";
-        version = ua.match(/firefox\/([\d.]+)/i)?.[1] || "";
-      } else if (/edg/i.test(ua)) {
-        browser = "Edge";
-        version = ua.match(/edg\/([\d.]+)/i)?.[1] || "";
-      } else if (/chrome/i.test(ua)) {
-        browser = "Chrome";
-        version = ua.match(/chrome\/([\d.]+)/i)?.[1] || "";
-      } else if (/safari/i.test(ua)) {
-        browser = "Safari";
-        version = ua.match(/version\/([\d.]+)/i)?.[1] || "";
-      }
-      return browser + (version ? " " + version : "");
-    }
-    function getOSInfo() {
-      // ... existing code ...
-      const platform = navigator.platform;
-      const ua = navigator.userAgent;
-      if (/Win/i.test(platform)) return "Windows";
-      if (/Mac/i.test(platform)) return "macOS";
-      if (/Linux/i.test(platform)) return "Linux";
-      if (/Android/i.test(ua)) return "Android";
-      if (/iPhone|iPad|iPod/i.test(ua)) return "iOS";
-      return "Unknown";
-    }
-    function getScreenRes() {
-      // ... existing code ...
-      return `${window.screen.width} x ${window.screen.height}`;
-    }
-    function getTimezone() {
-      // ... existing code ...
-      try {
-        return Intl.DateTimeFormat().resolvedOptions().timeZone;
-      } catch {
-        return "Unknown";
-      }
-    }
-    function getLanguage() {
-      // ... existing code ...
-      return navigator.language || "Unknown";
-    }
-    function getPlatform() {
-      // ... existing code ...
-      return navigator.platform || "Unknown";
-    }
-    function cookiesEnabled() {
-      // ... existing code ...
-      return navigator.cookieEnabled ? "Yes" : "No";
-    }
-
-    // Main FingerprintJS logic
-    async function generateFingerprint() {
-      // ... existing code ...
-      document.getElementById('fp-loading').classList.remove('hidden');
-      document.getElementById('fp-result').classList.add('hidden');
-      // Load FingerprintJS
-      const fpPromise = window.FingerprintJS.load();
-      const fp = await fpPromise;
-      const result = await fp.get();
-      // Display Visitor ID
-      document.getElementById('fp-id').textContent = result.visitorId;
-      // Data points
-      const dataPoints = [
-        { name: "Browser & Version", value: getBrowserInfo() },
-        { name: "Operating System", value: getOSInfo() },
-        { name: "Screen Resolution", value: getScreenRes() },
-        { name: "Timezone", value: getTimezone() },
-        { name: "Language", value: getLanguage() },
-        { name: "Platform", value: getPlatform() },
-        { name: "Cookies Enabled?", value: cookiesEnabled() }
-      ];
-      // Populate table
-      const table = document.getElementById('fp-table');
-      table.innerHTML = "";
-      dataPoints.forEach(dp => {
-        const row = document.createElement('tr');
-        row.innerHTML = `<td class="py-2 px-3 font-medium">${dp.name}</td><td class="py-2 px-3 font-mono">${dp.value}</td>`;
-        table.appendChild(row);
-      });
-      // Show result
-      document.getElementById('fp-loading').classList.add('hidden');
-      document.getElementById('fp-result').classList.remove('hidden');
-    }
-
-    // Copy Visitor ID
-    document.getElementById('copy-id').addEventListener('click', function() {
-      // ... existing code ...
-      const id = document.getElementById('fp-id').textContent;
-      navigator.clipboard.writeText(id);
-      this.textContent = "Copied!";
-      setTimeout(() => { this.textContent = "Copy"; }, 1200);
-    });
-
-    // Reload Fingerprint
-    document.getElementById('reload-fp').addEventListener('click', generateFingerprint);
-
-    // Initial load
-    window.addEventListener('DOMContentLoaded', generateFingerprint);
-  </script>
+  <script type="module" src="/fingerprint.js"></script>
+  <script type="module" src="/main.js"></script>
 </body>
+
 </html>

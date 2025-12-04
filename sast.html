@@ -1,639 +1,447 @@
 <!DOCTYPE html>
-<html lang="en" class="bg-gray-950 text-white scroll-smooth">
+<html lang="en" class="bg-gray-950 text-white">
+
 <head>
-  <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self'; 
-    script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; 
-    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
-    font-src 'self' https://fonts.gstatic.com; 
-    connect-src 'self' https://services.nvd.nist.gov https://api.first.org; 
-    object-src 'none'; 
-    frame-ancestors 'self'; 
-    base-uri 'self';
-">
-<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-<meta http-equiv="X-Content-Type-Options" content="nosniff">
-<meta name="referrer-policy" content="strict-origin-when-cross-origin">
-<meta http-equiv="Permissions-Policy" content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale-1">
-  <title>Investigating SAST Findings | D. Chandler Prince</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-  
-  <style>
-    /* html { font-family: 'Inter', sans-serif; } */
-    ::selection { background: #2563eb; color: #fff; }
-    
-    /* Styles for code blocks and copy button */
-    .code-block {
-      position: relative;
-      background-color: #030712; /* gray-950 */
-      border-radius: 0.5rem;
-      border: 1px solid #374151; /* border-gray-700 */
-      padding: 1rem;
-      font-family: 'Menlo', 'Consolas', monospace;
-      font-size: 0.875rem; /* text-sm */
-      overflow-x: auto;
-      color: #e5e7eb; /* gray-200 */
-    }
-    .code-block code { white-space: pre; }
-    .copy-btn {
-      position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      background-color: #1f2937; /* gray-800 */
-      border: 1px solid #4b5563; /* gray-600 */
-      color: #d1d5db; /* gray-300 */
-      padding: 0.25rem 0.5rem;
-      border-radius: 0.375rem;
-      font-size: 0.75rem;
-      cursor: pointer;
-      opacity: 0.6;
-      transition: opacity 0.2s;
-    }
-    .code-block:hover .copy-btn { opacity: 1; }
-    
-    /* Styles for scroll-to-top button */
-    #scrollTopBtn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      display: none;
-      z-index: 50;
-      transition: opacity 0.3s, transform 0.3s;
-      transform: translateY(100px);
-    }
-
-    /* Styles for table of contents */
-    .toc a.active { color: #60a5fa; /* blue-400 */ font-weight: 600; }
-    .toc a { transition: color 0.2s; }
-    .toc a:hover { color: #93c5fd; /* blue-300 */ }
-    
-    /* Styles for scroll animations */
-    .fade-in-section {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    }
-    .fade-in-section.is-visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Ensure dropdown content is above other elements */
-    .group .absolute {
-      z-index: 50;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SAST False Positives</title>
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self';">
+  <link rel="stylesheet" href="/style.css">
 </head>
+
 <body class="bg-gray-950 text-white min-h-screen flex flex-col">
-  <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
-      <div class="w-full flex items-center justify-center px-6 py-3">
-         <!-- Main navigation container -->
-         <div class="flex flex-wrap justify-center space-x-4">
-          
-          <!-- Home Link (Inactive) -->
-          <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
-            <span id="nav-home" class="mr-1"></span>Home
-          </a>
 
-          <!-- Guides & Case Studies Dropdown (ACTIVE) -->
-          <div class="relative group">
-            <!-- Dropdown Trigger -->
-            <button class="flex items-center px-3 py-1 rounded text-white font-semibold transition">
-              <span id="nav-guides-trigger" class="mr-1"></span>
-              Guides & Case Studies
-              <span id="nav-guides-chevron" class="ml-1"></span>
-            </button>
-            
-            <!-- Dropdown Menu -->
-            <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-              <div class="py-1" role="menu" aria-orientation="vertical">
-                <a href="regulation.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-regulation" class="mr-2"></span>Regulation (US/EU)
-                </a>
-                <a href="usprivacytimeline.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-privacy" class="mr-2"></span>US Privacy Timeline
-                </a>
-                <a href="euprivacytimeline.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-eu-privacy" class="mr-2"></span>EU Privacy Timeline
-                </a>
-                <a href="cloud.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-cloud" class="mr-2"></span>Cloud
-                </a>
-                <a href="cyber_roadmap.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-roadmap" class="mr-2"></span>Cyber Roadmap
-                </a>
-                <a href="phishing.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-phishing" class="mr-2"></span>Phishing
-                </a>
-                <a href="sast.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-sast" class="mr-2"></span>SAST
-                </a>
-                <a href="threatmodel.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-threat" class="mr-2"></span>Threat Model
-                </a>
-                <a href="fair.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-fair" class="mr-2"></span>FAIR Risk Scoring
-                  </a>
-                  <a href="sdlc.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                      <span id="nav-sdlc" class="mr-2"></span>Secure SDLC
-                  </a>
-              </div>
-            </div>
-          </div>
+  <site-nav></site-nav>
 
-          <!-- Tools & Demos Dropdown (Inactive) -->
-          <div class="relative group">
-            <!-- Dropdown Trigger -->
-            <button class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
-              <span id="nav-tools-trigger" class="mr-1"></span>
-              Tools & Demos
-              <span id="nav-tools-chevron" class="ml-1"></span>
-            </button>
-            
-            <!-- Dropdown Menu -->
-            <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-              <div class="py-1" role="menu" aria-orientation="vertical">
-                <a href="checklist.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-checklist" class="mr-2"></span>Checklist
-                </a>
-                <a href="epssdemo.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-epss" class="mr-2"></span>CVSS vs EPSS
-                </a>
-                <a href="encryption.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-encryption" class="mr-2"></span>Encryption
-                </a>
-                <a href="fingerprint.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-fp" class="mr-2"></span>Fingerprinting
-                </a>
-                <a href="jwt.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-jwt" class="mr-2"></span>JWT Decoder
-                </a>
-                <a href="modcat.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-modcat" class="mr-2"></span>PRS MODCAT
-                </a>
-                <a href="shamir.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-shamir" class="mr-2"></span>Shamir's Visualizer
-                </a>
-                <a href="dashboard.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-dashboard" class="mr-2"></span>Threat Intel
-                </a>
-                <a href="string.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-stringart" class="mr-2"></span>String Art
-                  </a>
-              </div>
-            </div>
-          </div>
-          
-        </div>
-      </div>
-  </nav>
-
-  <!-- Header -->
-  <header class="bg-gradient-to-r from-blue-900 to-gray-900 py-16 px-4 text-center shadow-lg">
-    <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">A Practical Guide to SAST False Positives</h1>
-    <p class="max-w-2xl mx-auto text-gray-200 text-lg">
-      How to investigate common Static Application Security Testing (SAST) findings and determine if they represent a true risk.
+  <!-- Page Header -->
+  <header class="bg-gradient-to-r from-blue-900 to-gray-900 py-10 px-4 text-center shadow-lg">
+    <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">SAST False Positives</h1>
+    <p class="max-w-2xl mx-auto text-gray-200 text-lg md:text-xl mb-6">
+      A guide to identifying and handling common false positives in Static Application Security Testing.
     </p>
   </header>
 
-  <div class="max-w-7xl mx-auto w-full flex flex-row">
-    <!-- Main Content -->
-    <main class="flex-1 px-4 py-10 max-w-5xl mx-auto w-full space-y-12">
-      
-      <!-- SQL Injection Section -->
-      <section id="sql-injection" class="fade-in-section">
-        <!-- ... existing section content ... -->
-        <div class="flex items-center mb-4">
-          <span id="icon-sql" class="text-blue-400 mr-3"></span>
-          <h2 class="text-3xl font-semibold text-blue-400">Case Study: SQL Injection in Java/Spring</h2>
-        </div>
-        <p class="text-gray-200 mb-6">A SAST tool flags a line of code for potential SQL Injection. Here's a checklist to investigate if it's a false positive:</p>
-        
-        <div class="space-y-6">
-          <div>
-            <h3 class="text-xl font-semibold text-blue-300 mb-2">1. Trace the Data Source: Is there any user input?</h3>
-            <p class="text-gray-300 mb-3">The most crucial question. If the data used in the query is entirely static, hardcoded, or system-generated (e.g., `System.currentTimeMillis()`), it cannot be influenced by a user and is not a vulnerability.</p>
-          </div>
-          
-          <div>
-            <h3 class="text-xl font-semibold text-blue-300 mb-2">2. Check for Parameterized Queries (The Right Way)</h3>
-            <p class="text-gray-300 mb-3">SAST tools are good, but sometimes they miss the context of modern frameworks. A query that looks like string concatenation might actually be safe if the framework handles parameterization under the hood.</p>
-            <p class="font-semibold text-red-400">SAST Flag (Potentially Vulnerable):</p>
-            <div class="code-block mt-2 mb-4"><button class="copy-btn">Copy</button><code>String query = "SELECT * FROM users WHERE status = '" + status + "'";</code></div>
-            <p class="font-semibold text-green-400">Investigation:</p>
-            <ul class="list-disc list-inside text-gray-300 pl-4 mt-2 space-y-2">
-              <li><strong>Is it Spring Data JPA?</strong> If the query is defined in a repository interface (e.g., `@Query("...")`), Spring automatically uses parameterized queries for method arguments. This is safe.</li>
-              <li><strong>Is it `JdbcTemplate`?</strong> If `JdbcTemplate` is used with `?` placeholders and arguments are passed separately, it is safe. Example: `jdbcTemplate.query(query, new Object[]{status}, ...)`.</li>
-            </ul>
-          </div>
-          
-          <div>
-            <h3 class="text-xl font-semibold text-blue-300 mb-2">3. Analyze the Input's Constraints: Is the input strictly controlled?</h3>
-            <p class="text-gray-300 mb-3">Even if user input is part of a query, the risk can be mitigated if the input is strictly validated against a known-safe allowlist.</p>
-             <ul class="list-disc list-inside text-gray-300 pl-4 mt-2 space-y-2">
-              <li><strong>Enum Validation:</strong> If the `status` variable from the example above is validated against an Enum (`Status.ACTIVE`, `Status.INACTIVE`), an attacker cannot inject arbitrary values. The query is safe in this context.</li>
-              <li><strong>Strict Regex:</strong> If an input must match a rigid pattern (e.g., a 5-digit zip code `^[0-9]{5}$`), the potential for malicious injection is effectively eliminated.</li>
-            </ul>
-          </div>
-        </div>
-      </section>
+  <main class="flex-1 px-4 py-10 max-w-5xl mx-auto space-y-10">
 
-      <!-- HTTPS Section -->
-      <section id="unencrypted-traffic" class="fade-in-section">
-        <!-- ... existing section content ... -->
-        <div class="flex items-center mb-4">
-          <span id="icon-http" class="text-blue-400 mr-3"></span>
-          <h2 class="text-3xl font-semibold text-blue-400">Case Study: "Traffic is not Encrypted (HTTP)"</h2>
+    <!-- SQL Injection Section -->
+    <section id="sql-injection" class="fade-in-section">
+      <div class="flex items-center mb-4">
+        <span id="icon-sql" class="text-blue-400 mr-3"></span>
+        <h2 class="text-3xl font-semibold text-blue-400">Case Study: SQL Injection in Java/Spring</h2>
+      </div>
+      <p class="text-gray-200 mb-6">A SAST tool flags a line of code for potential SQL Injection. Here's a checklist
+        to investigate if it's a false positive:</p>
+
+      <div class="space-y-6">
+        <div>
+          <h3 class="text-xl font-semibold text-blue-300 mb-2">1. Trace the Data Source: Is there any user input?</h3>
+          <p class="text-gray-300 mb-3">The most crucial question. If the data used in the query is entirely static,
+            hardcoded, or system-generated (e.g., `System.currentTimeMillis()`), it cannot be influenced by a user and
+            is not a vulnerability.</p>
         </div>
-        <p class="text-gray-200 mb-6">This is a classic example of a SAST tool lacking architectural context. A tool might see an internal service call like `http://product-service:8080` and flag it, but in modern cloud environments, this is often a false positive.</p>
 
         <div>
-          <h3 class="text-xl font-semibold text-blue-300 mb-2">1. Where is TLS Termination Handled?</h3>
-          <p class="text-gray-300 mb-4">In most production systems, encryption is handled outside the application. The application code itself communicates over HTTP within a secure, private network, while an upstream component handles all public-facing HTTPS traffic.</p>
-          <div class="text-center p-4 rounded-lg bg-gray-900 border border-gray-800">
-              <p class="font-mono text-lg">
-                  <span class="text-green-400">User (HTTPS)</span> &rarr; 
-                  <span class="text-blue-400">Load Balancer / Gateway</span> &rarr; 
-                  <span class="text-yellow-400">Service Mesh / Reverse Proxy</span> &rarr; 
-                  <span class="text-red-400">Application (HTTP)</span>
-              </p>
-              <p class="text-sm mt-2 text-gray-400">TLS is terminated at the Load Balancer or Gateway. All internal traffic from that point on is in a trusted network.</p>
+          <h3 class="text-xl font-semibold text-blue-300 mb-2">2. Check for Parameterized Queries (The Right Way)</h3>
+          <p class="text-gray-300 mb-3">SAST tools are good, but sometimes they miss the context of modern frameworks.
+            A query that looks like string concatenation might actually be safe if the framework handles
+            parameterization under the hood.</p>
+          <p class="font-semibold text-red-400">SAST Flag (Potentially Vulnerable):</p>
+          <div class="code-block mt-2 mb-4"><button
+              class="copy-btn">Copy</button><code>String query = "SELECT * FROM users WHERE status = '" + status + "'";</code>
           </div>
-        </div>
-
-         <div class="mt-6">
-          <h3 class="text-xl font-semibold text-blue-300 mb-2">2. How to Verify HTTPS is Enforced</h3>
-          <p class="text-gray-300 mb-3">Instead of looking at the code, test the running application's behavior from an external perspective.</p>
-           <ul class="list-disc list-inside text-gray-300 pl-4 mt-2 space-y-3">
-              <li>
-                  <strong>Use `curl`:</strong> Run `curl -I http://your-production-site.com`. You should see a `301` or `302` redirect to the `https://` version in the `Location:` header. To follow the redirect, use `curl -IL http://your-production-site.com` and verify the final response is a `200 OK` from the HTTPS URL.
-              </li>
-               <li>
-                  <strong>Browser Dev Tools:</strong> Open the Network tab in your browser's developer tools. Type `http://your-production-site.com` into the address bar. The first entry should be a `301` redirect, and all subsequent requests should be to the `https://` version.
-              </li>
-               <li>
-                  <strong>Check Infrastructure Configuration:</strong> Review the configuration for your Cloud Load Balancer (GCP, AWS, Azure), Ingress Controller (Kubernetes), or reverse proxy (NGINX) to confirm it is configured to redirect all HTTP traffic to HTTPS.
-              </li>
+          <p class="font-semibold text-green-400">Investigation:</p>
+          <ul class="list-disc list-inside text-gray-300 pl-4 mt-2 space-y-2">
+            <li><strong>Is it Spring Data JPA?</strong> If the query is defined in a repository interface (e.g.,
+              `@Query("...")`), Spring automatically uses parameterized queries for method arguments. This is safe.
+            </li>
+            <li><strong>Is it `JdbcTemplate`?</strong> If `JdbcTemplate` is used with `?` placeholders and arguments
+              are passed separately, it is safe. Example: `jdbcTemplate.query(query, new Object[]{status}, ...)`.</li>
           </ul>
         </div>
-      </section>
-       <!-- Other Examples Section -->
-      <section id="other-false-positives" class="fade-in-section">
-          <!-- ... existing section content ... -->
-          <div class="flex items-center mb-4">
-              <span id="icon-other" class="text-blue-400 mr-3"></span>
-              <h2 class="text-3xl font-semibold text-blue-400">Other Common False Positives</h2>
-          </div>
-          <div class="space-y-6">
-              <div>
-                  <h3 class="text-xl font-semibold text-blue-300 mb-2">Cross-Site Scripting (XSS)</h3>
-                  <p class="text-gray-300">A SAST tool might flag data being rendered in a template without seeing that the framework provides automatic protection.
-                      <br><strong>Investigation:</strong> Is this a modern front-end framework like React, Vue, or Angular? These frameworks automatically escape or sanitize data by default when rendering, mitigating most common XSS risks. The finding is likely a false positive unless `dangerouslySetInnerHTML` or a similar unguarded method is being used.
-                  </p>
-              </div>
-              <div>
-                  <h3 class="text-xl font-semibold text-blue-300 mb-2">Hardcoded Secrets</h3>
-                  <p class="text-gray-300">Tools are aggressive about finding anything that looks like a key or password.
-                      <br><strong>Investigation:</strong> Check the context. Is the flagged "secret" an example key in a comment or documentation? Is it part of a test file using mock or placeholder credentials? Is it a publicly known key for a test environment (e.g., a Stripe public test key)? True positives are secrets that control access to production data or systems.
-                  </p>
-              </div>
-          </div>
-      </section>
 
-      <!-- File Path Analysis Section -->
-      <section id="file-path-analysis" class="fade-in-section">
-          <!-- ... existing section content ... -->
-          <div class="flex items-center mb-4">
-              <span id="icon-path" class="text-blue-400 mr-3"></span>
-              <h2 class="text-3xl font-semibold text-blue-400">Leveraging File Path Analysis for Triage</h2>
+        <div>
+          <h3 class="text-xl font-semibold text-blue-300 mb-2">3. Analyze the Input's Constraints: Is the input
+            strictly controlled?</h3>
+          <p class="text-gray-300 mb-3">Even if user input is part of a query, the risk can be mitigated if the input
+            is strictly validated against a known-safe allowlist.</p>
+          <ul class="list-disc list-inside text-gray-300 pl-4 mt-2 space-y-2">
+            <li><strong>Enum Validation:</strong> If the `status` variable from the example above is validated against
+              an Enum (`Status.ACTIVE`, `Status.INACTIVE`), an attacker cannot inject arbitrary values. The query is
+              safe in this context.</li>
+            <li><strong>Strict Regex:</strong> If an input must match a rigid pattern (e.g., a 5-digit zip code
+              `^[0-9]{5}$`), the potential for malicious injection is effectively eliminated.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- HTTPS Section -->
+    <section id="unencrypted-traffic" class="fade-in-section">
+      <div class="flex items-center mb-4">
+        <span id="icon-http" class="text-blue-400 mr-3"></span>
+        <h2 class="text-3xl font-semibold text-blue-400">Case Study: "Traffic is not Encrypted (HTTP)"</h2>
+      </div>
+      <p class="text-gray-200 mb-6">This is a classic example of a SAST tool lacking architectural context. A tool
+        might see an internal service call like `http://product-service:8080` and flag it, but in modern cloud
+        environments, this is often a false positive.</p>
+
+      <div>
+        <h3 class="text-xl font-semibold text-blue-300 mb-2">1. Where is TLS Termination Handled?</h3>
+        <p class="text-gray-300 mb-4">In most production systems, encryption is handled outside the application. The
+          application code itself communicates over HTTP within a secure, private network, while an upstream component
+          handles all public-facing HTTPS traffic.</p>
+        <div class="text-center p-4 rounded-lg bg-gray-900 border border-gray-800">
+          <p class="font-mono text-lg">
+            <span class="text-green-400">User (HTTPS)</span> &rarr;
+            <span class="text-blue-400">Load Balancer / Gateway</span> &rarr;
+            <span class="text-yellow-400">Service Mesh / Reverse Proxy</span> &rarr;
+            <span class="text-red-400">Application (HTTP)</span>
+          </p>
+          <p class="text-sm mt-2 text-gray-400">TLS is terminated at the Load Balancer or Gateway. All internal
+            traffic from that point on is in a trusted network.</p>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <h3 class="text-xl font-semibold text-blue-300 mb-2">2. How to Verify HTTPS is Enforced</h3>
+        <p class="text-gray-300 mb-3">Instead of looking at the code, test the running application's behavior from an
+          external perspective.</p>
+        <ul class="list-disc list-inside text-gray-300 pl-4 mt-2 space-y-3">
+          <li>
+            <strong>Use `curl`:</strong> Run `curl -I http://your-production-site.com`. You should see a `301` or
+            `302` redirect to the `https://` version in the `Location:` header. To follow the redirect, use `curl -IL
+            http://your-production-site.com` and verify the final response is a `200 OK` from the HTTPS URL.
+          </li>
+          <li>
+            <strong>Browser Dev Tools:</strong> Open the Network tab in your browser's developer tools. Type
+            `http://your-production-site.com` into the address bar. The first entry should be a `301` redirect, and
+            all subsequent requests should be to the `https://` version.
+          </li>
+          <li>
+            <strong>Check Infrastructure Configuration:</strong> Review the configuration for your Cloud Load Balancer
+            (GCP, AWS, Azure), Ingress Controller (Kubernetes), or reverse proxy (NGINX) to confirm it is configured
+            to redirect all HTTP traffic to HTTPS.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Other Examples Section -->
+    <section id="other-false-positives" class="fade-in-section">
+      <div class="flex items-center mb-4">
+        <span id="icon-other" class="text-blue-400 mr-3"></span>
+        <h2 class="text-3xl font-semibold text-blue-400">Other Common False Positives</h2>
+      </div>
+      <div class="space-y-6">
+        <div>
+          <h3 class="text-xl font-semibold text-blue-300 mb-2">Cross-Site Scripting (XSS)</h3>
+          <p class="text-gray-300">A SAST tool might flag data being rendered in a template without seeing that the
+            framework provides automatic protection.
+            <br><strong>Investigation:</strong> Is this a modern front-end framework like React, Vue, or Angular?
+            These frameworks automatically escape or sanitize data by default when rendering, mitigating most common
+            XSS risks. The finding is likely a false positive unless `dangerouslySetInnerHTML` or a similar unguarded
+            method is being used.
+          </p>
+        </div>
+        <div>
+          <h3 class="text-xl font-semibold text-blue-300 mb-2">Hardcoded Secrets</h3>
+          <p class="text-gray-300">Tools are aggressive about finding anything that looks like a key or password.
+            <br><strong>Investigation:</strong> Check the context. Is the flagged "secret" an example key in a comment
+            or documentation? Is it part of a test file using mock or placeholder credentials? Is it a publicly known
+            key for a test environment (e.g., a Stripe public test key)? True positives are secrets that control
+            access to production data or systems.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- File Path Analysis Section -->
+    <section id="file-path-analysis" class="fade-in-section">
+      <div class="flex items-center mb-4">
+        <span id="icon-path" class="text-blue-400 mr-3"></span>
+        <h2 class="text-3xl font-semibold text-blue-400">Leveraging File Path Analysis for Triage</h2>
+      </div>
+      <p class="text-gray-200 mb-6">Before you even start random sampling, you can often eliminate a huge number of
+        findings by analyzing the file paths from your SAST tool's data export. A file's location provides critical
+        context about its role and risk level.</p>
+
+      <div class="space-y-6">
+        <div>
+          <h3 class="text-xl font-semibold text-blue-300 mb-2">1. Identify and Exclude Non-Production Code</h3>
+          <p class="text-gray-300 mb-3">Many findings reside in code that is not part of the production application. A
+            quick analysis of the file paths can help you identify and bulk-close these irrelevant alerts.</p>
+          <div class="grid md:grid-cols-2 gap-4 mt-4">
+            <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-700 transition">
+              <h4 class="font-semibold text-blue-300">Test Code</h4>
+              <p class="text-sm text-gray-400">Findings in unit, integration, or end-to-end tests are generally
+                low-risk. Look for common test directories:</p>
+              <ul class="list-disc list-inside text-sm text-gray-300 pl-2 mt-2 font-mono">
+                <li>`src/test/java/` (Java)</li>
+                <li>`tests/`, `__tests__/` (Python, JS)</li>
+                <li>`spec/` (Ruby)</li>
+                <li>`*_test.go` (Go files)</li>
+              </ul>
+            </div>
+            <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-700 transition">
+              <h4 class="font-semibold text-blue-300">Build & CI/CD Scripts</h4>
+              <p class="text-sm text-gray-400">Code for pipelines might contain test credentials or configurations
+                that are not secrets in a production context.</p>
+              <ul class="list-disc list-inside text-sm text-gray-300 pl-2 mt-2 font-mono">
+                <li>`.github/workflows/`</li>
+                <li>`Jenkinsfile`</li>
+                <li>`azure-pipelines.yml`</li>
+                <li>`scripts/`</li>
+              </ul>
+            </div>
+            <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-700 transition">
+              <h4 class="font-semibold text-blue-300">Third-Party Libraries</h4>
+              <p class="text-sm text-gray-400">You shouldn't be responsible for fixing findings in vendor code. These
+                should be reported to the vendor and suppressed.</p>
+              <ul class="list-disc list-inside text-sm text-gray-300 pl-2 mt-2 font-mono">
+                <li>`vendor/`</li>
+                <li>`node_modules/`</li>
+                <li>`target/`</li>
+                <li>`build/`</li>
+              </ul>
+            </div>
+            <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-700 transition">
+              <h4 class="font-semibold text-blue-300">Documentation & Examples</h4>
+              <p class="text-sm text-gray-400">Code in these folders is illustrative and not part of the deployed
+                application.</p>
+              <ul class="list-disc list-inside text-sm text-gray-300 pl-2 mt-2 font-mono">
+                <li>`docs/`</li>
+                <li>`examples/`</li>
+                <li>`samples/`</li>
+                <li>`demo/`</li>
+              </ul>
+            </div>
           </div>
-          <p class="text-gray-200 mb-6">Before you even start random sampling, you can often eliminate a huge number of findings by analyzing the file paths from your SAST tool's data export. A file's location provides critical context about its role and risk level.</p>
-          
-          <div class="space-y-6">
-              <div>
-                  <h3 class="text-xl font-semibold text-blue-300 mb-2">1. Identify and Exclude Non-Production Code</h3>
-                  <p class="text-gray-300 mb-3">Many findings reside in code that is not part of the production application. A quick analysis of the file paths can help you identify and bulk-close these irrelevant alerts.</p>
-                  <div class="grid md:grid-cols-2 gap-4 mt-4">
-                      <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-700 transition">
-                          <h4 class="font-semibold text-blue-300">Test Code</h4>
-                          <p class="text-sm text-gray-400">Findings in unit, integration, or end-to-end tests are generally low-risk. Look for common test directories:</p>
-                          <ul class="list-disc list-inside text-sm text-gray-300 pl-2 mt-2 font-mono">
-                              <li>`src/test/java/` (Java)</li>
-                              <li>`tests/`, `__tests__/` (Python, JS)</li>
-                              <li>`spec/` (Ruby)</li>
-                              <li>`*_test.go` (Go files)</li>
-                          </ul>
-                      </div>
-                      <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-700 transition">
-                          <h4 class="font-semibold text-blue-300">Build & CI/CD Scripts</h4>
-                          <p class="text-sm text-gray-400">Code for pipelines might contain test credentials or configurations that are not secrets in a production context.</p>
-                          <ul class="list-disc list-inside text-sm text-gray-300 pl-2 mt-2 font-mono">
-                              <li>`.github/workflows/`</li>
-                              <li>`Jenkinsfile`</li>
-                              <li>`azure-pipelines.yml`</li>
-                              <li>`scripts/`</li>
-                          </ul>
-                      </div>
-                      <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-700 transition">
-                          <h4 class="font-semibold text-blue-300">Third-Party Libraries</h4>
-                          <p class="text-sm text-gray-400">You shouldn't be responsible for fixing findings in vendor code. These should be reported to the vendor and suppressed.</p>
-                          <ul class="list-disc list-inside text-sm text-gray-300 pl-2 mt-2 font-mono">
-                              <li>`vendor/`</li>
-                              <li>`node_modules/`</li>
-                              <li>`target/`</li>
-                              <li>`build/`</li>
-                          </ul>
-                      </div>
-                      <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-700 transition">
-                          <h4 class="font-semibold text-blue-300">Documentation & Examples</h4>
-                          <p class="text-sm text-gray-400">Code in these folders is illustrative and not part of the deployed application.</p>
-                          <ul class="list-disc list-inside text-sm text-gray-300 pl-2 mt-2 font-mono">
-                              <li>`docs/`</li>
-                              <li>`examples/`</li>
-                              <li>`samples/`</li>
-                              <li>`demo/`</li>
-                          </ul>
-                      </div>
-                  </div>
-              </div>
+        </div>
 
-              <div>
-                  <h3 class="text-xl font-semibold text-blue-300 mb-2">2. The Workflow</h3>
-                  <p class="text-gray-300 mb-3">The process is straightforward and can be done with simple scripts or even spreadsheet software:</p>
-                  <ol class="list-decimal list-inside text-gray-300 space-y-2">
-                      <li><strong>Export All Findings:</strong> Get a complete list from your SAST tool, ensuring the output includes the full file path for each finding. A CSV format is ideal.</li>
-                      <li><strong>Filter and Categorize:</strong> Use filtering rules based on the path patterns above to tag each finding. For example, create a new column called "Category" and label findings as "Test", "Build", "Vendor", etc.</li>
-                      <li><strong>Prioritize the Rest:</strong> By filtering out these categories, your list of findings is now much smaller and focused exclusively on production source code. You can now apply statistical sampling to this reduced dataset for a more accurate analysis.</li>
-                  </ol>
-              </div>
+        <div>
+          <h3 class="text-xl font-semibold text-blue-300 mb-2">2. The Workflow</h3>
+          <p class="text-gray-300 mb-3">The process is straightforward and can be done with simple scripts or even
+            spreadsheet software:</p>
+          <ol class="list-decimal list-inside text-gray-300 space-y-2">
+            <li><strong>Export All Findings:</strong> Get a complete list from your SAST tool, ensuring the output
+              includes the full file path for each finding. A CSV format is ideal.</li>
+            <li><strong>Filter and Categorize:</strong> Use filtering rules based on the path patterns above to tag
+              each finding. For example, create a new column called "Category" and label findings as "Test", "Build",
+              "Vendor", etc.</li>
+            <li><strong>Prioritize the Rest:</strong> By filtering out these categories, your list of findings is now
+              much smaller and focused exclusively on production source code. You can now apply statistical sampling
+              to this reduced dataset for a more accurate analysis.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Statistical Sampling Section -->
+    <section id="statistical-sampling" class="fade-in-section">
+      <div class="flex items-center mb-4">
+        <span id="icon-calc" class="text-blue-400 mr-3"></span>
+        <h2 class="text-3xl font-semibold text-blue-400">Tackling High-Volume Findings with Statistical Sampling</h2>
+      </div>
+      <p class="text-gray-200 mb-6">What if a SAST tool generates thousands of instances of the same finding across a
+        large codebase? Reviewing each one is impractical. Instead, we can use statistical sampling to analyze a
+        smaller subset and make a highly confident, data-driven decision about the entire population.</p>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Calculator -->
+        <div class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
+          <h3 class="text-xl font-semibold text-blue-300 mb-4">Sample Size Calculator</h3>
+          <div class="space-y-4">
+            <div>
+              <label for="population" class="block text-sm font-medium text-gray-300">Total Findings (Population
+                Size)</label>
+              <input type="number" id="population" value="1000"
+                class="mt-1 block w-full bg-gray-800 border-gray-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors">
+            </div>
+            <div>
+              <label for="confidence" class="block text-sm font-medium text-gray-300">Confidence Level</label>
+              <select id="confidence"
+                class="mt-1 block w-full bg-gray-800 border-gray-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                <option value="1.96" selected>95% (Standard)</option>
+                <option value="1.645">90%</option>
+                <option value="2.576">99%</option>
+              </select>
+            </div>
+            <div>
+              <label for="margin" class="block text-sm font-medium text-gray-300">Margin of Error</label>
+              <select id="margin"
+                class="mt-1 block w-full bg-gray-800 border-gray-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                <option value="0.05" selected>5% (Standard)</option>
+                <option value="0.01">1%</option>
+                <option value="0.1">10%</option>
+              </select>
+            </div>
           </div>
-      </section>
-
-      <!-- Statistical Sampling Section -->
-      <section id="statistical-sampling" class="fade-in-section">
-          <!-- ... existing section content ... -->
-          <div class="flex items-center mb-4">
-              <span id="icon-calc" class="text-blue-400 mr-3"></span>
-              <h2 class="text-3xl font-semibold text-blue-400">Tackling High-Volume Findings with Statistical Sampling</h2>
+          <div class="mt-6 bg-blue-900/50 border border-blue-700 text-blue-200 px-4 py-3 rounded-lg text-center">
+            <p class="text-sm font-medium">Required Sample Size to Review:</p>
+            <p id="sample-size" class="text-3xl font-bold mt-1">278</p>
           </div>
-          <p class="text-gray-200 mb-6">What if a SAST tool generates thousands of instances of the same finding across a large codebase? Reviewing each one is impractical. Instead, we can use statistical sampling to analyze a smaller subset and make a highly confident, data-driven decision about the entire population.</p>
-          
-          <div class="grid md:grid-cols-2 gap-8">
-              <!-- Calculator -->
-              <div class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
-                  <h3 class="text-xl font-semibold text-blue-300 mb-4">Sample Size Calculator</h3>
-                  <div class="space-y-4">
-                      <div>
-                          <label for="population" class="block text-sm font-medium text-gray-300">Total Findings (Population Size)</label>
-                          <input type="number" id="population" value="1000" class="mt-1 block w-full bg-gray-800 border-gray-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors">
-                      </div>
-                      <div>
-                          <label for="confidence" class="block text-sm font-medium text-gray-300">Confidence Level</label>
-                          <select id="confidence" class="mt-1 block w-full bg-gray-800 border-gray-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors">
-                              <option value="1.96" selected>95% (Standard)</option>
-                              <option value="1.645">90%</option>
-                              <option value="2.576">99%</option>
-                          </select>
-                      </div>
-                      <div>
-                          <label for="margin" class="block text-sm font-medium text-gray-300">Margin of Error</label>
-                          <select id="margin" class="mt-1 block w-full bg-gray-800 border-gray-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition-colors">
-                              <option value="0.05" selected>5% (Standard)</option>
-                              <option value="0.01">1%</option>
-                              <option value="0.1">10%</option>
-                          </select>
-                      </div>
-                  </div>
-                  <div class="mt-6 bg-blue-900/50 border border-blue-700 text-blue-200 px-4 py-3 rounded-lg text-center">
-                      <p class="text-sm font-medium">Required Sample Size to Review:</p>
-                      <p id="sample-size" class="text-3xl font-bold mt-1">278</p>
-                  </div>
-              </div>
+        </div>
 
-              <!-- Methodology -->
-              <div class="text-gray-300">
-                  <h3 class="text-xl font-semibold text-blue-300 mb-2">The Approach</h3>
-                  <ol class="list-decimal list-inside space-y-3">
-                      <li>
-                          <strong>Define Your Parameters:</strong> Use the calculator to determine your sample size. A 95% confidence level with a 5% margin of error is a common industry standard. This means you can be 95% sure that the results from your sample reflect the entire set of findings, plus or minus 5%.
-                      </li>
-                      <li>
-                          <strong>Select a Random Sample:</strong> Export the list of all findings. Use a script or even a spreadsheet's random function to select the required number of findings randomly. It is critical that the sample is random and not just the "first N" findings.
-                      </li>
-                      <li>
-                          <strong>Analyze the Sample:</strong> Manually investigate each finding in your random sample, classifying it as a "True Positive" or "False Positive" based on the techniques described on this page.
-                      </li>
-                      <li>
-                          <strong>Extrapolate the Results:</strong> Calculate the false positive rate from your sample. For example, if you reviewed 278 findings and found that 270 were false positives, your false positive rate is ~97%.
-                      </li>
-                      <li>
-                          <strong>Make an Informed Decision:</strong> With a high false positive rate (e.g., >95%) backed by statistical data, you can now confidently recommend closing all findings of this type with a clear justification. This saves hundreds of hours of developer and security time.
-                      </li>
-                  </ol>
-              </div>
-          </div>
-      </section>
+        <!-- Methodology -->
+        <div class="text-gray-300">
+          <h3 class="text-xl font-semibold text-blue-300 mb-2">The Approach</h3>
+          <ol class="list-decimal list-inside space-y-3">
+            <li>
+              <strong>Define Your Parameters:</strong> Use the calculator to determine your sample size. A 95%
+              confidence level with a 5% margin of error is a common industry standard. This means you can be 95% sure
+              that the results from your sample reflect the entire set of findings, plus or minus 5%.
+            </li>
+            <li>
+              <strong>Select a Random Sample:</strong> Export the list of all findings. Use a script or even a
+              spreadsheet's random function to select the required number of findings randomly. It is critical that
+              the sample is random and not just the "first N" findings.
+            </li>
+            <li>
+              <strong>Analyze the Sample:</strong> Manually investigate each finding in your random sample,
+              classifying it as a "True Positive" or "False Positive" based on the techniques described on this page.
+            </li>
+            <li>
+              <strong>Extrapolate the Results:</strong> Calculate the false positive rate from your sample. For
+              example, if you reviewed 278 findings and found that 270 were false positives, your false positive rate
+              is ~97%.
+            </li>
+            <li>
+              <strong>Make an Informed Decision:</strong> With a high false positive rate (e.g., >95%) backed by
+              statistical data, you can now confidently recommend closing all findings of this type with a clear
+              justification. This saves hundreds of hours of developer and security time.
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
 
-    </main>
-    
-    <!-- Table of Contents Sidebar -->
-    <aside class="hidden xl:block w-64 p-10 sticky top-20 h-screen">
-      <nav class="toc space-y-3 text-sm text-gray-400">
-          <h3 class="font-semibold text-white mb-2">On This Page</h3>
-          <a href="#sql-injection">SQL Injection Case Study</a>
-          <a href="#unencrypted-traffic">Unencrypted Traffic Case Study</a>
-          <a href="#other-false-positives">Other Common False Positives</a>
-          <a href="#file-path-analysis">File Path Analysis</a>
-          <a href="#statistical-sampling">Statistical Sampling</a>
-      </nav>
-    </aside>
-  </div>
-  
-  <footer class="bg-gray-900 text-gray-400 text-center py-4 mt-8 rounded-t-xl shadow-inner">
-    © 2025 D. Chandler Prince
-  </footer>
+  </main>
 
-  <!-- Scroll to Top Button -->
-  <button id="scrollTopBtn" class="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-3 shadow-lg transition">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
+  <site-footer></site-footer>
+
+  <script type="module" src="/main.js"></script>
+
+  <button id="scrollTopBtn"
+    class="fixed bottom-5 right-5 hidden z-50 bg-blue-600 hover:bg-blue-500 text-white p-3 rounded-full shadow-lg transition-all duration-300"
+    aria-label="Scroll to top">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m5 12 7-7 7 7" />
+      <path d="M12 19V5" />
+    </svg>
   </button>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // --- 1. Render ALL Icons (Nav + Page) ---
-      if (window.lucide) {
-        lucide.createIcons({
-          icons: {
-            // All Nav Icons
-            'nav-home': lucide.Home,
-            'nav-guides-trigger': lucide.BookOpen,
-            'nav-tools-trigger': lucide.Briefcase,
-            'nav-guides-chevron': lucide.ChevronDown,
-            'nav-tools-chevron': lucide.ChevronDown,
-            'nav-cloud': lucide.Cloud,
-            'nav-roadmap': lucide.Map,
-            'nav-phishing': lucide.Fish,
-            'nav-sast': lucide.FileSearch,
-            'nav-threat': lucide.ShieldAlert,
-            'nav-checklist': lucide.ListChecks,
-            'nav-epss': lucide.Activity,
-            'nav-encryption': lucide.Lock,
-            'nav-fp': lucide.Fingerprint,
-            'nav-jwt': lucide.KeyRound,
-            'nav-modcat': lucide.Guitar,
-            'nav-shamir': lucide.Share2,
-            'nav-dashboard': lucide.LayoutDashboard,
-            'nav-regulation': lucide.Gavel,
-                'nav-privacy': lucide.Flag,
-                'nav-eu-privacy': lucide.Globe, // Added from your new nav snippet
-            'nav-fair': lucide.Banknote, // Added from your new nav snippet
-            'nav-sdlc': lucide.IterationCcw, // Added from your new nav snippet
-            'nav-stringart': lucide.GalleryVertical, // Added from your new nav snippet
-            
-            // SAST Page-specific icons
-            'icon-sql': lucide.Database,
-            'icon-http': lucide.Server,
-            'icon-other': lucide.ListChecks,
-            'icon-calc': lucide.Calculator,
-            'icon-path': lucide.FileCode,
-            
+    const populationEl = document.getElementById('population');
+    const confidenceEl = document.getElementById('confidence');
+    const marginEl = document.getElementById('margin');
+    const sampleSizeEl = document.getElementById('sample-size');
 
-          },
-          attrs: { color: "#38bdf8", size: 32, strokeWidth: 2 }
-        });
+    const calculateSampleSize = () => {
+      if (!populationEl || !confidenceEl || !marginEl) return;
+
+      const N = parseInt(populationEl.value);
+      const Z = parseFloat(confidenceEl.value); // Z-score
+      const e = parseFloat(marginEl.value); // Margin of error
+      const p = 0.5; // Use 0.5 for the most conservative sample size
+
+      if (isNaN(N) || N <= 0) {
+        if (sampleSizeEl) sampleSizeEl.textContent = "N/A";
+        return;
       }
+      const n0 = (Z * Z * p * (1 - p)) / (e * e);
+      const n = n0 / (1 + (n0 - 1) / N);
+      if (sampleSizeEl) sampleSizeEl.textContent = Math.ceil(n);
+    };
 
-      // --- 2. Sample Size Calculator Logic ---
-      const populationEl = document.getElementById('population');
-      const confidenceEl = document.getElementById('confidence');
-      const marginEl = document.getElementById('margin');
-      const sampleSizeEl = document.getElementById('sample-size');
+    if (populationEl) populationEl.addEventListener('input', calculateSampleSize);
+    if (confidenceEl) confidenceEl.addEventListener('change', calculateSampleSize);
+    if (marginEl) marginEl.addEventListener('change', calculateSampleSize);
+    calculateSampleSize(); // Initial calculation
 
-      const calculateSampleSize = () => {
-        const N = parseInt(populationEl.value);
-        const Z = parseFloat(confidenceEl.value); // Z-score
-        const e = parseFloat(marginEl.value); // Margin of error
-        const p = 0.5; // Use 0.5 for the most conservative sample size
-
-        if (isNaN(N) || N <= 0) {
-            if(sampleSizeEl) sampleSizeEl.textContent = "N/A";
-            return;
+    // --- 3. Scroll to Top Button Logic ---
+    const scrollTopBtn = document.getElementById('scrollTopBtn');
+    if (scrollTopBtn) {
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 200) {
+          scrollTopBtn.style.display = 'block';
+          requestAnimationFrame(() => {
+            scrollTopBtn.style.transform = 'translateY(0)';
+            scrollTopBtn.style.opacity = '1';
+          });
+        } else {
+          scrollTopBtn.style.transform = 'translateY(100px)';
+          scrollTopBtn.style.opacity = '0';
+          setTimeout(() => {
+            if (window.scrollY <= 200) scrollTopBtn.style.display = 'none';
+          }, 300);
         }
-        const n0 = (Z * Z * p * (1 - p)) / (e * e);
-        const n = n0 / (1 + (n0 - 1) / N);
-        if(sampleSizeEl) sampleSizeEl.textContent = Math.ceil(n);
-      };
-      
-      if(populationEl) populationEl.addEventListener('input', calculateSampleSize);
-      if(confidenceEl) confidenceEl.addEventListener('change', calculateSampleSize);
-      if(marginEl) marginEl.addEventListener('change', calculateSampleSize);
-      calculateSampleSize(); // Initial calculation
-
-      // --- 3. Scroll to Top Button Logic ---
-      const scrollTopBtn = document.getElementById('scrollTopBtn');
-      if (scrollTopBtn) {
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 200) {
-                scrollTopBtn.style.display = 'block';
-                requestAnimationFrame(() => {
-                  scrollTopBtn.style.transform = 'translateY(0)';
-                });
-            } else {
-                scrollTopBtn.style.transform = 'translateY(100px)';
-            }
-        });
-        scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-      }
-
-      // --- 4. Copy Button Logic ---
-      document.querySelectorAll('.copy-btn').forEach(button => {
-        button.addEventListener('click', () => {
-          const code = button.nextElementSibling.innerText;
-          // Use execCommand for broader compatibility
-          try {
-            const textarea = document.createElement('textarea');
-            textarea.value = code;
-            textarea.style.position = 'absolute';
-            textarea.style.left = '-9999px';
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            
-            button.textContent = 'Copied!';
-            setTimeout(() => { button.textContent = 'Copy'; }, 2000);
-          } catch (err) {
-            console.error('Failed to copy: ', err);
-          }
-        });
       });
 
-      // --- 5. Scroll Animation Logic ---
-      const sections = document.querySelectorAll('.fade-in-section');
-      if (sections.length > 0) {
-        const observer = new IntersectionObserver(entries => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('is-visible');
-              observer.unobserve(entry.target);
-            }
-          });
-        }, { threshold: 0.1 });
-        sections.forEach(section => observer.observe(section));
-      }
-      
-      // --- 6. TOC Active Link Logic ---
-      const tocLinks = document.querySelectorAll('.toc a');
-      if (tocLinks.length > 0) {
-        const tocObserver = new IntersectionObserver(entries => {
-          entries.forEach(entry => {
-            const id = entry.target.getAttribute('id');
-            const tocLink = document.querySelector(`.toc a[href="#${id}"]`);
-            if (entry.isIntersecting) {
-              tocLinks.forEach(link => link.classList.remove('active'));
-              if(tocLink) tocLink.classList.add('active');
-            }
-          });
-        }, { rootMargin: '-30% 0px -60% 0px' });
-        
-        document.querySelectorAll('section[id]').forEach(section => {
-          tocObserver.observe(section);
+      scrollTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
         });
-      }
-
-      // --- 7. Add Nav Dropdown Logic ---
-      const dropdownButtons = document.querySelectorAll('.group > button');
-      dropdownButtons.forEach(button => {
-          button.addEventListener('click', (e) => {
-          const dropdownMenu = e.currentTarget.nextElementSibling;
-          // Close all other open dropdowns
-          document.querySelectorAll('.group .absolute').forEach(menu => {
-              if (menu !== dropdownMenu) {
-              menu.classList.add('opacity-0', 'invisible');
-              menu.classList.remove('opacity-100', 'visible');
-              }
-          });
-          // Toggle the current dropdown
-          dropdownMenu.classList.toggle('opacity-0');
-          dropdownMenu.classList.toggle('invisible');
-          dropdownMenu.classList.toggle('opacity-100');
-          dropdownMenu.classList.toggle('visible');
-          });
       });
+    }
 
-      // Close dropdowns if clicking outside
-      window.addEventListener('click', (e) => {
-          if (!e.target.closest('.group')) {
-          document.querySelectorAll('.group .absolute').forEach(menu => {
-              menu.classList.add('opacity-0', 'invisible');
-              menu.classList.remove('opacity-100', 'visible');
-          });
-          }
+    // --- 4. Copy Button Logic ---
+    document.querySelectorAll('.copy-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        const code = button.nextElementSibling.innerText;
+        try {
+          const textarea = document.createElement('textarea');
+          textarea.value = code;
+          textarea.style.position = 'absolute';
+          textarea.style.left = '-9999px';
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+
+          button.textContent = 'Copied!';
+          setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+        } catch (err) {
+          console.error('Failed to copy: ', err);
+        }
       });
     });
+
+    // --- 5. Scroll Animation Logic ---
+    const sections = document.querySelectorAll('.fade-in-section');
+    if (sections.length > 0) {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      sections.forEach(section => observer.observe(section));
+    }
+
+    // --- 6. TOC Active Link Logic ---
+    const tocLinks = document.querySelectorAll('.toc a');
+    if (tocLinks.length > 0) {
+      const tocObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          const id = entry.target.getAttribute('id');
+          const tocLink = document.querySelector(`.toc a[href="#${id}"]`);
+          if (entry.isIntersecting) {
+            tocLinks.forEach(link => link.classList.remove('active'));
+            if (tocLink) tocLink.classList.add('active');
+          }
+        });
+      }, { rootMargin: '-30% 0px -60% 0px' });
+
+      document.querySelectorAll('section[id]').forEach(section => {
+        tocObserver.observe(section);
+      });
+    }
   </script>
 </body>
+
 </html>
