@@ -1,157 +1,43 @@
 <!DOCTYPE html>
 <html lang="en" class="bg-gray-950 text-white">
-<head>
 
-  <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self'; 
-    script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://static.cloudflareinsights.com; 
-    style-src 'self' 'unsafe-inline'; 
-    font-src 'self'; 
-    connect-src 'self' https://services.nvd.nist.gov https://api.first.org https://unpkg.com; 
-    object-src 'none'; 
-    base-uri 'self';
-  ">
-  <meta http-equiv="Strict-Transport-Security" content="max-age=63072000; includeSubDomains; preload">
-  <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta name="referrer-policy" content="strict-origin-when-cross-origin">
-  <meta http-equiv="Permissions-Policy" content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>D. Chandler Prince | Cybersecurity Leader & Product Strategist</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-  
-  <style>
-    /* The 'Inter' font reference is removed. 
-      The browser will now use its default 'sans-serif' font. 
-    */
-    html { font-family: sans-serif; }
-    ::selection { background: #2563eb; color: #fff; }
-    /* Ensure dropdown content is above other elements */
-    .group .absolute {
-      z-index: 50;
-    }
-  </style>
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self' https://services.nvd.nist.gov https://api.first.org; object-src 'none'; base-uri 'self';">
+  <meta http-equiv="Strict-Transport-Security" content="max-age=63072000; includeSubDomains; preload">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer-policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy"
+    content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">
 </head>
+
 <body class="bg-gray-950 text-white min-h-screen flex flex-col" hidden>
-  <!-- Navigation Bar -->
- <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
-      <div class="w-full flex items-center justify-center px-6 py-3">
-         <!-- Main navigation container -->
-         <div class="flex flex-wrap justify-center space-x-4">
-          
-          <!-- Home Link (Active) -->
-          <a href="index.html" class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition">
-            <span id="nav-home" class="mr-1"></span>Home
-          </a>
 
-          <!-- Guides & Case Studies Dropdown -->
-          <div class="relative group">
-            <!-- Dropdown Trigger -->
-            <button class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
-              <span id="nav-guides-trigger" class="mr-1"></span>
-              Guides & Case Studies
-              <span id="nav-guides-chevron" class="ml-1"></span>
-            </button>
-            
-            <!-- Dropdown Menu -->
-            <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-              <div class="py-1" role="menu" aria-orientation="vertical">
-                <a href="regulation.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-regulation" class="mr-2"></span>Regulation (US/EU)
-                </a>
-                <a href="usprivacytimeline.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-privacy" class="mr-2"></span>US Privacy Timeline
-                </a>
-                <a href="euprivacytimeline.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-eu-privacy" class="mr-2"></span>EU Privacy Timeline
-                </a>
-                <a href="cloud.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-cloud" class="mr-2"></span>Cloud
-                </a>
-                <a href="cyber_roadmap.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-roadmap" class="mr-2"></span>Cyber Roadmap
-                </a>
-                <a href="phishing.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-phishing" class="mr-2"></span>Phishing
-                </a>
-                <a href="sast.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-sast" class="mr-2"></span>SAST
-                </a>
-                <a href="threatmodel.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-threat" class="mr-2"></span>Threat Model
-                </a>
-                <a href="fair.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-fair" class="mr-2"></span>FAIR Risk Scoring
-                  </a>
-                  <a href="sdlc.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                      <span id="nav-sdlc" class="mr-2"></span>Secure SDLC
-                  </a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Tools & Demos Dropdown -->
-          <div class="relative group">
-            <!-- Dropdown Trigger -->
-            <button class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
-              <span id="nav-tools-trigger" class="mr-1"></span>
-              Tools & Demos
-              <span id="nav-tools-chevron" class="ml-1"></span>
-            </button>
-            
-            <!-- Dropdown Menu -->
-            <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-              <div class="py-1" role="menu" aria-orientation="vertical">
-                <a href="checklist.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-checklist" class="mr-2"></span>Checklist
-                </a>
-                <a href="epssdemo.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-epss" class="mr-2"></span>CVSS vs EPSS
-                </a>
-                <a href="encryption.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-encryption" class="mr-2"></span>Encryption
-                </a>
-                <a href="fingerprint.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-fp" class="mr-2"></span>Fingerprinting
-                </a>
-                <a href="jwt.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-jwt" class="mr-2"></span>JWT Decoder
-                </a>
-                <a href="modcat.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-modcat" class="mr-2"></span>PRS MODCAT
-                </a>
-                <a href="shamir.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-shamir" class="mr-2"></span>Shamir's Visualizer
-                </a>
-                <a href="dashboard.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-dashboard" class="mr-2"></span>Threat Intel
-                </a>
-                 <a href="string.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-stringart" class="mr-2"></span>String Art
-                  </a>
-              </div>
-            </div>
-          </div>
-          
-        </div>
-      </div>
-  </nav>
+  <site-nav></site-nav>
 
   <!-- Header -->
   <header class="bg-gradient-to-r from-blue-900 to-gray-900 py-10 px-4 text-center shadow-lg">
     <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">D. Chandler Prince</h1>
     <h2 class="text-xl md:text-2xl font-semibold text-blue-300 mb-4">Cybersecurity Leader & Product Strategist</h2>
     <p class="max-w-2xl mx-auto text-gray-200 text-lg md:text-xl mb-6">
-      A cybersecurity leader supporting Business Information Security Officer (BISO) organizations with deep technical expertise. My role is dynamic, adapting to fluctuating business needs, but always focused on solving complex problems. While my work is centered on cloud security, DevSecOps, and AppSec, I frequently provide guidance on secure architectures, assist teams during threat models and audits, and advise on privacy and compliance matters, escalating novel issues to legal and privacy specialists.
+      A cybersecurity leader supporting Business Information Security Officer (BISO) organizations with deep technical
+      expertise. My role is dynamic, adapting to fluctuating business needs, but always focused on solving complex
+      problems. While my work is centered on cloud security, DevSecOps, and AppSec, I frequently provide guidance on
+      secure architectures, assist teams during threat models and audits, and advise on privacy and compliance matters,
+      escalating novel issues to legal and privacy specialists.
     </p>
     <div class="flex justify-center items-center space-x-4">
-      <a href="https://github.com/DChandlerP" target="_blank" rel="noopener" class="inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded-full text-white font-semibold transition shadow-lg">
-        <span id="github-icon" class="mr-2"></span>
+      <a href="https://github.com/DChandlerP" target="_blank" rel="noopener"
+        class="inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded-full text-white font-semibold transition shadow-lg">
+        <i data-lucide="github" class="mr-2"></i>
         GitHub
       </a>
-      <a href="https://www.linkedin.com/in/chandler-prince-b53b1427/" target="_blank" rel="noopener" class="inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded-full text-white font-semibold transition shadow-lg">
-        <span id="linkedin-icon" class="mr-2"></span>
+      <a href="https://www.linkedin.com/in/chandler-prince-b53b1427/" target="_blank" rel="noopener"
+        class="inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded-full text-white font-semibold transition shadow-lg">
+        <i data-lucide="linkedin" class="mr-2"></i>
         LinkedIn
       </a>
     </div>
@@ -159,237 +45,272 @@
 
   <main class="flex-1 px-4 py-10 max-w-5xl mx-auto space-y-10">
 
-    <!-- Experience Highlights (NOW FIRST) -->
+    <!-- Experience Highlights -->
     <section>
       <h3 class="text-2xl font-semibold text-blue-400 mb-4">Experience Highlights</h3>
       <div class="grid gap-6 md:grid-cols-2">
-        
-        <!-- UPDATED MCP HIGHLIGHT CARD -->
+
+        <!-- MCP HIGHLIGHT CARD -->
         <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col" data-expandable-card>
           <div class="flex items-center mb-2">
-            <span id="mcp-icon" class="mr-2"></span>
+            <i data-lucide="usb" class="mr-2 text-sky-400"></i>
             <span class="text-lg font-semibold text-blue-300">Secure AI/ML Guidance (MCP)</span>
           </div>
           <div class="text-gray-200 text-sm space-y-3">
             <p class="preview-text">
-              With the new Model Context Protocol creating significant buzz in the AI space, our leadership wanted to innovate quickly but responsibly.
+              With the new Model Context Protocol creating significant buzz in the AI space, our leadership wanted to
+              innovate quickly but responsibly.
             </p>
             <p class="full-text max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out">
-               The challenge was balancing this desire with our core commitment to security and customer privacy. I stepped in to bridge that gap. I analyzed the protocol's early real-world vulnerabilities against the latest academic research. From this, I developed a practical security guide that gave our product and engineering teams the clear best practices they needed to build new products confidently and securely.
+              The challenge was balancing this desire with our core commitment to security and customer privacy. I
+              stepped in to bridge that gap. I analyzed the protocol's early real-world vulnerabilities against the
+              latest academic research. From this, I developed a practical security guide that gave our product and
+              engineering teams the clear best practices they needed to build new products confidently and securely.
             </p>
           </div>
           <button class="expand-toggle flex items-center text-blue-400 font-semibold mt-3 text-sm self-start">
             <span class="mr-1">Read more</span>
-            <span id="chevron-down-mcp" class="expand-icon-down"></span> 
-            <span id="chevron-up-mcp" class="expand-icon-up hidden"></span> 
+            <i data-lucide="chevron-down" class="expand-icon-down"></i>
+            <i data-lucide="chevron-up" class="expand-icon-up hidden"></i>
           </button>
         </div>
 
-        <!-- UPDATED ISO 27001 HIGHLIGHT CARD -->
+        <!-- ISO 27001 HIGHLIGHT CARD -->
         <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col" data-expandable-card>
           <div class="flex items-center mb-2">
-            <span id="certificate-icon" class="mr-2"></span>
+            <i data-lucide="badge-check" class="mr-2 text-sky-400"></i>
             <span class="text-lg font-semibold text-blue-300">ISO 27001 Certification & Business Enablement</span>
           </div>
           <div class="text-gray-200 text-sm space-y-3">
             <p class="preview-text">
-              When product security raised concerns about our core IAM product, I was brought in as the senior technical resource to join the threat modeling process.
+              When product security raised concerns about our core IAM product, I was brought in as the senior technical
+              resource to join the threat modeling process.
             </p>
             <p class="full-text max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out">
-              My strong software and cloud background was needed to validate the concerns and find an efficient path forward. The challenge quickly grew: the IAM product was brought into scope for ISO 27001 certification just as we also needed to enable 3rd-party identity federation (SSO) to support sales. I served as the central technical expert for my BISO team within this complex, multi-stakeholder effort. This required a rapid, deep dive into OIDC, SAML, and OAuth 2.0, working closely with external consultants to perform in-depth control reviews. I helped navigate the competing priorities of compliance, security, and business needs, ensuring we delivered the critical SSO capabilities that allowed sales to onboard large clients while successfully moving toward our certification.
-            </p>
-          </div>
-           <button class="expand-toggle flex items-center text-blue-400 font-semibold mt-3 text-sm self-start">
-            <span class="mr-1">Read more</span>
-            <span id="chevron-down-iso" class="expand-icon-down"></span> 
-            <span id="chevron-up-iso" class="expand-icon-up hidden"></span> 
-          </button>
-        </div>
-        
-        <!-- UPDATED BISO PARTNER HIGHLIGHT CARD -->
-        <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col md:col-span-2" data-expandable-card>
-          <div class="flex items-center mb-2">
-            <span id="bisopartner-icon" class="mr-2"></span>
-            <span class="text-lg font-semibold text-blue-300">Strategic Security & DevSecOps Partner</span>
-          </div>
-          <div class="text-gray-200 text-sm space-y-3">
-            <p class="preview-text">
-              Serving in key partnership roles like Product Line Anchor for Ford Pro's cybersecurity (akin to a Deputy BISO) and Product Anchor for a technical product group, I support two major business units (Ford Pro and FCSD).
-            </p>
-            <p class="full-text max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out">
-              Our large team operates globally from the US and Asia Pacific on a "sun never sets" model. This role extends beyond typical AppSec; we educate, advise, and partner with teams to drive key DevSecOps initiatives. This includes helping teams prioritize SCA findings to achieve automated dependency updates, partnering on JFrog Curation and container scanning rollouts, integrating DAST, reducing SAST false positives, and remediating code secrets. My teams also solve complex cloud security problems related to WAFs, load balancers, and proxies, acting as problem-solvers who partner with SMEs across the business.
+              My strong software and cloud background was needed to validate the concerns and find an efficient path
+              forward. The challenge quickly grew: the IAM product was brought into scope for ISO 27001 certification
+              just as we also needed to enable 3rd-party identity federation (SSO) to support sales. I served as the
+              central technical expert for my BISO team within this complex, multi-stakeholder effort. This required a
+              rapid, deep dive into OIDC, SAML, and OAuth 2.0, working closely with external consultants to perform
+              in-depth control reviews. I helped navigate the competing priorities of compliance, security, and business
+              needs, ensuring we delivered the critical SSO capabilities that allowed sales to onboard large clients
+              while successfully moving toward our certification.
             </p>
           </div>
           <button class="expand-toggle flex items-center text-blue-400 font-semibold mt-3 text-sm self-start">
             <span class="mr-1">Read more</span>
-            <span id="chevron-down-biso" class="expand-icon-down"></span> 
-            <span id="chevron-up-biso" class="expand-icon-up hidden"></span> 
+            <i data-lucide="chevron-down" class="expand-icon-down"></i>
+            <i data-lucide="chevron-up" class="expand-icon-up hidden"></i>
+          </button>
+        </div>
+
+        <!-- BISO PARTNER HIGHLIGHT CARD -->
+        <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col md:col-span-2" data-expandable-card>
+          <div class="flex items-center mb-2">
+            <i data-lucide="puzzle" class="mr-2 text-sky-400"></i>
+            <span class="text-lg font-semibold text-blue-300">Strategic Security & DevSecOps Partner</span>
+          </div>
+          <div class="text-gray-200 text-sm space-y-3">
+            <p class="preview-text">
+              Serving in key partnership roles like Product Line Anchor for Ford Pro's cybersecurity (akin to a Deputy
+              BISO) and Product Anchor for a technical product group, I support two major business units (Ford Pro and
+              FCSD).
+            </p>
+            <p class="full-text max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out">
+              Our large team operates globally from the US and Asia Pacific on a "sun never sets" model. This role
+              extends beyond typical AppSec; we educate, advise, and partner with teams to drive key DevSecOps
+              initiatives. This includes helping teams prioritize SCA findings to achieve automated dependency updates,
+              partnering on JFrog Curation and container scanning rollouts, integrating DAST, reducing SAST false
+              positives, and remediating code secrets. My teams also solve complex cloud security problems related to
+              WAFs, load balancers, and proxies, acting as problem-solvers who partner with SMEs across the business.
+            </p>
+          </div>
+          <button class="expand-toggle flex items-center text-blue-400 font-semibold mt-3 text-sm self-start">
+            <span class="mr-1">Read more</span>
+            <i data-lucide="chevron-down" class="expand-icon-down"></i>
+            <i data-lucide="chevron-up" class="expand-icon-up hidden"></i>
           </button>
         </div>
       </div>
     </section>
 
-    <!-- Projects & Demonstrations (NOW SECOND) -->
+    <!-- Projects & Demonstrations -->
     <section>
       <h3 class="text-2xl font-semibold text-blue-400 mb-4">Projects & Demonstrations</h3>
       <div class="grid gap-6 md:grid-cols-3">
         <!-- Interactive Threat Model Card -->
         <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
           <div class="flex items-center mb-2">
-            <span id="threat-icon" class="mr-2"></span>
+            <i data-lucide="shield-alert" class="mr-2 text-sky-400"></i>
             <span class="text-lg font-semibold text-blue-300">Interactive Threat Model</span>
           </div>
           <p class="text-gray-200 text-sm mb-4">
-            A hands-on walk-through of identifying security threats on a sample E-Commerce API using the STRIDE framework.
+            A hands-on walk-through of identifying security threats on a sample E-Commerce API using the STRIDE
+            framework.
           </p>
-          <a href="threatmodel.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
-            <span id="external-link-threat" class="mr-2"></span>
+          <a href="threatmodel.html"
+            class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
+            <i data-lucide="external-link" class="mr-2"></i>
             View the Case Study
           </a>
         </div>
         <!-- Security Checklist Generator Card -->
         <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
           <div class="flex items-center mb-2">
-            <span id="checklist-icon" class="mr-2"></span>
+            <i data-lucide="list-checks" class="mr-2 text-sky-400"></i>
             <span class="text-lg font-semibold text-blue-300">Security Checklist Generator</span>
           </div>
           <p class="text-gray-200 text-sm mb-4">
-            A tool to generate tailored security checklists for various project types and technologies, helping to standardize security posture.
+            A tool to generate tailored security checklists for various project types and technologies, helping to
+            standardize security posture.
           </p>
-          <a href="checklist.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
-            <span id="external-link-checklist" class="mr-2"></span>
+          <a href="checklist.html"
+            class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
+            <i data-lucide="external-link" class="mr-2"></i>
             Use the Generator
           </a>
         </div>
         <!-- JWT Decoder Demo Card -->
         <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
           <div class="flex items-center mb-2">
-            <span id="jwt-icon" class="mr-2"></span>
+            <i data-lucide="key-round" class="mr-2 text-sky-400"></i>
             <span class="text-lg font-semibold text-blue-300">JWT Decoder & Verifier</span>
           </div>
           <p class="text-gray-200 text-sm mb-4">
             An interactive tool to decode and verify JSON Web Tokens (JWTs) securely in your browser.
           </p>
-          <a href="jwt.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
-            <span id="external-link-jwt" class="mr-2"></span>
+          <a href="jwt.html"
+            class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
+            <i data-lucide="external-link" class="mr-2"></i>
             Try the JWT Decoder
           </a>
         </div>
         <!-- Browser Fingerprinting Demo Card -->
         <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
           <div class="flex items-center mb-2">
-            <span id="fingerprint-icon" class="mr-2"></span>
+            <i data-lucide="fingerprint" class="mr-2 text-sky-400"></i>
             <span class="text-lg font-semibold text-blue-300">Browser Fingerprinting Demo</span>
           </div>
           <p class="text-gray-200 text-sm mb-4">
-            A hands-on demonstration of browser fingerprinting techniques, explaining how they are used for fraud and bot detection.
+            A hands-on demonstration of browser fingerprinting techniques, explaining how they are used for fraud and
+            bot detection.
           </p>
-          <a href="fingerprint.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
-            <span id="external-link-fp" class="mr-2"></span>
+          <a href="fingerprint.html"
+            class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
+            <i data-lucide="external-link" class="mr-2"></i>
             View the Demo
           </a>
         </div>
         <!-- EPSS Comparator Demo Card -->
         <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
           <div class="flex items-center mb-2">
-            <span id="epss-icon" class="mr-2"></span>
+            <i data-lucide="activity" class="mr-2 text-sky-400"></i>
             <span class="text-lg font-semibold text-blue-300">Vulnerability Comparator</span>
           </div>
           <p class="text-gray-200 text-sm mb-4">
             An interactive tool to compare CVSS severity with EPSS exploitability, helping prioritize vulnerabilities.
           </p>
-          <a href="epssdemo.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
-            <span id="external-link-epss" class="mr-2"></span>
+          <a href="epssdemo.html"
+            class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
+            <i data-lucide="external-link" class="mr-2"></i>
             Try the Comparator
           </a>
         </div>
         <!-- MODCAT Decoder Demo Card -->
         <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
           <div class="flex items-center mb-2">
-            <span id="modcat-icon" class="mr-2"></span>
+            <i data-lucide="guitar" class="mr-2 text-sky-400"></i>
             <span class="text-lg font-semibold text-blue-300">PRS MODCAT Decoder</span>
           </div>
           <p class="text-gray-200 text-sm mb-4">
             A tool for decoding the complex model codes (MODCATs) used by Paul Reed Smith Guitars.
           </p>
-          <a href="modcat.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
-            <span id="external-link-modcat" class="mr-2"></span>
+          <a href="modcat.html"
+            class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
+            <i data-lucide="external-link" class="mr-2"></i>
             Try the Decoder
           </a>
         </div>
-         <!-- Threat Dashboard Card -->
+        <!-- Threat Dashboard Card -->
         <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
           <div class="flex items-center mb-2">
-            <span id="dashboard-icon" class="mr-2"></span>
+            <i data-lucide="layout-dashboard" class="mr-2 text-sky-400"></i>
             <span class="text-lg font-semibold text-blue-300">Threat Intelligence Dashboard</span>
           </div>
           <p class="text-gray-200 text-sm mb-4">
             A live dashboard that pulls the latest CVEs from the NVD API to visualize the current threat landscape.
           </p>
-          <a href="dashboard.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
-            <span id="external-link-dashboard" class="mr-2"></span>
+          <a href="dashboard.html"
+            class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
+            <i data-lucide="external-link" class="mr-2"></i>
             View Dashboard
           </a>
         </div>
-         <!-- SAST Guide Card -->
+        <!-- SAST Guide Card -->
         <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
           <div class="flex items-center mb-2">
-            <span id="sast-icon" class="mr-2"></span>
+            <i data-lucide="file-search" class="mr-2 text-sky-400"></i>
             <span class="text-lg font-semibold text-blue-300">Guide to SAST False Positives</span>
           </div>
           <p class="text-gray-200 text-sm mb-4">
-            A practical guide on investigating SAST findings, using statistical analysis and file path context to triage alerts at scale.
+            A practical guide on investigating SAST findings, using statistical analysis and file path context to triage
+            alerts at scale.
           </p>
-          <a href="sast.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
-            <span id="external-link-sast" class="mr-2"></span>
+          <a href="sast.html"
+            class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
+            <i data-lucide="external-link" class="mr-2"></i>
             Read the Guide
           </a>
         </div>
         <!-- Cloud Misconfiguration Card -->
         <div class="bg-gray-900 rounded-xl shadow-lg p-5 flex flex-col">
           <div class="flex items-center mb-2">
-            <span id="cloud-icon" class="mr-2"></span>
+            <i data-lucide="cloud" class="mr-2 text-sky-400"></i>
             <span class="text-lg font-semibold text-blue-300">Cloud Misconfiguration Explorer</span>
           </div>
           <p class="text-gray-200 text-sm mb-4">
-            A hands-on guide to common cloud security pitfalls. Click a component in the diagram to analyze a potential misconfiguration.
+            A hands-on guide to common cloud security pitfalls. Click a component in the diagram to analyze a potential
+            misconfiguration.
           </p>
-          <a href="cloud.html" class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
-            <span id="external-link-cloud" class="mr-2"></span>
+          <a href="cloud.html"
+            class="mt-auto inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white font-semibold transition shadow focus:outline-none w-max">
+            <i data-lucide="external-link" class="mr-2"></i>
             Explore the Diagram
           </a>
         </div>
       </div>
     </section>
 
-    <!-- Certifications (NOW THIRD) -->
+    <!-- Certifications -->
     <section>
       <h3 class="text-2xl font-semibold text-blue-400 mb-4">Certifications</h3>
       <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
         <!-- ISC2 Certification Card - Linked -->
-        <a href="https://www.credly.com/users/david-prince.a4e8f529/badges#credly" target="_blank" rel="noopener" class="bg-gray-900 rounded-lg shadow p-3 flex flex-col items-center transition duration-300 ease-in-out transform hover:scale-105 hover:bg-gray-800">
-          <span id="isc2-icon" class="mb-2"></span>
+        <a href="https://www.credly.com/users/david-prince.a4e8f529/badges#credly" target="_blank" rel="noopener"
+          class="bg-gray-900 rounded-lg shadow p-3 flex flex-col items-center transition duration-300 ease-in-out transform hover:scale-105 hover:bg-gray-800">
+          <i data-lucide="award" class="mb-2 text-sky-400"></i>
           <span class="text-blue-200 font-semibold text-sm">ISC²</span>
           <span class="text-gray-300 text-xs text-center">CISSP, CCSP</span>
         </a>
-        
+
         <!-- CompTIA Certification Card - Linked -->
-        <a href="https://www.credly.com/users/david-prince.a4e8f529/badges#credly" target="_blank" rel="noopener" class="bg-gray-900 rounded-lg shadow p-3 flex flex-col items-center transition duration-300 ease-in-out transform hover:scale-105 hover:bg-gray-800">
-          <span id="comp-icon" class="mb-2"></span>
+        <a href="https://www.credly.com/users/david-prince.a4e8f529/badges#credly" target="_blank" rel="noopener"
+          class="bg-gray-900 rounded-lg shadow p-3 flex flex-col items-center transition duration-300 ease-in-out transform hover:scale-105 hover:bg-gray-800">
+          <i data-lucide="server-cog" class="mb-2 text-sky-400"></i>
           <span class="text-blue-200 font-semibold text-sm">CompTIA</span>
           <span class="text-gray-300 text-xs text-center">Linux+, Security+, PenTest+, CySA+, CASP+, SecurityX</span>
         </a>
-        
+
         <!-- ITIL Certification Card - Not Linked -->
         <div class="bg-gray-900 rounded-lg shadow p-3 flex flex-col items-center">
-          <span id="itil-icon" class="mb-2"></span>
+          <i data-lucide="book-open-check" class="mb-2 text-sky-400"></i>
           <span class="text-blue-200 font-semibold text-sm">ITIL</span>
           <span class="text-gray-300 text-xs text-center">Foundation v4</span>
         </div>
       </div>
     </section>
 
-    <!-- Core Competencies (NOW LAST) -->
+    <!-- Core Competencies -->
     <section>
       <h3 class="text-2xl font-semibold text-blue-400 mb-4">Core Competencies</h3>
       <div class="space-y-4">
@@ -398,18 +319,22 @@
           <div class="flex flex-wrap gap-2">
             <span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-medium">Cloud Armor</span>
             <span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-medium">Akamai</span>
-            <span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-medium">Container Security (Docker, J Frog X-Ray)</span>
-            <span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-medium">Identity and Access Management (IAM)</span>
+            <span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-medium">Container Security
+              (Docker, J Frog X-Ray)</span>
+            <span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-medium">Identity and Access
+              Management (IAM)</span>
           </div>
         </div>
         <div>
           <h4 class="text-lg font-semibold text-blue-300 mb-2">DevSecOps</h4>
           <div class="flex flex-wrap gap-2">
             <span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-medium">SAST</span>
-            <span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-medium">Secret Scanning (Cycode)</span>
+            <span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-medium">Secret Scanning
+              (Cycode)</span>
             <span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-medium">SCA</span>
             <span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-medium">IaC Security</span>
-            <span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-medium">CI/CD Pipelines (Jenkins, Bamboo, Tekton)</span>
+            <span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-medium">CI/CD Pipelines (Jenkins,
+              Bamboo, Tekton)</span>
           </div>
         </div>
         <div>
@@ -431,7 +356,8 @@
             <span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-medium">Go</span>
             <span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-medium">C#</span>
             <span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-medium">Rust</span>
-            <span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-medium">Cybersecurity Dashboard Development</span>
+            <span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-medium">Cybersecurity Dashboard
+              Development</span>
             <span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-medium">Data Analysis</span>
             <span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-medium">Threat Modeling</span>
           </div>
@@ -441,120 +367,13 @@
 
   </main>
 
-  <!-- Footer -->
-  <footer class="bg-gray-900 text-gray-400 text-center py-4 mt-8 rounded-t-xl shadow-inner">
-    © 2025 D. Chandler Prince
-  </footer>
+  <site-footer></site-footer>
 
-  <!-- Lucide Icons Setup -->
+  <script type="module" src="/main.js"></script>
   <script>
-    // Render Lucide icons
-    lucide.createIcons({
-      icons: {
-        'github-icon': lucide.Github,
-        'linkedin-icon': lucide.Linkedin,
-        'certificate-icon': lucide.BadgeCheck,
-        'mcp-icon': lucide.Usb,
-        'bisopartner-icon': lucide.Puzzle,
-        'fingerprint-icon': lucide.Fingerprint,
-        'epss-icon': lucide.Activity,
-        'jwt-icon': lucide.KeyRound,
-        'modcat-icon': lucide.Guitar,
-        'threat-icon': lucide.ShieldAlert,
-        'checklist-icon': lucide.ListChecks,
-        'dashboard-icon': lucide.LayoutDashboard,
-        'sast-icon': lucide.FileSearch,
-        'cloud-icon': lucide.Cloud,
-        'external-link-fp': lucide.ExternalLink,
-        'external-link-epss': lucide.ExternalLink,
-        'external-link-jwt': lucide.ExternalLink,
-        'external-link-modcat': lucide.ExternalLink,
-        'external-link-threat': lucide.ExternalLink,
-        'external-link-checklist': lucide.ExternalLink,
-        'external-link-dashboard': lucide.ExternalLink,
-        'external-link-sast': lucide.ExternalLink,
-        'external-link-cloud': lucide.ExternalLink,
-        
-        // --- Nav Icons ---
-        'nav-home': lucide.Home,
-        'nav-guides-trigger': lucide.BookOpen,
-        'nav-tools-trigger': lucide.Briefcase,
-        'nav-guides-chevron': lucide.ChevronDown,
-        'nav-tools-chevron': lucide.ChevronDown,
-        'nav-phishing': lucide.Fish, 
-        'nav-cloud': lucide.Cloud,
-        'nav-sast': lucide.FileSearch,
-        'nav-threat': lucide.ShieldAlert,
-        'nav-checklist': lucide.ListChecks,
-        'nav-jwt': lucide.KeyRound,
-        'nav-encryption': lucide.Lock, 
-        'nav-fp': lucide.Fingerprint,
-        'nav-epss': lucide.Activity,
-        'nav-dashboard': lucide.LayoutDashboard,
-        'nav-modcat': lucide.Guitar,
-        'nav-roadmap': lucide.Map,
-        'nav-shamir': lucide.Share2,
-        'nav-regulation': lucide.Gavel,
-        'nav-privacy': lucide.Flag,
-        'nav-eu-privacy': lucide.Globe,
-        
-        
-        // --- Certification Icons ---
-        'isc2-icon': lucide.Award,
-        'comp-icon': lucide.ServerCog,
-        'itil-icon': lucide.BookOpenCheck,
-
-        // --- NEW ICONS for Expandable Cards ---
-        'chevron-down-mcp': lucide.ChevronDown,
-        'chevron-up-mcp': lucide.ChevronUp,
-        'chevron-down-iso': lucide.ChevronDown,
-        'chevron-up-iso': lucide.ChevronUp,
-        'chevron-down-biso': lucide.ChevronDown,
-        'chevron-up-biso': lucide.ChevronUp
-      },
-      attrs: {
-        color: "#38bdf8",
-        size: 24,
-        strokeWidth: 2
-      }
-    });
-
-    // --- Dropdown Click Handling for Mobile/Touch ---
-    const dropdownButtons = document.querySelectorAll('.group > button');
-
-    dropdownButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
-        const dropdownMenu = e.currentTarget.nextElementSibling;
-        
-        // Close all other open dropdowns
-        document.querySelectorAll('.group .absolute').forEach(menu => {
-          if (menu !== dropdownMenu) {
-            menu.classList.add('opacity-0', 'invisible');
-            menu.classList.remove('opacity-100', 'visible');
-          }
-        });
-
-        // Toggle the current dropdown
-        dropdownMenu.classList.toggle('opacity-0');
-        dropdownMenu.classList.toggle('invisible');
-        dropdownMenu.classList.toggle('opacity-100');
-        dropdownMenu.classList.toggle('visible');
-      });
-    });
-
-    // Close dropdowns if clicking outside
-    window.addEventListener('click', (e) => {
-      if (!e.target.closest('.group')) {
-        document.querySelectorAll('.group .absolute').forEach(menu => {
-          menu.classList.add('opacity-0', 'invisible');
-          menu.classList.remove('opacity-100', 'visible');
-        });
-      }
-    });
-
     // --- NEW SCRIPT for Expandable Cards ---
     const toggleButtons = document.querySelectorAll('.expand-toggle');
-            
+
     toggleButtons.forEach(button => {
       button.addEventListener('click', () => {
         const card = button.closest('[data-expandable-card]'); // Find the parent card
@@ -566,29 +385,24 @@
         const isExpanded = fullText.classList.contains('max-h-screen'); // Check for expansion class
 
         if (isExpanded) {
-            // Collapse
-            fullText.classList.remove('max-h-screen', 'opacity-100');
-            fullText.classList.add('max-h-0', 'opacity-0');
-            buttonText.textContent = 'Read more';
-            iconDown.classList.remove('hidden');
-            iconUp.classList.add('hidden');
+          // Collapse
+          fullText.classList.remove('max-h-screen', 'opacity-100');
+          fullText.classList.add('max-h-0', 'opacity-0');
+          buttonText.textContent = 'Read more';
+          iconDown.classList.remove('hidden');
+          iconUp.classList.add('hidden');
         } else {
-            // Expand
-            fullText.classList.remove('max-h-0', 'opacity-0');
-            // Use max-h-screen as a simple "auto" equivalent for animation
-            fullText.classList.add('max-h-screen', 'opacity-100'); 
-            buttonText.textContent = 'Show less';
-            iconDown.classList.add('hidden');
-            iconUp.classList.remove('hidden');
+          // Expand
+          fullText.classList.remove('max-h-0', 'opacity-0');
+          // Use max-h-screen as a simple "auto" equivalent for animation
+          fullText.classList.add('max-h-screen', 'opacity-100');
+          buttonText.textContent = 'Show less';
+          iconDown.classList.add('hidden');
+          iconUp.classList.remove('hidden');
         }
       });
     });
-
-    // Unhide the body after the initial script runs to prevent FOUC
-    document.addEventListener('DOMContentLoaded', () => {
-      document.body.removeAttribute('hidden');
-    });
-
   </script>
 </body>
+
 </html>

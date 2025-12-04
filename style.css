@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles from index.html */
+html { font-family: sans-serif; }
+::selection { background: #2563eb; color: #fff; }
+
+/* Ensure dropdown content is above other elements */
+.group .absolute {
+  z-index: 50;
+}

@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cybersecurity Certification Roadmap</title>
     <!-- Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    
     <!-- Load Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
     <style>
         /* Apply dark mode base from index.html */
         body {
@@ -258,7 +258,7 @@
 
     </style>
 </head>
-<body class="text-gray-300"> <!-- Default dark text -->
+<body hidden class="text-gray-300"> <!-- Default dark text -->
 
     <!-- 
       NAV BAR FOR "GUIDES & CASE STUDIES" PAGES
@@ -266,108 +266,7 @@
       - "Guides & Case Studies" is ACTIVE.
       - "Tools & Demos" is inactive.
     -->
-    <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
-        <div class="w-full flex items-center justify-center px-6 py-3">
-           <!-- Main navigation container -->
-           <div class="flex flex-wrap justify-center space-x-4">
-            
-            <!-- Home Link (Inactive) -->
-            <a href="index.html" class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
-              <span id="nav-home" class="mr-1"></span>Home
-            </a>
-
-            <!-- Guides & Case Studies Dropdown (ACTIVE) -->
-            <div class="relative group">
-              <!-- Dropdown Trigger -->
-               <button class="flex items-center px-3 py-1 rounded text-white bg-blue-700 font-semibold transition">
-                <span id="nav-guides-trigger" class="mr-1"></span>
-                Guides & Case Studies
-                <span id="nav-guides-chevron" class="ml-1"></span>
-              </button>
-              
-              <!-- Dropdown Menu -->
-              <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                <div class="py-1" role="menu" aria-orientation="vertical">
-                  <a href="regulation.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-regulation" class="mr-2"></span>Regulation (US/EU)
-                </a>
-                <a href="usprivacytimeline.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-privacy" class="mr-2"></span>US Privacy Timeline
-                </a>
-                <a href="euprivacytimeline.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <span id="nav-eu-privacy" class="mr-2"></span>EU Privacy Timeline
-                </a>
-                    <a href="cloud.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-cloud" class="mr-2"></span>Cloud
-                  </a>
-                  <a href="cyber_roadmap.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-roadmap" class="mr-2"></span>Cyber Roadmap
-                  </a>
-                  <a href="phishing.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-phishing" class="mr-2"></span>Phishing
-                  </a>
-                  <a href="sast.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-sast" class="mr-2"></span>SAST
-                  </a>
-                  <a href="threatmodel.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-threat" class="mr-2"></span>Threat Model
-                  </a>
-                  <a href="fair.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-fair" class="mr-2"></span>FAIR Risk Scoring
-                  </a>
-                  <a href="sdlc.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                      <span id="nav-sdlc" class="mr-2"></span>Secure SDLC
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <!-- Tools & Demos Dropdown (Inactive) -->
-            <div class="relative group">
-              <!-- Dropdown Trigger -->
-               <button class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
-                <span id="nav-tools-trigger" class="mr-1"></span>
-                Tools & Demos
-                <span id="nav-tools-chevron" class="ml-1"></span>
-              </button>
-              
-              <!-- Dropdown Menu -->
-              <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                <div class="py-1" role="menu" aria-orientation="vertical">
-                  <a href="checklist.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-checklist" class="mr-2"></span>Checklist
-                  </a>
-                  <a href="epssdemo.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-epss" class="mr-2"></span>CVSS vs EPSS
-                  </a>
-                  <a href="encryption.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-encryption" class="mr-2"></span>Encryption
-                  </a>
-                  <a href="fingerprint.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-fp" class="mr-2"></span>Fingerprinting
-                  </a>
-                  <a href="jwt.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-jwt" class="mr-2"></span>JWT Decoder
-                  </a>
-                  <a href="modcat.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-modcat" class="mr-2"></span>PRS MODCAT
-                  </a>
-                  <a href="shamir.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-shamir" class="mr-2"></span>Shamir's Visualizer
-                  </a>
-                  <a href="dashboard.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-dashboard" class="mr-2"></span>Threat Intel
-                  </a>
-                  <a href="string.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <span id="nav-stringart" class="mr-2"></span>String Art
-                  </a>
-                </div>
-              </div>
-            </div>
-            
-          </div>
-        </div>
-    </nav>
+    <site-nav></site-nav>
 
     <!-- Header - Dark Mode -->
     <header class="bg-gray-900 shadow-sm border-b border-gray-800">
@@ -1240,7 +1139,6 @@
                 <span class="text-lg font-bold text-red-400 flex-shrink-0">Varies*</span>
             </a>
 
-
         </div> <!-- /#cert-list -->
 
         <!-- GIAC Info Box -->
@@ -1257,16 +1155,7 @@
     </main>
 
     <!-- Footer - Dark Mode -->
-    <footer class="mt-12 bg-gray-900 text-gray-500 border-t border-gray-800">
-        <div class="container mx-auto max-w-4xl px-6 py-8 text-center">
-            <p>&copy; <span id="current-year"></span> Cybersecurity Roadmap. All prices are estimates and for informational purposes only.</p>
-            <p class="mt-1 text-sm">This site is not affiliated with or endorsed by CompTIA, (ISC)², GIAC, ISACA, Offensive Security, Microsoft, AWS, Google, or Cisco.</p>
-            <!-- UPDATED DISCLAIMER -->
-            <p class="mt-2 text-sm">
-                <strong>Note on Exclusions:</strong> This list is not exhaustive but is aligned with common roles in the DoD 8140 Cyber Workforce Framework (DCWF). Certs from EC-Council are intentionally omitted as they have fallen out of favor with much of the infosec community.
-            </p>
-        </div>
-    </footer>
+    <site-footer></site-footer>
 
     <!-- Details Modal -->
     <div id="modal-overlay" class="modal-overlay hidden">
@@ -1307,7 +1196,6 @@
             </div>
         </div>
     </div>
-
 
     <script>
       document.addEventListener('DOMContentLoaded', () => {
@@ -1550,6 +1438,7 @@ PLAYA:
       }); // End DOMContentLoaded
     </script>
 
+<script type="module" src="/main.js"></script>
 </body>
 </html>
 
