@@ -1,44 +1,27 @@
-<!DOCTYPE html>
-<html lang="en" class="bg-gray-900 text-white">
-
-<head>
-  <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self'; 
-    script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; 
-    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
-    font-src 'self' https://fonts.gstatic.com; 
-    connect-src 'self' https://services.nvd.nist.gov https://api.first.org; 
-    object-src 'none'; 
-    frame-ancestors 'self'; 
-    base-uri 'self';
 ">
-  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-  <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta name="referrer-policy" content="strict-origin-when-cross-origin">
-  <meta http-equiv="Permissions-Policy"
-    content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Browser Fingerprinting: A Closer Look</title>
+<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer-policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy"
+  content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Browser Fingerprinting: A Closer Look</title>
 
 
 
 </head>
 
 <body hidden class="bg-gray-900 text-white min-h-screen flex flex-col">
-  <!-- 
-    NAV BAR FOR "TOOLS & DEMOS" PAGES
-    - "Home" is inactive.
-    - "Guides & Case Studies" is inactive.
-    - "Tools & Demos" is ACTIVE.
-  -->
+
   <site-nav></site-nav>
 
   <!-- Header -->
   <header class="bg-gradient-to-r from-blue-800 to-gray-900 py-10 px-4 text-center shadow-lg">
     <!-- ... existing header content ... -->
     <h1 class="text-4xl md:text-5xl font-bold mb-3 text-white">Browser Fingerprinting: A Closer Look</h1>
-    <p class="text-lg md:text-xl text-blue-200 max-w-2xl mx-auto">Understand how your browser's unique fingerprint is
+    <p class="text-lg md:text-xl text-blue-200 max-w-2xl mx-auto">Understand how your browser's unique
+      fingerprint is
       created and why it matters for web security.</p>
   </header>
 
@@ -49,7 +32,8 @@
     <section class="bg-gray-800 rounded-xl shadow-md p-6">
       <h2 class="text-2xl font-semibold mb-2 text-blue-400">What is Browser Fingerprinting?</h2>
       <p class="mb-3 text-gray-200">
-        Browser fingerprinting is a technique used to identify and track users online by collecting detailed information
+        Browser fingerprinting is a technique used to identify and track users online by collecting detailed
+        information
         about their browser, operating system, and hardware. Unlike cookies, which can be deleted or blocked, a
         fingerprint is generated from data your browser shares automatically.
       </p>
@@ -70,12 +54,14 @@
       <ul class="space-y-3">
         <li>
           <span class="font-semibold text-blue-300">Fraud Detection:</span>
-          <span class="text-gray-200">Helps prevent account takeover by detecting logins from new or suspicious devices,
+          <span class="text-gray-200">Helps prevent account takeover by detecting logins from new or suspicious
+            devices,
             even if the correct credentials are used.</span>
         </li>
         <li>
           <span class="font-semibold text-blue-300">Bot Detection:</span>
-          <span class="text-gray-200">Distinguishes between human users and automated bots that may scrape content,
+          <span class="text-gray-200">Distinguishes between human users and automated bots that may scrape
+            content,
             create spam accounts, or perform malicious activities.</span>
         </li>
         <li>
@@ -84,151 +70,60 @@
             access.</span>
         </li>
       </ul>
-      <!DOCTYPE html>
-      <html lang="en" class="bg-gray-900 text-white">
+    </section>
 
-      <head>
-        <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self'; 
-    script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; 
-    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
-    font-src 'self' https://fonts.gstatic.com; 
-    connect-src 'self' https://services.nvd.nist.gov https://api.first.org; 
-    object-src 'none'; 
-    frame-ancestors 'self'; 
-    base-uri 'self';
-">
-        <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-        <meta http-equiv="X-Content-Type-Options" content="nosniff">
-        <meta name="referrer-policy" content="strict-origin-when-cross-origin">
-        <meta http-equiv="Permissions-Policy"
-          content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Browser Fingerprinting: A Closer Look</title>
+    <!-- Live Demonstration -->
+    <section class="bg-gray-800 rounded-xl shadow-md p-6">
+      <h2 class="text-2xl font-semibold mb-4 text-blue-400">Live Demonstration: Your Browser Fingerprint</h2>
+      <div id="fp-loading" class="flex items-center justify-center h-24">
+        <svg class="animate-spin h-6 w-6 text-blue-400 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+          viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+        </svg>
+        <span class="text-blue-300 text-lg">Loading fingerprint...</span>
+      </div>
 
+      <div id="fp-result" class="hidden space-y-8">
+        <!-- Visitor ID Card -->
+        <div
+          class="bg-gradient-to-r from-blue-900/50 to-gray-900 border border-blue-700/50 rounded-xl p-6 text-center shadow-lg relative overflow-hidden group">
+          <div class="absolute inset-0 bg-blue-600/10 opacity-0 group-hover:opacity-100 transition duration-500">
+          </div>
+          <h3 class="text-blue-300 text-sm font-semibold uppercase tracking-wider mb-2">Your Unique Visitor ID
+          </h3>
+          <div class="flex items-center justify-center space-x-3">
+            <span id="fp-id"
+              class="text-3xl md:text-4xl font-mono font-bold text-white tracking-tight select-all"></span>
+            <button id="copy-id" class="p-2 text-blue-400 hover:text-white hover:bg-blue-600/50 rounded-lg transition"
+              title="Copy ID">
+              <i data-lucide="copy" class="w-5 h-5"></i>
+            </button>
+          </div>
+        </div>
 
+        <!-- Data Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="fp-grid">
+          <!-- Cards will be injected here by JS -->
+        </div>
 
-      </head>
+        <div class="text-center">
+          <button id="reload-fp"
+            class="inline-flex items-center px-6 py-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-lg text-blue-300 font-semibold transition shadow-lg hover:shadow-xl hover:text-white group">
+            <i data-lucide="refresh-cw" class="w-5 h-5 mr-2 group-hover:rotate-180 transition duration-500"></i>
+            Regenerate Fingerprint
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
 
-      <body hidden class="bg-gray-900 text-white min-h-screen flex flex-col">
-        <!-- 
-    NAV BAR FOR "TOOLS & DEMOS" PAGES
-    - "Home" is inactive.
-    - "Guides & Case Studies" is inactive.
-    - "Tools & Demos" is ACTIVE.
-  -->
-        <site-nav></site-nav>
+  <!-- Footer -->
+  <site-footer></site-footer>
 
-        <!-- Header -->
-        <header class="bg-gradient-to-r from-blue-800 to-gray-900 py-10 px-4 text-center shadow-lg">
-          <!-- ... existing header content ... -->
-          <h1 class="text-4xl md:text-5xl font-bold mb-3 text-white">Browser Fingerprinting: A Closer Look</h1>
-          <p class="text-lg md:text-xl text-blue-200 max-w-2xl mx-auto">Understand how your browser's unique fingerprint
-            is
-            created and why it matters for web security.</p>
-        </header>
+  <!-- Lucide Icons Setup & FingerprintJS Demo -->
+  <script type="module" src="/fingerprint.js"></script>
+  <script type="module" src="/main.js"></script>
+</body>
 
-        <!-- Main Content -->
-        <main class="flex-1 px-4 py-8 max-w-5xl mx-auto space-y-8">
-          <!-- ... existing main content ... -->
-          <!-- What is Browser Fingerprinting? -->
-          <section class="bg-gray-800 rounded-xl shadow-md p-6">
-            <h2 class="text-2xl font-semibold mb-2 text-blue-400">What is Browser Fingerprinting?</h2>
-            <p class="mb-3 text-gray-200">
-              Browser fingerprinting is a technique used to identify and track users online by collecting detailed
-              information
-              about their browser, operating system, and hardware. Unlike cookies, which can be deleted or blocked, a
-              fingerprint is generated from data your browser shares automatically.
-            </p>
-            <ul class="list-disc list-inside text-gray-300">
-              <li>User agent (browser & version)</li>
-              <li>Screen resolution</li>
-              <li>Installed fonts</li>
-              <li>Browser plugins</li>
-              <li>Time zone</li>
-              <li>Language</li>
-              <li>Operating system</li>
-            </ul>
-          </section>
-
-          <!-- Why is it Used? -->
-          <section class="bg-gray-800 rounded-xl shadow-md p-6">
-            <h2 class="text-2xl font-semibold mb-2 text-blue-400">Why is it Used?</h2>
-            <ul class="space-y-3">
-              <li>
-                <span class="font-semibold text-blue-300">Fraud Detection:</span>
-                <span class="text-gray-200">Helps prevent account takeover by detecting logins from new or suspicious
-                  devices,
-                  even if the correct credentials are used.</span>
-              </li>
-              <li>
-                <span class="font-semibold text-blue-300">Bot Detection:</span>
-                <span class="text-gray-200">Distinguishes between human users and automated bots that may scrape
-                  content,
-                  create spam accounts, or perform malicious activities.</span>
-              </li>
-              <li>
-                <span class="font-semibold text-blue-300">Improving User Security:</span>
-                <span class="text-gray-200">Enables services to better protect user accounts and prevent unauthorized
-                  access.</span>
-              </li>
-            </ul>
-          </section>
-
-          <!-- Live Demonstration -->
-          <section class="bg-gray-800 rounded-xl shadow-md p-6">
-            <h2 class="text-2xl font-semibold mb-4 text-blue-400">Live Demonstration: Your Browser Fingerprint</h2>
-            <div id="fp-loading" class="flex items-center justify-center h-24">
-              <svg class="animate-spin h-6 w-6 text-blue-400 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
-                viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-              </svg>
-              <span class="text-blue-300 text-lg">Loading fingerprint...</span>
-            </div>
-
-            <div id="fp-result" class="hidden space-y-8">
-              <!-- Visitor ID Card -->
-              <div
-                class="bg-gradient-to-r from-blue-900/50 to-gray-900 border border-blue-700/50 rounded-xl p-6 text-center shadow-lg relative overflow-hidden group">
-                <div class="absolute inset-0 bg-blue-600/10 opacity-0 group-hover:opacity-100 transition duration-500">
-                </div>
-                <h3 class="text-blue-300 text-sm font-semibold uppercase tracking-wider mb-2">Your Unique Visitor ID
-                </h3>
-                <div class="flex items-center justify-center space-x-3">
-                  <span id="fp-id"
-                    class="text-3xl md:text-4xl font-mono font-bold text-white tracking-tight select-all"></span>
-                  <button id="copy-id"
-                    class="p-2 text-blue-400 hover:text-white hover:bg-blue-600/50 rounded-lg transition"
-                    title="Copy ID">
-                    <i data-lucide="copy" class="w-5 h-5"></i>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Data Grid -->
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="fp-grid">
-                <!-- Cards will be injected here by JS -->
-              </div>
-
-              <div class="text-center">
-                <button id="reload-fp"
-                  class="inline-flex items-center px-6 py-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-lg text-blue-300 font-semibold transition shadow-lg hover:shadow-xl hover:text-white group">
-                  <i data-lucide="refresh-cw" class="w-5 h-5 mr-2 group-hover:rotate-180 transition duration-500"></i>
-                  Regenerate Fingerprint
-                </button>
-              </div>
-            </div>
-          </section>
-        </main>
-
-        <!-- Footer -->
-        <site-footer></site-footer>
-
-        <!-- Lucide Icons Setup & FingerprintJS Demo -->
-        <script type="module" src="/fingerprint.js"></script>
-        <script type="module" src="/main.js"></script>
-      </body>
-
-      </html>
+</html>
