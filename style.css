@@ -541,3 +541,17 @@ select {
   font-size: 1.125rem; /* text-lg */
 }
 
+
+/* SDLC Popover Styles */
+.popover-content ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-top: 8px;
+}
+.popover-content li {
+  margin-bottom: 4px;
+}
+.popover-content strong {
+  color: #f0f0f0;
+}
+
