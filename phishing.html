@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" class="h-full">
-
 <head>
     <meta http-equiv="Content-Security-Policy" content="
     default-src 'self'; 
     script-src 'self' 'unsafe-inline'; 
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
     font-src 'self' https://fonts.gstatic.com; 
-    connect-src 'self' https://services.nvd.nist.gov https://api.first.org; 
+    connect-src 'self'; 
     object-src 'none'; 
     frame-ancestors 'self'; 
     base-uri 'self';
@@ -23,16 +22,8 @@
 </head>
 
 <body hidden class="bg-gray-950 text-white min-h-screen flex flex-col">
-
-    <!-- 
-      NAV BAR FOR "GUIDES & CASE STUDIES" PAGES
-      - "Home" is inactive.
-      - "Guides & Case Studies" is ACTIVE.
-      - "Tools & Demos" is inactive.
-    -->
     <site-nav></site-nav>
 
-    <!-- Header -->
     <header class="bg-gradient-to-r from-blue-900 to-gray-900 py-10 px-4 text-center shadow-lg">
         <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">Phishing Awareness Training</h1>
         <p class="max-w-2xl mx-auto text-blue-200 text-lg md:text-xl">
@@ -62,7 +53,6 @@
         </section>
     </main>
 
-    <!-- Footer -->
     <site-footer></site-footer>
 
     <script type="module" src="/phishing.js"></script>
