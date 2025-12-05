@@ -520,3 +520,24 @@ select {
     background-size: 1.25em 1.25em;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
 }
+
+/* EPSS Demo Styles */
+.score-display {
+  background: linear-gradient(135deg, #1e40af, #3b82f6);
+  border: 2px solid #60a5fa;
+}
+
+/* Custom style for error messages */
+.error-box {
+  background-color: #111827; /* gray-900 */
+  border: 1px solid #991b1b; /* red-800 */
+  padding: 2rem; /* spacing-8 */
+  border-radius: 0.5rem; /* rounded-lg */
+  text-align: center;
+}
+
+.error-text {
+  color: #f87171; /* red-400 */
+  font-size: 1.125rem; /* text-lg */
+}
+
