@@ -471,4 +471,99 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #4b5563;
+}/* String Art Styles */
+/* Custom styles for range sliders */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    background: #374151;
+    /* gray-700 */
+    border-radius: 9999px;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity .2s;
 }
+
+input[type="range"]:hover {
+    opacity: 1;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #ec4899;
+    /* pink-500 */
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #ec4899;
+    /* pink-500 */
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Custom styles for select dropdowns */
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-position: right 0.75rem center;
+    background-repeat: no-repeat;
+    background-size: 1.25em 1.25em;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+}
+
+/* EPSS Demo Styles */
+.score-display {
+  background: linear-gradient(135deg, #1e40af, #3b82f6);
+  border: 2px solid #60a5fa;
+}
+
+/* Custom style for error messages */
+.error-box {
+  background-color: #111827; /* gray-900 */
+  border: 1px solid #991b1b; /* red-800 */
+  padding: 2rem; /* spacing-8 */
+  border-radius: 0.5rem; /* rounded-lg */
+  text-align: center;
+}
+
+.error-text {
+  color: #f87171; /* red-400 */
+  font-size: 1.125rem; /* text-lg */
+}
+
+
+/* SDLC Popover Styles */
+.popover-content ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-top: 8px;
+}
+.popover-content li {
+  margin-bottom: 4px;
+}
+.popover-content strong {
+  color: #f0f0f0;
+}
+
+
+/* Dashboard Styles */
+.chart-container {
+  position: relative;
+  height: 40vh;
+  width: 100%;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+

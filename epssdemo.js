@@ -1,3 +1,5 @@
+import Chart from 'chart.js/auto';
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- 0. NEW: Cache and Validation Regex ---
     // Memoization cache for storing results (max 30 items)
@@ -141,9 +143,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${cvssColumnHtml}
                     ${renderEpssColumn(epssData)}
                 </div>
+                <!-- Chart Container -->
+                <div class="p-6 bg-gray-900 border-t border-gray-800">
+                    <h3 class="text-xl font-semibold text-gray-200 mb-4">Visual Comparison</h3>
+                    <div class="h-64 w-full">
+                        <canvas id="comparisonChart"></canvas>
+                    </div>
+                </div>
             </div>
             ${cvssBreakdownHtml}
         `;
+
+        // Render the chart
+        renderComparisonChart(cvssData, epssData);
     }
 
     function renderCvss4Column(data) {
@@ -296,6 +308,89 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'LOW': return { severityClass: 'bg-green-900/50 border border-green-700', severityTextClass: 'text-green-300' };
             default: return { severityClass: 'bg-gray-800 border border-gray-700', severityTextClass: 'text-gray-300' };
         }
+    }
+
+    // --- 3. Chart Rendering Logic ---
+    let comparisonChart = null;
+
+    function renderComparisonChart(cvssData, epssData) {
+        const ctx = document.getElementById('comparisonChart');
+        if (!ctx) return;
+
+        if (comparisonChart) {
+            comparisonChart.destroy();
+        }
+
+        const cvssScore = cvssData ? cvssData.baseScore : 0;
+        const epssScore = epssData ? (epssData.epss * 100) : 0; // Convert to percentage
+
+        comparisonChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['CVSS Base Score (Normalized to 100)', 'EPSS Probability (%)'],
+                datasets: [{
+                    label: 'Score Comparison',
+                    data: [cvssScore * 10, epssScore], // Normalize CVSS to 0-100
+                    backgroundColor: [
+                        'rgba(234, 179, 8, 0.7)', // Yellow-500 for CVSS
+                        'rgba(59, 130, 246, 0.7)'  // Blue-500 for EPSS
+                    ],
+                    borderColor: [
+                        'rgba(234, 179, 8, 1)',
+                        'rgba(59, 130, 246, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Score / Probability (%)',
+                            color: '#9ca3af'
+                        },
+                        grid: {
+                            color: '#374151'
+                        },
+                        ticks: {
+                            color: '#d1d5db'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#d1d5db'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y.toFixed(1) + '%';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     // --- 4. Keep existing page event listeners ---

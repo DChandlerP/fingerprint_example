@@ -1,5 +1,5 @@
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
-import { createIcons, Monitor, Globe, Maximize, Clock, Languages, Cpu, HardDrive, Palette, Image, Check } from 'lucide';
+import { createIcons, Monitor, Globe, Maximize, Clock, Languages, Cpu, HardDrive, Palette, Image, Check, Touchpad, Cookie, Database } from 'lucide';
 
 document.addEventListener('DOMContentLoaded', () => {
     const fpLoading = document.getElementById('fp-loading');
@@ -20,7 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
         'hard-drive': HardDrive,
         palette: Palette,
         image: Image,
-        check: Check
+        check: Check,
+        touchpad: Touchpad,
+        cookie: Cookie,
+        database: Database
     };
 
     // Helper to create a card
@@ -29,8 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
         card.className = 'bg-gray-800 rounded-xl p-5 border border-gray-700 shadow-md hover:border-blue-500/50 transition duration-300 flex items-start space-x-4';
 
         card.innerHTML = `
-      <div class="p-3 bg-gray-900 rounded-lg border border-gray-700 shrink-0">
-        <i data-lucide="${iconName}" class="w-6 h-6 ${colorClass}"></i>
+      <div class="shrink-0">
+        <i data-lucide="${iconName}" class="w-8 h-8 ${colorClass}"></i>
       </div>
       <div class="min-w-0 flex-1">
         <p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">${title}</p>
@@ -110,6 +113,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     value: 'Unique Signature Generated',
                     icon: 'image',
                     color: 'text-indigo-400'
+                },
+                {
+                    title: 'Touch Support',
+                    value: components.touchSupport?.value?.maxTouchPoints > 0 ? `Yes (${components.touchSupport.value.maxTouchPoints} points)` : 'No',
+                    icon: 'touchpad',
+                    color: 'text-teal-400'
+                },
+                {
+                    title: 'Cookies Enabled',
+                    value: navigator.cookieEnabled ? 'Yes' : 'No', // FingerprintJS doesn't always expose this directly in components, safer to use navigator
+                    icon: 'cookie',
+                    color: 'text-amber-400'
+                },
+                {
+                    title: 'Local Storage',
+                    value: (function () { try { return window.localStorage ? 'Available' : 'Restricted'; } catch (e) { return 'Restricted'; } })(),
+                    icon: 'database',
+                    color: 'text-rose-400'
                 }
             ];
 
@@ -121,10 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Re-initialize icons for the new elements
             createIcons({
                 icons: icons,
-                nameAttr: 'data-lucide',
-                attrs: {
-                    class: "w-6 h-6"
-                }
+                nameAttr: 'data-lucide'
             });
 
             fpLoading.classList.add('hidden');

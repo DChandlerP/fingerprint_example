@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Security-Policy" content="
     default-src 'self'; 
-    script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; 
+    script-src 'self' 'unsafe-inline'; 
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
     font-src 'self' https://fonts.gstatic.com; 
     connect-src 'self' https://services.nvd.nist.gov https://api.first.org; 
@@ -20,48 +20,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phishing Awareness Training Platform</title>
-
-    <!-- Tailwind CSS CDN -->
-
-    <!-- Lucide Icons CDN -->
-
-    <style>
-        /* Apply the Inter font family */
-        body {
-            font-family: sans-serif;
-        }
-
-        ::selection {
-            background: #2563eb;
-            color: #fff;
-        }
-
-        /* Custom scrollbar for better dark mode aesthetics */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #111827;
-            /* gray-900 */
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #374151;
-            /* gray-700 */
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #4b5563;
-            /* gray-600 */
-        }
-
-        /* Ensure dropdown content is above other elements */
-        .group .absolute {
-            z-index: 50;
-        }
-    </style>
 </head>
 
 <body hidden class="bg-gray-950 text-white min-h-screen flex flex-col">
@@ -109,11 +67,6 @@
 
     <script type="module" src="/phishing.js"></script>
     <script type="module" src="/main.js"></script>
-</body>
-
-</html>
-
-<script type="module" src="/main.js"></script>
 </body>
 
 </html>
