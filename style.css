@@ -555,3 +555,15 @@ select {
   color: #f0f0f0;
 }
 
+
+/* Dashboard Styles */
+.chart-container {
+  position: relative;
+  height: 40vh;
+  width: 100%;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
