@@ -23,7 +23,8 @@ import {
   Guitar,
   Share2,
   LayoutDashboard,
-  Palette
+  Palette,
+  Calculator
 } from 'lucide';
 
 // --- Web Components ---
@@ -124,8 +125,11 @@ class SiteNav extends HTMLElement {
                 <a href="dashboard.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="layout-dashboard" class="mr-2 w-4 h-4"></i>Threat Intel
                 </a>
-                 <a href="string.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                <a href="string.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                     <i data-lucide="palette" class="mr-2 w-4 h-4"></i>String Art
+                  </a>
+                  <a href="risk_scoring.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <i data-lucide="calculator" class="mr-2 w-4 h-4"></i>Risk Scoring
                   </a>
               </div>
             </div>
@@ -161,7 +165,8 @@ class SiteNav extends HTMLElement {
         Guitar,
         Share2,
         LayoutDashboard,
-        Palette
+        Palette,
+        Calculator
       },
       nameAttr: 'data-lucide',
       attrs: {

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-950 text-white">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Automated vs. Manual Risk Scoring | D. Chandler Prince</title>
+    <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self'; 
+    script-src 'self' 'unsafe-inline'; 
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
+    font-src 'self' https://fonts.gstatic.com; 
+    connect-src 'self'; 
+    object-src 'none'; 
+    frame-ancestors 'self'; 
+    base-uri 'self';
+">
+</head>
+
+<body hidden class="bg-gray-950 text-white min-h-screen flex flex-col">
+
+    <site-nav></site-nav>
+
+    <header class="bg-gradient-to-r from-blue-900 to-gray-900 py-10 px-4 text-center shadow-lg">
+        <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">Risk Scoring: Manual vs. Automated
+        </h1>
+        <p class="max-w-3xl mx-auto text-gray-200 text-lg">
+            See how relying on questionnaires creates a "Risk Gap," and how automated telemetry provides a source of
+            truth.
+        </p>
+    </header>
+
+    <main class="flex-1 px-4 py-10 max-w-6xl mx-auto w-full space-y-12">
+
+        <section class="grid md:grid-cols-2 gap-8">
+            <div class="bg-gray-900 p-6 rounded-xl border border-gray-800">
+                <div class="flex items-center gap-3 mb-4">
+                    <span id="icon-manual" class="text-gray-400"></span>
+                    <h2 class="text-2xl font-bold text-gray-200">The "Questionnaire" Approach</h2>
+                </div>
+                <p class="text-gray-400">Traditionally, security teams ask developers questions: <em>"Is this app
+                        internet-facing?"</em> or <em>"Does it process PII?"</em>.</p>
+                <p class="text-gray-400 mt-2">This relies on the developer knowing the answer, understanding the
+                    terminology, and being honest.</p>
+            </div>
+            <div class="bg-gray-900 p-6 rounded-xl border border-blue-900/50 shadow-blue-900/20 shadow-lg">
+                <div class="flex items-center gap-3 mb-4">
+                    <span id="icon-auto" class="text-blue-400"></span>
+                    <h2 class="text-2xl font-bold text-blue-300">The Automated Approach</h2>
+                </div>
+                <p class="text-gray-300">Modern risk scoring ingests data from <strong>scanners, CMDBs, and cloud
+                        environments</strong>. It ignores opinion and looks at configuration.</p>
+                <p class="text-gray-300 mt-2">If a Security Group creates an open path to the internet, the app is
+                    External, regardless of what the questionnaire says.</p>
+            </div>
+        </section>
+
+        <section class="bg-gray-800 rounded-xl p-1 shadow-2xl">
+            <div
+                class="bg-gray-900 rounded-t-xl p-4 border-b border-gray-700 flex flex-col md:flex-row justify-between items-center">
+                <h3 class="text-xl font-bold text-white mb-2 md:mb-0">Interactive Simulation</h3>
+                <div class="flex items-center gap-2">
+                    <label class="text-sm text-gray-400">Select Scenario:</label>
+                    <select id="scenario-select"
+                        class="bg-gray-800 border border-gray-600 rounded text-sm px-3 py-1 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="legacy">Scenario A: The "Legacy" Internal App</option>
+                        <option value="shadow">Scenario B: Shadow IT Project</option>
+                        <option value="modern">Scenario C: Modern Microservice</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="p-6 grid lg:grid-cols-2 gap-12">
+
+                <div class="space-y-6">
+                    <div class="flex justify-between items-center border-b border-gray-700 pb-2">
+                        <h4 class="text-lg font-semibold text-gray-300">1. Developer Questionnaire</h4>
+                        <span
+                            class="text-xs uppercase tracking-wider bg-gray-700 px-2 py-1 rounded text-gray-300">Subjective</span>
+                    </div>
+
+                    <div class="space-y-4" id="questionnaire-form">
+                    </div>
+
+                    <div class="bg-gray-950 p-4 rounded-lg border border-gray-700">
+                        <p class="text-sm text-gray-400 uppercase tracking-widest mb-1">Perceived Risk Score</p>
+                        <div class="flex items-center gap-3">
+                            <div class="text-3xl font-bold text-gray-200" id="manual-score-val">0</div>
+                            <div class="h-3 flex-1 bg-gray-800 rounded-full overflow-hidden">
+                                <div id="manual-score-bar" class="h-full bg-gray-500 transition-all duration-500"
+                                    style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-6 relative">
+                    <div id="scan-overlay"
+                        class="absolute inset-0 bg-gray-900/90 z-10 flex flex-col items-center justify-center rounded-lg transition-opacity duration-300">
+                        <p class="text-gray-300 mb-4 text-center max-w-xs">Run the automated scanners to compare the
+                            questionnaire against reality.</p>
+                        <button id="run-scan-btn"
+                            class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg shadow-lg flex items-center gap-2 transition-transform hover:scale-105">
+                            <span id="icon-scan"></span> Run Automated Assessment
+                        </button>
+                    </div>
+
+                    <div class="flex justify-between items-center border-b border-gray-700 pb-2">
+                        <h4 class="text-lg font-semibold text-blue-300">2. Automated Telemetry</h4>
+                        <span
+                            class="text-xs uppercase tracking-wider bg-blue-900/30 text-blue-200 border border-blue-800 px-2 py-1 rounded">Objective</span>
+                    </div>
+
+                    <div class="space-y-3" id="telemetry-feed">
+                    </div>
+
+                    <div class="bg-gray-950 p-4 rounded-lg border border-blue-900/50">
+                        <p class="text-sm text-blue-400 uppercase tracking-widest mb-1">Actual Risk Score</p>
+                        <div class="flex items-center gap-3">
+                            <div class="text-3xl font-bold text-white" id="auto-score-val">--</div>
+                            <div class="h-3 flex-1 bg-gray-800 rounded-full overflow-hidden">
+                                <div id="auto-score-bar" class="h-full bg-blue-500 transition-all duration-500"
+                                    style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="result-delta" class="bg-black/30 border-t border-gray-700 p-6 hidden">
+                <div class="flex items-start gap-4">
+                    <div id="delta-icon-container" class="p-3 bg-red-900/30 rounded-lg border border-red-800 shrink-0">
+                        <span id="icon-alert" class="text-red-400"></span>
+                    </div>
+                    <div>
+                        <h4 id="delta-title" class="text-xl font-bold text-white mb-1">Risk Gap Detected</h4>
+                        <p id="delta-message" class="text-gray-300 text-sm leading-relaxed"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <site-footer></site-footer>
+
+    <script type="module" src="/risk_scoring.js"></script>
+    <script type="module" src="/main.js"></script>
+</body>
+
+</html>
