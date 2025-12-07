@@ -134,51 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Render Functions ---
 
-    function renderQuestionnaire() {
-        // Updated inner HTML with 5 questions
-        questionnaireContainer.innerHTML = `
-            <div class="input-group">
-                <label class="block text-sm font-medium text-gray-400 mb-1">Is the application internet facing?</label>
-                <select id="q-exposure" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white">
-                    <option value="internal">No (Internal Only)</option>
-                    <option value="external">Yes (Public Internet)</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label class="block text-sm font-medium text-gray-400 mb-1">Does it store sensitive data (PII)?</label>
-                <select id="q-pii" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white">
-                    <option value="none">No sensitive data</option>
-                    <option value="low">Low (Names, Emails)</option>
-                    <option value="high">High (SSN, Credit Cards, Health)</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label class="block text-sm font-medium text-gray-400 mb-1">Authentication Mechanism</label>
-                <select id="q-auth" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white">
-                    <option value="sso">Modern SSO (OIDC/SAML)</option>
-                    <option value="mtls">mTLS / Service Mesh</option>
-                    <option value="ldap">Legacy LDAP / Basic Auth</option>
-                    <option value="none">None / Anonymous</option>
-                </select>
-            </div>
-             <div class="input-group">
-                <label class="block text-sm font-medium text-gray-400 mb-1">Third-Party Dependencies</label>
-                <select id="q-deps" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white">
-                    <option value="scanned">Scanned & Clean</option>
-                    <option value="unscanned">Unscanned / Unknown</option>
-                    <option value="vuln">Known Critical Vulnerabilities</option>
-                </select>
-            </div>
-             <div class="input-group">
-                <label class="block text-sm font-medium text-gray-400 mb-1">WAF Protection</label>
-                <select id="q-waf" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white">
-                    <option value="active">Active Block Mode</option>
-                    <option value="detection">Detection Only</option>
-                    <option value="none">No WAF</option>
-                </select>
-            </div>
-        `;
-
+    function hydrateQuestionnaire() {
         // Update scenario selector options
         scenarioSelect.innerHTML = Object.values(scenarios).map(s =>
             `<option value="${s.id}" ${s.id === currentScenario.id ? 'selected' : ''}>${s.name}</option>`
@@ -320,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resultDelta.classList.add('hidden');
         autoScoreVal.textContent = '--';
         autoScoreBar.style.width = '0%';
-        renderQuestionnaire();
+        hydrateQuestionnaire();
     }
 
     // --- Listeners ---
@@ -332,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
     runScanBtn.addEventListener('click', runSimulation);
 
     // --- Init ---
-    renderQuestionnaire();
+    hydrateQuestionnaire();
     createIcons({
         icons: { ClipboardList, ServerCog, ScanSearch, AlertTriangle },
         nameAttr: 'data-lucide'

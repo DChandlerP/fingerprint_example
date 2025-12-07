@@ -74,12 +74,57 @@
 
                 <div class="space-y-6">
                     <div class="flex justify-between items-center border-b border-gray-700 pb-2">
-                        <h4 class="text-lg font-semibold text-gray-300">1. Developer Questionnaire</h4>
+                        <h4 class="text-lg font-semibold text-gray-300">Developer Questionnaire</h4>
                         <span
                             class="text-xs uppercase tracking-wider bg-gray-700 px-2 py-1 rounded text-gray-300">Subjective</span>
                     </div>
 
                     <div class="space-y-4" id="questionnaire-form">
+                        <div class="input-group">
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Is the application internet
+                                facing?</label>
+                            <select id="q-exposure"
+                                class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white">
+                                <option value="internal">No (Internal Only)</option>
+                                <option value="external">Yes (Public Internet)</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Does it store sensitive data
+                                (PII)?</label>
+                            <select id="q-pii" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white">
+                                <option value="none">No sensitive data</option>
+                                <option value="low">Low (Names, Emails)</option>
+                                <option value="high">High (SSN, Credit Cards, Health)</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Authentication Mechanism</label>
+                            <select id="q-auth"
+                                class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white">
+                                <option value="sso">Modern SSO (OIDC/SAML)</option>
+                                <option value="mtls">mTLS / Service Mesh</option>
+                                <option value="ldap">Legacy LDAP / Basic Auth</option>
+                                <option value="none">None / Anonymous</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Third-Party Dependencies</label>
+                            <select id="q-deps"
+                                class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white">
+                                <option value="scanned">Scanned & Clean</option>
+                                <option value="unscanned">Unscanned / Unknown</option>
+                                <option value="vuln">Known Critical Vulnerabilities</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label class="block text-sm font-medium text-gray-400 mb-1">WAF Protection</label>
+                            <select id="q-waf" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white">
+                                <option value="active">Active Block Mode</option>
+                                <option value="detection">Detection Only</option>
+                                <option value="none">No WAF</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="bg-gray-950 p-4 rounded-lg border border-gray-700">
@@ -95,18 +140,10 @@
                 </div>
 
                 <div class="space-y-6 relative">
-                    <div id="scan-overlay"
-                        class="absolute inset-0 bg-gray-900/90 z-10 flex flex-col items-center justify-center rounded-lg transition-opacity duration-300">
-                        <p class="text-gray-300 mb-4 text-center max-w-xs">Run the automated scanners to compare the
-                            questionnaire against reality.</p>
-                        <button id="run-scan-btn"
-                            class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg shadow-lg flex items-center gap-2 transition-transform hover:scale-105">
-                            <span id="icon-scan"></span> Run Automated Assessment
-                        </button>
-                    </div>
+
 
                     <div class="flex justify-between items-center border-b border-gray-700 pb-2">
-                        <h4 class="text-lg font-semibold text-blue-300">2. Automated Telemetry</h4>
+                        <h4 class="text-lg font-semibold text-blue-300">Automated Telemetry</h4>
                         <span
                             class="text-xs uppercase tracking-wider bg-blue-900/30 text-blue-200 border border-blue-800 px-2 py-1 rounded">Objective</span>
                     </div>
@@ -123,6 +160,16 @@
                                     style="width: 0%"></div>
                             </div>
                         </div>
+                    </div>
+
+                    <div id="scan-overlay"
+                        class="absolute inset-0 bg-gray-900/90 z-10 flex flex-col items-center justify-center rounded-lg transition-opacity duration-300">
+                        <p class="text-gray-300 mb-4 text-center max-w-xs">Run the automated scanners to compare the
+                            questionnaire against reality.</p>
+                        <button id="run-scan-btn"
+                            class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg shadow-lg flex items-center gap-2 transition-transform hover:scale-105">
+                            <span id="icon-scan"></span> Run Automated Assessment
+                        </button>
                     </div>
                 </div>
 

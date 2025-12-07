@@ -131,6 +131,9 @@ class SiteNav extends HTMLElement {
                   <a href="risk_scoring.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                     <i data-lucide="calculator" class="mr-2 w-4 h-4"></i>Risk Scoring
                   </a>
+                  <a href="password_cracker.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                    <i data-lucide="lock" class="mr-2 w-4 h-4"></i>Password Cracker
+                  </a>
               </div>
             </div>
           </div>
