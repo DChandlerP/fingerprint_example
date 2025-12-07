@@ -25,7 +25,8 @@ import {
   Share2,
   LayoutDashboard,
   Palette,
-  Calculator
+  Calculator,
+  Box
 } from 'lucide';
 
 // --- Web Components ---
@@ -56,39 +57,42 @@ class SiteNav extends HTMLElement {
             <!-- Dropdown Menu -->
             <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
               <div class="py-1" role="menu" aria-orientation="vertical">
-                <a href="waf.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <i data-lucide="shield" class="mr-2 w-4 h-4"></i>Google Cloud Armor WAF
-                </a>
-                <a href="regulation.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <i data-lucide="gavel" class="mr-2 w-4 h-4"></i>Regulation (US/EU)
-                </a>
-                <a href="usprivacytimeline.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <i data-lucide="flag" class="mr-2 w-4 h-4"></i>US Privacy Timeline
-                </a>
-                <a href="euprivacytimeline.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <i data-lucide="globe" class="mr-2 w-4 h-4"></i>EU Privacy Timeline
-                </a>
                 <a href="cloud.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="cloud" class="mr-2 w-4 h-4"></i>Cloud
+                </a>
+                <a href="container.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <i data-lucide="box" class="mr-2 w-4 h-4"></i>Container Security
                 </a>
                 <a href="cyber_roadmap.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="map" class="mr-2 w-4 h-4"></i>Cyber Roadmap
                 </a>
-                <a href="phishing.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <i data-lucide="fish" class="mr-2 w-4 h-4"></i>Phishing
-                </a>
-                <a href="sast.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <i data-lucide="file-search" class="mr-2 w-4 h-4"></i>SAST
-                </a>
-                <a href="threatmodel.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <i data-lucide="shield-alert" class="mr-2 w-4 h-4"></i>Threat Model
+                <a href="euprivacytimeline.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <i data-lucide="globe" class="mr-2 w-4 h-4"></i>EU Privacy Timeline
                 </a>
                 <a href="fair.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                     <i data-lucide="scale" class="mr-2 w-4 h-4"></i>FAIR Risk Scoring
                   </a>
-                  <a href="sdlc.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                <a href="waf.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <i data-lucide="shield" class="mr-2 w-4 h-4"></i>Google Cloud Armor WAF
+                </a>
+                <a href="phishing.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <i data-lucide="fish" class="mr-2 w-4 h-4"></i>Phishing
+                </a>
+                <a href="regulation.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <i data-lucide="gavel" class="mr-2 w-4 h-4"></i>Regulation (US/EU)
+                </a>
+                <a href="sast.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <i data-lucide="file-search" class="mr-2 w-4 h-4"></i>SAST
+                </a>
+                <a href="sdlc.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                       <i data-lucide="code-2" class="mr-2 w-4 h-4"></i>Secure SDLC
                   </a>
+                <a href="threatmodel.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <i data-lucide="shield-alert" class="mr-2 w-4 h-4"></i>Threat Model
+                </a>
+                <a href="usprivacytimeline.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <i data-lucide="flag" class="mr-2 w-4 h-4"></i>US Privacy Timeline
+                </a>
               </div>
             </div>
           </div>
@@ -120,24 +124,24 @@ class SiteNav extends HTMLElement {
                 <a href="jwt.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="key-round" class="mr-2 w-4 h-4"></i>JWT Decoder
                 </a>
+                <a href="password_cracker.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <i data-lucide="lock" class="mr-2 w-4 h-4"></i>Password Cracker
+                </a>
                 <a href="modcat.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="guitar" class="mr-2 w-4 h-4"></i>PRS MODCAT
+                </a>
+                <a href="risk_scoring.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <i data-lucide="calculator" class="mr-2 w-4 h-4"></i>Risk Scoring
                 </a>
                 <a href="shamir.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="share-2" class="mr-2 w-4 h-4"></i>Shamir's Visualizer
                 </a>
-                <a href="dashboard.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <i data-lucide="layout-dashboard" class="mr-2 w-4 h-4"></i>Threat Intel
-                </a>
                 <a href="string.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                     <i data-lucide="palette" class="mr-2 w-4 h-4"></i>String Art
                   </a>
-                  <a href="risk_scoring.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <i data-lucide="calculator" class="mr-2 w-4 h-4"></i>Risk Scoring
-                  </a>
-                  <a href="password_cracker.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                    <i data-lucide="lock" class="mr-2 w-4 h-4"></i>Password Cracker
-                  </a>
+                <a href="dashboard.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <i data-lucide="layout-dashboard" class="mr-2 w-4 h-4"></i>Threat Intel
+                </a>
               </div>
             </div>
           </div>
@@ -174,7 +178,8 @@ class SiteNav extends HTMLElement {
         Share2,
         LayoutDashboard,
         Palette,
-        Calculator
+        Calculator,
+        Box
       },
       nameAttr: 'data-lucide',
       attrs: {
