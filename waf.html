@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-950 text-white">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Google Cloud Armor & OWASP Rules | D. Chandler Prince</title>
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self';">
+</head>
+
+<body hidden class="bg-gray-950 text-white min-h-screen flex flex-col">
+
+    <site-nav></site-nav>
+
+    <header class="bg-gradient-to-r from-blue-900 to-gray-900 py-10 px-4 text-center shadow-lg">
+        <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">Google Cloud Armor WAF</h1>
+        <p class="max-w-2xl mx-auto text-gray-200 text-lg">
+            A deep dive into the OWASP Core Rule Set (CRS) used by Google Cloud Armor.
+            Understand the regex behind the rules and how to tune them for your application.
+        </p>
+    </header>
+
+    <main class="flex-1 px-4 py-10 max-w-6xl mx-auto w-full space-y-12">
+
+        <section class="grid lg:grid-cols-2 gap-8">
+            <div class="bg-gray-900 p-6 rounded-xl border border-gray-800">
+                <h2 class="text-2xl font-bold text-blue-400 mb-4">Rule Explorer</h2>
+                <p class="text-gray-400 mb-4">Select a Cloud Armor preconfigured rule set to see what it detects and the
+                    types of regex patterns it uses.</p>
+
+                <div class="space-y-2" id="rule-selector">
+                </div>
+            </div>
+
+            <div class="bg-gray-900 p-6 rounded-xl border border-blue-900/50 shadow-lg relative overflow-hidden">
+                <div id="rule-detail-content" class="relative z-10">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div id="rule-icon" class="p-3 bg-blue-900/30 rounded-lg text-blue-400">
+                        </div>
+                        <div>
+                            <h3 id="rule-title" class="text-xl font-bold text-white">Select a Rule</h3>
+                            <p id="rule-id" class="font-mono text-xs text-gray-500">evaluatePreconfiguredWaf('...')</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">What it Blocks</h4>
+                            <p id="rule-desc" class="text-gray-200 mt-1">...</p>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Regex Logic
+                                (Simplified)</h4>
+                            <div
+                                class="bg-black/30 p-3 rounded border border-gray-700 font-mono text-sm text-green-400 overflow-x-auto">
+                                <code id="rule-regex">...</code>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Common False
+                                Positives</h4>
+                            <ul id="rule-fp" class="list-disc list-inside text-gray-300 mt-1 space-y-1">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="absolute -bottom-10 -right-10 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"></div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="text-3xl font-bold text-blue-400 mb-6">Tailoring Rules to Your App</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+
+                <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span data-lucide="sliders" class="text-purple-400"></span>
+                        <h3 class="text-lg font-bold text-white">1. Sensitivity Levels</h3>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Cloud Armor maps to OWASP "Paranoia Levels". Level 1 is safe; Level 4 is extreme.
+                    </p>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-green-400 font-bold">Level 1</span>
+                            <span class="text-gray-500">Default. Blocks obvious attacks.</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-yellow-400 font-bold">Level 2</span>
+                            <span class="text-gray-500">Blocks hex encoding (e.g., %41).</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-red-400 font-bold">Level 3-4</span>
+                            <span class="text-gray-500">High false positives. Specialized use only.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span data-lucide="eye" class="text-blue-400"></span>
+                        <h3 class="text-lg font-bold text-white">2. Preview Mode</h3>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Never turn on a rule in "Block" mode immediately. Use Preview Mode to log what <em>would</em>
+                        have happened.
+                    </p>
+                    <div class="bg-black/30 p-3 rounded border border-gray-700 font-mono text-xs text-blue-300">
+                        gcloud compute security-policies rules update 1000 \<br>
+                        --preview
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">
+                        Analyze Cloud Logging for <code>previewSecurityPolicy</code> entries to find false positives
+                        before going live.
+                    </p>
+                </div>
+
+                <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span data-lucide="filter" class="text-green-400"></span>
+                        <h3 class="text-lg font-bold text-white">3. Custom Exclusions</h3>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Don't disable a whole rule for one noisy field. Exclude specific headers or cookies from
+                        inspection.
+                    </p>
+                    <div class="bg-black/30 p-3 rounded border border-gray-700 font-mono text-xs text-green-300">
+                        evaluatePreconfiguredWaf('sqli-v33-stable', {<br>
+                        &nbsp;&nbsp;"exclude_request_headers": ["auth-token"]<br>
+                        })
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">
+                        This keeps SQLi protection active for the rest of the request, ignoring only the
+                        <code>auth-token</code>.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <section>
+            <h2 class="text-3xl font-bold text-blue-400 mb-6">Advanced Defense Strategies</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+
+                <div class="bg-gray-900 p-5 rounded-xl border border-gray-800 flex flex-col">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span data-lucide="gauge" class="text-orange-400"></span>
+                        <h3 class="text-lg font-bold text-white">Rate Limiting</h3>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4 flex-1">
+                        Don't just block bad payloads; block excessive traffic. Throttling prevents brute-force login
+                        attempts and aggressive scrapers.
+                    </p>
+                    <div class="bg-black/30 p-3 rounded border border-gray-700 font-mono text-xs text-orange-300">
+                        rate_limit_options: {<br>
+                        &nbsp;&nbsp;rate_limit_threshold: { count: 100, interval_sec: 60 }<br>
+                        &nbsp;&nbsp;enforce_on_key: "IP"<br>
+                        }
+                    </div>
+                </div>
+
+                <div class="bg-gray-900 p-5 rounded-xl border border-gray-800 flex flex-col">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span data-lucide="globe" class="text-blue-400"></span>
+                        <h3 class="text-lg font-bold text-white">Geo-Fencing</h3>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4 flex-1">
+                        Reduce your attack surface by blocking traffic from countries where you do not do business.
+                    </p>
+                    <div class="bg-black/30 p-3 rounded border border-gray-700 font-mono text-xs text-blue-300">
+                        origin.region_code == 'RU' || origin.region_code == 'CN'<br>
+                        <span class="text-gray-500">// Action: Deny 403</span>
+                    </div>
+                </div>
+
+                <div class="bg-gray-900 p-5 rounded-xl border border-gray-800 flex flex-col">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span data-lucide="bot" class="text-purple-400"></span>
+                        <h3 class="text-lg font-bold text-white">Bot Management</h3>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4 flex-1">
+                        Integrate reCAPTCHA Enterprise to challenge suspicious traffic before it hits your backend.
+                    </p>
+                    <div class="bg-black/30 p-3 rounded border border-gray-700 font-mono text-xs text-purple-300">
+                        token.recaptcha_session.score &lt; 0.4<br>
+                        <span class="text-gray-500">// Action: Redirect to Challenge Page</span>
+                    </div>
+                </div>
+
+                <div class="bg-gray-900 p-5 rounded-xl border border-gray-800 flex flex-col">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span data-lucide="check-circle" class="text-green-400"></span>
+                        <h3 class="text-lg font-bold text-white">Positive Security</h3>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4 flex-1">
+                        Instead of chasing bad traffic, strictly define "Good" traffic (e.g., specific methods or
+                        headers) and block everything else.
+                    </p>
+                    <div class="bg-black/30 p-3 rounded border border-gray-700 font-mono text-xs text-green-300">
+                        !request.method.matches('^(GET|POST)$')<br>
+                        <span class="text-gray-500">// Action: Deny 405 (Method Not Allowed)</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section>
+            <h2 class="text-3xl font-bold text-blue-400 mb-6">How It Works: Under the Hood</h2>
+            <div class="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
+
+                <div class="p-6 border-b border-gray-800 flex flex-col md:flex-row gap-4">
+                    <div class="p-3 bg-blue-900/20 rounded-lg h-fit w-fit"><span data-lucide="cloud-lightning"
+                            class="text-blue-400 w-6 h-6"></span></div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white mb-2">Edge Enforcement</h3>
+                        <p class="text-gray-400 text-sm">
+                            Cloud Armor sits at the Google Network Edge (PoPs). Malicious traffic is dropped
+                            <strong>before it enters your VPC</strong>, saving your load balancers and backend instances
+                            from processing junk requests.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="p-6 border-b border-gray-800 flex flex-col md:flex-row gap-4">
+                    <div class="p-3 bg-purple-900/20 rounded-lg h-fit w-fit"><span data-lucide="brain-circuit"
+                            class="text-purple-400 w-6 h-6"></span></div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white mb-2">Adaptive Protection (ML)</h3>
+                        <p class="text-gray-400 text-sm">
+                            Google's machine learning models learn your app's "normal" traffic. If it detects an anomaly
+                            (like a sudden spike from a specific User-Agent), it will <strong>generate a recommended
+                                rule</strong> for you to block the attack with one click.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="p-6 flex flex-col md:flex-row gap-4">
+                    <div class="p-3 bg-yellow-900/20 rounded-lg h-fit w-fit"><span data-lucide="list-ordered"
+                            class="text-yellow-400 w-6 h-6"></span></div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white mb-2">Priority Hierarchy</h3>
+                        <p class="text-gray-400 text-sm">
+                            Rules are evaluated from <strong>0</strong> (Highest) to <strong>2,147,483,647</strong>
+                            (Lowest). Processing stops at the first match.
+                            <br><br>
+                            <span class="text-yellow-400 font-semibold">Pro Tip:</span> Always place your specific
+                            "Deny" rules (e.g., SQLi Block) at a higher priority (lower number) than your broad "Allow"
+                            rules to prevent accidental bypasses.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <site-footer></site-footer>
+
+    <script type="module" src="/waf.js"></script>
+    <script type="module" src="/main.js"></script>
+</body>
+
+</html>
