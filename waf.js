@@ -1,7 +1,7 @@
-import { createIcons, Shield, Database, Code, FileCode, Terminal, Sliders, Eye, Filter, AlertTriangle } from 'lucide';
+import { createIcons, Shield, Database, Code, FileCode, Terminal, Sliders, Eye, Filter, AlertTriangle, Gauge, Globe, Bot, CheckCircle, CloudLightning, BrainCircuit, ListOrdered } from 'lucide';
 
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     // --- Data: Cloud Armor / OWASP Rules ---
     const rules = [
         {
@@ -85,12 +85,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="text-xs text-gray-500 font-mono">${rule.id}</div>
             </div>
         `;
-        
+
         btn.addEventListener('click', () => {
             // Update active state style
             document.querySelectorAll('#rule-selector button').forEach(b => b.classList.remove('ring-2', 'ring-blue-500'));
             btn.classList.add('ring-2', 'ring-blue-500');
-            
+
             // Render content
             displayRule(rule);
         });
@@ -103,13 +103,13 @@ document.addEventListener('DOMContentLoaded', () => {
         idEl.textContent = `evaluatePreconfiguredWaf('${rule.id}')`;
         descEl.textContent = rule.desc;
         regexEl.textContent = rule.regex;
-        
+
         // Update Icon
         iconContainer.innerHTML = `<i data-lucide="${rule.icon}" class="w-8 h-8"></i>`;
-        
+
         // Update False Positives
         fpListEl.innerHTML = rule.fps.map(fp => `<li>${fp}</li>`).join('');
-        
+
         // Re-init icons for the new content
         createIcons({
             icons: {
@@ -136,7 +136,15 @@ document.addEventListener('DOMContentLoaded', () => {
             code: Code,
             'file-code': FileCode,
             terminal: Terminal,
-            'alert-triangle': AlertTriangle
+            'alert-triangle': AlertTriangle,
+            // New icons for Section 3 & 4
+            gauge: Gauge,
+            globe: Globe,
+            bot: Bot,
+            'check-circle': CheckCircle,
+            'cloud-lightning': CloudLightning,
+            'brain-circuit': BrainCircuit,
+            'list-ordered': ListOrdered
         },
         attrs: { class: "w-6 h-6" }
     });
