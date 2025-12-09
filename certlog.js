@@ -1,5 +1,5 @@
 import Chart from 'chart.js/auto';
-import { createIcons, Search } from 'lucide';
+import { createIcons, Search, Eye, AlertTriangle, Copy } from 'lucide';
 
 document.addEventListener('DOMContentLoaded', () => {
     const domainInput = document.getElementById('domain-input');
@@ -54,10 +54,17 @@ document.addEventListener('DOMContentLoaded', () => {
         return Array.from(uniqueMap.values()).sort((a, b) => new Date(b.date) - new Date(a.date));
     }
 
+    function updateCurlCommand(domain) {
+        const cmd = `curl "https://crt.sh/?q=%.${domain}&output=json" | jq .`;
+        const codeBlock = document.getElementById('curl-cmd');
+        if (codeBlock) codeBlock.textContent = cmd;
+    }
+
     async function runScan() {
         const domain = domainInput.value.trim().replace(/https?:\/\//, '').replace(/\/$/, '');
         if (!domain) return;
 
+        updateCurlCommand(domain);
         setLoadingState(domain);
 
         const targetUrl = `https://crt.sh/?q=%.${domain}&output=json`;
@@ -188,13 +195,39 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.key === 'Enter') runScan();
         });
 
+        const copyBtn = document.getElementById('copy-curl-btn');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', () => {
+                const text = document.getElementById('curl-cmd').textContent;
+                navigator.clipboard.writeText(text);
+
+                // Temp visual feedback
+                const originalIcon = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<span class="text-green-400 font-bold">Copied!</span>';
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalIcon;
+                    createIcons({ icons: { Copy }, nameAttr: 'data-lucide' }); // Re-init icon
+                    document.getElementById('icon-copy').innerHTML = '<i data-lucide="copy" class="w-4 h-4"></i>';
+                    createIcons({ icons: { Copy }, nameAttr: 'data-lucide' });
+                }, 2000);
+            });
+        }
+
         prevBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderTable(); } });
         nextBtn.addEventListener('click', () => { if ((currentPage * itemsPerPage) < filteredRecords.length) { currentPage++; renderTable(); } });
         resetChartBtn.addEventListener('click', resetFilter);
 
+        // Icons
+        const iconAlert = document.getElementById('icon-alert');
+        if (iconAlert) iconAlert.innerHTML = '<i data-lucide="alert-triangle" class="w-5 h-5"></i>';
+
+        const iconCopy = document.getElementById('icon-copy');
+        if (iconCopy) iconCopy.innerHTML = '<i data-lucide="copy" class="w-4 h-4"></i>';
+
         createIcons({
-            icons: { 'icon-search': Search },
-            attrs: { class: "w-5 h-5" }
+            icons: { 'icon-search': Search, 'alert-triangle': AlertTriangle, 'copy': Copy },
+            attrs: { class: "w-5 h-5" },
+            nameAttr: 'data-lucide'
         });
     }
 

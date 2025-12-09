@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Shadow IT Explorer (CT Logs) | D. Chandler Prince</title>
+    <title>Certificate Log Explorer (CT Logs) | D. Chandler Prince</title>
     <meta http-equiv="Content-Security-Policy" content="
     default-src 'self'; 
     script-src 'self' 'unsafe-inline'; 
@@ -22,7 +22,7 @@
     <site-nav></site-nav>
 
     <header class="bg-gradient-to-r from-violet-900 to-gray-900 py-10 px-4 text-center shadow-lg">
-        <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">Shadow IT Explorer</h1>
+        <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">Certificate Log Explorer</h1>
         <p class="max-w-2xl mx-auto text-gray-200 text-lg">
             Discover forgotten subdomains and rouge assets using <strong>Certificate Transparency</strong> logs.
         </p>
@@ -43,9 +43,29 @@
                     Scan Domain
                 </button>
             </div>
-            <p class="text-sm text-gray-500 mt-3">
-                Queries public CT logs (crt.sh). No interaction with the target domain occurs.
-            </p>
+            <div
+                class="mt-4 p-3 bg-yellow-900/30 border border-yellow-800 rounded-lg text-sm text-yellow-200 flex items-center gap-2 max-w-lg">
+                <span id="icon-alert" class="text-yellow-400"></span>
+                <span><strong>Note:</strong> The crt.sh backend service is free and occasionally unstable or slow. If
+                    the scan hangs, please try again later.</span>
+            </div>
+        </section>
+
+        <!-- API Usage Section -->
+        <section class="max-w-4xl mx-auto">
+            <div class="bg-gray-900 rounded-xl border border-gray-800 p-4">
+                <h3 class="text-gray-400 text-xs uppercase tracking-widest font-bold mb-2">Terminal Alternative</h3>
+                <div class="flex items-center gap-2 bg-black/50 rounded p-3 font-mono text-xs md:text-sm text-gray-300">
+                    <span class="text-violet-400">$</span>
+                    <code id="curl-cmd"
+                        class="flex-1 break-all">curl "https://crt.sh/?q=%.example.com&output=json" | jq .</code>
+                    <button id="copy-curl-btn"
+                        class="p-2 hover:bg-gray-800 rounded text-gray-400 hover:text-white transition-colors"
+                        title="Copy to clipboard">
+                        <span id="icon-copy"></span>
+                    </button>
+                </div>
+            </div>
         </section>
 
         <div id="status-message" class="hidden text-center py-8"></div>
@@ -114,7 +134,7 @@
 
     <site-footer></site-footer>
 
-    <script type="module" src="/shadowit.js"></script>
+    <script type="module" src="/certlog.js"></script>
     <script type="module" src="/main.js"></script>
 </body>
 

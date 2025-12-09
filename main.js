@@ -145,8 +145,8 @@ class SiteNav extends HTMLElement {
                 <a href="shamir.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="share-2" class="mr-2 w-4 h-4"></i>Shamir's Visualizer
                 </a>
-                <a href="shadowit.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <i data-lucide="ghost" class="mr-2 w-4 h-4"></i>Shadow IT Explorer
+                <a href="certlog.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <i data-lucide="ghost" class="mr-2 w-4 h-4"></i>Certificate Log Explorer
                 </a>
                 <a href="string.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                     <i data-lucide="palette" class="mr-2 w-4 h-4"></i>String Art
