@@ -26,7 +26,8 @@ import {
   LayoutDashboard,
   Palette,
   Calculator,
-  Box
+  Box,
+  Siren
 } from 'lucide';
 
 // --- Web Components ---
@@ -112,6 +113,9 @@ class SiteNav extends HTMLElement {
                 <a href="checklist.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="list-checks" class="mr-2 w-4 h-4"></i>Checklist
                 </a>
+                <a href="kev.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <i data-lucide="siren" class="mr-2 w-4 h-4"></i>CISA KEV Explorer
+                </a>
                 <a href="epssdemo.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="target" class="mr-2 w-4 h-4"></i>CVSS vs EPSS
                 </a>
@@ -179,7 +183,8 @@ class SiteNav extends HTMLElement {
         LayoutDashboard,
         Palette,
         Calculator,
-        Box
+        Box,
+        Siren
       },
       nameAttr: 'data-lucide',
       attrs: {
