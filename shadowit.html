@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-950 text-white">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shadow IT Explorer (CT Logs) | D. Chandler Prince</title>
+    <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self'; 
+    script-src 'self' 'unsafe-inline'; 
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
+    font-src 'self' https://fonts.gstatic.com; 
+    connect-src 'self' https://crt.sh https://corsproxy.io; 
+    object-src 'none'; 
+    frame-ancestors 'self'; 
+    base-uri 'self';
+">
+</head>
+
+<body hidden class="bg-gray-950 text-white min-h-screen flex flex-col">
+
+    <site-nav></site-nav>
+
+    <header class="bg-gradient-to-r from-violet-900 to-gray-900 py-10 px-4 text-center shadow-lg">
+        <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">Shadow IT Explorer</h1>
+        <p class="max-w-2xl mx-auto text-gray-200 text-lg">
+            Discover forgotten subdomains and rouge assets using <strong>Certificate Transparency</strong> logs.
+        </p>
+    </header>
+
+    <main class="flex-1 px-4 py-10 max-w-7xl mx-auto w-full space-y-8">
+
+        <section
+            class="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-800 flex flex-col items-center justify-center">
+            <label for="domain-input" class="text-xl font-semibold text-violet-300 mb-4">Enter a Domain to Scan</label>
+            <div class="w-full max-w-lg relative flex gap-2">
+                <input type="text" id="domain-input"
+                    class="w-full bg-gray-950 border border-gray-700 rounded-lg py-3 px-4 pl-12 text-white focus:ring-2 focus:ring-violet-500 focus:outline-none"
+                    placeholder="e.g. ford.com, tesla.com, google.com">
+                <span id="icon-search" class="absolute left-4 top-3.5 text-gray-500"></span>
+                <button id="scan-btn"
+                    class="px-6 py-3 bg-violet-700 hover:bg-violet-600 rounded-lg font-bold transition shadow-lg whitespace-nowrap">
+                    Scan Domain
+                </button>
+            </div>
+            <p class="text-sm text-gray-500 mt-3">
+                Queries public CT logs (crt.sh). No interaction with the target domain occurs.
+            </p>
+        </section>
+
+        <div id="status-message" class="hidden text-center py-8"></div>
+
+        <div id="results-area" class="hidden space-y-8">
+
+            <section class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div class="bg-gray-900 p-5 rounded-xl shadow-lg border border-gray-800">
+                    <h3 class="text-violet-400 font-semibold text-lg">Total Certificates</h3>
+                    <p id="total-certs" class="text-4xl font-bold text-white mt-1">--</p>
+                </div>
+                <div class="bg-gray-900 p-5 rounded-xl shadow-lg border border-gray-800">
+                    <h3 class="text-blue-400 font-semibold text-lg">Unique Subdomains</h3>
+                    <p id="unique-subs" class="text-4xl font-bold text-white mt-1">--</p>
+                </div>
+                <div class="bg-gray-900 p-5 rounded-xl shadow-lg border border-gray-800">
+                    <h3 class="text-emerald-400 font-semibold text-lg">Avg. Validity</h3>
+                    <p id="avg-days" class="text-3xl font-bold text-white mt-1">-- days</p>
+                </div>
+            </section>
+
+            <section class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-violet-400">Certificate Authorities (CAs)</h2>
+                    <button id="reset-chart-btn"
+                        class="hidden text-sm bg-gray-800 hover:bg-gray-700 text-violet-300 px-3 py-1 rounded border border-gray-700 transition">Reset
+                        Filter</button>
+                </div>
+                <div class="h-80 w-full">
+                    <canvas id="issuerChart"></canvas>
+                </div>
+                <p class="text-center text-xs text-gray-500 mt-4">Click a bar to filter the table below by Issuer (e.g.,
+                    "Let's Encrypt").</p>
+            </section>
+
+            <section class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
+                <div class="flex justify-between items-end mb-4">
+                    <h3 class="text-xl font-bold text-white">Discovered Subdomains</h3>
+                    <div class="text-sm text-gray-400">Showing <span id="showing-count">0</span> records</div>
+                </div>
+
+                <div class="overflow-x-auto rounded-lg border border-gray-700">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-gray-800 text-gray-300 uppercase text-xs tracking-wider">
+                            <tr>
+                                <th class="p-4 border-b border-gray-700">Logged At</th>
+                                <th class="p-4 border-b border-gray-700">Subdomain</th>
+                                <th class="p-4 border-b border-gray-700">Issuer (CA)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ct-table-body" class="divide-y divide-gray-800 text-sm text-gray-300">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="flex justify-center gap-2 mt-6">
+                    <button id="prev-btn"
+                        class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-sm disabled:opacity-50">Previous</button>
+                    <button id="next-btn"
+                        class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-sm disabled:opacity-50">Next</button>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <site-footer></site-footer>
+
+    <script type="module" src="/shadowit.js"></script>
+    <script type="module" src="/main.js"></script>
+</body>
+
+</html>
