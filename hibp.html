@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-950 text-white">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Breach Checker | D. Chandler Prince</title>
+</head>
+
+<body hidden class="bg-gray-950 text-white min-h-screen flex flex-col">
+
+    <site-nav></site-nav>
+
+    <header class="bg-gradient-to-r from-red-900 to-gray-900 py-10 px-4 text-center shadow-lg">
+        <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">Breach Checker</h1>
+        <p class="max-w-3xl mx-auto text-gray-200 text-lg">
+            Check if a password has been compromised without ever revealing it.
+        </p>
+    </header>
+
+    <main class="flex-1 px-4 py-10 max-w-4xl mx-auto w-full space-y-12">
+
+        <!-- Checker Section -->
+        <section class="max-w-2xl mx-auto space-y-8">
+
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500">
+                    <span id="icon-lock"></span>
+                </div>
+                <input type="password" id="password-input" placeholder="Enter a password to check..."
+                    class="w-full bg-gray-900 border-2 border-gray-700 rounded-xl pl-12 pr-14 py-4 text-xl md:text-2xl text-white placeholder-gray-500 focus:border-red-500 focus:ring-4 focus:ring-red-900/50 outline-none transition-all"
+                    autocomplete="off">
+                <button id="toggle-visibility"
+                    class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                    aria-label="Toggle visibility">
+                    <span id="icon-eye"></span>
+                </button>
+            </div>
+
+            <!-- Visualization Area -->
+            <div id="visualization-area"
+                class="bg-gray-900 rounded-xl p-6 border border-gray-800 opacity-50 transition-opacity duration-300">
+                <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <span data-lucide="hash" class="w-4 h-4"></span> k-Anonymity Visualization
+                </h3>
+
+                <div class="space-y-4 font-mono text-sm md:text-base">
+                    <!-- Step 1: Client Side Hash -->
+                    <div
+                        class="flex flex-col md:flex-row gap-2 md:items-center p-3 bg-black/30 rounded border border-gray-800">
+                        <div class="min-w-[120px] text-gray-500">SHA-1 Hash:</div>
+                        <div class="break-all text-gray-400">
+                            <span id="hash-prefix" class="text-red-400 font-bold text-lg">-----</span><span
+                                id="hash-suffix" class="text-gray-600">-----------------------------------</span>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: API Request -->
+                    <div
+                        class="flex flex-col md:flex-row gap-2 md:items-center p-3 bg-black/30 rounded border border-gray-800">
+                        <div class="min-w-[120px] text-gray-500">API Request:</div>
+                        <div class="text-blue-300 break-all">
+                            GET https://api.pwnedpasswords.com/range/<span id="api-prefix"
+                                class="font-bold text-white">-----</span>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-gray-500 italic mt-2">
+                        * Only the first 5 characters (prefix) are sent to the API. Your full password logic never
+                        leaves your browser.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Result Card -->
+            <div id="result-card"
+                class="hidden p-8 rounded-xl border-2 text-center transition-all duration-500 border-gray-700 bg-gray-800">
+                <div id="result-icon" class="flex justify-center mb-4"></div>
+                <h2 id="result-title" class="text-3xl font-bold mb-2 text-white"></h2>
+                <div id="result-desc" class="text-gray-300 mb-4"></div>
+                <div id="result-count"
+                    class="inline-block bg-black/50 px-4 py-1 rounded-full text-sm font-mono border border-gray-700">
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <site-footer></site-footer>
+
+    <script type="module" src="/hibp.js"></script>
+    <script type="module" src="/main.js"></script>
+</body>
+
+</html>
