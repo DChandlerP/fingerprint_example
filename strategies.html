@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Thinking Models - Dark Mode</title>
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; object-src 'none'; base-uri 'self';">
+    <meta http-equiv="Strict-Transport-Security" content="max-age=63072000; includeSubDomains; preload">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer-policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy"
+        content="geolocation=(), midi=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .cheese-hole {
+            background-color: #1e293b;
+            /* Matches slate-800 card bg */
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        /* Smooth fade for hover effects */
+        .model-card {
+            transition: all 0.3s ease;
+        }
+
+        .model-card:hover {
+            transform: translateY(-4px);
+        }
+    </style>
+</head>
+
+<body class="bg-slate-950 text-slate-200 antialiased" hidden>
+
+    <site-nav></site-nav>
+
+    <div class="max-w-7xl mx-auto py-10 px-4">
+
+
+
+        <!-- Header -->
+        <header class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight mb-4">Strategic Thinking Models</h1>
+            <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+                A visual guide to 28 essential frameworks for decision making, strategy, and self-awareness.
+            </p>
+        </header>
+
+        <!-- Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+
+            <!-- 1. The Eisenhower Matrix -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-indigo-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">1. Eisenhower Matrix</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Prioritize tasks by distinguishing urgency from
+                        importance.</p>
+
+                    <!-- Visual -->
+                    <div
+                        class="aspect-square relative grid grid-cols-2 grid-rows-2 gap-1 font-semibold text-xs text-white text-center select-none">
+                        <div
+                            class="absolute -left-6 top-1/2 -translate-y-1/2 -rotate-90 text-slate-600 text-[10px] font-normal tracking-widest">
+                            IMPORTANCE</div>
+                        <div
+                            class="absolute -bottom-5 left-1/2 -translate-x-1/2 text-slate-600 text-[10px] font-normal tracking-widest">
+                            URGENCY</div>
+
+                        <div class="bg-rose-600/90 rounded-tl-lg flex flex-col items-center justify-center p-2">
+                            <span>DO</span>
+                            <span class="font-normal opacity-75 text-[10px] mt-1">Urgent & Important</span>
+                        </div>
+                        <div class="bg-blue-600/90 rounded-tr-lg flex flex-col items-center justify-center p-2">
+                            <span>PLAN</span>
+                            <span class="font-normal opacity-75 text-[10px] mt-1">Not Urgent & Important</span>
+                        </div>
+                        <div class="bg-amber-600/90 rounded-bl-lg flex flex-col items-center justify-center p-2">
+                            <span>DELEGATE</span>
+                            <span class="font-normal opacity-75 text-[10px] mt-1">Urgent & Not Important</span>
+                        </div>
+                        <div
+                            class="bg-slate-700/50 rounded-br-lg flex flex-col items-center justify-center p-2 text-slate-400">
+                            <span>ELIMINATE</span>
+                            <span class="font-normal opacity-75 text-[10px] mt-1">Neither</span>
+                        </div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Time_management#The_Eisenhower_Method" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 2. SWOT Analysis -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-teal-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">2. SWOT Analysis</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Evaluate internal strengths/weaknesses & external
+                        opportunities/threats.</p>
+
+                    <div class="aspect-square grid grid-cols-2 grid-rows-2 gap-4">
+                        <div
+                            class="bg-teal-950/40 border border-teal-900/50 rounded-xl p-3 flex flex-col items-center justify-center text-center">
+
+                            <span class="text-xs font-bold text-teal-200">Strengths</span>
+                            <span class="text-[9px] text-teal-500 mt-1">Internal / Helpful</span>
+                        </div>
+                        <div
+                            class="bg-rose-950/40 border border-rose-900/50 rounded-xl p-3 flex flex-col items-center justify-center text-center">
+
+                            <span class="text-xs font-bold text-rose-200">Weaknesses</span>
+                            <span class="text-[9px] text-rose-500 mt-1">Internal / Harmful</span>
+                        </div>
+                        <div
+                            class="bg-emerald-950/40 border border-emerald-900/50 rounded-xl p-3 flex flex-col items-center justify-center text-center">
+
+                            <span class="text-xs font-bold text-emerald-200">Opportunities</span>
+                            <span class="text-[9px] text-emerald-500 mt-1">External / Helpful</span>
+                        </div>
+                        <div
+                            class="bg-amber-950/40 border border-amber-900/50 rounded-xl p-3 flex flex-col items-center justify-center text-center">
+
+                            <span class="text-xs font-bold text-amber-200">Threats</span>
+                            <span class="text-[9px] text-amber-500 mt-1">External / Harmful</span>
+                        </div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/SWOT_analysis" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 3. The Pareto Principle -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-purple-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">3. Pareto Principle</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">The 80/20 rule: 20% of causes lead to 80% of
+                        effects.
+                    </p>
+
+                    <div class="aspect-square flex flex-col justify-center gap-6 px-4 relative">
+                        <!-- Connection Line -->
+                        <svg class="absolute inset-0 w-full h-full pointer-events-none z-0" style="opacity: 0.2">
+                            <path d="M80 140 C 120 140, 180 180, 220 180" stroke="currentColor" stroke-width="2"
+                                fill="none" class="text-purple-500" />
+                        </svg>
+
+                        <!-- Row 1: Input -->
+                        <div class="flex items-center gap-4 z-10">
+                            <div class="w-16 text-right text-xs font-bold text-slate-500">INPUT</div>
+                            <div
+                                class="flex-1 h-8 bg-slate-800 rounded-full flex overflow-hidden border border-slate-700">
+                                <div
+                                    class="w-[20%] bg-purple-600 h-full flex items-center justify-center text-[10px] font-bold text-white">
+                                    20%</div>
+                                <div class="w-[80%] h-full"></div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-center -my-2">
+
+                        </div>
+
+                        <!-- Row 2: Output -->
+                        <div class="flex items-center gap-4 z-10">
+                            <div class="w-16 text-right text-xs font-bold text-slate-500">OUTPUT</div>
+                            <div
+                                class="flex-1 h-8 bg-slate-800 rounded-full flex overflow-hidden border border-slate-700">
+                                <div
+                                    class="w-[80%] bg-purple-500/80 h-full flex items-center justify-center text-[10px] font-bold text-white">
+                                    80%</div>
+                                <div class="w-[20%] h-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Pareto_principle" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 4. Maslow's Hierarchy -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-indigo-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">4. Maslow's Hierarchy</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Human motivation progresses from basic survival to
+                        self-fulfillment.</p>
+
+                    <div class="aspect-square flex flex-col justify-end items-center gap-1 pt-4">
+                        <div
+                            class="w-[20%] h-[15%] bg-indigo-300/90 rounded-t-lg flex items-center justify-center text-[8px] font-bold text-indigo-950 shadow-sm hover:w-[90%] transition-all duration-300 cursor-default group">
+                            <span class="hidden group-hover:block">Self-Actualization</span>
+                        </div>
+                        <div
+                            class="w-[35%] h-[15%] bg-indigo-400/90 flex items-center justify-center text-[8px] font-bold text-indigo-950 shadow-sm hover:w-[90%] transition-all duration-300 cursor-default group">
+                            <span class="hidden group-hover:block">Esteem</span>
+                        </div>
+                        <div
+                            class="w-[50%] h-[15%] bg-indigo-500/90 flex items-center justify-center text-[8px] font-bold text-white shadow-sm hover:w-[90%] transition-all duration-300 cursor-default group">
+                            <span class="hidden group-hover:block">Belonging</span>
+                        </div>
+                        <div
+                            class="w-[70%] h-[15%] bg-indigo-600/90 flex items-center justify-center text-[8px] font-bold text-white shadow-sm hover:w-[90%] transition-all duration-300 cursor-default group">
+                            <span class="hidden group-hover:block">Safety</span>
+                        </div>
+                        <div
+                            class="w-[90%] h-[15%] bg-indigo-700/90 rounded-b-lg flex items-center justify-center text-[8px] font-bold text-white shadow-sm hover:w-[90%] transition-all duration-300 cursor-default group">
+                            <span class="hidden group-hover:block">Physiological</span><span
+                                class="group-hover:hidden">Physiological</span>
+                        </div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Maslow%27s_hierarchy_of_needs" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 5. The Flow Model -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-sky-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">5. The Flow Model</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Balancing challenge and skill to achieve optimal
+                        mental
+                        state.</p>
+
+                    <div class="aspect-square relative border-l-2 border-b-2 border-slate-700 p-2">
+                        <div
+                            class="absolute -left-6 top-1/2 -translate-y-1/2 -rotate-90 text-slate-500 text-[10px] font-bold tracking-widest">
+                            CHALLENGE</div>
+                        <div
+                            class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-slate-500 text-[10px] font-bold tracking-widest">
+                            ABILITY</div>
+
+                        <div class="absolute top-0 left-0 w-1/2 h-1/2 flex items-center justify-center"><span
+                                class="text-xs text-slate-600 font-medium">Anxiety</span></div>
+                        <div class="absolute bottom-0 right-0 w-1/2 h-1/2 flex items-center justify-center"><span
+                                class="text-xs text-slate-600 font-medium">Boredom</span></div>
+
+                        <div
+                            class="absolute bottom-0 left-0 w-[140%] h-16 bg-gradient-to-r from-sky-500 to-sky-400 origin-bottom-left -rotate-45 opacity-90 rounded-full flex items-center justify-center shadow-lg transform translate-x-2 -translate-y-2">
+                            <span class="text-white font-bold tracking-widest text-sm rotate-0">FLOW</span>
+                        </div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Flow_(psychology)" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 6. The Swiss Cheese Model -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-yellow-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">6. Swiss Cheese</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Risk management: Accidents happen when system flaws
+                        align.</p>
+
+                    <div
+                        class="aspect-square relative flex items-center justify-center bg-slate-950/50 rounded-lg overflow-hidden border border-slate-800">
+                        <div class="absolute w-full h-1 bg-red-500/50 z-0 top-1/2 -translate-y-1/2 left-0"></div>
+                        <div class="absolute right-2 top-1/2 -translate-y-1/2 z-0">
+
+                        </div>
+
+                        <!-- Slices (Dark mode adjusted) -->
+                        <div
+                            class="w-16 h-32 bg-yellow-600/90 border-2 border-yellow-500 rounded-lg absolute left-8 top-1/2 -translate-y-1/2 transform -skew-y-6 shadow-md z-10">
+                            <div class="cheese-hole w-4 h-4 top-2 left-2"></div>
+                            <div class="cheese-hole w-3 h-3 bottom-4 right-2"></div>
+                            <div
+                                class="cheese-hole w-6 h-6 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-500/20 border border-red-500/50">
+                            </div>
+                        </div>
+                        <div
+                            class="w-16 h-32 bg-yellow-600/90 border-2 border-yellow-500 rounded-lg absolute left-20 top-1/2 -translate-y-1/2 transform -skew-y-6 shadow-md z-20">
+                            <div class="cheese-hole w-3 h-3 top-8 right-3"></div>
+                            <div class="cheese-hole w-5 h-5 bottom-2 left-2"></div>
+                            <div
+                                class="cheese-hole w-6 h-6 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-500/20 border border-red-500/50">
+                            </div>
+                        </div>
+                        <div
+                            class="w-16 h-32 bg-yellow-600/90 border-2 border-yellow-500 rounded-lg absolute left-32 top-1/2 -translate-y-1/2 transform -skew-y-6 shadow-md z-30">
+                            <div class="cheese-hole w-2 h-2 top-2 right-6"></div>
+                            <div class="cheese-hole w-4 h-4 bottom-8 left-4"></div>
+                            <div
+                                class="cheese-hole w-6 h-6 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-500/20 border border-red-500/50">
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Swiss_cheese_model" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 7. Prisoner's Dilemma -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-orange-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">7. Prisoner's Dilemma</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Why rational individuals might not cooperate.</p>
+
+                    <div class="aspect-square grid grid-cols-2 grid-rows-2 gap-1 bg-slate-800 p-1 rounded-lg">
+                        <!-- Cell 1 -->
+                        <div
+                            class="bg-slate-900 rounded flex flex-col items-center justify-center p-2 text-center relative border border-slate-700">
+                            <div class="text-[9px] text-orange-400 font-bold mb-1">BOTH SILENT</div>
+                            <div class="text-[8px] text-slate-400">1 Yr / 1 Yr</div>
+                            <div class="text-[8px] text-green-500 mt-1">Best Team</div>
+                        </div>
+                        <!-- Cell 2 -->
+                        <div
+                            class="bg-slate-900 rounded flex flex-col items-center justify-center p-2 text-center relative border border-slate-700">
+                            <div class="text-[9px] text-slate-300 font-bold mb-1">A BETRAYS</div>
+                            <div class="text-[8px] text-slate-400">Free / 3 Yrs</div>
+                        </div>
+                        <!-- Cell 3 -->
+                        <div
+                            class="bg-slate-900 rounded flex flex-col items-center justify-center p-2 text-center relative border border-slate-700">
+                            <div class="text-[9px] text-slate-300 font-bold mb-1">B BETRAYS</div>
+                            <div class="text-[8px] text-slate-400">3 Yrs / Free</div>
+                        </div>
+                        <!-- Cell 4 -->
+                        <div
+                            class="bg-slate-900 rounded flex flex-col items-center justify-center p-2 text-center relative border border-orange-500/50">
+                            <div class="text-[9px] text-red-400 font-bold mb-1">BOTH BETRAY</div>
+                            <div class="text-[8px] text-slate-400">2 Yrs / 2 Yrs</div>
+                            <div class="text-[8px] text-red-500 mt-1">Nash Eq.</div>
+                        </div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Prisoner%27s_dilemma" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 8. Johari Window -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-pink-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">8. Johari Window</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Improving self-awareness and understanding
+                        relationships.</p>
+
+                    <div class="aspect-square relative grid grid-cols-2 grid-rows-2 gap-2 text-center">
+                        <!-- Labels -->
+                        <div class="absolute -top-4 left-1/4 -translate-x-1/2 text-[8px] text-slate-500 tracking-wider">
+                            KNOWN TO SELF</div>
+                        <div class="absolute -top-4 left-3/4 -translate-x-1/2 text-[8px] text-slate-500 tracking-wider">
+                            NOT KNOWN</div>
+                        <div
+                            class="absolute -left-4 top-1/4 -translate-y-1/2 -rotate-90 text-[8px] text-slate-500 tracking-wider w-20 text-center">
+                            KNOWN TO OTHERS</div>
+
+                        <!-- Quadrants -->
+                        <div
+                            class="bg-pink-600/20 border border-pink-500/50 rounded flex flex-col items-center justify-center p-2">
+                            <span class="text-xs font-bold text-pink-300">OPEN</span>
+                            <span class="text-[8px] text-pink-400/70">Public Self</span>
+                        </div>
+                        <div
+                            class="bg-slate-800 border border-slate-700 rounded flex flex-col items-center justify-center p-2">
+                            <span class="text-xs font-bold text-slate-300">BLIND</span>
+                            <span class="text-[8px] text-slate-500">Blind Spot</span>
+                        </div>
+                        <div
+                            class="bg-slate-800 border border-slate-700 rounded flex flex-col items-center justify-center p-2">
+                            <span class="text-xs font-bold text-slate-300">HIDDEN</span>
+                            <span class="text-[8px] text-slate-500">Façade</span>
+                        </div>
+                        <div
+                            class="bg-slate-950 border border-slate-800 rounded flex flex-col items-center justify-center p-2">
+                            <span class="text-xs font-bold text-slate-500">UNKNOWN</span>
+                            <span class="text-[8px] text-slate-600">Unconscious</span>
+                        </div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Johari_window" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 9. The Long Tail -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-lime-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">9. The Long Tail</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Selling small volumes of hard-to-find items to many
+                        customers.</p>
+
+                    <div class="aspect-square relative border-l border-b border-slate-600 p-2 flex items-end">
+                        <div class="absolute left-2 top-2 text-[9px] text-lime-400 font-bold">HEAD (Hits)</div>
+                        <div class="absolute right-2 bottom-8 text-[9px] text-slate-400 font-bold text-right w-20">
+                            LONG
+                            TAIL<br>(Niches)</div>
+
+                        <!-- Graph Bars (Stylized) -->
+                        <div class="w-[10%] h-[90%] bg-lime-600 mx-[2px] rounded-t"></div>
+                        <div class="w-[10%] h-[50%] bg-lime-600/80 mx-[2px] rounded-t"></div>
+                        <div class="w-[10%] h-[25%] bg-lime-600/60 mx-[2px] rounded-t"></div>
+                        <div class="w-[10%] h-[15%] bg-slate-700 mx-[2px] rounded-t"></div>
+                        <div class="w-[10%] h-[10%] bg-slate-700 mx-[2px] rounded-t"></div>
+                        <div class="w-[10%] h-[8%] bg-slate-700 mx-[2px] rounded-t"></div>
+                        <div class="w-[10%] h-[6%] bg-slate-700 mx-[2px] rounded-t"></div>
+                        <div class="w-[10%] h-[5%] bg-slate-700 mx-[2px] rounded-t"></div>
+
+                        <!-- Overlay Curve -->
+                        <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100"
+                            preserveAspectRatio="none">
+                            <path d="M10,10 Q25,80 100,95" stroke="white" stroke-width="0.5" fill="none"
+                                stroke-dasharray="2 2" />
+                        </svg>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Long_tail" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 10. Double-Loop Learning -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-cyan-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">10. Double-Loop</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Changing underlying values rather than just
+                        adjusting
+                        actions.</p>
+
+                    <div class="aspect-square relative flex items-center justify-center">
+<div class="flex flex-col gap-4 w-full max-w-[200px]">
+    <!-- Top Row: Assumptions -->
+    <div class="flex justify-center">
+        <div class="bg-cyan-900/40 border border-cyan-500/30 px-3 py-1.5 rounded text-center z-10">
+            <span class="text-[10px] text-cyan-200 font-bold block">Assumptions</span>
+            <span class="text-[8px] text-slate-400">Values / Why?</span>
+        </div>
+    </div>
+
+    <!-- Middle Row: Strategies -->
+    <div class="flex justify-center">
+        <div class="bg-slate-700 border border-slate-600 px-3 py-1.5 rounded text-center z-10">
+            <span class="text-[10px] text-slate-200 font-bold block">Strategies</span>
+            <span class="text-[8px] text-slate-400">Actions / What?</span>
+        </div>
+    </div>
+
+    <!-- Bottom Row: Results -->
+    <div class="flex justify-center">
+        <div class="bg-slate-700 border border-slate-600 px-3 py-1.5 rounded text-center z-10">
+            <span class="text-[10px] text-slate-200 font-bold block">Results</span>
+            <span class="text-[8px] text-slate-400">Outcomes</span>
+        </div>
+    </div>
+
+    <!-- Arrows / Loops Overlay -->
+    <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 200 200">
+        <!-- Downward Flow -->
+        <path d="M100 55 L100 75" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-down)" />
+        <path d="M100 105 L100 125" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-down)" />
+
+        <!-- Single Loop (Results -> Strategies) -->
+        <path d="M135 140 Q 160 140 160 115 Q 160 90 135 90" fill="none" stroke="#94a3b8" stroke-width="1.5"
+            stroke-dasharray="3,3" marker-end="url(#arrow-left-gray)" />
+        <text x="165" y="115" fill="#94a3b8" font-size="8" dominant-baseline="middle">Single</text>
+
+        <!-- Double Loop (Results -> Assumptions) -->
+        <path d="M65 140 Q 20 140 20 90 Q 20 40 65 40" fill="none" stroke="#22d3ee" stroke-width="1.5"
+            marker-end="url(#arrow-right-cyan)" />
+        <text x="15" y="90" fill="#22d3ee" font-size="8" text-anchor="end" dominant-baseline="middle">Double</text>
+
+        <defs>
+            <marker id="arrow-down" markerWidth="6" markerHeight="6" refX="3" refY="6" orient="auto">
+                <path d="M0,0 L3,6 L6,0" fill="none" stroke="#64748b" stroke-width="1" />
+            </marker>
+            <marker id="arrow-left-gray" markerWidth="6" markerHeight="6" refX="0" refY="3" orient="auto">
+                <path d="M6,0 L0,3 L6,6" fill="#94a3b8" />
+            </marker>
+            <marker id="arrow-right-cyan" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6" fill="#22d3ee" />
+            </marker>
+        </defs>
+    </svg>
+</div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Double-loop_learning" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 11. Conflict Resolution (TKI) -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-red-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">11. Conflict Modes</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Five styles based on assertiveness and cooperation.
+                    </p>
+
+                    <div class="aspect-square relative border-l border-b border-slate-600 p-2">
+                        <div
+                            class="absolute -left-6 top-1/2 -translate-y-1/2 -rotate-90 text-slate-500 text-[9px] font-bold tracking-widest">
+                            ASSERTIVE</div>
+                        <div
+                            class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-slate-500 text-[9px] font-bold tracking-widest">
+                            COOPERATIVE</div>
+
+                        <!-- 5 Points -->
+                        <div
+                            class="absolute top-2 left-2 bg-red-900/50 border border-red-500 text-red-300 text-[8px] p-1 rounded">
+                            Competing</div>
+                        <div
+                            class="absolute top-2 right-2 bg-blue-900/50 border border-blue-500 text-blue-300 text-[8px] p-1 rounded">
+                            Collaborating</div>
+                        <div class="absolute bottom-2 left-2 bg-slate-800 text-slate-400 text-[8px] p-1 rounded">
+                            Avoiding</div>
+                        <div class="absolute bottom-2 right-2 bg-slate-800 text-slate-400 text-[8px] p-1 rounded">
+                            Accommodating</div>
+                        <div
+                            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-purple-900/50 border border-purple-500 text-purple-300 text-[8px] p-1 rounded">
+                            Compromise</div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Thomas%E2%80%93Kilmann_Conflict_Mode_Instrument"
+                        target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 12. Rumsfeld Matrix -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-fuchsia-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">12. Known/Unknowns</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Categorizing risk by knowledge and awareness.</p>
+
+                    <div class="aspect-square grid grid-cols-2 grid-rows-2 gap-1 bg-slate-800 p-1 rounded-lg">
+                        <div
+                            class="bg-green-900/30 border border-green-800 flex flex-col items-center justify-center text-center">
+                            <span class="text-[9px] text-green-400 font-bold">KNOWN<br>KNOWNS</span>
+                            <span class="text-[8px] text-slate-500 mt-1">Facts</span>
+                        </div>
+                        <div
+                            class="bg-yellow-900/30 border border-yellow-800 flex flex-col items-center justify-center text-center">
+                            <span class="text-[9px] text-yellow-400 font-bold">KNOWN<br>UNKNOWNS</span>
+                            <span class="text-[8px] text-slate-500 mt-1">Questions</span>
+                        </div>
+                        <div
+                            class="bg-blue-900/30 border border-blue-800 flex flex-col items-center justify-center text-center">
+                            <span class="text-[9px] text-blue-400 font-bold">UNKNOWN<br>KNOWNS</span>
+                            <span class="text-[8px] text-slate-500 mt-1">Intuition</span>
+                        </div>
+                        <div
+                            class="bg-red-900/30 border border-red-800 flex flex-col items-center justify-center text-center">
+                            <span class="text-[9px] text-red-400 font-bold">UNKNOWN<br>UNKNOWNS</span>
+                            <span class="text-[8px] text-slate-500 mt-1">Discovery</span>
+                        </div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/There_are_known_knowns" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 13. BCG Matrix -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-green-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">13. BCG Matrix</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Balancing product portfolio by growth and market
+                        share.
+                    </p>
+
+                    <div
+                        class="aspect-square relative grid grid-cols-2 grid-rows-2 gap-1 font-semibold text-xs text-white text-center select-none">
+                        <div
+                            class="absolute -left-6 top-1/2 -translate-y-1/2 -rotate-90 text-slate-600 text-[10px] font-normal tracking-widest">
+                            MARKET GROWTH</div>
+                        <div
+                            class="absolute -bottom-5 left-1/2 -translate-x-1/2 text-slate-600 text-[10px] font-normal tracking-widest">
+                            MARKET SHARE</div>
+
+                        <div
+                            class="bg-yellow-600/20 border border-yellow-600/50 rounded-tl-lg flex flex-col items-center justify-center p-2">
+
+                            <span class="text-[9px] text-yellow-300">Question Mark</span>
+                        </div>
+                        <div
+                            class="bg-green-600/20 border border-green-600/50 rounded-tr-lg flex flex-col items-center justify-center p-2">
+
+                            <span class="text-[9px] text-green-300">Star</span>
+                        </div>
+                        <div
+                            class="bg-red-600/20 border border-red-600/50 rounded-bl-lg flex flex-col items-center justify-center p-2">
+
+                            <span class="text-[9px] text-red-300">Dog</span>
+                        </div>
+                        <div
+                            class="bg-blue-600/20 border border-blue-600/50 rounded-br-lg flex flex-col items-center justify-center p-2">
+
+                            <span class="text-[9px] text-blue-300">Cash Cow</span>
+                        </div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Growth%E2%80%93share_matrix" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 14. Diffusion of Innovations -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-cyan-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">14. Innovation Curve</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">How new ideas and technologies spread through
+                        cultures.
+                    </p>
+
+                    <div class="aspect-square relative flex items-end justify-between px-2 pb-4 gap-1">
+                        <!-- Bars approximating a Bell Curve -->
+                        <div class="w-[10%] h-[15%] bg-cyan-900 rounded-t flex items-end justify-center"><span
+                                class="text-[7px] -rotate-90 mb-2 text-cyan-300">Innovators</span></div>
+                        <div class="w-[20%] h-[40%] bg-cyan-700 rounded-t flex items-end justify-center"><span
+                                class="text-[7px] -rotate-90 mb-4 text-cyan-200">Early Adopters</span></div>
+                        <div class="w-[25%] h-[80%] bg-cyan-600 rounded-t flex items-end justify-center"><span
+                                class="text-[7px] -rotate-90 mb-8 text-white">Early Majority</span></div>
+                        <div class="w-[25%] h-[80%] bg-cyan-800 rounded-t flex items-end justify-center"><span
+                                class="text-[7px] -rotate-90 mb-8 text-cyan-200">Late Majority</span></div>
+                        <div class="w-[15%] h-[30%] bg-slate-700 rounded-t flex items-end justify-center"><span
+                                class="text-[7px] -rotate-90 mb-4 text-slate-400">Laggards</span></div>
+
+                        <!-- Bell Curve Line Overlay -->
+                        <svg class="absolute inset-0 w-full h-full pointer-events-none pb-4" preserveAspectRatio="none">
+                            <path d="M0,100 C 20,100 30,20 50,10 S 80,100 100,100" stroke="white" stroke-width="2"
+                                fill="none" stroke-opacity="0.2" vector-effect="non-scaling-stroke" />
+                        </svg>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Diffusion_of_innovations" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 15. The 5 Whys -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-orange-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">15. The 5 Whys</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Drilling down to the root cause of a problem.</p>
+
+                    <div class="aspect-square flex flex-col justify-between py-2">
+                        <div class="bg-slate-800 p-2 rounded text-center border-l-4 border-slate-600">
+                            <span class="text-[10px] text-slate-300">Problem Statement</span>
+                        </div>
+                        <div class="flex flex-col gap-1 items-center">
+                            <div class="flex items-center gap-2 w-full justify-center">
+
+                                <span class="text-[9px] text-orange-400 font-bold">WHY?</span>
+                            </div>
+                            <div class="w-3/4 h-1 bg-slate-800 rounded"></div>
+                            <div class="flex items-center gap-2 w-full justify-center">
+
+                                <span class="text-[9px] text-orange-400/80 font-bold">WHY?</span>
+                            </div>
+                            <div class="w-2/3 h-1 bg-slate-800 rounded"></div>
+                            <div class="flex items-center gap-2 w-full justify-center">
+
+                                <span class="text-[9px] text-orange-400/60 font-bold">WHY?</span>
+                            </div>
+                            <div class="w-1/2 h-1 bg-slate-800 rounded"></div>
+                        </div>
+                        <div class="bg-orange-900/40 p-2 rounded text-center border-l-4 border-orange-500">
+                            <span class="text-[10px] text-orange-200 font-bold">ROOT CAUSE</span>
+                        </div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Five_whys" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 16. Situational Leadership -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-violet-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">16. Situational Leadership</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Adapting leadership style to team maturity.</p>
+
+                    <div
+                        class="aspect-square relative grid grid-cols-2 grid-rows-2 gap-1 font-semibold text-xs text-white text-center select-none">
+                        <div
+                            class="absolute -left-6 top-1/2 -translate-y-1/2 -rotate-90 text-slate-600 text-[10px] font-normal tracking-widest">
+                            SUPPORTIVE</div>
+                        <div
+                            class="absolute -bottom-5 left-1/2 -translate-x-1/2 text-slate-600 text-[10px] font-normal tracking-widest">
+                            DIRECTIVE</div>
+
+                        <div
+                            class="bg-violet-600/20 border border-violet-600/50 rounded-tl-lg flex flex-col items-center justify-center p-2">
+                            <span class="text-[9px] text-violet-300">S3: Supporting</span>
+                            <span class="text-[7px] text-slate-400 font-normal">High Support / Low Direction</span>
+                        </div>
+                        <div
+                            class="bg-violet-600/40 border border-violet-600/50 rounded-tr-lg flex flex-col items-center justify-center p-2">
+                            <span class="text-[9px] text-violet-200">S2: Coaching</span>
+                            <span class="text-[7px] text-slate-400 font-normal">High Support / High Direction</span>
+                        </div>
+                        <div
+                            class="bg-slate-800 border border-slate-700 rounded-bl-lg flex flex-col items-center justify-center p-2">
+                            <span class="text-[9px] text-slate-300">S4: Delegating</span>
+                            <span class="text-[7px] text-slate-500 font-normal">Low Support / Low Direction</span>
+                        </div>
+                        <div
+                            class="bg-violet-600/60 border border-violet-600/50 rounded-br-lg flex flex-col items-center justify-center p-2">
+                            <span class="text-[9px] text-white">S1: Directing</span>
+                            <span class="text-[7px] text-slate-300 font-normal">Low Support / High Direction</span>
+                        </div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Situational_leadership_theory" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 17. Black Swan Theory -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-gray-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">17. Black Swan Theory</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">High-profile, hard-to-predict, and rare outlier
+                        events.
+                    </p>
+
+                    <div
+                        class="aspect-square relative flex items-center justify-center bg-slate-950 rounded border border-slate-800">
+                        <svg class="w-full h-full p-4" viewBox="0 0 100 100">
+                            <!-- Bell Curve Distribution -->
+                            <path d="M5,90 Q 25,90 40,50 Q 50,10 60,50 Q 75,90 95,90" stroke="#64748b" stroke-width="2"
+                                fill="none" />
+
+                            <!-- The Black Swan Event (Outlier) -->
+                            <line x1="90" y1="90" x2="90" y2="40" stroke="#ef4444" stroke-width="1"
+                                stroke-dasharray="2,2" />
+                            <circle cx="90" cy="40" r="3" fill="#ef4444" />
+
+                            <!-- Label -->
+                            <text x="88" y="30" fill="#ef4444" font-size="8" text-anchor="end"
+                                font-weight="bold">Outlier</text>
+                        </svg>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Black_swan_theory" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 18. GROW Model -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-emerald-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">18. GROW Model</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">A simple framework for coaching and goal setting.
+                    </p>
+
+                    <div class="aspect-square flex flex-col items-center justify-center gap-2">
+                        <div class="flex gap-2 w-full">
+                            <div class="bg-emerald-900/30 border border-emerald-800 rounded p-2 flex-1 text-center">
+                                <span class="block text-lg font-bold text-emerald-400">G</span>
+                                <span class="text-[8px] text-emerald-200">GOAL</span>
+                            </div>
+                            <div class="bg-emerald-900/30 border border-emerald-800 rounded p-2 flex-1 text-center">
+                                <span class="block text-lg font-bold text-emerald-400">R</span>
+                                <span class="text-[8px] text-emerald-200">REALITY</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 w-full">
+                            <div class="bg-emerald-900/30 border border-emerald-800 rounded p-2 flex-1 text-center">
+                                <span class="block text-lg font-bold text-emerald-400">O</span>
+                                <span class="text-[8px] text-emerald-200">OPTIONS</span>
+                            </div>
+                            <div class="bg-emerald-900/30 border border-emerald-800 rounded p-2 flex-1 text-center">
+                                <span class="block text-lg font-bold text-emerald-400">W</span>
+                                <span class="text-[8px] text-emerald-200">WILL</span>
+                            </div>
+                        </div>
+                        <div class="text-[9px] text-slate-500 mt-2 text-center">
+                            "Where are you going?<br>Where are you now?<br>What can you do?<br>What will you do?"
+                        </div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/GROW_model" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 19. SCAMPER (Added) -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-pink-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">19. SCAMPER</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Creative thinking technique to improve
+                        products/ideas.
+                    </p>
+                    <div class="aspect-square flex flex-col justify-center space-y-1">
+                        <div
+                            class="flex justify-between items-center px-2 py-1 bg-pink-900/20 rounded border border-pink-800/30">
+                            <span class="text-pink-400 font-bold text-xs">S</span><span
+                                class="text-[10px] text-slate-400">Substitute</span>
+                        </div>
+                        <div
+                            class="flex justify-between items-center px-2 py-1 bg-pink-900/20 rounded border border-pink-800/30">
+                            <span class="text-pink-400 font-bold text-xs">C</span><span
+                                class="text-[10px] text-slate-400">Combine</span>
+                        </div>
+                        <div
+                            class="flex justify-between items-center px-2 py-1 bg-pink-900/20 rounded border border-pink-800/30">
+                            <span class="text-pink-400 font-bold text-xs">A</span><span
+                                class="text-[10px] text-slate-400">Adapt</span>
+                        </div>
+                        <div
+                            class="flex justify-between items-center px-2 py-1 bg-pink-900/20 rounded border border-pink-800/30">
+                            <span class="text-pink-400 font-bold text-xs">M</span><span
+                                class="text-[10px] text-slate-400">Modify</span>
+                        </div>
+                        <div
+                            class="flex justify-between items-center px-2 py-1 bg-pink-900/20 rounded border border-pink-800/30">
+                            <span class="text-pink-400 font-bold text-xs">P</span><span
+                                class="text-[10px] text-slate-400">Put to use</span>
+                        </div>
+                        <div
+                            class="flex justify-between items-center px-2 py-1 bg-pink-900/20 rounded border border-pink-800/30">
+                            <span class="text-pink-400 font-bold text-xs">E</span><span
+                                class="text-[10px] text-slate-400">Eliminate</span>
+                        </div>
+                        <div
+                            class="flex justify-between items-center px-2 py-1 bg-pink-900/20 rounded border border-pink-800/30">
+                            <span class="text-pink-400 font-bold text-xs">R</span><span
+                                class="text-[10px] text-slate-400">Reverse</span>
+                        </div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/SCAMPER" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 20. Cognitive Dissonance (Added) -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-red-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">20. Cog. Dissonance</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Mental discomfort when beliefs contradict actions.
+                    </p>
+                    <div class="aspect-square relative flex items-center justify-center">
+                        <div
+                            class="absolute left-4 top-1/2 -translate-y-1/2 w-16 h-16 bg-blue-900/40 rounded-full border border-blue-500 flex items-center justify-center z-10">
+                            <span class="text-[9px] text-blue-200">Belief</span>
+                        </div>
+                        <div
+                            class="absolute right-4 top-1/2 -translate-y-1/2 w-16 h-16 bg-red-900/40 rounded-full border border-red-500 flex items-center justify-center z-10">
+                            <span class="text-[9px] text-red-200">Action</span>
+                        </div>
+                        <!-- Jagged line -->
+                        <svg class="absolute w-8 h-8 z-20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" class="text-yellow-400"
+                                fill="rgba(250, 204, 21, 0.2)" />
+                        </svg>
+                        <span class="absolute bottom-4 text-[10px] text-slate-500">Tension requiring
+                            resolution</span>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Cognitive_dissonance" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 21. Stakeholder Analysis (Added) -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-blue-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">21. Stakeholders</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Mapping stakeholders by Interest vs. Power.</p>
+                    <div
+                        class="aspect-square relative grid grid-cols-2 grid-rows-2 gap-1 font-semibold text-xs text-white text-center select-none">
+                        <div
+                            class="absolute -left-6 top-1/2 -translate-y-1/2 -rotate-90 text-slate-600 text-[10px] font-normal tracking-widest">
+                            POWER</div>
+                        <div
+                            class="absolute -bottom-5 left-1/2 -translate-x-1/2 text-slate-600 text-[10px] font-normal tracking-widest">
+                            INTEREST</div>
+
+                        <div
+                            class="bg-blue-600/40 border border-blue-600/50 rounded-tl-lg flex flex-col items-center justify-center p-2">
+                            <span class="text-[9px] text-blue-200">Keep Satisfied</span>
+                        </div>
+                        <div
+                            class="bg-blue-600/80 border border-blue-600/50 rounded-tr-lg flex flex-col items-center justify-center p-2">
+                            <span class="text-[9px] text-white">Manage Closely</span>
+                        </div>
+                        <div
+                            class="bg-slate-800 border border-slate-700 rounded-bl-lg flex flex-col items-center justify-center p-2">
+                            <span class="text-[9px] text-slate-400">Monitor</span>
+                        </div>
+                        <div
+                            class="bg-blue-600/40 border border-blue-600/50 rounded-br-lg flex flex-col items-center justify-center p-2">
+                            <span class="text-[9px] text-blue-200">Keep Informed</span>
+                        </div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Stakeholder_analysis" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 22. Communication Model (Added) -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-teal-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">22. Communication</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Shannon-Weaver: Source, Encoder, Channel, Noise,
+                        Receiver.</p>
+                    <div class="aspect-square flex flex-col items-center justify-center space-y-2">
+                        <div class="flex items-center gap-2 w-full">
+                            <div
+                                class="w-8 h-8 rounded-full bg-teal-900 border border-teal-500 flex items-center justify-center text-[8px]">
+                                Source</div>
+                            <div class="h-0.5 bg-slate-600 flex-1"></div>
+                            <div
+                                class="w-8 h-8 rounded bg-slate-800 border border-slate-600 flex items-center justify-center text-[8px]">
+                                Encode</div>
+                        </div>
+                        <div class="flex items-center gap-2 w-full justify-center relative">
+                            <div class="w-0.5 h-8 bg-slate-600 absolute left-1/2 -translate-x-1/2 -top-4"></div>
+                            <div
+                                class="p-2 border-2 border-dashed border-teal-500/50 rounded w-full text-center relative">
+                                <span class="text-[9px] text-teal-400">CHANNEL</span>
+
+                                <!-- Noise -->
+                            </div>
+                            <div class="w-0.5 h-8 bg-slate-600 absolute left-1/2 -translate-x-1/2 -bottom-4"></div>
+                        </div>
+                        <div class="flex items-center gap-2 w-full mt-4">
+                            <div
+                                class="w-8 h-8 rounded bg-slate-800 border border-slate-600 flex items-center justify-center text-[8px]">
+                                Decode</div>
+                            <div class="h-0.5 bg-slate-600 flex-1"></div>
+                            <div
+                                class="w-8 h-8 rounded-full bg-teal-900 border border-teal-500 flex items-center justify-center text-[8px]">
+                                Receiver</div>
+                        </div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Shannon%E2%80%93Weaver_model" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 23. Gap Analysis (Added) -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-orange-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">23. Gap Analysis</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Comparing current performance with desired
+                        potential.
+                    </p>
+                    <div class="aspect-square relative flex items-center justify-center px-4">
+                        <!-- Current State -->
+                        <div
+                            class="absolute left-0 bottom-8 w-1/3 h-24 bg-slate-800 border-t-4 border-slate-600 rounded-t flex items-end justify-center pb-2">
+                            <span class="text-[9px] text-slate-400">Current</span>
+                        </div>
+
+                        <!-- Desired State -->
+                        <div
+                            class="absolute right-0 bottom-8 w-1/3 h-40 bg-orange-900/30 border-t-4 border-orange-500 rounded-t flex items-end justify-center pb-2">
+                            <span class="text-[9px] text-orange-400">Desired</span>
+                        </div>
+
+                        <!-- The Gap -->
+                        <div class="absolute bottom-32 left-1/3 w-1/3 text-center">
+                            <div class="border-b border-dashed border-slate-500 w-full mb-1"></div>
+                            <span class="text-[10px] font-bold text-red-400">THE GAP</span>
+
+                        </div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Gap_analysis" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 24. Political Compass (Added) -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-indigo-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">24. Political Compass</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Mapping ideology on Authoritarian/Libertarian &
+                        Left/Right axes.</p>
+                    <div class="aspect-square grid grid-cols-2 grid-rows-2 gap-0.5 bg-slate-700 p-0.5 rounded relative">
+                        <div class="absolute top-0 left-1/2 -translate-x-1/2 -mt-4 text-[8px] text-slate-400">
+                            AUTHORITARIAN</div>
+                        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 -mb-4 text-[8px] text-slate-400">
+                            LIBERTARIAN</div>
+                        <div
+                            class="absolute left-0 top-1/2 -translate-y-1/2 -ml-4 -rotate-90 text-[8px] text-slate-400">
+                            LEFT</div>
+                        <div
+                            class="absolute right-0 top-1/2 -translate-y-1/2 -mr-4 -rotate-90 text-[8px] text-slate-400">
+                            RIGHT</div>
+
+                        <div class="bg-red-500/30 flex items-center justify-center"><span
+                                class="text-[8px] text-red-200">Auth Left</span></div>
+                        <div class="bg-blue-500/30 flex items-center justify-center"><span
+                                class="text-[8px] text-blue-200">Auth Right</span></div>
+                        <div class="bg-green-500/30 flex items-center justify-center"><span
+                                class="text-[8px] text-green-200">Lib Left</span></div>
+                        <div class="bg-purple-500/30 flex items-center justify-center"><span
+                                class="text-[8px] text-purple-200">Lib Right</span></div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/The_Political_Compass" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 25. SuperMemo / Spaced Repetition (Added) -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-lime-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">25. Spaced Repetition</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Optimizing learning by reviewing at increasing
+                        intervals.</p>
+                    <div class="aspect-square relative border-l border-b border-slate-600 p-2">
+                        <div class="absolute left-2 top-2 text-[8px] text-lime-400">Retention</div>
+                        <div class="absolute right-2 bottom-2 text-[8px] text-slate-400">Time</div>
+
+                        <!-- Forgetting Curve 1 -->
+                        <svg class="absolute inset-0 w-full h-full p-2" viewBox="0 0 100 100"
+                            preserveAspectRatio="none">
+                            <path d="M0,10 Q20,80 40,90" stroke="#475569" stroke-width="1" fill="none"
+                                stroke-dasharray="2 2" />
+                            <!-- Review 1 boost -->
+                            <path d="M40,90 L40,10" stroke="#84cc16" stroke-width="1" fill="none" />
+                            <!-- Forgetting Curve 2 (flatter) -->
+                            <path d="M40,10 Q70,60 100,70" stroke="#84cc16" stroke-width="2" fill="none" />
+                        </svg>
+                        <div
+                            class="absolute bottom-8 left-1/2 text-[9px] text-lime-200 bg-slate-800 px-1 rounded border border-lime-500/50">
+                            Review</div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/SuperMemo" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 26. Black Box Model (Added) -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-gray-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">26. Black Box</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Focusing on inputs and outputs without knowing
+                        internal
+                        workings.</p>
+                    <div class="aspect-square flex items-center justify-between">
+                        <div class="flex flex-col items-center">
+
+                            <span class="text-[8px] text-slate-400 mt-1">INPUT</span>
+                        </div>
+
+                        <div
+                            class="w-24 h-24 bg-slate-950 border-2 border-slate-700 flex items-center justify-center shadow-inner rounded relative overflow-hidden">
+                            <div
+                                class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-slate-800 to-slate-950 opacity-50">
+                            </div>
+                            <span class="text-2xl font-bold text-slate-600">?</span>
+                        </div>
+
+                        <div class="flex flex-col items-center">
+
+                            <span class="text-[8px] text-slate-400 mt-1">OUTPUT</span>
+                        </div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Black_box" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 27. Morphological Analysis (Added) -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-fuchsia-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">27. Morphological Box</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Breaking problems into parameters and combining
+                        them.
+                    </p>
+                    <div class="aspect-square flex flex-col justify-center gap-1 text-[8px] text-center">
+                        <div class="grid grid-cols-3 gap-1">
+                            <div class="bg-slate-800 p-1 rounded text-slate-500">P1</div>
+                            <div class="bg-fuchsia-900/40 border border-fuchsia-500/50 p-1 rounded text-fuchsia-200">
+                                Option A</div> <!-- Selected -->
+                            <div class="bg-slate-800 p-1 rounded text-slate-500">Option B</div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-1">
+                            <div class="bg-slate-800 p-1 rounded text-slate-500">P2</div>
+                            <div class="bg-slate-800 p-1 rounded text-slate-500">Option C</div>
+                            <div class="bg-fuchsia-900/40 border border-fuchsia-500/50 p-1 rounded text-fuchsia-200">
+                                Option D</div> <!-- Selected -->
+                        </div>
+                        <div class="grid grid-cols-3 gap-1">
+                            <div class="bg-slate-800 p-1 rounded text-slate-500">P3</div>
+                            <div class="bg-fuchsia-900/40 border border-fuchsia-500/50 p-1 rounded text-fuchsia-200">
+                                Option E</div> <!-- Selected -->
+                            <div class="bg-slate-800 p-1 rounded text-slate-500">Option F</div>
+                        </div>
+                        <div class="mt-2 text-fuchsia-400 font-bold text-[9px]">New Combination: A-D-E</div>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Morphological_analysis_(problem-solving)" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+            <!-- 28. RACI Matrix (Added) -->
+            <div
+                class="model-card bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-lg hover:shadow-cyan-500/10">
+                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-white">28. RACI Matrix</h3>
+
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-6 h-10">Clarifying roles: Responsible, Accountable,
+                        Consulted,
+                        Informed.</p>
+
+                    <div class="aspect-square flex items-center justify-center p-2">
+                        <table class="w-full text-center text-[8px] border-collapse">
+                            <thead>
+                                <tr class="text-cyan-400 font-bold border-b border-slate-700">
+                                    <th class="p-1 text-left text-slate-500">Task</th>
+                                    <th class="p-1">R</th>
+                                    <th class="p-1">A</th>
+                                    <th class="p-1">C</th>
+                                    <th class="p-1">I</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-slate-300">
+                                <tr class="border-b border-slate-800">
+                                    <td class="p-2 text-left font-semibold">Plan</td>
+                                    <td class="p-2 bg-cyan-900/30 text-cyan-200 rounded">X</td>
+                                    <td class="p-2"></td>
+                                    <td class="p-2 bg-slate-800/50 rounded">X</td>
+                                    <td class="p-2"></td>
+                                </tr>
+                                <tr class="border-b border-slate-800">
+                                    <td class="p-2 text-left font-semibold">Build</td>
+                                    <td class="p-2"></td>
+                                    <td class="p-2 bg-cyan-700/40 text-cyan-100 rounded font-bold">X</td>
+                                    <td class="p-2"></td>
+                                    <td class="p-2 bg-slate-800/50 rounded">X</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 text-left font-semibold">Test</td>
+                                    <td class="p-2 bg-cyan-900/30 text-cyan-200 rounded">X</td>
+                                    <td class="p-2"></td>
+                                    <td class="p-2"></td>
+                                    <td class="p-2 bg-slate-800/50 rounded">X</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <a href="https://en.wikipedia.org/wiki/Responsibility_assignment_matrix" target="_blank"
+                        class="mt-6 inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                        Read on Wikipedia
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <site-footer></site-footer>
+
+
+
+    </div>
+
+
+    <script type="module" src="/main.js"></script>
+</body>
+
+</html>

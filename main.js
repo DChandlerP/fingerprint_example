@@ -93,6 +93,9 @@ class SiteNav extends HTMLElement {
                 <a href="threatmodel.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="shield-alert" class="mr-2 w-4 h-4"></i>Threat Model
                 </a>
+                <a href="strategies.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <i data-lucide="brain-circuit" class="mr-2 w-4 h-4"></i>Strategic Thinking
+                </a>
                 <a href="usprivacytimeline.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="flag" class="mr-2 w-4 h-4"></i>US Privacy Timeline
                 </a>
