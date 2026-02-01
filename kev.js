@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Configuration ---
     const CISA_URL = 'https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json';
-    const PROXY_URL = 'https://corsproxy.io/?' + encodeURIComponent(CISA_URL);
+    const PROXY_URL = 'kev_data.json';
     const CACHE_KEY = 'cisa_kev_data_v2'; // Bumped version to invalidate old cache
     const CACHE_DURATION = 1000 * 60 * 60 * 24; // 24 Hours
 
