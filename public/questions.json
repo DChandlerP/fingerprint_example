@@ -1,0 +1,4577 @@
+[
+  {
+    "id": 21,
+    "text": "Who is considered a \"covered entity\" required to comply with the ADA’s employment provisions?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Any private employer with at least 5 employees."
+      },
+      {
+        "label": "B",
+        "text": "Employers with 15 or more employees, employment agencies, and labor unions."
+      },
+      {
+        "label": "C",
+        "text": "Only federal and state government agencies."
+      },
+      {
+        "label": "D",
+        "text": "Any business that offers services to the public, regardless of employee count."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Title I of the ADA applies to private employers with 15 or more employees, as well as employment agencies and labor unions.\nWhy not others: Smaller employers (<15) are generally exempt from the federal ADA (though state laws may still apply).",
+    "category": "Americans with Disabilities Act (ADA)"
+  },
+  {
+    "id": 22,
+    "text": "How did the ADA Amendments Act of 2008 (ADAAA) change the definition of \"disability\"?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It narrowed the definition to exclude mental impairments."
+      },
+      {
+        "label": "B",
+        "text": "It required that a disability be permanent rather than episodic."
+      },
+      {
+        "label": "C",
+        "text": "It expanded the definition to include episodic conditions or those in remission."
+      },
+      {
+        "label": "D",
+        "text": "It restricted the definition to only those conditions that cannot be corrected by medication."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: The ADAAA was enacted to overturn Supreme Court decisions that had too narrowly defined disability. It explicitly states that an impairment that is episodic or in remission is a disability if it would substantially limit a major life activity when active.\nWhy not others: It *broadened* the scope, explicitly rejecting the idea that mitigating measures (like medication) should be considered when determining if a disability exists (refuting D).",
+    "category": "Americans with Disabilities Act (ADA)"
+  },
+  {
+    "id": 23,
+    "text": "According to the substantive rules of the ADA, when is an employer permitted to require a medical examination of a job applicant?",
+    "options": [
+      {
+        "label": "A",
+        "text": "At any stage of the application process to ensure the candidate is fit for work."
+      },
+      {
+        "label": "B",
+        "text": "Only after a conditional offer of employment has been extended."
+      },
+      {
+        "label": "C",
+        "text": "Only if the applicant mentions they have a physical impairment."
+      },
+      {
+        "label": "D",
+        "text": "Medical exams are strictly prohibited at all stages of employment."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The ADA strictly prohibits medical exams *before* an offer is made to prevent discrimination based on perceived disabilities. Once a conditional offer is made, an employer can require an exam, provided all entering employees in that category are subject to the same exam.\nWhy not others: Pre-offer exams (A) are illegal.",
+    "category": "Americans with Disabilities Act (ADA)"
+  },
+  {
+    "id": 24,
+    "text": "Under the ADA, an employer must provide \"reasonable accommodation\" to a qualified individual unless the employer can demonstrate that the accommodation would:",
+    "options": [
+      {
+        "label": "A",
+        "text": "Cost more than the employee's starting salary."
+      },
+      {
+        "label": "B",
+        "text": "Result in an \"undue hardship\" involving significant difficulty or expense."
+      },
+      {
+        "label": "C",
+        "text": "Be visible to other employees in the workplace."
+      },
+      {
+        "label": "D",
+        "text": "Require the employer to change the essential functions of the job."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Undue Hardship is the specific legal standard for declining an accommodation. It is determined by looking at the nature and cost of the accommodation in relation to the size and resources of the employer.\nWhy not others: Changing \"essential functions\" (D) is not required; the employee must be able to perform them (with or without accommodation).",
+    "category": "Americans with Disabilities Act (ADA)"
+  },
+  {
+    "id": 25,
+    "text": "Which agency is responsible for the federal administrative enforcement of the ADA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The Federal Trade Commission (FTC)."
+      },
+      {
+        "label": "B",
+        "text": "The Equal Employment Opportunity Commission (EEOC)."
+      },
+      {
+        "label": "C",
+        "text": "The Department of Health and Human Services (HHS)."
+      },
+      {
+        "label": "D",
+        "text": "The Consumer Financial Protection Bureau (CFPB)."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The EEOC enforces Title I of the ADA (employment).\nWhy not others: The FTC handles consumer protection/privacy; HHS handles medical privacy (HIPAA).",
+    "category": "Americans with Disabilities Act (ADA)"
+  },
+  {
+    "id": 26,
+    "text": "Regarding legal remedies, which of the following is true of the ADA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It lacks a private right of action, meaning only the government can sue."
+      },
+      {
+        "label": "B",
+        "text": "State Attorneys General have primary authority to enforce it via civil penalties."
+      },
+      {
+        "label": "C",
+        "text": "It permits private causes of action in the same way as Title VII of the Civil Rights Act."
+      },
+      {
+        "label": "D",
+        "text": "Individuals can only seek remedies through mandatory arbitration, not in federal court."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: The ADA adopts the powers, remedies, and procedures of Title VII of the Civil Rights Act of 1964. This includes the right for individuals to file a lawsuit in federal court (a Private Right of Action) after exhausting administrative remedies with the EEOC.\nWhy not others: It is not limited to government enforcement (A).",
+    "category": "Americans with Disabilities Act (ADA)"
+  },
+  {
+    "id": 27,
+    "text": "Who is considered a \"covered entity\" required to comply with the Bank Secrecy Act (BSA)?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Only national banks and credit unions."
+      },
+      {
+        "label": "B",
+        "text": "\"Financial institutions,\" including banks, securities brokers, casinos, and card clubs."
+      },
+      {
+        "label": "C",
+        "text": "Any private business that processes more than $10,000 in cash per month."
+      },
+      {
+        "label": "D",
+        "text": "Only federal government agencies involved in monetary policy."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The BSA defines \"financial institution\" very broadly. It includes not just banks, but also broker-dealers, casinos (with revenue >$1M), card clubs, and money services businesses (MSBs).\nWhy not others: It is not limited to just banks (A) or government agencies (D). While cash processing is relevant, businesses don't become \"covered entities\" just for processing cash unless they fit the MSB definition; general businesses have reporting duties (Form 8300) but aren't the primary \"financial institutions\" regulated in the same way.",
+    "category": "Bank Secrecy Act (BSA)"
+  },
+  {
+    "id": 28,
+    "text": "What is the primary objective of the record-keeping requirements mandated by the BSA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "To help the IRS track and tax all personal income."
+      },
+      {
+        "label": "B",
+        "text": "To maintain records identified as having a \"high degree of usefulness\" in criminal or national security investigations."
+      },
+      {
+        "label": "C",
+        "text": "To provide a public database of all high-value financial transfers."
+      },
+      {
+        "label": "D",
+        "text": "To ensure that banks remain solvent during economic downturns."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: This phrase (\"high degree of usefulness\") comes directly from the statute. The purpose is to create a paper trail for law enforcement to track money laundering, tax evasion, and terrorist financing.\nWhy not others: While it aids the IRS (A), the specific statutory standard is \"usefulness\" in investigations, not just taxation.",
+    "category": "Bank Secrecy Act (BSA)"
+  },
+  {
+    "id": 29,
+    "text": "Under the BSA’s substantive rules, for what minimum period must financial institutions generally keep records useful for investigations?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Two years."
+      },
+      {
+        "label": "B",
+        "text": "Three years."
+      },
+      {
+        "label": "C",
+        "text": "Five years."
+      },
+      {
+        "label": "D",
+        "text": "Seven years."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: The standard retention period for BSA records (including Suspicious Activity Reports (SARs) and Currency Transaction Reports (CTRs)) is 5 years.\nWhy not others: 2, 3, or 7 years are standard in other laws (like some tax records), but 5 is the magic number for the BSA.",
+    "category": "Bank Secrecy Act (BSA)"
+  },
+  {
+    "id": 30,
+    "text": "Which of the following is a key requirement for financial institutions under the BSA to prevent money laundering and verify client identities?",
+    "options": [
+      {
+        "label": "A",
+        "text": "\"Know Your Customer\" (KYC) requirements."
+      },
+      {
+        "label": "B",
+        "text": "Filing a public report for every account opened by a non-citizen."
+      },
+      {
+        "label": "C",
+        "text": "Performing a credit check on every person who enters a bank."
+      },
+      {
+        "label": "D",
+        "text": "Providing the government with real-time access to all digital banking logs."
+      }
+    ],
+    "answer": "A",
+    "rationale": "Why it’s A: KYC (and CIP - Customer Identification Program) is the fundamental preventative component of the BSA (strengthened by the USA PATRIOT Act). Banks must verify who their clients are to prevent anonymity in the financial system.\nWhy not others: Real-time access (D) and public reports (B) are not requirements and would violate other privacy norms.",
+    "category": "Bank Secrecy Act (BSA)"
+  },
+  {
+    "id": 31,
+    "text": "Which agency has the primary authority to enforce the BSA through the imposition of civil penalties?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The Federal Trade Commission (FTC)."
+      },
+      {
+        "label": "B",
+        "text": "The Department of the Treasury (via FinCEN)."
+      },
+      {
+        "label": "C",
+        "text": "The Department of Justice (DOJ)."
+      },
+      {
+        "label": "D",
+        "text": "The Consumer Financial Protection Bureau (CFPB)."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The Financial Crimes Enforcement Network (FinCEN), a bureau of the U.S. Department of the Treasury, is the administrator of the BSA.\nWhy not others: The DOJ handles *criminal* prosecutions, but FinCEN handles the *civil* administration and rulemaking. The FTC/CFPB do not strictly enforce the BSA.",
+    "category": "Bank Secrecy Act (BSA)"
+  },
+  {
+    "id": 32,
+    "text": "Regarding legal remedies and enforcement, which of the following is true of the Bank Secrecy Act?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It allows individuals to sue banks for failure to report suspicious activity."
+      },
+      {
+        "label": "B",
+        "text": "It provides for a private cause of action in cases of identity theft."
+      },
+      {
+        "label": "C",
+        "text": "It does not provide for a private cause of action."
+      },
+      {
+        "label": "D",
+        "text": "State Attorneys General have the primary authority to enforce it via civil penalties."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: The BSA is a regulatory reporting statute. If a bank fails to follow it, the government fines the bank. A private citizen cannot sue a bank for failing to file a SAR, nor for filing one about them (banks actually have immunity for filing SARs).\nWhy not others: There is no mechanism for individual lawsuits (A/B).",
+    "category": "Bank Secrecy Act (BSA)"
+  },
+  {
+    "id": 33,
+    "text": "Who is primarily regulated by the Cable Communications Policy Act of 1984 regarding subscriber privacy?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Internet Service Providers (ISPs) that provide high-speed broadband."
+      },
+      {
+        "label": "B",
+        "text": "Any person providing \"cable services\" (one-way transmissions) and entities they own or control that provide wire or radio communications."
+      },
+      {
+        "label": "C",
+        "text": "Only state and local government agencies that manage public access channels."
+      },
+      {
+        "label": "D",
+        "text": "Video production companies that create content for cable networks."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The Act applies to \"cable operators.\" This definition covers companies providing one-way transmission of video/other programming.\nWhy not others: It does NOT generally apply to broadband Internet (A) (which is regulated differently, often under the Telecommunications Act or FTC oversight depending on the current net neutrality stance), nor essentially content creators (D).",
+    "category": "Cable Communications Policy Act"
+  },
+  {
+    "id": 34,
+    "text": "What type of information does the Act specifically protect?",
+    "options": [
+      {
+        "label": "A",
+        "text": "All data transmitted through a cable line, including commercial advertisements."
+      },
+      {
+        "label": "B",
+        "text": "Aggregated viewing data that does not identify specific persons."
+      },
+      {
+        "label": "C",
+        "text": "Personally identifiable information (PII) from consumers."
+      },
+      {
+        "label": "D",
+        "text": "Proprietary financial records of the cable operating company."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: The Act focuses on \"personally identifiable information\" collected by the cable operator.\nWhy not others: It explicitly excludes aggregated data (B) that does not identify particular persons. It is about subscriber privacy, not company secrets (D).",
+    "category": "Cable Communications Policy Act"
+  },
+  {
+    "id": 35,
+    "text": "Under the Act’s substantive rules, how often must a cable operator provide privacy notices to its subscribers?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Only at the time the subscriber first signs a contract for service."
+      },
+      {
+        "label": "B",
+        "text": "Every time a subscriber changes their service tier or equipment."
+      },
+      {
+        "label": "C",
+        "text": "At the time of entering into a service agreement and at least once a year thereafter."
+      },
+      {
+        "label": "D",
+        "text": "Monthly, as part of the standard billing cycle."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: This is a strict requirement of the Cable Act. Subscribers must be told about PII collection, use, and disclosure rights initially and annually.\nWhy not others: Just once (A) is insufficient; monthly (D) is not required.",
+    "category": "Cable Communications Policy Act"
+  },
+  {
+    "id": 36,
+    "text": "When is a cable operator permitted to disclose a subscriber’s personally identifiable information without prior written or electronic consent?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Whenever it is necessary to render services or conduct legitimate business activities related to cable service."
+      },
+      {
+        "label": "B",
+        "text": "If the operator receives a request from a marketing partner for lead generation."
+      },
+      {
+        "label": "C",
+        "text": "To any federal agency that provides a verbal request for national security purposes."
+      },
+      {
+        "label": "D",
+        "text": "There are no exceptions; consent is strictly required for all disclosures."
+      }
+    ],
+    "answer": "A",
+    "rationale": "Why it’s A: The Act allows disclosure *without consent* if it is \"necessary to render... service\" (e.g., giving an address to a technician or a billing processor).\nWhy not others: Marketing (B) generally requires consent or an opt-out depending on the specific nuance, but the \"service necessity\" is the primary statutory exception. Law enforcement disclosure usually requires a court order, not just a verbal request (C).",
+    "category": "Cable Communications Policy Act"
+  },
+  {
+    "id": 37,
+    "text": "Which of the following describes the federal administrative enforcement of the Act?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It is enforced exclusively by the Federal Trade Commission (FTC) as a deceptive trade practice."
+      },
+      {
+        "label": "B",
+        "text": "It is enforced under the Communications Act (overseen by the FCC)."
+      },
+      {
+        "label": "C",
+        "text": "Enforcement is handled primarily by the Department of Justice (DOJ)."
+      },
+      {
+        "label": "D",
+        "text": "The Department of Commerce (DOC) manages all enforcement through its audit program."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The Cable Act is part of the broader Communications Act of 1934. The FCC has the primary regulatory authority over cable operators.\nWhy not others: While the FTC (A) handles general privacy, the FCC handles strict comms regulations.",
+    "category": "Cable Communications Policy Act"
+  },
+  {
+    "id": 38,
+    "text": "Regarding legal remedies, what is true about the private cause of action provided by the Act?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It lacks a private right of action, so only the FCC can sue."
+      },
+      {
+        "label": "B",
+        "text": "Individuals can sue for actual damages or statutory damages of $1,000, whichever is higher, plus punitive damages and attorney's fees."
+      },
+      {
+        "label": "C",
+        "text": "Subscribers may only seek remedies if they can prove a financial loss of at least $10,000."
+      },
+      {
+        "label": "D",
+        "text": "Private lawsuits are restricted to state courts and cannot be filed in federal district court."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The Cable Act provides a robust Private Right of Action. Aggrieved subscribers can sue in federal court.\nWhy not others: It allows for statutory damages (usually $100/day or $1,000 total), so actual financial loss (C) isn't strictly required to get into court. It is NOT restricted to state courts (D).",
+    "category": "Cable Communications Policy Act"
+  },
+  {
+    "id": 39,
+    "text": "To be considered a \"business\" subject to the CCPA, a legal entity must operate for profit in California and meet which of the following revenue thresholds?",
+    "options": [
+      {
+        "label": "A",
+        "text": "More than $10 million in annual gross revenue."
+      },
+      {
+        "label": "B",
+        "text": "More than $25 million in annual gross revenue as of January 1 of the preceding year."
+      },
+      {
+        "label": "C",
+        "text": "More than $50 million in annual gross revenue."
+      },
+      {
+        "label": "D",
+        "text": "Any amount of revenue, provided it handles the data of at least 50,000 consumers."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The CCPA defines a business as a for-profit entity in CA that meets one of three thresholds: (1) >$25M gross revenue, (2) buys/sells/shares data of 100,000+ consumers/households (CPRA update from 50k), or (3) derives 50% of revenue from selling/sharing data.\nWhy not others: $10M and $50M are not the specific legislative thresholds.",
+    "category": "CCPA / CPRA"
+  },
+  {
+    "id": 40,
+    "text": "How does the CCPA define a \"consumer\" entitled to privacy rights?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Any person located within the United States who purchases goods from a California business."
+      },
+      {
+        "label": "B",
+        "text": "Any natural person who is a resident of California."
+      },
+      {
+        "label": "C",
+        "text": "Only individuals who have a registered account with a covered business."
+      },
+      {
+        "label": "D",
+        "text": "Any person, including corporations, doing business in the State of California."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: A \"consumer\" is defined broadly as a natural person who is a California resident.\nWhy not others: It excludes corporations and non-residents. It applies regardless of whether they have a registered account or have physically purchased goods (just browsing can trigger data collection).",
+    "category": "CCPA / CPRA"
+  },
+  {
+    "id": 41,
+    "text": "Under the CCPA’s \"What It Applies To\" section, which of the following is generally excluded from the definition of personal information?",
+    "options": [
+      {
+        "label": "A",
+        "text": "IP addresses and unique device identifiers."
+      },
+      {
+        "label": "B",
+        "text": "Geolocation data and browsing history."
+      },
+      {
+        "label": "C",
+        "text": "Information that has been de-identified or aggregated."
+      },
+      {
+        "label": "D",
+        "text": "Professional or employment-related information."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: The CCPA explicitly excludes de-identified or aggregated consumer information from the definition of \"personal information\" because it cannot reasonably be linked to a specific individual.\nWhy not others: IP addresses, geolocation data, and browsing history (A, B) are considered personal information.",
+    "category": "CCPA / CPRA"
+  },
+  {
+    "id": 42,
+    "text": "Which of the following is NOT one of the specific individual rights granted to California residents under the CCPA/CPRA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The right to correct inaccurate personal information."
+      },
+      {
+        "label": "B",
+        "text": "The right to opt-out of the \"selling\" or \"sharing\" of personal information."
+      },
+      {
+        "label": "C",
+        "text": "The right to absolute deletion of all data, including data required for legal compliance."
+      },
+      {
+        "label": "D",
+        "text": "The right to limit the use and disclosure of \"sensitive personal information.\""
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: The Right to Delete is NOT absolute. Businesses can retain data for specific reasons, such as completing a transaction, detecting security incidents, or complying with a legal obligation.\nWhy not others: The rights to correct (A), opt-out (B), and limit sensitive data use (D) are all core rights granted by the CPRA.",
+    "category": "CCPA / CPRA"
+  },
+  {
+    "id": 43,
+    "text": "What is the specific consent requirement for a business to \"sell\" or \"share\" the personal information of a minor aged 13 to 16?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The business must obtain the express opt-in consent of the minor."
+      },
+      {
+        "label": "B",
+        "text": "The business must obtain verifiable parental consent."
+      },
+      {
+        "label": "C",
+        "text": "No consent is required, as the default state is opt-out for all consumers."
+      },
+      {
+        "label": "D",
+        "text": "Minors in this age group are prohibited from using services that sell or share data."
+      }
+    ],
+    "answer": "A",
+    "rationale": "Why it’s A: For consumers aged 13-16, the business must get affirmative authorization (opt-in) from the minor themselves before selling/sharing data.\nWhy not others: Parental consent (B) is required only for children under 13. No consent (C) applies to adults (16+).",
+    "category": "CCPA / CPRA"
+  },
+  {
+    "id": 44,
+    "text": "Regarding organizational requirements, what must a business do to satisfy the CCPA’s \"Right to Opt-Out\"?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Require consumers to call a toll-free number during business hours."
+      },
+      {
+        "label": "B",
+        "text": "Prominently display a means for individuals to opt-out, such as a \"Do Not Sell or Share My Personal Information\" link."
+      },
+      {
+        "label": "C",
+        "text": "Send a physical letter to every consumer once per year explaining their rights."
+      },
+      {
+        "label": "D",
+        "text": "Only provide opt-out rights to consumers who pay for a premium privacy tier."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The law requires a clear and conspicuous link on the homepage titled \"Do Not Sell or Share My Personal Information\" (or honoring a recognized Opt-Out Preference Signal like GPC).\nWhy not others: Mailing letters (C) or phone-only options (A) are generally insufficient for online businesses.",
+    "category": "CCPA / CPRA"
+  },
+  {
+    "id": 45,
+    "text": "Which dedicated state-level agency is primarily responsible for enforcing the CCPA and conducting rulemaking?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The California Office of the Attorney General exclusively."
+      },
+      {
+        "label": "B",
+        "text": "The California Privacy Protection Agency (CPPA)."
+      },
+      {
+        "label": "C",
+        "text": "The California Department of Consumer Affairs."
+      },
+      {
+        "label": "D",
+        "text": "The Federal Trade Commission (FTC)."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The CPRA (which amended CCPA) created the California Privacy Protection Agency (CPPA), the first dedicated privacy agency in the US, to enforce and implement the law.\nWhy not others: The AG (A) used to enforce it exclusively, but now shares/transferred much power to the CPPA.",
+    "category": "CCPA / CPRA"
+  },
+  {
+    "id": 46,
+    "text": "What are the potential civil penalties for an intentional violation of the CCPA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Up to $1,000 per violation."
+      },
+      {
+        "label": "B",
+        "text": "Up to $2,500 per violation."
+      },
+      {
+        "label": "C",
+        "text": "Up to $7,500 per violation."
+      },
+      {
+        "label": "D",
+        "text": "A flat fine of 4% of the company's global annual revenue."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: Civil penalties are up to $2,500 for unintentional violations and up to $7,500 for intentional violations (or violations involving minors).\nWhy not others: $2,500 (B) is the cap for *accidental* violations.",
+    "category": "CCPA / CPRA"
+  },
+  {
+    "id": 47,
+    "text": "The CCPA provides a limited private right of action for consumers. In which scenario can a consumer sue a business directly?",
+    "options": [
+      {
+        "label": "A",
+        "text": "For a business’s failure to provide a proper privacy notice."
+      },
+      {
+        "label": "B",
+        "text": "For an unauthorized access and exfiltration of personal information resulting from a failure to maintain reasonable security."
+      },
+      {
+        "label": "C",
+        "text": "For any violation of the right to delete or the right to access data."
+      },
+      {
+        "label": "D",
+        "text": "Only if the consumer can prove they suffered a financial loss of at least $10,000."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The private right of action is limited *only* to data breaches where non-encrypted/non-redacted personal information is subject to unauthorized access due to a failure to maintain reasonable security.\nWhy not others: Consumers cannot sue for general privacy violations (like failure to provide notice (A) or failure to delete (C)); those are enforced by the Agency.",
+    "category": "CCPA / CPRA"
+  },
+  {
+    "id": 48,
+    "text": "What statutory damages can an individual consumer recover in a private lawsuit under the CCPA for a qualified data breach?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Actual damages only."
+      },
+      {
+        "label": "B",
+        "text": "Between $100 and $750 per consumer per incident, or actual damages, whichever is greater."
+      },
+      {
+        "label": "C",
+        "text": "Treble damages (three times the actual harm)."
+      },
+      {
+        "label": "D",
+        "text": "A maximum of $10,000 per incident, regardless of the number of consumers affected."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why not others: Under the private right of action for data breaches, consumers can recover statutory damages between $100 and $750 per consumer per incident, without needing to prove actual financial loss.",
+    "category": "CCPA / CPRA"
+  },
+  {
+    "id": 49,
+    "text": "Which of the following businesses is subject to the California Age-Appropriate Design Code Act?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Any non-profit organization that provides educational services to children in California."
+      },
+      {
+        "label": "B",
+        "text": "A for-profit entity that does business in California and derives at least 50% of its annual revenue from selling or sharing personal information."
+      },
+      {
+        "label": "C",
+        "text": "Only businesses that are physically headquartered within the State of California."
+      },
+      {
+        "label": "D",
+        "text": "Any business that collects the personal information of at least 1,000 children annually."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The AADC applies to entities that meet the definition of a \"business\" under the CCPA. Deriving 50% of revenue from data sales is one of the three thresholds to qualify as a CCPA business. To be subject to AADC, such a business must also provide services likely to be accessed by children.\nWhy not others: Non-profits (A) are generally exempt from CCPA/AADC. Being headquartered in CA (C) is not required (just \"doing business\" there). 1,000 children (D) is not a specific threshold (CCPA's data threshold is 100,000 consumers/households total).",
+    "category": "California Age-Appropriate Design Code"
+  },
+  {
+    "id": 50,
+    "text": "The Act applies to which type of digital offerings?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Only social media platforms specifically marketed to toddlers."
+      },
+      {
+        "label": "B",
+        "text": "Any \"online service, product, or feature likely to be accessed by children.\""
+      },
+      {
+        "label": "C",
+        "text": "Only websites that require a paid subscription for access."
+      },
+      {
+        "label": "D",
+        "text": "Publicly available government websites and databases."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: This is the specific scope of the law. It is broader than services \"directed at\" children (like COPPA); it includes general audience services if children are likely to access them (e.g., social media, games).\nWhy not others: It excludes delivery services, broadband providers, and government agencies (D). It is not limited to paid services (C) or toddlers (A).",
+    "category": "California Age-Appropriate Design Code"
+  },
+  {
+    "id": 51,
+    "text": "Under the Act’s substantive rules, what must a covered business complete before launching a new online product directed at children?",
+    "options": [
+      {
+        "label": "A",
+        "text": "A public financial audit."
+      },
+      {
+        "label": "B",
+        "text": "A Data Protection Impact Assessment (DPIA)."
+      },
+      {
+        "label": "C",
+        "text": "A 90-day beta testing period with a restricted user group."
+      },
+      {
+        "label": "D",
+        "text": "A formal registration with the Federal Trade Commission (FTC)."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The AADC mandates that businesses complete a DPIA for any new feature likely to be accessed by children *before* it is offered to the public. This assessment must examine risks to children's well-being.\nWhy not others: FTC registration (D) is not required by this state law.",
+    "category": "California Age-Appropriate Design Code"
+  },
+  {
+    "id": 52,
+    "text": "Which of the following design practices is specifically restricted under the California Age-Appropriate Design Code Act?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The use of high-contrast colors in mobile applications."
+      },
+      {
+        "label": "B",
+        "text": "The implementation of \"dark patterns\" designed to lead children to disclose more personal data than necessary."
+      },
+      {
+        "label": "C",
+        "text": "Requiring users to create a unique password for account security."
+      },
+      {
+        "label": "D",
+        "text": "Providing \"opt-out\" links in a standard footer menu."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The Act explicitly prohibits using dark patterns or other manipulative techniques to encourage children to provide personal information or weaken their privacy settings.\nWhy not others: Strong security (C) is encouraged, not restricted. High contrast (A) is a UI choice unrelated to privacy harm here.",
+    "category": "California Age-Appropriate Design Code"
+  },
+  {
+    "id": 53,
+    "text": "How is the California Age-Appropriate Design Code Act enforced, and what are the potential remedies?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It is enforced by the California Attorney General, with civil penalties of up to $7,500 for intentional violations per affected child."
+      },
+      {
+        "label": "B",
+        "text": "It provides a private cause of action allowing parents to sue for statutory damages of $1,000 per violation."
+      },
+      {
+        "label": "C",
+        "text": "It is enforced exclusively by the California Privacy Protection Agency (CPPA) via administrative hearings."
+      },
+      {
+        "label": "D",
+        "text": "The Act relies on self-regulation and does not permit the imposition of civil penalties."
+      }
+    ],
+    "answer": "A",
+    "rationale": "Why it’s A: Enforcement is handled by the California Attorney General. Violations carry civil penalties of up to $2,500 (negligent) or $7,500 (intentional) per affected child.\nWhy not others: There is explicitly NO Private Right of Action (B). The CPPA (C) enforces CCPA, but AADC enforcement is specifically assigned to the AG (though there is some overlap in subject matter).",
+    "category": "California Age-Appropriate Design Code"
+  },
+  {
+    "id": 54,
+    "text": "To which of the following entities does COPPA apply?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Any commercial website directed to children under 13."
+      },
+      {
+        "label": "B",
+        "text": "Any non-profit organization that provides educational services to children."
+      },
+      {
+        "label": "C",
+        "text": "Only social media companies with more than 1 million users."
+      },
+      {
+        "label": "D",
+        "text": "Any business that targets teenagers between the ages of 13 and 16."
+      }
+    ],
+    "answer": "A",
+    "rationale": "Why it’s A: COPPA applies to operators of commercial websites or online services (including apps) that are either directed to children under 13 or have actual knowledge they are collecting personal information from a child under 13.\nWhy not others: Non-profits (B) are generally exempt from FTC jurisdiction (and thus COPPA). Teenagers 13-16 (D) are not covered by COPPA (they are covered by CCPA/AADC).",
+    "category": "COPPA"
+  },
+  {
+    "id": 55,
+    "text": "Under the definition of \"Personal Information,\" what recently added identifiers are explicitly included following the 2025 amendments noted in your study guide?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Favorite hobbies and interests."
+      },
+      {
+        "label": "B",
+        "text": "Government-issued identifiers and biometric identifiers."
+      },
+      {
+        "label": "C",
+        "text": "General city and state of residence."
+      },
+      {
+        "label": "D",
+        "text": "Publicly available social media usernames."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Recent regulatory updates have modernized the definition of PI to explicitly include biometric data (fingerprints, face prints) and other identifiers that act as persistent online identifiers.\nWhy not others: Hobbies/City (A/C) alone are not PI unless combined with other identifiers.",
+    "category": "COPPA"
+  },
+  {
+    "id": 56,
+    "text": "What is the primary requirement an operator must fulfill *prior* to any collection, use, or disclosure of personal information from a child?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Post a \"Do Not Track\" signal on the home page."
+      },
+      {
+        "label": "B",
+        "text": "Provide a one-time notice to the child’s school."
+      },
+      {
+        "label": "C",
+        "text": "Obtain \"verifiable parental consent.\""
+      },
+      {
+        "label": "D",
+        "text": "Register the website with the Department of Education."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: The cornerstone of COPPA is the requirement to obtain Verifiable Parental Consent (VPC) *before* collecting data.\nWhy not others: Notice to schools (B) is a specific exception for educational apps, but VPC is the general rule. DNT signals (A) are not part of COPPA.",
+    "category": "COPPA"
+  },
+  {
+    "id": 57,
+    "text": "How does the COPPA \"Safe Harbor\" provision function?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It allows companies to avoid all data security requirements if they are based outside the U.S."
+      },
+      {
+        "label": "B",
+        "text": "It deems an entity in compliance if they follow the guidelines of an FTC-approved participating seal program."
+      },
+      {
+        "label": "C",
+        "text": "It provides total immunity from FTC enforcement for a period of five years."
+      },
+      {
+        "label": "D",
+        "text": "It exempts any website that is purely for entertainment purposes from the VPC requirement."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: COPPA incentivizes industry self-regulation by offering a \"Safe Harbor.\" If a company joins an approved program (like kidSAFE, BBB, or TRUSTe) and follows their rules, they are deemed to be in compliance with COPPA.\nWhy not others: It does not grant total immunity (C) or waive security requirements (A).",
+    "category": "COPPA"
+  },
+  {
+    "id": 58,
+    "text": "Which agency is responsible for federal administrative enforcement of COPPA, and how are violations classified?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The Department of Justice (DOJ); as criminal felonies."
+      },
+      {
+        "label": "B",
+        "text": "The Federal Communications Commission (FCC); as a breach of contract."
+      },
+      {
+        "label": "C",
+        "text": "The Federal Trade Commission (FTC); as an \"unfair or deceptive\" trade practice."
+      },
+      {
+        "label": "D",
+        "text": "The Department of Health and Human Services (HHS); as a HIPAA violation."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: The FTC has the authority to issue regulations and enforce COPPA violations. Violations are treated as unfair or deceptive acts under Section 5 of the FTC Act.\nWhy not others: The DOJ (A) typically files the suit on behalf of the FTC, but it's civil, not criminal. It is not an FCC (B) or HHS (D) matter.",
+    "category": "COPPA"
+  },
+  {
+    "id": 59,
+    "text": "Regarding legal remedies for individual consumers, which of the following is true?",
+    "options": [
+      {
+        "label": "A",
+        "text": "COPPA contains a robust private right of action allowing parents to sue for $5,000 per violation."
+      },
+      {
+        "label": "B",
+        "text": "It lacks a private cause of action, meaning individuals cannot sue under this act."
+      },
+      {
+        "label": "C",
+        "text": "Parents can only sue if they can prove a financial loss of at least $10,000."
+      },
+      {
+        "label": "D",
+        "text": "Only State Attorneys General have the authority to seek monetary damages on behalf of residents."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Like most FTC-enforced statutes, COPPA does NOT provide a private right of action. Parents cannot sue Facebook or TikTok directly for violating COPPA.\nWhy not others: State AGs can bring parens patriae suits (validating D as a partial truth, but B is the direct answer regarding consumers suing).",
+    "category": "COPPA"
+  },
+  {
+    "id": 60,
+    "text": "Who is primarily considered a \"covered entity\" required to comply with CALEA’s design mandates?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Any software developer that creates end-to-end encrypted messaging apps."
+      },
+      {
+        "label": "B",
+        "text": "\"Telecommunications carriers,\" including common carriers and those providing commercial mobile services."
+      },
+      {
+        "label": "C",
+        "text": "Only federal law enforcement agencies that conduct wiretapping."
+      },
+      {
+        "label": "D",
+        "text": "Any business that provides public Wi-Fi to customers."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: CALEA mandates that \"telecommunications carriers\" design their networks to allow for lawful intercepts. This definition has been expanded by the FCC to include broadband ISPs and VoIP providers.\nWhy not others: It generally exempts \"information services\" (A) (though the line is blurry with VoIP). Mere Wi-Fi spots (D) are not usually considered common carriers subject to these backend design rules.",
+    "category": "CALEA"
+  },
+  {
+    "id": 61,
+    "text": "What does CALEA specifically regulate regarding telecommunications carriers?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The prices they can charge for international long-distance calls."
+      },
+      {
+        "label": "B",
+        "text": "The \"equipment, facilities, or services\" used to provide communications."
+      },
+      {
+        "label": "C",
+        "text": "The length of time they must store customer billing records."
+      },
+      {
+        "label": "D",
+        "text": "The marketing strategies they use to target new subscribers."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: This is the core subject matter—the *hardware and software infrastructure* must be built in a way that allows the government to plug in a \"black box\" for wiretapping when they have a warrant.\nWhy not others: It is not a pricing (A) or marketing (D) statute.",
+    "category": "CALEA"
+  },
+  {
+    "id": 62,
+    "text": "Under CALEA’s substantive rules, what must carriers do regarding the design of their products and services?",
+    "options": [
+      {
+        "label": "A",
+        "text": "They must ensure all communications are encrypted so that law enforcement cannot read them."
+      },
+      {
+        "label": "B",
+        "text": "They must design their systems to provide access to communications as necessary to comply with a court order."
+      },
+      {
+        "label": "C",
+        "text": "They must provide a real-time, public log of all active wiretaps."
+      },
+      {
+        "label": "D",
+        "text": "They must notify subscribers immediately whenever their lines are being monitored."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: This is the \"Substantive Rule\" of CALEA, often called \"Wiretap Ready.\" Systems must be capable of isolating and intercepting communications expeditiously.\nWhy not others: Carriers are not required to decrypt (A) unless they hold the key. Notification (D) would defeat the purpose of a secret wiretap.",
+    "category": "CALEA"
+  },
+  {
+    "id": 63,
+    "text": "To ensure security and integrity, how must a surveillance capability be activated according to CALEA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It must be capable of remote activation by law enforcement without carrier involvement."
+      },
+      {
+        "label": "B",
+        "text": "It can only be activated with the affirmative intervention of an individual officer or employee of the carrier."
+      },
+      {
+        "label": "C",
+        "text": "It must require a secondary order from the FCC before activation."
+      },
+      {
+        "label": "D",
+        "text": "It must be activated automatically whenever a \"red flag\" keyword is detected in a conversation."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: This is a crucial security control. Law enforcement cannot just remotely \"flip a switch\" on their own. They must present the warrant to the carrier, and an employee of the carrier must physically or technically activate the intercept.\nWhy not others: Remote activation without carrier oversight (A) is prohibited to prevent abuse.",
+    "category": "CALEA"
+  },
+  {
+    "id": 64,
+    "text": "Which official or agency is primarily responsible for the federal enforcement of CALEA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The Federal Trade Commission (FTC)."
+      },
+      {
+        "label": "B",
+        "text": "The United States Attorney General."
+      },
+      {
+        "label": "C",
+        "text": "The Secretary of the Treasury."
+      },
+      {
+        "label": "D",
+        "text": "State Attorneys General."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: CALEA is enforced by the Attorney General (DOJ). The Attorney General can file civil actions to force carriers to comply (and seek fines of $10,000/day).\nWhy not others: It is not an FTC (consumer protection) or Treasury issue.",
+    "category": "CALEA"
+  },
+  {
+    "id": 65,
+    "text": "Regarding legal remedies, which of the following is true of CALEA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It provides a private cause of action for individuals whose calls were intercepted."
+      },
+      {
+        "label": "B",
+        "text": "It allows individuals to sue for statutory damages of $1,000 per day."
+      },
+      {
+        "label": "C",
+        "text": "It does not provide for a private cause of action."
+      },
+      {
+        "label": "D",
+        "text": "State Attorneys General have primary authority to enforce it via civil penalties."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: CALEA is a technical mandate between the government and telecom carriers. If a carrier fails to build their network correctly, the government sues them. A private individual cannot sue a carrier for violating CALEA design rules.\nWhy not others: There is no mechanism for consumers to sue (A/B).",
+    "category": "CALEA"
+  },
+  {
+    "id": 66,
+    "text": "Who is primarily required to comply with the confidentiality requirements of 42 C.F.R. Part 2?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Only state-run hospitals and clinics."
+      },
+      {
+        "label": "B",
+        "text": "Any federally funded \"program\" (Part 2 Program) and anyone who receives covered records from such a program."
+      },
+      {
+        "label": "C",
+        "text": "Only law enforcement agencies investigating drug-related crimes."
+      },
+      {
+        "label": "D",
+        "text": "Private employers with more than 50 employees who conduct drug testing."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The rule applies to federally assisted programs that hold themselves out as providing substance use diagnosis, treatment, or referral for treatment. It also follows the data (\"anyone who receives...\"), prohibiting redisclosure.\nWhy not others: It limits it to federally funded programs (unlike general HIPAA which is broader), but \"federally funded\" is interpreted broadly (tax exempt status, Medicare acceptance). It is not limited to state-run clinics (A).",
+    "category": "42 C.F.R. Part 2 (Substance Use)"
+  },
+  {
+    "id": 67,
+    "text": "What specific information does this Rule apply to?",
+    "options": [
+      {
+        "label": "A",
+        "text": "All general medical records of any patient in a federally funded hospital."
+      },
+      {
+        "label": "B",
+        "text": "Any personally identifying information in records related to the treatment of substance abuse."
+      },
+      {
+        "label": "C",
+        "text": "Only financial and billing records of patients receiving rehabilitation services."
+      },
+      {
+        "label": "D",
+        "text": "Publicly available statistics regarding local substance abuse trends."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The key to Part 2 is the stigma. It protects records that would identify an individual *as having a substance use disorder* (SUD).\nWhy not others: It does NOT cover all medical records (A); if a patient breaks a leg and goes to the ER, that record isn't Part 2 just because the hospital gets federal funds. It is specific to SUD treatment.",
+    "category": "42 C.F.R. Part 2 (Substance Use)"
+  },
+  {
+    "id": 68,
+    "text": "According to the substantive rules, which of the following is a prohibited use of covered patient records?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Using the records to coordinate care between different medical facilities."
+      },
+      {
+        "label": "B",
+        "text": "Using the records for the purposes of criminal law enforcement."
+      },
+      {
+        "label": "C",
+        "text": "Notifying a patient of their rights under the Rule."
+      },
+      {
+        "label": "D",
+        "text": "Maintaining a formal security program for electronic records."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Part 2 protects patients from having their treatment records used against them in criminal proceedings. Using these records to investigate or prosecute the patient is strictly prohibited absent a very specific court order.\nWhy not others: Care coordination (A) is a permitted purpose (often with consent).",
+    "category": "42 C.F.R. Part 2 (Substance Use)"
+  },
+  {
+    "id": 69,
+    "text": "Under which of the following circumstances may covered records be disclosed without patient consent?",
+    "options": [
+      {
+        "label": "A",
+        "text": "For any marketing purpose requested by a partner pharmaceutical company."
+      },
+      {
+        "label": "B",
+        "text": "In the case of a bona fide medical emergency."
+      },
+      {
+        "label": "C",
+        "text": "Whenever requested by a local police department for a routine background check."
+      },
+      {
+        "label": "D",
+        "text": "Records may never be disclosed without written patient consent."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Life-saving treatment takes precedence. If a patient overdoses and cannot consent, the Part 2 program can disclose relevant info to medical personnel treating the emergency.\nWhy not others: Marketing (A) always requires consent. Routine police checks (C) are absolutely prohibited.",
+    "category": "42 C.F.R. Part 2 (Substance Use)"
+  },
+  {
+    "id": 70,
+    "text": "How are federal violations of the Substance Use Disorder Patient Record Rule typically enforced?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Through civil penalties imposed by the Federal Trade Commission (FTC)."
+      },
+      {
+        "label": "B",
+        "text": "By criminal prosecution through a local United States Attorney’s Office."
+      },
+      {
+        "label": "C",
+        "text": "By administrative audits conducted by the Department of Commerce."
+      },
+      {
+        "label": "D",
+        "text": "Only through private arbitration between the patient and the provider."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Unlike HIPAA (which is civil/administrative), violation of Part 2 is a criminal offense. It is enforced by the U.S. Attorney for that judicial district.\nWhy not others: It is not an FTC (civil) matter.",
+    "category": "42 C.F.R. Part 2 (Substance Use)"
+  },
+  {
+    "id": 71,
+    "text": "Regarding legal remedies and state-level enforcement, which of the following is true?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The rule provides a robust private right of action for statutory damages."
+      },
+      {
+        "label": "B",
+        "text": "State Attorneys General have primary authority to enforce the rule via civil litigation."
+      },
+      {
+        "label": "C",
+        "text": "There is no private cause of action and no enforcement authority for State Attorneys General."
+      },
+      {
+        "label": "D",
+        "text": "Individuals may sue only if they can prove a financial loss of at least $5,000."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: This is a strict federal criminal statute. Individuals cannot sue (no PRA). Interestingly, State AGs also lack specific enforcement authority under this federal rule (unlike HIPAA).\nWhy not others: No PRA (A). AGs enforce HIPAA, not Part 2 (B).",
+    "category": "42 C.F.R. Part 2 (Substance Use)"
+  },
+  {
+    "id": 72,
+    "text": "To which of the following does the CAN-SPAM Act apply?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Only emails sent by non-profit organizations for fundraising."
+      },
+      {
+        "label": "B",
+        "text": "Any \"sender\" of a commercial email with the primary purpose of advertising goods or services, directed to or sent from the U.S."
+      },
+      {
+        "label": "C",
+        "text": "Only emails that contain sexually explicit material."
+      },
+      {
+        "label": "D",
+        "text": "All digital communications, including personal peer-to-peer emails."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: CAN-SPAM applies to commercial electronic mail messages. The \"primary purpose\" test determines if a message is commercial (advertising) or transactional.\nWhy not others: It covers all commercial email, not just explicit material. Non-profits (A) and personal emails (D) are generally exempt or not considered \"commercial.\"",
+    "category": "CAN-SPAM Act"
+  },
+  {
+    "id": 73,
+    "text": "How does CAN-SPAM distinguish between \"commercial\" and \"transactional or relationship\" messages?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Transactional messages are strictly prohibited, while commercial messages are permitted."
+      },
+      {
+        "label": "B",
+        "text": "Commercial messages must follow all rules (opt-out, identification), while transactional messages are mostly exempt except for header accuracy."
+      },
+      {
+        "label": "C",
+        "text": "Both types are treated exactly the same under the law."
+      },
+      {
+        "label": "D",
+        "text": "Transactional messages require express opt-in consent, while commercial messages require opt-out."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Transactional messages (like shipping notifications, password resets) are exempt from the opt-out and physical address requirements. They only need to ensure the header information (To, From, Subject) is not misleading. Commercial messages must follow all rules.\nWhy not others: Transactional messages are definitely permitted (A) and do not require opt-in (D).",
+    "category": "CAN-SPAM Act"
+  },
+  {
+    "id": 74,
+    "text": "Under the substantive rules for commercial emails, what is the maximum timeframe a sender has to honor a recipient’s opt-out request?",
+    "options": [
+      {
+        "label": "A",
+        "text": "48 hours."
+      },
+      {
+        "label": "B",
+        "text": "10 business days."
+      },
+      {
+        "label": "C",
+        "text": "30 calendar days."
+      },
+      {
+        "label": "D",
+        "text": "There is no specific timeframe as long as the sender makes a \"good faith effort.\""
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Senders must process opt-out requests within 10 business days.\nWhy not others: 30 days (C) is the limit for how long the opt-out mechanism must remain *available* (active) for the user to click, not the processing time.",
+    "category": "CAN-SPAM Act"
+  },
+  {
+    "id": 75,
+    "text": "What is the specific requirement for sending \"Mobile Service Commercial Messages\" (MSCMs) to wireless devices?",
+    "options": [
+      {
+        "label": "A",
+        "text": "They follow the standard opt-out rule for email."
+      },
+      {
+        "label": "B",
+        "text": "They require \"express prior authorization\" (opt-in) from the recipient."
+      },
+      {
+        "label": "C",
+        "text": "They are strictly prohibited under the Telephone Consumer Protection Act."
+      },
+      {
+        "label": "D",
+        "text": "They only require a valid physical postal address to be legal."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Unlike standard email (which is Opt-Out), commercial messages sent to wireless domains (MSCMs) generally require Opt-In (Express Prior Authorization) to prevent consumers from paying for data charges for spam.\nWhy not others: It flips the standard rule (A).",
+    "category": "CAN-SPAM Act"
+  },
+  {
+    "id": 76,
+    "text": "Which agency is the primary federal enforcer of the CAN-SPAM Act, and what are the potential penalties?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The FCC; with criminal fines up to $1 million."
+      },
+      {
+        "label": "B",
+        "text": "The FTC; with civil penalties of up to approximately $53,088 per violation."
+      },
+      {
+        "label": "C",
+        "text": "The Department of Justice; with mandatory jail time for first offenses."
+      },
+      {
+        "label": "D",
+        "text": "The Department of Commerce; through the revocation of business licenses."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The FTC is the primary enforcer. Within the last few years, the civil penalty maximum was adjusted for inflation to approximately ~$51k-$53k (historically $40k initially).\nWhy not others: It is not a criminal statute (A/C) primarily, though the DOJ can enforce criminal sanctions for egregious fraud. FCC (A) shares some jurisdiction (common carriers) but FTC is the primary named agency for general business.",
+    "category": "CAN-SPAM Act"
+  },
+  {
+    "id": 77,
+    "text": "Regarding legal remedies, who has a private right of action to sue under the CAN-SPAM Act?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Any individual consumer who receives an unsolicited email."
+      },
+      {
+        "label": "B",
+        "text": "Only state governors."
+      },
+      {
+        "label": "C",
+        "text": "Internet Access Service (IAS) providers who are adversely affected by violations."
+      },
+      {
+        "label": "D",
+        "text": "No private party has the right to sue; only the federal government can enforce it."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: This is a crucial distinction. Consumers (A) have NO private right of action. However, ISPs (like Google, Comcast) CAN sue spammers who clog their networks.\nWhy not others: State Governors/AGs (B) can sue, but the question asks about *private* rights, or implies a distinction between government and private entities. ISPs are the only private entities with standing.",
+    "category": "CAN-SPAM Act"
+  },
+  {
+    "id": 78,
+    "text": "Who is considered a \"covered entity\" under CISA for the purposes of sharing and receiving cybersecurity information?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Only federal intelligence agencies and the Department of Defense."
+      },
+      {
+        "label": "B",
+        "text": "The federal government and \"non-Federal entities,\" which include state/local governments and private entities."
+      },
+      {
+        "label": "C",
+        "text": "Only private-sector Fortune 500 companies."
+      },
+      {
+        "label": "D",
+        "text": "Any international organization that operates a data center within the United States."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: CISA is designed to facilitate two-way information sharing between the Federal Government and Non-Federal Entities (private companies, state/local/tribal governments).\nWhy not others: It is not limited to specific industries (C) or just the intelligence community (A).",
+    "category": "CISA"
+  },
+  {
+    "id": 79,
+    "text": "How does CISA define \"cyberthreat indicators\"?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Any data that reveals the identity and personal habits of a suspected hacker."
+      },
+      {
+        "label": "B",
+        "text": "Information necessary to describe or identify malicious reconnaissance, methods of intrusion, or exploitation techniques."
+      },
+      {
+        "label": "C",
+        "text": "A public list of all IP addresses associated with foreign governments."
+      },
+      {
+        "label": "D",
+        "text": "Proprietary source code belonging to a private entity that has been compromised."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: This mirrors the statutory definition. Indicators capture the technical \"how\" of an attack (malware signatures, IP addresses, phishing patterns) rather than the \"who\" (personal habits).\nWhy not others: It notably excludes personal info about the hacker's habits (A) if unrelated to the threat mechanics.",
+    "category": "CISA"
+  },
+  {
+    "id": 80,
+    "text": "Under the substantive rules of CISA, what is the nature of the information-sharing requirements for private companies?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Sharing is strictly mandatory for all entities in the critical infrastructure sector."
+      },
+      {
+        "label": "B",
+        "text": "Companies must share all \"defensive measures\" with the FTC on a quarterly basis."
+      },
+      {
+        "label": "C",
+        "text": "Sharing is entirely voluntary, and the Act imposes no affirmative disclosure obligations."
+      },
+      {
+        "label": "D",
+        "text": "Companies are required to share data only if they receive a specific request from the DHS."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: CISA is a voluntary framework. It encourages sharing by offering liability protection, but it does NOT mandate that any private company share anything (unlike breach notification laws).\nWhy not others: It is never mandatory (A/D).",
+    "category": "CISA"
+  },
+  {
+    "id": 81,
+    "text": "What privacy protection step must an entity take *before* sharing a cyberthreat indicator with the government under CISA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "They must obtain a judicial order authorizing the transfer."
+      },
+      {
+        "label": "B",
+        "text": "They must notify any individual whose data is contained within the indicator."
+      },
+      {
+        "label": "C",
+        "text": "They must use their technical capability to scrub any personal information (PII) of specific individuals not relevant to the threat."
+      },
+      {
+        "label": "D",
+        "text": "No scrubbing is required as long as the data is shared for national security purposes."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: This is the primary privacy safeguard. Entities must review indicators and remove (scrub) any PII that is not directly necessary to understand the cyber threat.\nWhy not others: Judicial orders (A) are not required for this voluntary sharing. Notification (B) is not required.",
+    "category": "CISA"
+  },
+  {
+    "id": 82,
+    "text": "Regarding legal liability, what protection does CISA provide to entities that share information in accordance with its protocols?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It provides a small tax credit for every indicator shared."
+      },
+      {
+        "label": "B",
+        "text": "It grants broad immunity from civil and criminal liability for monitoring systems and sharing threat intelligence."
+      },
+      {
+        "label": "C",
+        "text": "It provides a \"safe harbor\" from all future FTC enforcement actions."
+      },
+      {
+        "label": "D",
+        "text": "It allows companies to sue the government if the shared data is leaked."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: To encourage participation, CISA provides liability protection (immunity) to companies. They cannot be sued for monitoring their own networks or for sharing indicators with the DHS/government, provided they follow the rules (like scrubbing PII).\nWhy not others: It does not protect against FTC enforcement for *other* failures (C) (like failing to secure data), only for the act of sharing.",
+    "category": "CISA"
+  },
+  {
+    "id": 83,
+    "text": "Which of the following is a key restriction on the federal government’s use of information received under CISA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The government may only store the data for a maximum of 30 days."
+      },
+      {
+        "label": "B",
+        "text": "The government must make all shared indicators available to the public via a FOIA request."
+      },
+      {
+        "label": "C",
+        "text": "The information cannot be used by the government for regulatory enforcement actions (such as antitrust) unrelated to cybersecurity."
+      },
+      {
+        "label": "D",
+        "text": "The government is prohibited from sharing the data with other private-sector entities."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: This is a compromise to get businesses to trust the government. The data shared for security cannot be used by regulators (like the FTC or DOJ Antitrust Division) to punish the company for unrelated regulatory matters.\nWhy not others: The data is specifically EXEMPT from FOIA (B) (public disclosure).",
+    "category": "CISA"
+  },
+  {
+    "id": 84,
+    "text": "Who is considered a \"covered person\" subject to the requirements of Title X of the Dodd-Frank Act?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Only national banks with assets exceeding $10 billion."
+      },
+      {
+        "label": "B",
+        "text": "Any person offering or providing a consumer financial product or service, or an affiliate doing the same."
+      },
+      {
+        "label": "C",
+        "text": "Any private business that processes consumer credit card transactions."
+      },
+      {
+        "label": "D",
+        "text": "Only service providers that work directly with the Federal Reserve."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Title X applies broadly to any \"covered person\" who provides a financial product/service to a consumer (lenders, debt collectors, servicers), regardless of size.\nWhy not others: The $10B threshold (A) determines whether the CFPB supervises them *directly* versus a smaller regulator, but the *law* applies to all. It covers more than just Reserve service providers (D).",
+    "category": "Dodd-Frank Act"
+  },
+  {
+    "id": 85,
+    "text": "Title X prohibits \"UDAAP\" violations. What does this acronym stand for in the context of consumer financial protection?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Unfair, Deceptive, and Arbitrary Acts or Practices."
+      },
+      {
+        "label": "B",
+        "text": "Unlawful, Discriminatory, and Abusive Acts or Practices."
+      },
+      {
+        "label": "C",
+        "text": "Unfair, Deceptive, and Abusive Acts or Practices."
+      },
+      {
+        "label": "D",
+        "text": "Unauthorized, Deceptive, and Automated Acts or Practices."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: Dodd-Frank added the term \"Abusive\" to the existing FTC standard of \"Unfair\" and \"Deceptive.\" This created the new UDAAP standard.\nWhy not others: \"Arbitrary\" (A) and \"Unlawful\" (B) are not the correct terms in this specific acronym.",
+    "category": "Dodd-Frank Act"
+  },
+  {
+    "id": 86,
+    "text": "Under the Act's \"abusive\" standard, an act or practice is prohibited if it takes \"unreasonable advantage\" of a consumer’s:",
+    "options": [
+      {
+        "label": "A",
+        "text": "Lack of understanding regarding the risks, costs, or conditions of a product."
+      },
+      {
+        "label": "B",
+        "text": "Inability to pay for a product or service."
+      },
+      {
+        "label": "C",
+        "text": "Physical or mental disability."
+      },
+      {
+        "label": "D",
+        "text": "Desire to seek a lower interest rate."
+      }
+    ],
+    "answer": "A",
+    "rationale": "Why it’s A: The statute specifically defines \"abusive\" as materially interfering with a consumer's ability to understand a term OR taking unreasonable advantage of their (1) lack of understanding, (2) inability to protect their interests, or (3) reasonable reliance on the covered person.\nWhy not others: Inability to pay (B) might be an underwriting issue, but \"lack of understanding\" is the specific trigger for the *abusive* standard.",
+    "category": "Dodd-Frank Act"
+  },
+  {
+    "id": 87,
+    "text": "Which agency has broad federal enforcement authority over Dodd-Frank Title X and can seek civil penalties of over $1 million per day for knowing violations?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The Federal Trade Commission (FTC)."
+      },
+      {
+        "label": "B",
+        "text": "The Office of the Comptroller of the Currency (OCC)."
+      },
+      {
+        "label": "C",
+        "text": "The Consumer Financial Protection Bureau (CFPB)."
+      },
+      {
+        "label": "D",
+        "text": "The Securities and Exchange Commission (SEC)."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: Dodd-Frank created the CFPB specifically to be this regulator. It has massive penalty authority (tiered penalties: approx $5k/day, $25k/day, or $1M+/day for knowing violations, adjusted for inflation).\nWhy not others: The FTC (A) shares some jurisdiction but the CFPB is the primary Title X enforcer.",
+    "category": "Dodd-Frank Act"
+  },
+  {
+    "id": 88,
+    "text": "Regarding legal remedies for individuals, which of the following is true of Dodd-Frank Title X?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It provides a robust private right of action for any UDAAP violation."
+      },
+      {
+        "label": "B",
+        "text": "Individuals can only sue if they can prove actual damages exceeding $5,000."
+      },
+      {
+        "label": "C",
+        "text": "It does not provide for a private cause of action."
+      },
+      {
+        "label": "D",
+        "text": "A private cause of action is available only against \"service providers,\" not \"covered persons\"."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: Similar to the FTC Act, there is generally no private right of action for individuals to sue under the federal UDAAP standard of Title X. Enforcement is administrative (CFPB) or via State AGs.\nWhy not others: Consumers can sue under *other* laws (like FCRA or TILA), but not generally for a standalone Title X UDAAP violation.",
+    "category": "Dodd-Frank Act"
+  },
+  {
+    "id": 89,
+    "text": "How are State Attorneys General involved in the enforcement of the Consumer Financial Protection Act?",
+    "options": [
+      {
+        "label": "A",
+        "text": "They are prohibited from enforcing federal financial laws."
+      },
+      {
+        "label": "B",
+        "text": "They may bring civil actions to enforce the Act, but must provide notice to federal authorities before filing suit."
+      },
+      {
+        "label": "C",
+        "text": "They have exclusive authority to enforce the Act against national banks."
+      },
+      {
+        "label": "D",
+        "text": "They can only enforce the Act if the CFPB fails to act within 90 days."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Dodd-Frank explicitly empowers State Attorneys General to enforce its provisions (Title X) in federal or state court. They generally must consult with or notify the CFPB before filing.\nWhy not others: They are definitely not prohibited (A). They do not have *exclusive* authority (C).",
+    "category": "Dodd-Frank Act"
+  },
+  {
+    "id": 90,
+    "text": "Who is considered a \"covered entity\" required to comply with the DPPA’s disclosure restrictions?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Only private companies that sell vehicle history reports."
+      },
+      {
+        "label": "B",
+        "text": "State Departments of Motor Vehicles (DMVs) and any of their officers, employees, or contractors."
+      },
+      {
+        "label": "C",
+        "text": "Any insurance company that requests motor vehicle records."
+      },
+      {
+        "label": "D",
+        "text": "Only federal agencies that manage highway safety programs."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The DPPA is a federal statute regulating State DMVs. It prohibits them from knowingly disclosing personal information from motor vehicle records.\nWhy not others: While insurance companies (C) receive data, the compliance burden of *not disclosing* starts with the DMV.",
+    "category": "Driver's Privacy Protection Act (DPPA)"
+  },
+  {
+    "id": 91,
+    "text": "What does the DPPA specifically protect as \"personal information\"?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Records pertaining to vehicular accidents and driving violations."
+      },
+      {
+        "label": "B",
+        "text": "Information obtained by a DMV in connection with a motor vehicle record, such as a license number or address."
+      },
+      {
+        "label": "C",
+        "text": "Only the financial records of individuals paying for vehicle registration."
+      },
+      {
+        "label": "D",
+        "text": "Publicly available statistics regarding state-wide traffic fatalities."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: This is the standard definition: name, address, phone number, SSN, driver ID, photograph, medical info.\nWhy not others: The DPPA explicitly EXCLUDES information about accidents, driving violations, and legal status (A/D). This public safety data is considered public record.",
+    "category": "Driver's Privacy Protection Act (DPPA)"
+  },
+  {
+    "id": 92,
+    "text": "Under the DPPA, which of the following is classified as \"Highly Restricted Personal Information\" requiring express consent for most permissible uses?",
+    "options": [
+      {
+        "label": "A",
+        "text": "A person’s home address and telephone number."
+      },
+      {
+        "label": "B",
+        "text": "A person's photograph, Social Security Number, and medical/disability information."
+      },
+      {
+        "label": "C",
+        "text": "A person’s vehicle make, model, and year of manufacture."
+      },
+      {
+        "label": "D",
+        "text": "A person’s record of unpaid parking tickets."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The law creates a two-tier system. \"Highly Restricted\" PI (Photo, SSN, Medical) requires express consent (Opt-In) for almost any disclosure other than strict government/legal use.\nWhy not others: Addresses (A) are standard \"Personal Information,\" not \"Highly Restricted.\"",
+    "category": "Driver's Privacy Protection Act (DPPA)"
+  },
+  {
+    "id": 93,
+    "text": "According to the substantive rules, when is a DMV permitted to disclose personal information for marketing purposes?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Whenever the DMV determines it is in the public interest."
+      },
+      {
+        "label": "B",
+        "text": "Only if the state has an \"opt-out\" policy for all residents."
+      },
+      {
+        "label": "C",
+        "text": "Only if the individual has provided express \"opt-in\" consent."
+      },
+      {
+        "label": "D",
+        "text": "Marketing disclosures are strictly prohibited under all circumstances."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: Originally, the law allowed an Opt-Out. A court case (*Reno*) and subsequent amendment changed this. Now, for survey/marketing/solicitation purposes, the DMV must obtain express consent (Opt-In).\nWhy not others: Opt-Out (B) is no longer the standard for marketing.",
+    "category": "Driver's Privacy Protection Act (DPPA)"
+  },
+  {
+    "id": 94,
+    "text": "Which official has the authority to enforce the DPPA at the federal level, and what is a potential penalty for a noncompliant DMV?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The Federal Trade Commission (FTC); civil penalties of $53,088 per record."
+      },
+      {
+        "label": "B",
+        "text": "The U.S. Attorney General; civil penalties of up to $5,000 per day for substantial noncompliance."
+      },
+      {
+        "label": "C",
+        "text": "The Secretary of Transportation; revocation of all federal highway funding."
+      },
+      {
+        "label": "D",
+        "text": "State Attorneys General; criminal prosecution of DMV directors."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The U.S. Attorney General (DOJ) enforces the Act against State DMVs. The fine for a DMV in substantial noncompliance is up to $5,000 per day.\nWhy not others: It is not an FTC (A) or Transportation (C) matter.",
+    "category": "Driver's Privacy Protection Act (DPPA)"
+  },
+  {
+    "id": 95,
+    "text": "Regarding legal remedies, what is true about the private cause of action provided by the DPPA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It lacks a private right of action, meaning only the government can sue."
+      },
+      {
+        "label": "B",
+        "text": "Individuals can sue for actual damages, but the law sets a floor of $2,500 in liquidated damages."
+      },
+      {
+        "label": "C",
+        "text": "Subscribers may only seek remedies if they can prove a financial loss of at least $10,000."
+      },
+      {
+        "label": "D",
+        "text": "Private lawsuits are limited to seeking injunctive relief and do not allow for monetary damages."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The DPPA provides a private right of action against any person who knowingly obtains or discloses data for an impermissible use. The plaintiff gets actual damages, but if actual damages are low, they automatically get $2,500 liquidated damages (plus attorney's fees).\nWhy not others: No financial loss floor (C) is required. Punitive damages are also allowed (refuting D).",
+    "category": "Driver's Privacy Protection Act (DPPA)"
+  },
+  {
+    "id": 96,
+    "text": "Under the FCRA, which entity is primarily responsible for compiling consumer information to provide \"consumer reports\" to third parties for a fee?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Furnishers."
+      },
+      {
+        "label": "B",
+        "text": "Users."
+      },
+      {
+        "label": "C",
+        "text": "Consumer Reporting Agencies (CRAs)."
+      },
+      {
+        "label": "D",
+        "text": "Prudential Regulators."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: The CRA (like Equifax, Experian, TransUnion) is the regulated entity that compiles and sells the data.\nWhy not others: *Furnishers* (A) (like banks) give data to CRAs. *Users* (B) (like lenders/landlords) buy data from CRAs.",
+    "category": "Fair Credit Reporting Act (FCRA)"
+  },
+  {
+    "id": 97,
+    "text": "How does the FCRA define an \"Investigative Consumer Report\" compared to a standard consumer report?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It consists solely of credit scores and transaction history."
+      },
+      {
+        "label": "B",
+        "text": "It includes information about a consumer’s character or reputation obtained through personal interviews."
+      },
+      {
+        "label": "C",
+        "text": "It is a report used exclusively by federal law enforcement for national security."
+      },
+      {
+        "label": "D",
+        "text": "It is any report that takes more than 30 days to compile."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: This is a key FCRA distinction. If the report involves gathering subjective info (character, reputation, lifestyle) via interviews with neighbors/associates (often for employment or insurance), it is \"Investigative\" and requires special notice (within 3 days).\nWhy not others: Standard credit reports (A) are objective data, not investigative.",
+    "category": "Fair Credit Reporting Act (FCRA)"
+  },
+  {
+    "id": 98,
+    "text": "When a \"user\" takes an adverse action (such as denying credit or employment) based on a consumer report, what is their primary obligation?",
+    "options": [
+      {
+        "label": "A",
+        "text": "They must provide the consumer with an \"Adverse Action Notice\"."
+      },
+      {
+        "label": "B",
+        "text": "They must pay a statutory fee to the Consumer Financial Protection Bureau (CFPB)."
+      },
+      {
+        "label": "C",
+        "text": "They must offer the consumer an alternative product with a higher interest rate."
+      },
+      {
+        "label": "D",
+        "text": "They must notify the IRS of the consumer's credit standing."
+      }
+    ],
+    "answer": "A",
+    "rationale": "Why it’s A: The user must tell the consumer *why* they were denied. This notice must include the name of the CRA, notice of the right to obtain a free copy of the report, and the right to dispute accuracy.\nWhy not others: No fee is paid to the CFPB (B).",
+    "category": "Fair Credit Reporting Act (FCRA)"
+  },
+  {
+    "id": 99,
+    "text": "The \"Red Flags Rule,\" added by FACTA, requires financial institutions and certain creditors to:",
+    "options": [
+      {
+        "label": "A",
+        "text": "Report all cash transactions over $10,000 to FinCEN."
+      },
+      {
+        "label": "B",
+        "text": "Implement a written program to identify, detect, and mitigate patterns of identity theft."
+      },
+      {
+        "label": "C",
+        "text": "Provide a free credit report to every consumer once a month."
+      },
+      {
+        "label": "D",
+        "text": "Publicly list the names of individuals with delinquent accounts."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: FACTA (Fair and Accurate Credit Transactions Act, amending FCRA) mandated the Red Flags Rule. It specifically targets identity theft prevention by requiring written Identity Theft Prevention Programs.\nWhy not others: Reporting cash >$10k is part of the Bank Secrecy Act (BSA), not FACTA.",
+    "category": "Fair Credit Reporting Act (FCRA)"
+  },
+  {
+    "id": 100,
+    "text": "According to the Supreme Court’s ruling in *TransUnion LLC v. Ramirez*, what must a plaintiff demonstrate to have standing to sue for an FCRA violation in federal court?",
+    "options": [
+      {
+        "label": "A",
+        "text": "A mere technical violation of the statute."
+      },
+      {
+        "label": "B",
+        "text": "That they have never filed for bankruptcy."
+      },
+      {
+        "label": "C",
+        "text": "An actual, \"concrete harm\" resulting from the violation."
+      },
+      {
+        "label": "D",
+        "text": "A written referral from a State Attorney General."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: This recent (2021) landmark case limited class actions. The Court ruled that a plaintiff cannot sue just because a company failed to follow a procedure (A) (statutory violation); the plaintiff must prove they suffered actual, concrete harm (e.g., reputational damage because the inaccurate file was actually sent to a third party).",
+    "category": "Fair Credit Reporting Act (FCRA)"
+  },
+  {
+    "id": 101,
+    "text": "Which two federal agencies share the primary responsibility for enforcing the FCRA and its implementing regulations (like Regulation V)?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The FCC and the Department of Commerce."
+      },
+      {
+        "label": "B",
+        "text": "The FTC and the CFPB."
+      },
+      {
+        "label": "C",
+        "text": "The DOJ and the SEC."
+      },
+      {
+        "label": "D",
+        "text": "The Department of Education and the HHS."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The FTC was the original enforcer. Dodd-Frank transferred rulemaking authority (Regulation V) to the CFPB, but both agencies retain enforcement power over different entities (CFPB over large banks; FTC over smaller entities/general businesses).\nWhy not others: FCC (A) handles telecoms; SEC (C) handles securities.",
+    "category": "Fair Credit Reporting Act (FCRA)"
+  },
+  {
+    "id": 102,
+    "text": "Who is primarily considered a \"covered entity\" required to comply with FERPA’s privacy mandates?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Any private or public school, regardless of their funding source."
+      },
+      {
+        "label": "B",
+        "text": "Any educational agency or institution that receives funds under any program administered by the U.S. Department of Education."
+      },
+      {
+        "label": "C",
+        "text": "Only state-run universities and colleges."
+      },
+      {
+        "label": "D",
+        "text": "Any non-profit organization that provides tutoring services to children."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: FERPA's authority comes from the Spending Clause. If a school receives explicit federal funding from the Dept of Ed (which effectively all public K-12 and most public/private universities do), they must comply.\nWhy not others: Private schools that accept NO federal funding (A) are not covered.",
+    "category": "FERPA"
+  },
+  {
+    "id": 103,
+    "text": "FERPA protects \"education records,\" which are defined as records that are maintained by an educational institution and:",
+    "options": [
+      {
+        "label": "A",
+        "text": "Contain the student's medical and financial history only."
+      },
+      {
+        "label": "B",
+        "text": "Relate directly to a student."
+      },
+      {
+        "label": "C",
+        "text": "Are created exclusively by teachers for their own private use as memory aids."
+      },
+      {
+        "label": "D",
+        "text": "Include peer-graded papers that have not yet been collected by a teacher."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The definition of \"Education Record\" has three parts: (1) Directly related to a student, (2) Maintained by the agency/institution.\nWhy not others: It excludes \"sole possession\" notes (C) (memory aids) and peer-graded papers (D) before they are recorded by the teacher.",
+    "category": "FERPA"
+  },
+  {
+    "id": 104,
+    "text": "Under the substantive rules of FERPA, what is the maximum timeframe an educational institution has to comply with a request for access to education records?",
+    "options": [
+      {
+        "label": "A",
+        "text": "10 business days."
+      },
+      {
+        "label": "B",
+        "text": "30 calendar days."
+      },
+      {
+        "label": "C",
+        "text": "45 days."
+      },
+      {
+        "label": "D",
+        "text": "60 days."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: Schools must provide access to records within 45 days of the request.\nWhy not others: This is longer than the typical GDPR/CCPA active response times (often 30 days) but is the specific statutory window for FERPA.",
+    "category": "FERPA"
+  },
+  {
+    "id": 105,
+    "text": "How does FERPA generally handle the privacy of health records held by an educational institution (such as school nurse records)?",
+    "options": [
+      {
+        "label": "A",
+        "text": "They are subject to HIPAA because they contain medical information."
+      },
+      {
+        "label": "B",
+        "text": "They are subject to FERPA and are generally excluded from the HIPAA Privacy Rule."
+      },
+      {
+        "label": "C",
+        "text": "They are not protected by any federal law and are governed only by state tort law."
+      },
+      {
+        "label": "D",
+        "text": "They must be maintained in a public directory unless the student opts-out."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: This is a common overlap question. Health records maintained by a FERPA covered entity (like a school nurse) are considered \"Education Records\" and are governed by FERPA, not HIPAA. The HIPAA Privacy Rule explicitly excludes education records covered by FERPA to avoid dual regulation.\nWhy not others: They are NOT under HIPAA (A).",
+    "category": "FERPA"
+  },
+  {
+    "id": 106,
+    "text": "Which agency or office is responsible for the federal administrative enforcement of FERPA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The Federal Trade Commission (FTC)."
+      },
+      {
+        "label": "B",
+        "text": "The Department of Education’s Office of the Chief Privacy Officer (formerly the Family Policy Compliance Office)."
+      },
+      {
+        "label": "C",
+        "text": "The Department of Health and Human Services (HHS)."
+      },
+      {
+        "label": "D",
+        "text": "The Department of Justice (DOJ)."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Enforcement is handled within the Department of Education. The specific office has evolved (formerly FPCO), but it is definitely an Ed Dept function.\nWhy not others: It is not an FTC (A) or HHS (C) matter.",
+    "category": "FERPA"
+  },
+  {
+    "id": 107,
+    "text": "Regarding legal remedies for individual students or parents, which of the following is true?",
+    "options": [
+      {
+        "label": "A",
+        "text": "FERPA provides a robust private right of action for statutory damages."
+      },
+      {
+        "label": "B",
+        "text": "Individuals can sue for actual damages in federal district court if their records are leaked."
+      },
+      {
+        "label": "C",
+        "text": "It does not provide for a private cause of action."
+      },
+      {
+        "label": "D",
+        "text": "State Attorneys General have primary authority to enforce it via civil penalties."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: The Supreme Court ruled in *Gonzaga University v. Doe* that FERPA creates spending conditions, not individual rights enforceable in court. Therefore, students/parents cannot sue. The remedy is filing a complaint with the Dept of Ed, which can (theoretically) cut off funding.\nWhy not others: No PRA (A/B).",
+    "category": "FERPA"
+  },
+  {
+    "id": 108,
+    "text": "Who is the primary target of surveillance authorized under the Foreign Intelligence Surveillance Act (FISA)?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Any domestic individual suspected of a federal crime."
+      },
+      {
+        "label": "B",
+        "text": "Foreign powers or agents of a foreign power."
+      },
+      {
+        "label": "C",
+        "text": "Only non-U.S. citizens located within the United States."
+      },
+      {
+        "label": "D",
+        "text": "U.S. corporations involved in international trade."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: FISA was enacted to regulate surveillance of \"foreign power\" and \"agents of a foreign power\" within the U.S.\nWhy not others: It is not for general criminal suspects (A); for that, the government uses Title III (the Wiretap Act). \"Agents\" can include U.S. citizens (refuting C) if they are spying for a foreign nation.",
+    "category": "Foreign Intelligence Surveillance Act (FISA)"
+  },
+  {
+    "id": 109,
+    "text": "To obtain an order for electronic surveillance, the government must show that gathering foreign intelligence is a:",
+    "options": [
+      {
+        "label": "A",
+        "text": "\"Sole purpose.\""
+      },
+      {
+        "label": "B",
+        "text": "\"Primary purpose.\""
+      },
+      {
+        "label": "C",
+        "text": "\"Significant purpose\"."
+      },
+      {
+        "label": "D",
+        "text": "\"Secondary purpose\" only if a criminal warrant is also obtained."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: Originally, foreign intelligence had to be the \"primary purpose.\" The USA PATRIOT Act changed this standard to \"significant purpose,\" making it easier for law enforcement to use FISA tools where there is overlapping criminal interest.\nWhy not others: \"Primary\" (B) was the old standard. \"Sole\" (A) was never the standard.",
+    "category": "Foreign Intelligence Surveillance Act (FISA)"
+  },
+  {
+    "id": 110,
+    "text": "What authority is granted to the government under FISA Section 215?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The production of \"any tangible thing\" relevant to an authorized investigation."
+      },
+      {
+        "label": "B",
+        "text": "The immediate wiretapping of any U.S. person without a warrant."
+      },
+      {
+        "label": "C",
+        "text": "The public disclosure of all foreign intelligence targets."
+      },
+      {
+        "label": "D",
+        "text": "The mandatory decryption of all private communications by service providers."
+      }
+    ],
+    "answer": "A",
+    "rationale": "Why it’s A: Section 215 (the \"Business Records\" provision) allows the FBI to order the production of \"any tangible things\" (books, records, papers, documents). This was the controversial authority used for bulk metadata collection (until reform).\nWhy not others: Wiring/Decryption (B/D) fall under different sections or laws (like CALEA or traditional warrants).",
+    "category": "Foreign Intelligence Surveillance Act (FISA)"
+  },
+  {
+    "id": 111,
+    "text": "Under FISA Section 702, the government is authorized to conduct surveillance on which of the following groups?",
+    "options": [
+      {
+        "label": "A",
+        "text": "U.S. citizens located anywhere in the world."
+      },
+      {
+        "label": "B",
+        "text": "Non-U.S. persons reasonably believed to be located outside the United States."
+      },
+      {
+        "label": "C",
+        "text": "Any person, regardless of citizenship, who uses a U.S.-based email provider."
+      },
+      {
+        "label": "D",
+        "text": "Only individuals who have been formally charged with espionage."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Section 702 authorizes targeting non-U.S. persons outside the U.S. to acquire foreign intelligence information.\nWhy not others: It cannot intentionally target U.S. citizens (A) or anyone inside the U.S. (regardless of citizenship).",
+    "category": "Foreign Intelligence Surveillance Act (FISA)"
+  },
+  {
+    "id": 112,
+    "text": "What requirement must the government follow to limit the amount of information obtained and retained about \"United States persons\"?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Public Disclosure Procedures."
+      },
+      {
+        "label": "B",
+        "text": "Minimization Procedures."
+      },
+      {
+        "label": "C",
+        "text": "Mandatory Deletion Protocols."
+      },
+      {
+        "label": "D",
+        "text": "Privacy Impact Assessments."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: FISA strictly requires Minimization Procedures. These are specific rules adopted by the AG to minimize the acquisition and retention, and prohibit the dissemination, of non-publicly available information concerning unconsenting U.S. persons.\nWhy not others: \"Deletion Protocols\" (C) is a descriptive term, but \"Minimization Procedures\" is the legal term of art.",
+    "category": "Foreign Intelligence Surveillance Act (FISA)"
+  },
+  {
+    "id": 113,
+    "text": "Regarding legal remedies, what statutory damages can an individual seek in a private cause of action for a FISA violation?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Actual damages only."
+      },
+      {
+        "label": "B",
+        "text": "A flat fee of $10,000 per violation."
+      },
+      {
+        "label": "C",
+        "text": "$100 per day or $1,000, whichever is greater."
+      },
+      {
+        "label": "D",
+        "text": "FISA does not provide for a private cause of action."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: Unlike many other intelligence laws (or lack thereof), FISA *does* provide a private right of action for illegal surveillance. The statutory damages are actual damages, or $100/day for each day of violation, or $1,000, whichever is higher (plus punitive damages/attorney's fees).\nWhy not others: It creates specific liability for \"agents of foreign power\" or federal officers who violate the law.",
+    "category": "Foreign Intelligence Surveillance Act (FISA)"
+  },
+  {
+    "id": 114,
+    "text": "Which of the following represents the correct chronological order of enactment for these major surveillance laws?",
+    "options": [
+      {
+        "label": "A",
+        "text": "USA PATRIOT Act -> FISA -> USA FREEDOM Act."
+      },
+      {
+        "label": "B",
+        "text": "FISA -> USA PATRIOT Act -> USA FREEDOM Act."
+      },
+      {
+        "label": "C",
+        "text": "USA FREEDOM Act -> USA PATRIOT Act -> FISA."
+      },
+      {
+        "label": "D",
+        "text": "FISA -> USA FREEDOM Act -> USA PATRIOT Act."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B:",
+    "category": "Foreign Intelligence Surveillance Act (FISA)"
+  },
+  {
+    "id": 115,
+    "text": "Which law was enacted in 1978 to create a specialized court (the FISC) and establish a legal framework for foreign intelligence surveillance?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The USA PATRIOT Act."
+      },
+      {
+        "label": "B",
+        "text": "The Electronic Communications Privacy Act (ECPA)."
+      },
+      {
+        "label": "C",
+        "text": "The Foreign Intelligence Surveillance Act (FISA)."
+      },
+      {
+        "label": "D",
+        "text": "The Communications Assistance to Law Enforcement Act (CALEA)."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: FISA (1978) was passed in response to abuses of domestic surveillance (Watergate era). It established the Foreign Intelligence Surveillance Court (FISC).\nWhy not others: ECPA (B) was 1986. PATRIOT (A) was 2001.",
+    "category": "Foreign Intelligence Surveillance Act (FISA)"
+  },
+  {
+    "id": 116,
+    "text": "Which 2015 legislation amended prior authorities to end the bulk collection of telephone metadata and introduced amicus curiae experts to the FISC?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The USA PATRIOT Act."
+      },
+      {
+        "label": "B",
+        "text": "The USA FREEDOM Act."
+      },
+      {
+        "label": "C",
+        "text": "The CLOUD Act."
+      },
+      {
+        "label": "D",
+        "text": "The FISA Amendments Act of 2008."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The USA FREEDOM Act (2015) ended the bulk collection of call detail records under Section 215 and created a panel of \"amicus curiae\" (friends of the court) to advise the FISC on privacy and civil liberties.\nWhy not others: CLOUD Act (C) (2018) deals with cross-border data access.",
+    "category": "Foreign Intelligence Surveillance Act (FISA)"
+  },
+  {
+    "id": 117,
+    "text": "Which act significantly lowered the legal threshold for surveillance by changing the requirement that foreign intelligence be the \"primary purpose\" of a search to a \"significant purpose\"?",
+    "options": [
+      {
+        "label": "A",
+        "text": "FISA (Original 1978 text)."
+      },
+      {
+        "label": "B",
+        "text": "The USA PATRIOT Act."
+      },
+      {
+        "label": "C",
+        "text": "The USA FREEDOM Act."
+      },
+      {
+        "label": "D",
+        "text": "The Privacy Protection Act."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The USA PATRIOT Act (2001) amended FISA to break down the \"wall\" between criminal and intelligence investigations. It changed the \"primary purpose\" requirement to \"significant purpose,\" allowing more flexibility for law enforcement.\nWhy not others: FREEDOM Act (C) was restrictive/reformative.",
+    "category": "Foreign Intelligence Surveillance Act (FISA)"
+  },
+  {
+    "id": 118,
+    "text": "Who is considered a \"covered entity\" subject to the FTC’s Section 5 authority?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Any business or individual engaging in “practices in or affecting commerce.”"
+      },
+      {
+        "label": "B",
+        "text": "Only Fortune 500 companies with interstate operations."
+      },
+      {
+        "label": "C",
+        "text": "Only entities that have signed a voluntary \"privacy pledge.\""
+      },
+      {
+        "label": "D",
+        "text": "All legal entities, including federal and state government agencies."
+      }
+    ],
+    "answer": "A",
+    "rationale": "Why it’s A: The FTC has broad jurisdiction over nearly all commercial entities in the U.S. that engage in commerce.\nWhy not others: It excludes government agencies (D) (sovereign immunity) and is not limited to large/pledged companies (B/C).",
+    "category": "FTC Act Section 5"
+  },
+  {
+    "id": 119,
+    "text": "Which of the following groups is explicitly EXEMPT from the FTC’s Section 5 authority?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Private healthcare providers."
+      },
+      {
+        "label": "B",
+        "text": "Non-profit entities, banking institutions, and common carriers."
+      },
+      {
+        "label": "C",
+        "text": "Retailers that operate exclusively online."
+      },
+      {
+        "label": "D",
+        "text": "Foreign corporations doing business within the United States."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: These are the three major \"carve-outs.\" Banks are regulated by banking agencies (OCC, Fed, FDIC). Common carriers (telecom/transport) by FCC/DOT. Non-profits are generally exempt unless they are actually for-profit shams.\nWhy not others: Private healthcare providers (A) are covered (though HIPAA also applies, FTC can still enforce). Foreign corps (D) are covered if they touch U.S. commerce.",
+    "category": "FTC Act Section 5"
+  },
+  {
+    "id": 120,
+    "text": "Under the \"deceptive\" trade practice standard, a statement or omission must be \"material,\" meaning it is:",
+    "options": [
+      {
+        "label": "A",
+        "text": "Physically documented in a written contract."
+      },
+      {
+        "label": "B",
+        "text": "Likely to affect a consumer’s conduct or decision."
+      },
+      {
+        "label": "C",
+        "text": "Intentionally fraudulent."
+      },
+      {
+        "label": "D",
+        "text": "Related to the physical components of a product."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: This is the legal definition of materiality. If the lie wouldn't change your mind about buying the product, it's not \"material\" deception.\nWhy not others: It doesn't need to be written (A) or intentional (C) (FTC is strict liability—intent doesn't matter for the initial violation finding).",
+    "category": "FTC Act Section 5"
+  },
+  {
+    "id": 121,
+    "text": "To be considered \"unfair\" under Section 5(n), a trade practice must cause a substantial injury that is not reasonably avoidable by consumers and is:",
+    "options": [
+      {
+        "label": "A",
+        "text": "Not outweighed by countervailing benefits to consumers or competition."
+      },
+      {
+        "label": "B",
+        "text": "Supported by a material statement or omission likely to mislead a reasonable consumer."
+      },
+      {
+        "label": "C",
+        "text": "Conducted with a specific intent to harm the consumer."
+      },
+      {
+        "label": "D",
+        "text": "Prevalent across at least three different industries."
+      }
+    ],
+    "answer": "A",
+    "rationale": "Why it’s A: This is the three-part test for Unfairness codified in Section 5(n): (1) Substantial Injury, (2) Not reasonably avoidable, (3) Not outweighed by benefits.\nWhy not others: Intent (C) is irrelevant. Misleading statements (B) related to *Deception*, not Unfairness.",
+    "category": "FTC Act Section 5"
+  },
+  {
+    "id": 122,
+    "text": "Under the Magnuson-Moss Act (Section 18), the FTC can only issue rules regarding unfair or deceptive practices if it has reason to believe those practices are:",
+    "options": [
+      {
+        "label": "A",
+        "text": "Historically criminalized."
+      },
+      {
+        "label": "B",
+        "text": "\"Prevalent,\" established via prior orders or a widespread pattern of conduct."
+      },
+      {
+        "label": "C",
+        "text": "Increasing in frequency by at least 10% annually."
+      },
+      {
+        "label": "D",
+        "text": "Impacting at least one million individual consumers."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The FTC cannot just make rules on a whim. Under Mag-Moss, they must show the practice is \"prevalent\" (widespread) to justify industry-wide regulation.\nWhy not others: Criminal history (A) or specific percentages (C) are not the standard.",
+    "category": "FTC Act Section 5"
+  },
+  {
+    "id": 123,
+    "text": "When the FTC initiates a formal enforcement action, where is the matter first heard?",
+    "options": [
+      {
+        "label": "A",
+        "text": "In a local state trial court."
+      },
+      {
+        "label": "B",
+        "text": "Before a federal District Court judge."
+      },
+      {
+        "label": "C",
+        "text": "Before an Administrative Law Judge (ALJ)."
+      },
+      {
+        "label": "D",
+        "text": "Directly by the five FTC Commissioners in a public hearing."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: Formal administrative complaints go to an ALJ (unless the FTC files directly in federal court for an injunction). The ALJ holds a mini-trial.\nWhy not others: It does not go straight to the full Commission (D) or a District Court (B) for the *initial* administrative hearing (though the FTC *can* choose federal court for certain remedies).",
+    "category": "FTC Act Section 5"
+  },
+  {
+    "id": 124,
+    "text": "If a company wishes to appeal a final adverse determination by the full FTC Commission, where must the appeal be filed?",
+    "options": [
+      {
+        "label": "A",
+        "text": "A federal District Court."
+      },
+      {
+        "label": "B",
+        "text": "A federal Circuit Court of Appeal."
+      },
+      {
+        "label": "C",
+        "text": "The U.S. Supreme Court directly."
+      },
+      {
+        "label": "D",
+        "text": "The Department of Justice's Office of Consumer Protection."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Appeals from federal agencies go up to the Circuit Court of Appeals (appellate level), skipping the District Court district trial level.\nWhy not others: Not District Court (A). Supreme Court (C) is too high (requires certiorari later).",
+    "category": "FTC Act Section 5"
+  },
+  {
+    "id": 125,
+    "text": "Regarding civil penalties, what is true about the FTC's authority under the Act?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The ALJ can impose civil penalties of up to $1 million per day."
+      },
+      {
+        "label": "B",
+        "text": "The FTC can only seek civil penalties in federal court, not through administrative hearings."
+      },
+      {
+        "label": "C",
+        "text": "Civil penalties are strictly limited to the amount of the company's annual profit."
+      },
+      {
+        "label": "D",
+        "text": "The FTC has no authority to seek monetary fines under any circumstances."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The FTC generally lacks authority to impose civil monetary penalties (fines) in its own administrative courts (unlike the CFPB). To get $$ fines, it must go to Federal Court (often for violating a previous order or a specific rule like COPPA). *AMG Capital* further restricted their ability to get equitable monetary relief (disgorgement) under 13(b).\nWhy not others: The ALJ cannot impose fines (A).",
+    "category": "FTC Act Section 5"
+  },
+  {
+    "id": 126,
+    "text": "Does Section 5 of the FTC Act provide for a private right of action?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Yes, individuals can sue for up to $53,088 per violation."
+      },
+      {
+        "label": "B",
+        "text": "Yes, but only if the consumer can prove a \"concrete harm.\""
+      },
+      {
+        "label": "C",
+        "text": "No, only the government can bring suits under the FTC Act."
+      },
+      {
+        "label": "D",
+        "text": "Only for violations involving sensitive health or financial data."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: There is NO private right of action under the FTC Act. You cannot sue a company for \"Unfair/Deceptive Acts\" under federal law (though you might be able to under state \"Little FTC Acts\").\nWhy not others: A/B are false.",
+    "category": "FTC Act Section 5"
+  },
+  {
+    "id": 127,
+    "text": "Which landmark judicial decision affirmed the FTC's authority to regulate cybersecurity failures as an \"unfair\" trade practice?",
+    "options": [
+      {
+        "label": "A",
+        "text": "*AMG Capital Management, LLC v. FTC*"
+      },
+      {
+        "label": "B",
+        "text": "*FTC v. Wyndham Worldwide Corp.*"
+      },
+      {
+        "label": "C",
+        "text": "*LabMD, Inc. v. FTC*"
+      },
+      {
+        "label": "D",
+        "text": "*TransUnion LLC v. Ramirez*"
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: In *Wyndham*, the 3rd Circuit affirmed that lax cybersecurity can be \"unfair\" even if there was no specific deception/promise. It cemented the FTC's role as the primary cyber-regulator.\nWhy not others: *LabMD* (C) was a win for the other side (regarding specific order strictness). *AMG* (A) limited monetary powers.",
+    "category": "FTC Act Section 5"
+  },
+  {
+    "id": 128,
+    "text": "Who is considered a \"covered entity\" subject to the requirements of Title II of GINA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Only health insurance companies and medical providers."
+      },
+      {
+        "label": "B",
+        "text": "Any private organization with more than 500 employees."
+      },
+      {
+        "label": "C",
+        "text": "Employers, employment agencies, labor unions, and training programs."
+      },
+      {
+        "label": "D",
+        "text": "Only federal government agencies."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: Title II of GINA prohibits discrimination in employment. It applies to arguably all sectors of employment: employers (private state/local govt), unions, and training programs. (Note: Title I covers Health Insurance).\nWhy not others: It's not limited to healthcare (A) or the federal govt (D).",
+    "category": "GINA"
+  },
+  {
+    "id": 129,
+    "text": "How does GINA define \"Genetic Information\" regarding an individual?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Information about an individual's current medical symptoms and diagnosis."
+      },
+      {
+        "label": "B",
+        "text": "Information about an individual's genetic tests, those of family members, and the manifestation of disease in family members."
+      },
+      {
+        "label": "C",
+        "text": "An individual’s age, sex, and race."
+      },
+      {
+        "label": "D",
+        "text": "Only data derived from a full genome sequencing conducted by a licensed physician."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: GINA is very specific. It covers genetic tests and family medical history. Crucially, it does NOT cover the *current manifestation* of a disease in the employee themselves (that is an ADA issue, not GINA). However, the manifestation of disease in *family members* counts as \"genetic information\" (family history).\nWhy not others: It excludes current symptoms (A).",
+    "category": "GINA"
+  },
+  {
+    "id": 130,
+    "text": "Under GINA's substantive rules, what is an employer generally prohibited from doing with respect to genetic information?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Storing it in the same file as the employee's general personnel record."
+      },
+      {
+        "label": "B",
+        "text": "Using it as a basis for hiring, firing, or promotion decisions."
+      },
+      {
+        "label": "C",
+        "text": "Sharing it with the employee's direct supervisor for \"safety monitoring.\""
+      },
+      {
+        "label": "D",
+        "text": "All of the above."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: This is the core prohibition: No discrimination based on genetic info.\nWhy not others: Storing it is allowed (if kept separate, unlike A). Sharing it is strictly limited (C is generally wrong unless a specific exception applies).",
+    "category": "GINA"
+  },
+  {
+    "id": 131,
+    "text": "GINA prohibits covered entities from \"requesting, requiring, or purchasing\" genetic information. Which of the following is a primary exception to this rule?",
+    "options": [
+      {
+        "label": "A",
+        "text": "When the information is requested to determine an employee's eligibility for a standard life insurance policy."
+      },
+      {
+        "label": "B",
+        "text": "When the acquisition of the information is \"inadvertent\" (e.g., overhearing a conversation)."
+      },
+      {
+        "label": "C",
+        "text": "When the employer believes the information is necessary to ensure workplace productivity."
+      },
+      {
+        "label": "D",
+        "text": "There are no exceptions to the prohibition on requesting genetic information."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: This is the \"Water Cooler Exception.\" If a manager overhears an employee talking about their mom's cancer, it's not a violation because it was inadvertent.\nWhy not others: Productivity (C) is not a valid reason.",
+    "category": "GINA"
+  },
+  {
+    "id": 132,
+    "text": "What is the specific requirement for an employer to legally acquire genetic information as part of a voluntary wellness program?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The employee must be paid a financial bonus for participating."
+      },
+      {
+        "label": "B",
+        "text": "The information must be shared with the company's health insurance broker."
+      },
+      {
+        "label": "C",
+        "text": "Participation must be voluntary and the employer must obtain prior \"written authorization\"."
+      },
+      {
+        "label": "D",
+        "text": "The information must be verified by a third-party laboratory."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: Wellness programs are a major exception. Employers CAN ask for family history (HRA) if the employee provides voluntary, written authorization.\nWhy not others: Inducements (A) are highly regulated/restricted under recent EEOC rules to ensure voluntariness.",
+    "category": "GINA"
+  },
+  {
+    "id": 133,
+    "text": "An employer is permitted to purchase genetic information about an employee if that information is:",
+    "options": [
+      {
+        "label": "A",
+        "text": "Sold by a data broker with the employee's \"implied consent.\""
+      },
+      {
+        "label": "B",
+        "text": "\"Commercially or publicly available,\" such as in a newspaper or on a public website."
+      },
+      {
+        "label": "C",
+        "text": "Necessary to defend against a worker's compensation claim."
+      },
+      {
+        "label": "D",
+        "text": "Part of a standard background check authorized under the FCRA."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: This is the \"Newspaper Exception.\" If the info is in a newspaper, magazine, or publicly available book, the employer didn't \"request\" it illegally.\nWhy not others: Data brokers (A) are not an exception.",
+    "category": "GINA"
+  },
+  {
+    "id": 134,
+    "text": "Under which federal statute's compliance requirements is an employer permitted to request genetic information?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The Fair Labor Standards Act (FLSA)."
+      },
+      {
+        "label": "B",
+        "text": "The Occupational Safety and Health Act (OSHA)."
+      },
+      {
+        "label": "C",
+        "text": "The Family and Medical Leave Act (FMLA)."
+      },
+      {
+        "label": "D",
+        "text": "The Employee Retirement Income Security Act (ERISA)."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: If an employee asks for FMLA leave to care for a sick family member, the employer *must* ask for medical certification (which includes family history). GINA permits this receipt of info.\nWhy not others: FLSA/OSHA do not inherently require family history in the same way.",
+    "category": "GINA"
+  },
+  {
+    "id": 135,
+    "text": "Which federal agency is responsible for the administrative enforcement of GINA Title II?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The Federal Trade Commission (FTC)."
+      },
+      {
+        "label": "B",
+        "text": "The Department of Health and Human Services (HHS)."
+      },
+      {
+        "label": "C",
+        "text": "The Equal Employment Opportunity Commission (EEOC)."
+      },
+      {
+        "label": "D",
+        "text": "The Consumer Financial Protection Bureau (CFPB)."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: The EEOC enforces Title II (Employment). (HHS/Labor/Treasury enforce Title I - Health Insurance).\nWhy not others: Not FTC (A).",
+    "category": "GINA"
+  },
+  {
+    "id": 136,
+    "text": "Regarding legal remedies, how is GINA Title II enforced through the courts?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It does not provide for a private cause of action; only the EEOC can sue."
+      },
+      {
+        "label": "B",
+        "text": "It permits a private cause of action in the same way as Title VII of the Civil Rights Act of 1964."
+      },
+      {
+        "label": "C",
+        "text": "Individuals can only seek remedies through mandatory binding arbitration."
+      },
+      {
+        "label": "D",
+        "text": "Only State Attorneys General have the authority to bring civil actions for monetary damages."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: GINA piggybacks on Title VII remedies. You file an EEOC charge, get a \"Right to Sue\" letter, and then sue in federal court for damages (reinstatement, back pay, compensatory/punitive damages).\nWhy not others: It *does* have a PRA (refuting A).",
+    "category": "GINA"
+  },
+  {
+    "id": 137,
+    "text": "How does GINA Title II interact with the HIPAA Privacy Rule?",
+    "options": [
+      {
+        "label": "A",
+        "text": "GINA completely replaces HIPAA for all genetic data."
+      },
+      {
+        "label": "B",
+        "text": "Genetic information is explicitly classified as \"Protected Health Information\" (PHI) under HIPAA."
+      },
+      {
+        "label": "C",
+        "text": "Genetic information held by an employer is always exempt from HIPAA protections."
+      },
+      {
+        "label": "D",
+        "text": "GINA requires that genetic information be stored in the same database as standard medical records to ensure consistency."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: One of GINA's mandates was to modify HIPAA to explicitly state that genetic information IS health information (PHI) and thus protected by the HIPAA Privacy Rule.\nWhy not others: It doesn't replace HIPAA (A). GINA actually prohibits storing it with general personnel files (implying D is wrong; it must be kept confidential/separate).",
+    "category": "GINA"
+  },
+  {
+    "id": 138,
+    "text": "Who is considered a \"covered entity\" subject to the requirements of the GLBA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Only national banks and credit unions with assets over $10 billion."
+      },
+      {
+        "label": "B",
+        "text": "Any \"financial institution\" significantly engaged in financial activities, including \"finders\" who connect consumers with lenders."
+      },
+      {
+        "label": "C",
+        "text": "Any private business that processes more than 50,000 financial transactions annually."
+      },
+      {
+        "label": "D",
+        "text": "Only federal government agencies that oversee monetary policy."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: GLBA applies to \"financial institutions,\" defined broadly as any company significantly engaged in \"financial activities\" (lending, insuring, advising). The \"finders\" rule expanded this even further to those who just bring buyers/sellers together.\nWhy not others: It is NOT limited to banks size (A) or govt agencies (D).",
+    "category": "Gramm-Leach-Bliley Act (GLBA)"
+  },
+  {
+    "id": 139,
+    "text": "The GLBA applies to \"Nonpublic Personal Information\" (NPI). Which of the following is generally EXCLUDED from:: this definition?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Personally identifiable information provided by a consumer to a financial institution."
+      },
+      {
+        "label": "B",
+        "text": "Information obtained as a result of a transaction with or service provided to a consumer."
+      },
+      {
+        "label": "C",
+        "text": "Publicly available information or lists created without using nonpublic information."
+      },
+      {
+        "label": "D",
+        "text": "An individual's account history and credit card usage patterns."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: NPI strictly excludes publicly available information (like real estate records or phone book listings).\nWhy not others: Transaction history (B) and Account info (D) are classic NPI.",
+    "category": "Gramm-Leach-Bliley Act (GLBA)"
+  },
+  {
+    "id": 140,
+    "text": "Under the GLBA Privacy Rule, when is a financial institution required to provide a consumer with a \"short-form\" notice rather than a full initial notice?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Only if the consumer has an ongoing relationship, such as a mortgage."
+      },
+      {
+        "label": "B",
+        "text": "When the individual is a one-time \"consumer\" (e.g., using an ATM) and the institution shares their NPI with non-affiliated third parties."
+      },
+      {
+        "label": "C",
+        "text": "Every time a consumer logs into their online banking portal."
+      },
+      {
+        "label": "D",
+        "text": "Short-form notices are only permitted for non-profit financial cooperatives."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: This is the distinction between Consumer (one-off) and Customer (ongoing relationship). Customers get the full annual notice. Consumers only get a \"Short Form\" notice IF the bank shares their data. If the bank doesn't share consumer data, no notice is required for one-off transactions (like buying a money order or using an ATM).\nWhy not others: Mortgages (A) are \"Customers\" (full notice).",
+    "category": "Gramm-Leach-Bliley Act (GLBA)"
+  },
+  {
+    "id": 141,
+    "text": "Financial institutions must provide consumers an opportunity to \"opt-out\" of sharing their NPI with:",
+    "options": [
+      {
+        "label": "A",
+        "text": "Affiliated entities under common control."
+      },
+      {
+        "label": "B",
+        "text": "Service providers necessary to process transactions or service accounts."
+      },
+      {
+        "label": "C",
+        "text": "Non-affiliated third parties."
+      },
+      {
+        "label": "D",
+        "text": "Federal law enforcement agencies responding to a subpoena."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: This is the core GLBA Privacy Rule right. You can Opt-Out of sharing with Non-Affiliates.\nWhy not others: You generally CANNOT opt-out of sharing with Affiliates (A) (FCRA regulates that, but it's an Opt-Out, GLBA is stricter on non-affiliates). You definitely can't opt-out of necessary service providers (B) or law enforcement (D).",
+    "category": "Gramm-Leach-Bliley Act (GLBA)"
+  },
+  {
+    "id": 142,
+    "text": "Which of the following is a mandatory requirement for a written \"Comprehensive Information Security Program\" under the GLBA Safeguards Rule?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Designating a single \"Qualified Individual\" to oversee and enforce the security program."
+      },
+      {
+        "label": "B",
+        "text": "Reporting every minor technical glitch to the FTC within 24 hours."
+      },
+      {
+        "label": "C",
+        "text": "Encrypting only information that is \"in transit\" over internal networks."
+      },
+      {
+        "label": "D",
+        "text": "Performing vulnerability assessments once every five years."
+      }
+    ],
+    "answer": "A",
+    "rationale": "Why it’s A: The 2021 update to the Safeguards Rule explicitly requires designating a single Qualified Individual (CISO equivalent, though can be external) to be responsible for the program.\nWhy not others: Encryption must be for transit AND rest (refuting C).",
+    "category": "Gramm-Leach-Bliley Act (GLBA)"
+  },
+  {
+    "id": 143,
+    "text": "Regarding enforcement and legal remedies, which of the following is true of the GLBA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It provides a robust private right of action for individuals whose data is breached."
+      },
+      {
+        "label": "B",
+        "text": "It is enforced by prudential financial regulators, the FTC, and the CFPB, but lacks a federal private cause of action."
+      },
+      {
+        "label": "C",
+        "text": "State Attorneys General have no authority to enforce any laws equivalent to the GLBA."
+      },
+      {
+        "label": "D",
+        "text": "Penalties for violations are strictly limited to the revocation of a bank's charter."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Enforcement is split among federal banking regulators (OCC, Fed), the CFPB (Rulemaking/Privacy), and the FTC (Safeguards/Privacy for non-banks). Crucially, there is NO Private Right of Action.\nWhy not others: No PRA (A). AGs can enforce state equivalents (refuting C).",
+    "category": "Gramm-Leach-Bliley Act (GLBA)"
+  },
+  {
+    "id": 144,
+    "text": "Which of the following is considered a \"covered entity\" required to comply with HIPAA's Privacy and Security Rules?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Any employer that maintains employee health insurance records."
+      },
+      {
+        "label": "B",
+        "text": "Health plans, healthcare clearinghouses, and healthcare providers who transmit health information in electronic form."
+      },
+      {
+        "label": "C",
+        "text": "Only state and local government health departments."
+      },
+      {
+        "label": "D",
+        "text": "Any person who receives health information from a medical provider for personal use."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: This is the standard definition of a \"Covered Entity\" (CE). It includes plans (insurers), clearinghouses, and providers (doctors/hospitals) who engage in electronic billing/transactions.\nWhy not others: Employers (A) are generally NOT covered entities (unless they self-insure, but even then it's the Plan, not the employer as a whole). Individuals (D) are not covered.",
+    "category": "HIPAA"
+  },
+  {
+    "id": 145,
+    "text": "How does the HIPAA Security Rule categorize its implementation specifications for electronic Protected Health Information (ePHI)?",
+    "options": [
+      {
+        "label": "A",
+        "text": "As Mandatory, Recommended, or Optional."
+      },
+      {
+        "label": "B",
+        "text": "As \"Required\" (must be implemented) or \"Addressable\" (must be assessed for reasonableness)."
+      },
+      {
+        "label": "C",
+        "text": "As solely administrative or technical, with no physical component."
+      },
+      {
+        "label": "D",
+        "text": "As strictly voluntary guidelines with no enforcement power."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The Security Rule is flexible/scalable. \"Required\" specs must be done. \"Addressable\" specs must be assessed; if reasonable/appropriate, you do it. If not, you document why and implement an alternative equivalent measure.\nWhy not others: There is no \"Recommended\" or \"Optional\" category (A). It definitely has a Physical component (locks, guards) (refuting C).",
+    "category": "HIPAA"
+  },
+  {
+    "id": 146,
+    "text": "Under the HITECH Act amendments, what is the default standard for determining if an unauthorized use or disclosure of PHI constitutes a \"breach\"?",
+    "options": [
+      {
+        "label": "A",
+        "text": "A breach is presumed unless the entity demonstrates a \"low probability\" that the PHI was compromised based on a four-factor risk assessment."
+      },
+      {
+        "label": "B",
+        "text": "A breach occurs only if the information is actually accessed by a competitor."
+      },
+      {
+        "label": "C",
+        "text": "A breach is only recognized if it affects more than 500 individuals."
+      },
+      {
+        "label": "D",
+        "text": "Any unauthorized disclosure is automatically a breach, with no exceptions allowed."
+      }
+    ],
+    "answer": "A",
+    "rationale": "Why it’s A: Originally, the \"harm standard\" applied (only a breach if it caused harm). HITECH/Omnibus Rule changed this to the \"Low Probability of Compromise\" standard. You must assume it's a breach unless you can prove (via risk assessment) that it wasn't compromised.\nWhy not others: \"Harm\" is no longer the test.",
+    "category": "HIPAA"
+  },
+  {
+    "id": 147,
+    "text": "When a covered entity discovers a breach of PHI, what is the maximum timeframe permitted for notifying affected individuals?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Immediately upon discovery."
+      },
+      {
+        "label": "B",
+        "text": "Within 30 calendar days."
+      },
+      {
+        "label": "C",
+        "text": "Without unreasonable delay and no later than 60 days after discovery."
+      },
+      {
+        "label": "D",
+        "text": "Within 60 business days of the end of the calendar year."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: The statutory clock is 60 calendar days. Note: \"Without unreasonable delay\" is the primary rule; 60 days is just the outer limit.\nWhy not others: 30 days (B) is the GDPR/State standard often, but HIPAA allows 60.",
+    "category": "HIPAA"
+  },
+  {
+    "id": 148,
+    "text": "Which of the following describes the federal administrative enforcement structure for HIPAA violations?",
+    "options": [
+      {
+        "label": "A",
+        "text": "HHS enforces compliance through investigations and civil penalties, while the DOJ can bring criminal prosecutions."
+      },
+      {
+        "label": "B",
+        "text": "The Federal Trade Commission (FTC) has exclusive authority to impose all civil and criminal penalties."
+      },
+      {
+        "label": "C",
+        "text": "HIPAA is enforced solely through private arbitration between patients and providers."
+      },
+      {
+        "label": "D",
+        "text": "Enforcement is handled by the Department of Commerce through business license revocations."
+      }
+    ],
+    "answer": "A",
+    "rationale": "Why it’s A: HHS (OCR) handles civil enforcement (CMP). The DOJ handles criminal prosecutions for knowing misuse (up to 10 years in prison).\nWhy not others: FTC (B) can enforce privacy promises under Section 5, but they don't have *exclusive* or primary HIPAA authority (though they share jurisdiction in practice for data security).",
+    "category": "HIPAA"
+  },
+  {
+    "id": 149,
+    "text": "Regarding legal remedies for individuals, which of the following is true of HIPAA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It provides a robust private right of action for statutory damages of $1,000 per record."
+      },
+      {
+        "label": "B",
+        "text": "It does not provide for a federal private cause of action."
+      },
+      {
+        "label": "C",
+        "text": "Individuals can sue only if they can prove a financial loss of at least $10,000."
+      },
+      {
+        "label": "D",
+        "text": "A private cause of action is available against Business Associates, but not Covered Entities."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: There is NO Private Right of Action under HIPAA. You cannot sue your doctor in federal court strictly for a HIPAA violation. (You might sue for state law negligence/privacy torts using HIPAA as the standard of care, but that's a state claim).\nWhy not others: A is false.",
+    "category": "HIPAA"
+  },
+  {
+    "id": 150,
+    "text": "Who is primarily regulated by the Junk Fax Protection Act, and what is the specific medium of communication it covers?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Any entity sending unsolicited text messages to mobile devices."
+      },
+      {
+        "label": "B",
+        "text": "Any person sending \"unsolicited advertisements\" via facsimile (fax) transmissions."
+      },
+      {
+        "label": "C",
+        "text": "Only non-profit organizations sending fundraising requests via email."
+      },
+      {
+        "label": "D",
+        "text": "Common carriers who provide the telecommunications lines used for faxing."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: As the name implies, it regulates FAXES. Specifically, unsolicited advertisements sent by fax. It codified the FCC's EBR exception for faxes.\nWhy not others: Not texts (A) or emails (C).",
+    "category": "Junk Fax Protection Act"
+  },
+  {
+    "id": 151,
+    "text": "Under the \"Established Business Relationship\" (EBR) exception, a sender may legally send a commercial fax if they obtained the recipient’s number through voluntary communication or public distribution, provided they ALSO:",
+    "options": [
+      {
+        "label": "A",
+        "text": "Limit transmissions to no more than one fax per month."
+      },
+      {
+        "label": "B",
+        "text": "Include a clear and conspicuous notice on the first page explaining the recipient's right to opt-out."
+      },
+      {
+        "label": "C",
+        "text": "Pay the recipient a fee to cover the cost of ink and paper."
+      },
+      {
+        "label": "D",
+        "text": "Verify the recipient's current mailing address through the U.S. Postal Service."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Even if you have an EBR (prior business), you MUST include an Opt-Out Notice on the first page of the fax. If you don't include the notice, the fax is illegal.\nWhy not others: The fee (C) is not a requirement.",
+    "category": "Junk Fax Protection Act"
+  },
+  {
+    "id": 152,
+    "text": "Regarding legal remedies, which of the following is true about the private cause of action provided by the JFPA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It does not permit a private right of action; only the FCC can seek penalties."
+      },
+      {
+        "label": "B",
+        "text": "Individuals can sue for statutory damages of up to $500 per fax, which can be trebled for willful violations."
+      },
+      {
+        "label": "C",
+        "text": "Consumers can only seek remedies if they can prove a financial loss of at least $1,000."
+      },
+      {
+        "label": "D",
+        "text": "Lawsuits are limited to state courts and cannot be filed in federal district court."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Since the JFPA is an amendment to the TCPA, it shares the same penalty structure: Private Right of Action for $500 per violation (per fax), treble damages ($1500) for willful/knowing violations.\nWhy not others: It *does* have a PRA (refuting A).",
+    "category": "Junk Fax Protection Act"
+  },
+  {
+    "id": 153,
+    "text": "What is the primary distinction between a \"pen register\" and a \"trap and trace device\" under the statute?",
+    "options": [
+      {
+        "label": "A",
+        "text": "A pen register records incoming calls, while a trap and trace records outgoing calls."
+      },
+      {
+        "label": "B",
+        "text": "A pen register decodes outgoing dialing and routing information, while a trap and trace identifies the originating source of incoming communications."
+      },
+      {
+        "label": "C",
+        "text": "A pen register collects the content of a call, while a trap and trace collects only metadata."
+      },
+      {
+        "label": "D",
+        "text": "A pen register applies only to landline phones, while a trap and trace applies only to electronic mail."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: This is the core definition. Pen Register = Outgoing numbers dialed *by* the target. Trap and Trace = Incoming numbers dialing *to* the target. Both capture dialing/routing metadata.\nWhy not others: A has them backward. Neither collects content (C).",
+    "category": "Junk Fax Protection Act"
+  },
+  {
+    "id": 154,
+    "text": "To obtain a court order for the installation of these devices, the government must certify to a judge that the information likely to be obtained is:",
+    "options": [
+      {
+        "label": "A",
+        "text": "Based on \"probable cause\" that a specific crime has been committed."
+      },
+      {
+        "label": "B",
+        "text": "\"Relevant to an ongoing criminal investigation.\""
+      },
+      {
+        "label": "C",
+        "text": "Supported by \"specific and articulable facts\" showing the target is a foreign agent."
+      },
+      {
+        "label": "D",
+        "text": "Necessary to prevent an \"imminent and certain\" physical injury."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Collects metadata, not content, so the standard is low: just \"relevant to an investigation.\" Most importantly, if the government certifies relevance, the judge MUST issue the order; they have no discretion to deny it.\nWhy not others: It requires neither Probable Cause (A) nor Reasonable Suspicion (C).",
+    "category": "Junk Fax Protection Act"
+  },
+  {
+    "id": 155,
+    "text": "Which of the following is a \"Crucial Distinction\" regarding the type of data these devices are permitted to collect?",
+    "options": [
+      {
+        "label": "A",
+        "text": "They may collect the first 30 seconds of any audio conversation."
+      },
+      {
+        "label": "B",
+        "text": "They are strictly prohibited from collecting the \"content\" of the communication."
+      },
+      {
+        "label": "C",
+        "text": "They can collect the subject lines of emails but not the body text."
+      },
+      {
+        "label": "D",
+        "text": "They are permitted to collect content only if the target is using a public computer."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: These devices are for addressing/routing info only (phone numbers, IP headers, email To/From). They CANNOT record the \"content\" (audio, body of email).\nWhy not others: Subject lines (C) are often considered content in email contexts (unlike phone numbers), so they are generally excluded too. First 30 seconds (A) is content.",
+    "category": "Junk Fax Protection Act"
+  },
+  {
+    "id": 156,
+    "text": "Under the Act’s emergency exception (e.g., danger to life or national security), law enforcement may install a device without a prior order provided they seek one within what timeframe?",
+    "options": [
+      {
+        "label": "A",
+        "text": "24 hours."
+      },
+      {
+        "label": "B",
+        "text": "48 hours."
+      },
+      {
+        "label": "C",
+        "text": "72 hours."
+      },
+      {
+        "label": "D",
+        "text": "One week."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The statute allows immediate installation in emergencies (immediate danger of death/injury, national security threats), but a retroactive order must be sought within 48 hours.\nWhy not others: 72 hours (C) is standard for some other FISA/Title III provisions, but Pen/Trap is 48.",
+    "category": "Junk Fax Protection Act"
+  },
+  {
+    "id": 157,
+    "text": "How is a violation of this statute enforced at the federal level?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It is a criminal offense punishable by fines and up to one year of imprisonment."
+      },
+      {
+        "label": "B",
+        "text": "Through civil penalties of $53,088 imposed by the FTC."
+      },
+      {
+        "label": "C",
+        "text": "Exclusively through the withholding of federal telecommunications grants."
+      },
+      {
+        "label": "D",
+        "text": "By the revocation of the service provider’s operating license."
+      }
+    ],
+    "answer": "A",
+    "rationale": "Why it’s A: Knowing violation of the statute is a federal crime (misdemeanor level, up to 1 year).\nWhy not others: Not an FTC matter (B).",
+    "category": "Junk Fax Protection Act"
+  },
+  {
+    "id": 158,
+    "text": "Regarding legal remedies and the private sector, which of the following is true?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Individuals have a private right of action to sue for $10,000 in statutory damages."
+      },
+      {
+        "label": "B",
+        "text": "The statute provides immunity from civil liability to providers who cooperate with a valid court order."
+      },
+      {
+        "label": "C",
+        "text": "State Attorneys General have the primary authority to enforce the statute via civil litigation."
+      },
+      {
+        "label": "D",
+        "text": "Subscribers must be notified before a device is installed so they can challenge it in court."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: To ensure telecom providers help the police, the law grants them immunity from lawsuits if they provide assistance pursuant to a court order.\nWhy not others: There is generally NO private right of action for individuals under the Pen/Trap statute (unlike the Wiretap Act or Stored Communications Act, which do have PRAs). A is false.",
+    "category": "Junk Fax Protection Act"
+  },
+  {
+    "id": 159,
+    "text": "Who is primarily restricted by the Privacy Protection Act of 1980 regarding the search and seizure of journalistic materials?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Private private investigators and corporate security firms."
+      },
+      {
+        "label": "B",
+        "text": "Officers and employees of both federal and state governments."
+      },
+      {
+        "label": "C",
+        "text": "Only federal law enforcement agencies like the FBI."
+      },
+      {
+        "label": "D",
+        "text": "Any person or entity that attempts to access a journalist's private computer."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The PPA restricts \"government officers or employees\" at all levels (federal, state, and local) from searching/seizing materials from someone engaged in First Amendment activities (journalists/publishers).\nWhy not others: It does not apply to private actors (A). It applies to MORE than just feds (C).",
+    "category": "Privacy Protection Act (PPA)"
+  },
+  {
+    "id": 160,
+    "text": "The Act protects \"work product material\" and \"documentary material.\" How do these categories differ under the law?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Work product material is created by the journalist; documentary material is main source material obtained from others."
+      },
+      {
+        "label": "B",
+        "text": "Documentary material is protected by a warrant, while work product requires a subpoena."
+      },
+      {
+        "label": "C",
+        "text": "Work product applies only to digital files, while documentary material applies only to physical papers."
+      },
+      {
+        "label": "D",
+        "text": "There is no legal difference; both categories have identical exceptions and protections."
+      }
+    ],
+    "answer": "A",
+    "rationale": "Why it’s A: \"Work Product\" = the journalist's own notes, drafts, and mental impressions. \"Documentary Material\" = raw materials provided by sources (photos, recordings, documents). The PPA gives HIGHER protection to Work Product (fewer warrant exceptions).\nWhy not others: Both are protected from warrants, but Work Product is harder to get (refuting B).",
+    "category": "Privacy Protection Act (PPA)"
+  },
+  {
+    "id": 161,
+    "text": "Under the substantive rules of the PPA, what is the standard requirement for the government to obtain materials intended for public dissemination?",
+    "options": [
+      {
+        "label": "A",
+        "text": "A standard search warrant based on probable cause."
+      },
+      {
+        "label": "B",
+        "text": "The government must generally use a subpoena rather than a search warrant."
+      },
+      {
+        "label": "C",
+        "text": "A verbal request to the editor-in-chief of the news organization."
+      },
+      {
+        "label": "D",
+        "text": "A National Security Letter (NSL) issued by the Department of Justice."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The core PPA rule is: Subpoena First. A subpoena allows the journalist to challenge the request in court before handing anything over. A warrant (surprise raid) is generally prohibited unless an exception applies.\nWhy not others: A warrant (A) is the *exception*, not the rule.",
+    "category": "Privacy Protection Act (PPA)"
+  },
+  {
+    "id": 162,
+    "text": "In which of the following scenarios is the government PERMITTED to use a search warrant to seize protected materials?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Whenever the journalist refuses to comply with a standard interview request."
+      },
+      {
+        "label": "B",
+        "text": "If the journalist is suspected of a minor misdemeanor unrelated to the materials."
+      },
+      {
+        "label": "C",
+        "text": "If there is reason to believe that the seizure is necessary to prevent death or serious bodily injury."
+      },
+      {
+        "label": "D",
+        "text": "If the materials contain information about a political candidate's private life."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: This is the \"Emergency Exception\" (or Life and Limb exception). If someone is about to die, police can get a warrant to seize specific journalist materials (e.g., adequate warning of a planned bombing).\nWhy not others: Misdemeanors (B) aren't enough. The main \"Criminality Exception\" applies if the journalist *themselves* committed the crime (but NOT if the crime is just possessing the leaked docs).",
+    "category": "Privacy Protection Act (PPA)"
+  },
+  {
+    "id": 163,
+    "text": "Which exception for using a search warrant applies ONLY to \"documentary materials\" and NOT to \"work product\"?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The \"Probable Cause of Criminality\" exception."
+      },
+      {
+        "label": "B",
+        "text": "The \"Imminent Danger\" exception."
+      },
+      {
+        "label": "C",
+        "text": "If the person in possession has failed to comply with a court order and all appeals are exhausted."
+      },
+      {
+        "label": "D",
+        "text": "If the journalist consents to the search in writing."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: The PPA splits exceptions.\nBoth can be seized for: Criminal Suspect (Journalist did it) or Death/Injury.\nDocumentary ONLY can be seized for: Destruction of Evidence (reason to believe they will destroy it) or Failure to Comply with Subpoena (after appeals).\nWhy not others: You generally can *never* get a warrant for \"Work Product\" just because they ignored a subpoena; the remedy is contempt of court, not a raid.",
+    "category": "Privacy Protection Act (PPA)"
+  },
+  {
+    "id": 164,
+    "text": "Regarding legal remedies, what is the minimum amount of statutory damages a plaintiff can recover for a violation of the PPA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "$500 per violation."
+      },
+      {
+        "label": "B",
+        "text": "$1,000."
+      },
+      {
+        "label": "C",
+        "text": "$10,000."
+      },
+      {
+        "label": "D",
+        "text": "The PPA does not provide for statutory damages, only actual damages."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The PPA provides a statutory minimum of $1,000 in liquidated damages against the government entity (or officer if the entity isn't liable).\nWhy not others: It's higher than the $100/day often seen in older laws, but specifically set at $1k.",
+    "category": "Privacy Protection Act (PPA)"
+  },
+  {
+    "id": 165,
+    "text": "Who is considered a \"covered entity\" subject to the requirements of the PPRA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Any private or public educational institution, including post-secondary colleges and universities."
+      },
+      {
+        "label": "B",
+        "text": "Only elementary and secondary schools that receive federal funding."
+      },
+      {
+        "label": "C",
+        "text": "Only state-level Departments of Education."
+      },
+      {
+        "label": "D",
+        "text": "Any business that provides \"EdTech\" services to children in public schools."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Unlike FERPA (which covers colleges), the PPRA applies specifically to primary and secondary schools (K-12) that receive Dept of Ed funding.\nWhy not others: It does NOT apply to post-secondary institutions (colleges/universities) (refuting A).",
+    "category": "PPRA"
+  },
+  {
+    "id": 166,
+    "text": "Under the PPRA’s substantive rules, what must a school obtain before requiring a student to submit to a survey that would reveal sensitive information (such as political affiliations or mental problems)?",
+    "options": [
+      {
+        "label": "A",
+        "text": "A court order from a local magistrate."
+      },
+      {
+        "label": "B",
+        "text": "Informed oral consent from the student."
+      },
+      {
+        "label": "C",
+        "text": "Permission from the student's parent or guardian."
+      },
+      {
+        "label": "D",
+        "text": "Approval from the U.S. Department of Education's Student Privacy Policy Office."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: This is the core \"Survey Rights\" provision. If a federally funded survey asks about the \"8 shielded categories\" (politics, sex, religion, income, etc.), the school must get parental consent.\nWhy not others: The student cannot consent for themselves unless they are an adult (emancipated/18).",
+    "category": "PPRA"
+  },
+  {
+    "id": 167,
+    "text": "Regarding enforcement and legal remedies, which of the following is true of the PPRA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It provides parents with a private right of action to sue for statutory damages."
+      },
+      {
+        "label": "B",
+        "text": "It is enforced in a similar manner to FERPA and lacks a private cause of action."
+      },
+      {
+        "label": "C",
+        "text": "It is enforced exclusively by the Federal Trade Commission (FTC)."
+      },
+      {
+        "label": "D",
+        "text": "Violations result in mandatory criminal penalties for the school principal."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Like FERPA, the PPRA is a spending clause statute enforced by the Dept of Ed (specifically the Student Privacy Policy Office). There is no individual right to sue.\nWhy not others: No PRA (A). Not FTC (C).",
+    "category": "PPRA"
+  },
+  {
+    "id": 168,
+    "text": "Who is considered a \"customer\" whose financial records are protected from unauthorized federal access under the RFPA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Any legal entity, including large corporations and non-profits."
+      },
+      {
+        "label": "B",
+        "text": "Individuals and partnerships consisting of five or fewer people."
+      },
+      {
+        "label": "C",
+        "text": "Only individuals with assets exceeding $100,000 in a federal bank."
+      },
+      {
+        "label": "D",
+        "text": "All residents of the United States, regardless of the size of their business partnerships."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The RFPA was passed to protect individuals. It specifically limits the definition of \"customer\" to individuals or small partnerships (<5 people).\nWhy not others: It EXCLUDES corporations (A), large partnerships, and non-profits.",
+    "category": "Right to Financial Privacy Act (RFPA)"
+  },
+  {
+    "id": 169,
+    "text": "Which entities are primarily restricted by the RFPA regarding the acquisition of financial records?",
+    "options": [
+      {
+        "label": "A",
+        "text": "State and local law enforcement agencies."
+      },
+      {
+        "label": "B",
+        "text": "Private-sector employers conducting background checks."
+      },
+      {
+        "label": "C",
+        "text": "Federal government agencies and their officers."
+      },
+      {
+        "label": "D",
+        "text": "Credit reporting agencies like Equifax and TransUnion."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: The RFPA was a response to *United States v. Miller* (Supreme Court case saying you have no 4th Amendment right in bank records). Congress passed RFPA to restrict the Federal Government.\nWhy not others: It does NOT apply to State/Local police (A), nor private actors (B).",
+    "category": "Right to Financial Privacy Act (RFPA)"
+  },
+  {
+    "id": 170,
+    "text": "Before a financial institution is permitted to disclose records to a federal agency under the Act, what must the agency provide to the institution?",
+    "options": [
+      {
+        "label": "A",
+        "text": "A verbal assurance that the records will remain confidential."
+      },
+      {
+        "label": "B",
+        "text": "A written certification that it has complied with the applicable provisions of the RFPA."
+      },
+      {
+        "label": "C",
+        "text": "A formal letter of introduction from the Department of Justice."
+      },
+      {
+        "label": "D",
+        "text": "Proof that the customer has failed to pay federal taxes for three consecutive years."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: This is the bank's \"Get Out of Jail Free\" card. The bank cannot release the records until the government agency provides a Certificate of Compliance, stating they have followed all RFPA rules (e.g., notified the customer or got a valid warrant).\nWhy not others: Verbal assurance (A) is insufficient.",
+    "category": "Right to Financial Privacy Act (RFPA)"
+  },
+  {
+    "id": 171,
+    "text": "Under the RFPA’s substantive rules, which of the following is a valid method for a federal agency to obtain financial records?",
+    "options": [
+      {
+        "label": "A",
+        "text": "An informal written request without notice to the customer."
+      },
+      {
+        "label": "B",
+        "text": "A valid search warrant, which allows notice to the customer to be delayed for up to 90 days."
+      },
+      {
+        "label": "C",
+        "text": "A standard business letter from a federal agency head."
+      },
+      {
+        "label": "D",
+        "text": "A request made by a private investigator acting as a government contractor."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The government can use a Search Warrant. Unlike subpoenas (where the customer gets prior notice to challenge it), a Warrant allows the government to ask a judge to delay notice (usually 90 days) to avoid tipping off the suspect.\nWhy not others: Informal requests (A/C) are prohibited.",
+    "category": "Right to Financial Privacy Act (RFPA)"
+  },
+  {
+    "id": 172,
+    "text": "What is the minimum amount of statutory damages a customer can recover in a private lawsuit for a violation of the RFPA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "$50."
+      },
+      {
+        "label": "B",
+        "text": "$100."
+      },
+      {
+        "label": "C",
+        "text": "$1,000."
+      },
+      {
+        "label": "D",
+        "text": "The Act does not provide for statutory damages, only actual financial loss."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: RFPA provides for: Actual damages + Punitive damages + Attorney's fees + $100 statutory damages (regardless of the actual loss size).\nWhy not others: It's a small amount, but it exists (unlike D).",
+    "category": "Right to Financial Privacy Act (RFPA)"
+  },
+  {
+    "id": 173,
+    "text": "Regarding legal remedies and enforcement, which of the following is true of the RFPA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It is enforced exclusively by the Consumer Financial Protection Bureau (CFPB)."
+      },
+      {
+        "label": "B",
+        "text": "It provides a private cause of action with a three-year statute of limitations."
+      },
+      {
+        "label": "C",
+        "text": "State Attorneys General have the authority to seek civil penalties for violations of this federal act."
+      },
+      {
+        "label": "D",
+        "text": "Individuals must file a complaint with the FTC before they are permitted to sue in federal court."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Customers can sue the federal agency or the bank for violating the Act. The Statute of Limitations is 3 years.\nWhy not others: It is not an administrative enforcement scheme like CFPB (A). It's a direct private right of action for the citizen.",
+    "category": "Right to Financial Privacy Act (RFPA)"
+  },
+  {
+    "id": 174,
+    "text": "How does the SCA distinguish between an \"Electronic Communication Service\" (ECS) and a \"Remote Computing Service\" (RCS)?",
+    "options": [
+      {
+        "label": "A",
+        "text": "ECS refers to physical hardware, while RCS refers to software."
+      },
+      {
+        "label": "B",
+        "text": "ECS provides the ability to send or receive communications; RCS provides computer storage or processing services to the public."
+      },
+      {
+        "label": "C",
+        "text": "ECS is for government use only, while RCS is for private sector use."
+      },
+      {
+        "label": "D",
+        "text": "There is no legal distinction; the terms are used interchangeably in the statute."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: These are the two distinct categories of providers. ECS = email/text/phone (transit). RCS = cloud storage/data processing (storage). The distinction matters for how easily the government can get access (though *Warshak* blurred this for email).\nWhy not others: It's not about hardware vs. software (A).",
+    "category": "Stored Communications Act (SCA)"
+  },
+  {
+    "id": 175,
+    "text": "Under the SCA, what constitutes \"electronic storage\" for a wire or electronic communication?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Any data stored on a local hard drive for more than 180 days."
+      },
+      {
+        "label": "B",
+        "text": "Temporary, intermediate storage incidental to transmission, or storage for backup protection."
+      },
+      {
+        "label": "C",
+        "text": "Only data that has been encrypted by the service provider."
+      },
+      {
+        "label": "D",
+        "text": "Publicly accessible social media posts and profile information."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: This is a highly technical and litigated definition. The SCA protects \"electronic storage,\" defined as (1) temporary intermediate storage (ECS queue) or (2) backup storage.\nWhy not others: It does NOT generally cover opened emails left on a server indefinitely (unless for backup), leading to the \"180-day rule\" confusion in older interpretations. It is not limited to encrypted data (C).",
+    "category": "Stored Communications Act (SCA)"
+  },
+  {
+    "id": 176,
+    "text": "What is the primary requirement for service providers regarding the preservation of evidence under the SCA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Providers must keep all communications for a minimum of two years."
+      },
+      {
+        "label": "B",
+        "text": "Providers must delete all communications immediately after they are read by the recipient."
+      },
+      {
+        "label": "C",
+        "text": "Upon government request, providers must preserve communications and records for 90 days, subject to renewal."
+      },
+      {
+        "label": "D",
+        "text": "Providers are prohibited from preserving any data unless a warrant has been issued."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: This is the \"Freeze Letter.\" The government can ask a provider to preserve records pending a court order. The provider must hold them for 90 days (renewable once).\nWhy not others: They do not have to keep everything for 2 years (A) automatically; only if requested.",
+    "category": "Stored Communications Act (SCA)"
+  },
+  {
+    "id": 177,
+    "text": "How did the Clarifying Lawful Overseas Use of Data Act (CLOUD Act) amend the production obligations of U.S. service providers?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It exempted all data stored on foreign servers from U.S. law enforcement access."
+      },
+      {
+        "label": "B",
+        "text": "It required the government to obtain a separate warrant from the foreign country where the data is stored."
+      },
+      {
+        "label": "C",
+        "text": "It clarified that providers must produce documents regardless of whether the communications are stored domestically or in a foreign country."
+      },
+      {
+        "label": "D",
+        "text": "It restricted the government to accessing only metadata for communications stored overseas."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: The CLOUD Act resolved the *Microsoft Ireland* case. It states that if a U.S. company controls the data, they must produce it, even if the server is physically in Dublin, Ireland.\nWhy not others: It did the opposite of A.",
+    "category": "Stored Communications Act (SCA)"
+  },
+  {
+    "id": 178,
+    "text": "Regarding enforcement, what is the nature of a violation of the Stored Communications Act at the federal level?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It is a civil infraction enforced exclusively by the FTC."
+      },
+      {
+        "label": "B",
+        "text": "It is a criminal offense punishable by fines and imprisonment (up to 10 years for malicious intent)."
+      },
+      {
+        "label": "C",
+        "text": "It is a regulatory matter handled by the Department of Commerce."
+      },
+      {
+        "label": "D",
+        "text": "Violations are enforced solely through private arbitration with no government oversight."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Like the Wiretap Act, violating the SCA (hacking into stored communications) is a federal crime.\nWhy not others: It's not just civil/FTC (A).",
+    "category": "Stored Communications Act (SCA)"
+  },
+  {
+    "id": 179,
+    "text": "Which of the following is true regarding legal remedies and State Attorney General enforcement for SCA violations?",
+    "options": [
+      {
+        "label": "A",
+        "text": "State Attorneys General have the authority to bring civil actions for statutory damages."
+      },
+      {
+        "label": "B",
+        "text": "The Act provides for a private right of action, with minimum statutory damages of $1,000."
+      },
+      {
+        "label": "C",
+        "text": "There is no private right of action; only the Department of Justice can sue."
+      },
+      {
+        "label": "D",
+        "text": "Individuals can only sue for actual financial loss and cannot recover statutory damages."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The SCA allows individuals to sue for violations (e.g., unauthorized access). The minimum statutory damages are generally $1,000. (Note: While some sources might reference higher caps for government liability, $1,000 is the standard minimum per person).\nWhy not others: State AGs (A) do not generally have a specific civil enforcement role under this federal criminal statute (unlike statutes like CAN-SPAM or TCPA where they do).",
+    "category": "Stored Communications Act (SCA)"
+  },
+  {
+    "id": 180,
+    "text": "Who is considered a \"covered entity\" subject to the CPNI privacy rules under the Telecommunications Act?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Any company that manufactures mobile devices or hardware."
+      },
+      {
+        "label": "B",
+        "text": "Telecommunications carriers and interconnected voice-over-Internet (VoIP) providers."
+      },
+      {
+        "label": "C",
+        "text": "Only federal government agencies that oversee communication infrastructure."
+      },
+      {
+        "label": "D",
+        "text": "\"Over-the-top\" (OTT) messaging applications like WhatsApp or Signal."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Access is limited to Telecommunications Carriers and (by FCC regulation) VoIP providers. These are the pipes.\nWhy not others: Edge providers/Apps (D) like WhatsApp are generally NOT covered (a major policy debate point). Device makers (A) are not carriers.",
+    "category": "CPNI (Telecommunications Act)"
+  },
+  {
+    "id": 181,
+    "text": "How does the law distinguish between \"Customer Proprietary Network Information\" (CPNI) and \"Subscriber List Information\"?",
+    "options": [
+      {
+        "label": "A",
+        "text": "CPNI is publicly available, while Subscriber List Information is strictly confidential."
+      },
+      {
+        "label": "B",
+        "text": "CPNI consists of metadata like call destination and location; Subscriber List Information consists of public data like name and address."
+      },
+      {
+        "label": "C",
+        "text": "There is no legal distinction; both are treated as sensitive personal information."
+      },
+      {
+        "label": "D",
+        "text": "CPNI refers to physical equipment, while Subscriber List Information refers to digital records."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: CPNI is the *sensitive* stuff: Who you call, when, how long, how much you pay. Subscriber List Info is the *public* stuff: Your name, address, and phone number (phone book info).\nWhy not others: A has it backward.",
+    "category": "CPNI (Telecommunications Act)"
+  },
+  {
+    "id": 182,
+    "text": "Under the Act’s substantive rules, what is the required consent model for a carrier to share a customer's CPNI with a third-party Joint Venture partner for marketing?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Implied consent (no notice required)."
+      },
+      {
+        "label": "B",
+        "text": "Opt-out consent (permitted unless the customer says \"no\")."
+      },
+      {
+        "label": "C",
+        "text": "Opt-in consent (prior express authorization required)."
+      },
+      {
+        "label": "D",
+        "text": "Disclosure to third parties is strictly prohibited under all circumstances."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: The FCC rules have a sliding scale.\nMarketing *related* services to the customer? Implied/No Consent.\nSharing with *Affiliates*? Opt-Out.\nSharing with *Third Parties/Joint Ventures*? Opt-In.\nWhy not others: Opt-Out (B) is for affiliates, not 3rd parties.",
+    "category": "CPNI (Telecommunications Act)"
+  },
+  {
+    "id": 183,
+    "text": "To ensure compliance with CPNI regulations, what administrative safeguard must a carrier perform annually?",
+    "options": [
+      {
+        "label": "A",
+        "text": "File an officer certification with the FCC stating the company is in compliance with the rules."
+      },
+      {
+        "label": "B",
+        "text": "Delete all customer billing records older than 30 days."
+      },
+      {
+        "label": "C",
+        "text": "Provide a $100 credit to every subscriber who maintains an active account."
+      },
+      {
+        "label": "D",
+        "text": "Conduct a public town hall meeting to discuss privacy practices."
+      }
+    ],
+    "answer": "A",
+    "rationale": "Why it’s A: This is a specific bureaucratic requirement. Every year, an officer must certify compliance.\nWhy not others: C is made up.",
+    "category": "CPNI (Telecommunications Act)"
+  },
+  {
+    "id": 184,
+    "text": "In the event of a security breach involving CPNI, which of the following describes the correct notification procedure?",
+    "options": [
+      {
+        "label": "A",
+        "text": "The carrier must notify the customer immediately, before contacting any government agency."
+      },
+      {
+        "label": "B",
+        "text": "The carrier must notify federal law enforcement (FBI/USSS) within 7 business days and wait to notify the customer until after that window."
+      },
+      {
+        "label": "C",
+        "text": "The carrier only needs to notify the FCC if the breach affects more than 10,000 residents."
+      },
+      {
+        "label": "D",
+        "text": "Notification is only required if the data was unencrypted at the time of the breach."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: This is unique to CPNI. You must notify the US Secret Service and FBI *first*. You cannot notify the customer until 7 business days *after* telling the feds (unless they say it's okay sooner). This prevents tipping off hackers.\nWhy not others: A is the opposite (and dangerous in this context).",
+    "category": "CPNI (Telecommunications Act)"
+  },
+  {
+    "id": 185,
+    "text": "Regarding legal remedies, what is true about the \"Choice of Action\" available to an individual for a violation of the Act?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Individuals must file a complaint with the FCC and cannot sue in court."
+      },
+      {
+        "label": "B",
+        "text": "Individuals may choose to proceed before the FCC OR in federal court, but cannot do both."
+      },
+      {
+        "label": "C",
+        "text": "There is no private right of action; only the FCC can enforce the Act."
+      },
+      {
+        "label": "D",
+        "text": "A private lawsuit can only be filed if the FCC fails to issue a ruling within 180 days."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The 1996 Act gives a private right of action but forces a choice: You can file a formal complaint with the FCC (administrative) OR sue in federal district court. You cannot double dip.\nWhy not others: C is false. D is not a prerequisite.",
+    "category": "CPNI (Telecommunications Act)"
+  },
+  {
+    "id": 186,
+    "text": "Who is considered a \"covered entity\" subject to the requirements of Title VII?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Any business with 5 or more employees."
+      },
+      {
+        "label": "B",
+        "text": "Employers with 15 or more employees, employment agencies, labor unions, and training programs."
+      },
+      {
+        "label": "C",
+        "text": "Only federal government agencies and contractors."
+      },
+      {
+        "label": "D",
+        "text": "Any non-profit organization, regardless of the number of employees."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Title VII defines an \"employer\" as engaged in industry affecting commerce with 15 or more employees.\nWhy not others: It excludes small businesses (<15) (A). It applies to private sector, not just govt (C).",
+    "category": "Title VII (Civil Rights Act)"
+  },
+  {
+    "id": 187,
+    "text": "Title VII prohibits discrimination based on which \"protected classes\"?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Age, disability, and genetic information."
+      },
+      {
+        "label": "B",
+        "text": "Race, color, religion, sex (including pregnancy), or national origin."
+      },
+      {
+        "label": "C",
+        "text": "Political affiliation, sexual orientation, and wealth."
+      },
+      {
+        "label": "D",
+        "text": "Citizenship status, veteran status, and criminal history."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: These are the original \"Big Five\" (plus pregnancy added later via PDA).\nWhy not others: Age/Disability/Genetics (A) are covered by separate laws (ADEA, ADA, GINA). Citizenship (D) is IRCA.",
+    "category": "Title VII (Civil Rights Act)"
+  },
+  {
+    "id": 188,
+    "text": "How does the law define \"disparate impact\" in the context of employment practices?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Intentional discrimination against an individual based on a protected trait."
+      },
+      {
+        "label": "B",
+        "text": "A practice that is facially neutral but falls more harshly on a protected group."
+      },
+      {
+        "label": "C",
+        "text": "A policy that allows for a \"bona fide occupational qualification.\""
+      },
+      {
+        "label": "D",
+        "text": "The unequal distribution of salary across different departments."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Access to jobs/promotions is blocked by a rule that *looks* fair (e.g., \"Must be 6 feet tall\") but disproportionately impacts a protected class (e.g., women or certain ethnic groups) without a business necessity.\nWhy not others: Intentional discrimination (A) is \"Disparate Treatment.\"",
+    "category": "Title VII (Civil Rights Act)"
+  },
+  {
+    "id": 189,
+    "text": "Under what specific exception is discrimination permitted under Title VII?",
+    "options": [
+      {
+        "label": "A",
+        "text": "If the employer has a \"legitimate business interest\" in maintaining a specific demographic."
+      },
+      {
+        "label": "B",
+        "text": "If the trait is a \"bona fide occupational qualification\" (BFOQ) reasonably necessary to the operation of the business."
+      },
+      {
+        "label": "C",
+        "text": "If the employee has worked for the company for less than 90 days."
+      },
+      {
+        "label": "D",
+        "text": "There are no legal exceptions to the prohibition of discrimination."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: You can discriminate if it's a BFOQ. (e.g., hiring only female actors for a female role, or a religious school hiring only members of that faith). Note: Race can almost never be a BFOQ.\nWhy not others: General business interest (A) is not enough.",
+    "category": "Title VII (Civil Rights Act)"
+  },
+  {
+    "id": 190,
+    "text": "What is the mandatory first step for an individual seeking to bring a claim of discrimination under Title VII?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Filing a civil lawsuit in federal district court."
+      },
+      {
+        "label": "B",
+        "text": "Filing a \"charge\" with the Equal Employment Opportunity Commission (EEOC)."
+      },
+      {
+        "label": "C",
+        "text": "Requesting a formal apology from the employer's HR department."
+      },
+      {
+        "label": "D",
+        "text": "Undergoing mandatory arbitration through a state-sanctioned mediator."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Before you can sue, you MUST exhaust administrative remedies. This means filing a formal charge with the EEOC (usually within 180 days).\nWhy not others: You cannot go straight to court (A).",
+    "category": "Title VII (Civil Rights Act)"
+  },
+  {
+    "id": 191,
+    "text": "Regarding legal remedies, when may an aggrieved individual file a private civil action?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Immediately after the discriminatory act occurs."
+      },
+      {
+        "label": "B",
+        "text": "Only if the employer has more than 500 employees."
+      },
+      {
+        "label": "C",
+        "text": "If the EEOC finds no reasonable cause after a complaint is filed, or after the administrative process is exhausted."
+      },
+      {
+        "label": "D",
+        "text": "Only if the State Attorney General declines to take the case."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: Once the EEOC finishes its investigation (or if they take too long), they issue a \"Right to Sue\" letter. Only THEN can you file a lawsuit in federal court.\nWhy not others: A is prohibited. D is irrelevant.",
+    "category": "Title VII (Civil Rights Act)"
+  },
+  {
+    "id": 192,
+    "text": "What specific event prompted the U.S. Congress to enact the Video Privacy Protection Act in 1988?",
+    "options": [
+      {
+        "label": "A",
+        "text": "A massive data breach at a national video rental chain."
+      },
+      {
+        "label": "B",
+        "text": "The publication of Supreme Court nominee Robert Bork’s video rental history in a newspaper."
+      },
+      {
+        "label": "C",
+        "text": "The rise of illegal peer-to-peer movie sharing platforms."
+      },
+      {
+        "label": "D",
+        "text": "A series of stalker incidents involving data obtained from public library records."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: This is the famous origin story. A reporter got Judge Bork's video rental list (which was surprisingly boring) during his confirmation hearings. Congress was so spooked that they passed the VPPA immediately.\nWhy not others: It wasn't a breach (A) or piracy (C).",
+    "category": "Privacy Protection Act (PPA)"
+  },
+  {
+    "id": 193,
+    "text": "Who is considered a \"covered entity\" under the VPPA, and how has this scope evolved?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Only brick-and-mortar stores that rent physical VHS tapes."
+      },
+      {
+        "label": "B",
+        "text": "Any person engaged in the business of rental, sale, or delivery of prerecorded video cassette tapes or similar audio visual materials, now including streaming media services."
+      },
+      {
+        "label": "C",
+        "text": "Only federal agencies that maintain archives of historical films."
+      },
+      {
+        "label": "D",
+        "text": "Any business that displays video advertisements to consumers on public screens."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: While the text says \"video cassette tapes,\" courts have broadly interpreted \"similar audio visual materials\" to cover streaming platforms (Netflix, Hulu) and websites with video content.\nWhy not others: It's not limited to VHS (A).",
+    "category": "Video Privacy Protection Act (VPPA)"
+  },
+  {
+    "id": 194,
+    "text": "Under the VPPA Amendments of 2012, how long can a \"one-time\" consumer consent for the disclosure of viewing information remain valid?",
+    "options": [
+      {
+        "label": "A",
+        "text": "90 days."
+      },
+      {
+        "label": "B",
+        "text": "1 year."
+      },
+      {
+        "label": "C",
+        "text": "2 years."
+      },
+      {
+        "label": "D",
+        "text": "Indefinitely, until the consumer manually revokes it."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: The 2012 Amendment (pushed by Netflix for social sharing) allows users to give consent for ongoing sharing (e.g., auto-posting to Facebook) for up to two years (or until they withdraw it).\nWhy not others: It is not indefinite (D).",
+    "category": "Video Privacy Protection Act (VPPA)"
+  },
+  {
+    "id": 195,
+    "text": "According to the substantive rules regarding data destruction, when must a video tape service provider destroy personally identifiable information (PII)?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Immediately after the video is returned."
+      },
+      {
+        "label": "B",
+        "text": "As soon as practicable, but no later than one year from the date the information is no longer necessary for the purpose it was collected."
+      },
+      {
+        "label": "C",
+        "text": "Within 30 days of a consumer's written request for deletion."
+      },
+      {
+        "label": "D",
+        "text": "The VPPA does not contain any specific requirements for data destruction."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: This is the specific destruction mandate. Once the account is closed/transaction done, you must delete the PII within one year.\nWhy not others: Immediate deletion (A) isn't required.",
+    "category": "Video Privacy Protection Act (VPPA)"
+  },
+  {
+    "id": 196,
+    "text": "Regarding federal and state enforcement, which of the following is true?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Violations of the VPPA constitute a criminal offense at the federal level."
+      },
+      {
+        "label": "B",
+        "text": "State Attorneys General have primary authority to seek civil penalties of $5,000 per violation."
+      },
+      {
+        "label": "C",
+        "text": "The Federal Trade Commission (FTC) is the only agency permitted to bring enforcement actions."
+      },
+      {
+        "label": "D",
+        "text": "Enforcement is handled exclusively through mandatory private arbitration."
+      }
+    ],
+    "answer": "A",
+    "rationale": "Why it’s A: Many privacy pros forget this: The VPPA is technically a criminal statute (though rarely enforced that way). It does NOT rely on the FTC or AGs primarily; it relies on the Private Right of Action.\nWhy not others: State AGs (B) don't have specific authority here.",
+    "category": "Video Privacy Protection Act (VPPA)"
+  },
+  {
+    "id": 197,
+    "text": "What is the statutory damage amount a plaintiff may recover in a private cause of action for improper disclosure under the VPPA?",
+    "options": [
+      {
+        "label": "A",
+        "text": "$500."
+      },
+      {
+        "label": "B",
+        "text": "$1,000."
+      },
+      {
+        "label": "C",
+        "text": "$2,500."
+      },
+      {
+        "label": "D",
+        "text": "$10,000."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: This is one of the highest statutory minimums in privacy law: $2,500 per violation (plus punitive damages attorney fees). This makes VPPA class actions very expensive/attractive.\nWhy not others: It is significantly higher than the standard $1,000 found in other laws (B).",
+    "category": "Video Privacy Protection Act (VPPA)"
+  },
+  {
+    "id": 198,
+    "text": "Who is considered a \"covered entity\" subject to the prohibitions of the Wiretap Act?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Only government officials and law enforcement officers."
+      },
+      {
+        "label": "B",
+        "text": "Any \"person\" who intercepts a wire, oral, or electronic communication."
+      },
+      {
+        "label": "C",
+        "text": "Only telecommunications carriers and internet service providers."
+      },
+      {
+        "label": "D",
+        "text": "Only private investigators hired for civil litigation."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: Title I applies to everyone—private individuals and government agents alike. Anyone who \"intercepts\" (captures in transit) a communication is liable.\nWhy not others: It is NOT limited to govt (A) or telcos (C).",
+    "category": "Wiretap Act"
+  },
+  {
+    "id": 199,
+    "text": "How does the statute define an \"oral communication\" to distinguish it from other types?",
+    "options": [
+      {
+        "label": "A",
+        "text": "Any communication transmitted via a cellular network."
+      },
+      {
+        "label": "B",
+        "text": "An \"in-person\" conversation where there is a reasonable expectation of privacy."
+      },
+      {
+        "label": "C",
+        "text": "Any communication that involves a human voice, regardless of the medium."
+      },
+      {
+        "label": "D",
+        "text": "A voicemail message stored on a provider's server."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: \"Oral\" means sound waves in the air (a chat in a room). The key legal test is whether the speakers had a Reasonable Expectation of Privacy (REP). If they shouted in public, it's not protected \"oral communication.\"\nWhy not others: Cellular (A) is \"Wire/Electronic.\" Voicemail (D) is \"Stored.\"",
+    "category": "Wiretap Act"
+  },
+  {
+    "id": 200,
+    "text": "Under the federal one-party consent rule, an interception is NOT unlawful if:",
+    "options": [
+      {
+        "label": "A",
+        "text": "The intercepting party is a licensed attorney."
+      },
+      {
+        "label": "B",
+        "text": "The interception occurs in a public place with high ambient noise."
+      },
+      {
+        "label": "C",
+        "text": "One of the persons involved in the communication has consented to the interception."
+      },
+      {
+        "label": "D",
+        "text": "The interception is necessary to protect a trade secret."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: Federal law (and most states) uses One-Party Consent. As long as YOU (the commercial party or individual) are part of the conversation, you can record it without telling the other person (unless you are in a Two-Party state like CA/MA).\nWhy not others: Attorney status (A) is irrelevant.",
+    "category": "Wiretap Act"
+  },
+  {
+    "id": 201,
+    "text": "To obtain a \"super-warrant\" for a wiretap, law enforcement must satisfy several hurdles, including \"minimization,\" which requires them to:",
+    "options": [
+      {
+        "label": "A",
+        "text": "Limit the physical size of the recording equipment used."
+      },
+      {
+        "label": "B",
+        "text": "Conduct the surveillance for no more than 48 hours."
+      },
+      {
+        "label": "C",
+        "text": "Stop recording when a conversation is determined to be non-relevant to the investigation."
+      },
+      {
+        "label": "D",
+        "text": "Notify the target of the surveillance within 24 hours of its conclusion."
+      }
+    ],
+    "answer": "C",
+    "rationale": "Why it’s C: Wiretaps are intrusive. Police must minimize the interception of innocent calls. If the target calls his wife to talk about dinner, the agent must stop listening/recording immediately.\nWhy not others: It's about content, not equipment size (A).",
+    "category": "Wiretap Act"
+  },
+  {
+    "id": 202,
+    "text": "What is the status of federal preemption regarding the Wiretap Act?",
+    "options": [
+      {
+        "label": "A",
+        "text": "It expressly preempts all state laws regarding communication interception."
+      },
+      {
+        "label": "B",
+        "text": "It does not preempt state law, allowing several states to enact stricter \"dual-consent\" statutes."
+      },
+      {
+        "label": "C",
+        "text": "It preempts state law only in cases involving national security."
+      },
+      {
+        "label": "D",
+        "text": "It allows states to enact more lenient \"no-consent\" rules if they choose."
+      }
+    ],
+    "answer": "B",
+    "rationale": "Why it’s B: The Wiretap Act sets a \"floor,\" not a ceiling. States can be stricter. About a dozen states (California, Florida, Massachusetts, etc.) require All-Party (Dual) Consent.\nWhy not others: It does not fully preempt (A). Lenient \"no-consent\" (D) would violate the federal floor.",
+    "category": "Wiretap Act"
+  },
+  {
+    "id": 203,
+    "text": "Regarding legal remedies, what is the statutory damage floor an individual may recover for a private cause of action under 18 U.S.C. § 2520?",
+    "options": [
+      {
+        "label": "A",
+        "text": "$1,000."
+      },
+      {
+        "label": "B",
+        "text": "$2,500."
+      },
+      {
+        "label": "C",
+        "text": "$5,000."
+      },
+      {
+        "label": "D",
+        "text": "$10,000 (or $100 per day of violation)."
+      }
+    ],
+    "answer": "D",
+    "rationale": "Why it’s D: Tapping is serious. The damages are $100/day OR $10,000 statutory minimum, whichever is higher.\nWhy not others: $1,000 (A) is typical for SCA, but Wiretap is $10k.",
+    "category": "Wiretap Act"
+  }
+]

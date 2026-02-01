@@ -27,7 +27,8 @@ import {
   Palette,
   Calculator,
   Box,
-  Siren
+  Siren,
+  HelpCircle
 } from 'lucide';
 
 // --- Web Components ---
@@ -67,9 +68,7 @@ class SiteNav extends HTMLElement {
                 <a href="cyber_roadmap.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="map" class="mr-2 w-4 h-4"></i>Cyber Roadmap
                 </a>
-                <a href="euprivacytimeline.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <i data-lucide="globe" class="mr-2 w-4 h-4"></i>EU Privacy Timeline
-                </a>
+
                 <a href="fair.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                     <i data-lucide="scale" class="mr-2 w-4 h-4"></i>FAIR Risk Scoring
                   </a>
@@ -79,9 +78,7 @@ class SiteNav extends HTMLElement {
                 <a href="phishing.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="fish" class="mr-2 w-4 h-4"></i>Phishing
                 </a>
-                <a href="regulation.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <i data-lucide="gavel" class="mr-2 w-4 h-4"></i>Regulation (US/EU)
-                </a>
+
                 <a href="sast.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="file-search" class="mr-2 w-4 h-4"></i>SAST
                 </a>
@@ -90,6 +87,33 @@ class SiteNav extends HTMLElement {
                   </a>
                 <a href="threatmodel.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="shield-alert" class="mr-2 w-4 h-4"></i>Threat Model
+                </a>
+
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Law & Regulations Dropdown -->
+          <div class="relative group">
+            <!-- Dropdown Trigger -->
+            <button class="flex items-center px-3 py-1 rounded text-blue-300 hover:bg-gray-800 hover:text-white font-semibold transition">
+              <i data-lucide="scale" class="mr-1 w-4 h-4"></i>
+              Law & Regulations
+              <i data-lucide="chevron-down" class="ml-1 w-4 h-4"></i>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div class="absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+              <div class="py-1" role="menu" aria-orientation="vertical">
+                <a href="regulation.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <i data-lucide="gavel" class="mr-2 w-4 h-4"></i>Regulation (US/EU)
+                </a>
+                <a href="quiz.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <i data-lucide="help-circle" class="mr-2 w-4 h-4"></i>CIPP/US Quiz
+                </a>
+                <a href="euprivacytimeline.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <i data-lucide="globe" class="mr-2 w-4 h-4"></i>EU Privacy Timeline
                 </a>
                 <a href="usprivacytimeline.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="flag" class="mr-2 w-4 h-4"></i>US Privacy Timeline
@@ -113,6 +137,7 @@ class SiteNav extends HTMLElement {
                 <a href="checklist.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="list-checks" class="mr-2 w-4 h-4"></i>Checklist
                 </a>
+
                 <a href="kev.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="siren" class="mr-2 w-4 h-4"></i>CISA KEV Explorer
                 </a>
@@ -184,7 +209,8 @@ class SiteNav extends HTMLElement {
         Palette,
         Calculator,
         Box,
-        Siren
+        Siren,
+        HelpCircle
       },
       nameAttr: 'data-lucide',
       attrs: {
