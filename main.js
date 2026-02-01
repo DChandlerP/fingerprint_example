@@ -23,6 +23,7 @@ import {
   KeyRound,
   Guitar,
   Share2,
+  Layers,
   LayoutDashboard,
   Palette,
   Calculator,
@@ -112,6 +113,9 @@ class SiteNav extends HTMLElement {
                 <a href="quiz.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="help-circle" class="mr-2 w-4 h-4"></i>CIPP/US Quiz
                 </a>
+                <a href="cipp_flashcards.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <i data-lucide="layers" class="mr-2 w-4 h-4"></i>CIPP/US Flashcards
+                </a>
                 <a href="euprivacytimeline.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="globe" class="mr-2 w-4 h-4"></i>EU Privacy Timeline
                 </a>
@@ -137,6 +141,7 @@ class SiteNav extends HTMLElement {
                 <a href="checklist.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="list-checks" class="mr-2 w-4 h-4"></i>Checklist
                 </a>
+
 
                 <a href="kev.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="siren" class="mr-2 w-4 h-4"></i>CISA KEV Explorer
@@ -205,6 +210,7 @@ class SiteNav extends HTMLElement {
         KeyRound,
         Guitar,
         Share2,
+        Layers,
         LayoutDashboard,
         Palette,
         Calculator,
