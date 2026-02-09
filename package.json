@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "fetch-kev": "node fetch_kev.js",
-    "build": "npm run fetch-kev && vite build",
+    "parse-quiz": "node parse_practice_questions.js",
+    "build": "npm run fetch-kev && npm run parse-quiz && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {

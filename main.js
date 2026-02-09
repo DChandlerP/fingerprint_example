@@ -11,6 +11,7 @@ import {
   Map,
   Fish,
   FileSearch,
+  FileQuestion,
   Shield,
   ShieldAlert,
   Scale,
@@ -111,7 +112,10 @@ class SiteNav extends HTMLElement {
                   <i data-lucide="gavel" class="mr-2 w-4 h-4"></i>Regulation (US/EU)
                 </a>
                 <a href="quiz.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
-                  <i data-lucide="help-circle" class="mr-2 w-4 h-4"></i>CIPP/US Quiz
+                  <i data-lucide="help-circle" class="mr-2 w-4 h-4"></i>CIPP/US Quiz (By Topic)
+                </a>
+                <a href="cipp_us_practice_exam.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <i data-lucide="file-question" class="mr-2 w-4 h-4"></i>CIPP US Practice Exam
                 </a>
                 <a href="cipp_flashcards.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="layers" class="mr-2 w-4 h-4"></i>CIPP/US Flashcards
@@ -198,6 +202,7 @@ class SiteNav extends HTMLElement {
         Map,
         Fish,
         FileSearch,
+        FileQuestion,
         Shield,
         ShieldAlert,
         Scale,
