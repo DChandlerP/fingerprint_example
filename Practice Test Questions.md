@@ -1062,3 +1062,153 @@ The Genetic Information Nondiscrimination Act of 2008 (GINA) implemented all of 
 
 **Rationale:**
 This tests the distinction between GINA's anti-discrimination focus and HITECH's administrative requirements. GINA focuses on prohibiting discrimination in health insurance and employment based on genetic information (Options A and D) and integrates genetic data into HIPAA's privacy definitions (Option B). However, the specific **60-day breach notification rule** (Option C) comes from the **HITECH Act**, not GINA itself, even though HITECH applies to the genetic data GINA protects.
+
+### FCRA Enforcement (Regulatory Authority)
+
+**72. Question**
+When an employer utilizes a third-party background screening firm to investigate a candidate’s criminal history and creditworthiness, which federal agency has the primary authority to ensure the investigation complies with the Fair Credit Reporting Act (FCRA)?
+
+*   **A.** The Equal Employment Opportunity Commission (EEOC).
+*   **B.** The Federal Trade Commission (FTC).
+*   **C.** The Occupational Safety and Health Administration (OSHA).
+*   **D.** The National Labor Relations Board (NLRB).
+
+**Correct Answer: B**
+
+**Rationale:**
+The Federal Trade Commission (FTC) is the lead regulator for the FCRA, which governs how consumer reports are used for employment screening.
+
+### TCPA Informational Calls (Utility Outage)
+
+**73. Question**
+A utility company plans to use an automated dialing system to send prerecorded voice messages to its customers' mobile phones to warn them of a scheduled power outage in their neighborhood. Under the Telephone Consumer Protection Act (TCPA), what level of consent is required for this specific communication?
+
+*   **A.** Prior express written consent is required because the call is made using an autodialer to a wireless number.
+*   **B.** No prior express consent is required because the call is for purely informational, non-telemarketing purposes.
+*   **C.** Oral consent obtained at the time the account was opened is sufficient because the call is not for a commercial purpose.
+*   **D.** The company must obtain a signature on a formal "Notice of Telemarketing" document before sending the alert.
+
+**Correct Answer: B**
+
+**Rationale:**
+No prior express consent is required because the call is for purely informational, non-telemarketing purposes. (Informational calls, such as service alerts or emergency notifications, are exempt from the strict "prior express written consent" standard that applies to commercial telemarketing robocalls.)
+
+### FTC Data Breach Response (Immediate Actions)
+
+**74. Question**
+According to FTC guidance on data breach response, an organization’s immediate "Secure Your Operations" phase should include all of the following actions, EXCEPT:
+
+*   **A.** Disconnecting compromised servers from the network while keeping them powered on to preserve volatile data.
+*   **B.** Changing access codes and passwords for all employees who may have had their credentials compromised.
+*   **C.** Notifying the Federal Trade Commission and the media within 24 hours of discovering the unauthorized access.
+*   **D.** Mobilizing a forensic team to begin a preliminary investigation into the scope of the exposure.
+
+**Correct Answer: C**
+
+**Rationale:**
+Notifying the Federal Trade Commission and the media within 24 hours of discovering the unauthorized access. (Notification is a later step in the response process; the immediate priority is containment and securing the environment. Furthermore, most laws and guidelines provide more than 24 hours for initial notifications.)
+
+### CFAA (Authorized Access)
+
+**75. Question**
+An employee at a financial services firm has legitimate credentials to access the company's client contact database for sales purposes. If the employee uses those credentials to download the contact list to sell it to a competitor, how would the U.S. Supreme Court’s ruling in Van Buren v. United States likely impact a potential prosecution under the Computer Fraud and Abuse Act (CFAA)?
+
+*   **A.** The employee would be liable under the CFAA because they "exceeded authorized access" by violating the company’s internal use policy.
+*   **B.** The employee would not be liable under the CFAA because they were authorized to access that specific database, regardless of their intent.
+*   **C.** The employee would be liable under the CFAA because selling trade secrets constitutes a "predatory" purpose.
+*   **D.** The employee would only be liable if they bypassed a technical barrier, such as a firewall, to reach the data.
+
+**Correct Answer: B**
+
+**Rationale:**
+The employee would not be liable under the CFAA because they were authorized to access that specific database, regardless of their intent. (Under Van Buren, if you are authorized to access a folder or database, your reason for accessing it does not trigger a CFAA violation, even if it violates a company policy.)
+
+### FTC Enforcement (Eli Lilly Precedent)
+
+**76. Question**
+The FTC's landmark 2002 consent decree with Eli Lilly & Co. established several precedents for modern data security enforcement. This specific settlement required the company to do all of the following, EXCEPT:
+
+*   **A.** Implement a comprehensive, written information security program.
+*   **B.** Designate a specific employee or employees to be accountable for the security program.
+*   **C.** Pay a $5 million civil penalty to the Department of Justice for the data exposure.
+*   **D.** Undergo regular third-party audits to verify the effectiveness of their security controls.
+
+**Correct Answer: C**
+
+**Rationale:**
+Pay a $5 million civil penalty to the Department of Justice for the data exposure. (Historically, the FTC did not have the authority to seek civil penalties for first-time violations under Section 5 of the FTC Act. The Eli Lilly settlement focused on mandated security programs and audits, not monetary fines.)
+
+### MA Data Breach Notification (Prohibited Content)
+
+**77. Question**
+Under Massachusetts General Law Chapter 93H, when an organization notifies the state's Attorney General and the Director of Consumer Affairs and Business Regulation about a data breach, it must provide a detailed description of the nature and circumstances of the incident. However, what is the restriction when notifying the affected individual?
+
+*   **A.** The notice must include the name of the specific hacker or group responsible if known.
+*   **B.** The notice must be delayed until the exact number of all affected individuals globally has been determined.
+*   **C.** The notice must exclude both the nature of the breach and the number of Massachusetts residents affected.
+*   **D.** The notice must include a copy of the organization’s entire Written Information Security Program (WISP).
+
+**Correct Answer: C**
+
+**Rationale:**
+The notice must exclude both the nature of the breach and the number of Massachusetts residents affected. (This is the specific prohibition found in M.G.L. c. 93H, § 3(b).)
+
+### FCRA Prescreen Opt-Out (Timeframe)
+
+**78. Question**
+A consumer uses the official "Opt-Out Prescreen" website to request that their name be removed from all lists used for firm offers of credit for the next five years. According to the Fair Credit Reporting Act (FCRA), what is the maximum timeframe allowed for a consumer reporting agency to process and implement this request?
+
+*   **A.** 48 hours from the time the request is submitted online.
+*   **B.** 5 business days after receiving the consumer's notification.
+*   **C.** 30 calendar days, consistent with the timeline for investigating disputed information.
+*   **D.** Without unreasonable delay, typically not to exceed 10 business days.
+
+**Correct Answer: B**
+
+**Rationale:**
+5 business days after receiving the consumer's notification. (This is the specific statutory deadline for CRAs to act on a prescreening opt-out request.)
+
+### EPPA Exemptions (Pharmacy vs. Retail)
+
+**79. Question**
+The Employee Polygraph Protection Act of 1988 (EPPA) prohibits most private-sector employers from requiring employees to take a lie detector test. However, certain narrow exemptions exist. Under the EPPA, a private employer is permitted to request a polygraph test in all of the following circumstances, EXCEPT:
+
+*   **A.** When the employer is a private security firm contracted to protect "vital facilities" such as a nuclear power plant.
+*   **B.** When the employer has reasonable suspicion that an employee was involved in a workplace incident (like theft) that resulted in specific economic loss to the business.
+*   **C.** When the employer is a retail pharmacy and is conducting a regular background screening for a new cashier who will handle cash but not controlled substances.
+*   **D.** When the employer is a pharmaceutical company authorized to manufacture, distribute, or dispense controlled substances.
+
+**Correct Answer: C**
+
+**Rationale:**
+When the employer is a retail pharmacy and is conducting a regular background screening for a new cashier who will handle cash but not controlled substances. (While there is an exemption for certain employees of pharmaceutical companies, it is specifically for those who have direct access to controlled substances, not just cash. General pre-employment screening for most retail positions remains prohibited.)
+
+### State Data Breach Notification (Private Right of Action)
+
+**80. Question**
+A consumer in a state whose data breach notification law does not contain an express private right of action (PRA) attempts to sue a company for failing to notify them of a leak of their Social Security number. Which of the following describes the most likely path for this consumer's litigation?
+
+*   **A.** The lawsuit will be immediately dismissed because data breach laws can only be enforced by federal agencies like the FTC.
+*   **B.** The consumer may be able to bring a claim under the state’s general Unfair and Deceptive Acts and Practices (UDAP) statute, alleging the failure to notify was an unfair business practice.
+*   **C.** The consumer is legally prohibited from filing any lawsuit unless the State Attorney General first initiates an enforcement action against the company.
+*   **D.** The consumer can automatically sue under the federal Fair Credit Reporting Act (FCRA) because a Social Security number was involved.
+
+**Correct Answer: B**
+
+**Rationale:**
+The consumer may be able to bring a claim under the state’s general Unfair and Deceptive Acts and Practices (UDAP) statute, alleging the failure to notify was an unfair business practice. (Even without a specific PRA in the breach law, state UDAP laws often serve as a "catch-all" for private litigants to pursue claims related to unfair or deceptive corporate behavior.)
+
+### Contract Law (Elements)
+
+**81. Question**
+Under U.S. common law, a legally enforceable contract requires the presence of several distinct elements. A valid contract is generally considered to exist when all of the following are present, EXCEPT:
+
+*   **A.** Offer and Acceptance: One party manifests a willingness to enter a bargain and the other party unequivocally assents to those terms.
+*   **B.** Consideration: There is a bargained-for exchange of value, such as a legal benefit to one party or a detriment to the other.
+*   **C.** Writing Requirement: The agreement is memorialized in a formal written document signed by both parties and notarized by a third party.
+*   **D.** Mutual Assent: There is a "meeting of the minds" where both parties have a common understanding of the agreement’s essential terms.
+
+**Correct Answer: C**
+
+**Rationale:**
+Writing Requirement: The agreement is memorialized in a formal written document signed by both parties and notarized by a third party. Reasoning: While certain types of contracts (like those involving land or high-value goods) must be in writing under the Statute of Frauds, a "writing" is not a universal requirement for all enforceable contracts. Many oral agreements are legally binding if Offer, Acceptance, Consideration, and Mutual Assent are present.

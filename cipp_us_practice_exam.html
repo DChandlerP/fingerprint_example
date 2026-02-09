@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CIPP/US Practice Quiz | D. Chandler Prince</title>
+    <title>CIPP/US Practice Exam | D. Chandler Prince</title>
     <link rel="stylesheet" href="/style.css">
 </head>
 
@@ -14,7 +14,7 @@
 
     <header
         class="bg-gradient-to-r from-blue-900 to-gray-900 py-10 px-4 text-center shadow-lg border-b border-gray-800">
-        <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">CIPP/US Practice Quiz</h1>
+        <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">CIPP/US Practice Exam</h1>
         <p class="max-w-2xl mx-auto text-gray-300 text-lg">
             Test your knowledge with randomized practice questions.
         </p>
@@ -35,12 +35,18 @@
                 </div>
                 <h2 class="text-2xl font-bold mb-4">Ready to begin?</h2>
                 <p class="text-gray-400 mb-8">
-                    Questions are randomized every time. Headlines are hidden to simulate the real exam experience.
+                    Questions are randomized every time.
                 </p>
                 <div class="flex flex-col gap-4">
+                    <div class="flex items-center justify-center space-x-2 mb-2">
+                        <label for="question-count" class="text-gray-300 font-medium">Number of Questions:</label>
+                        <input type="number" id="question-count" min="1" max="100" value="10"
+                            class="w-20 bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white text-center focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
                     <button id="start-btn"
                         class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 shadow-lg shadow-blue-900/50">
-                        Start Quiz
+                        Start Exam
                     </button>
                     <div class="text-sm text-gray-500">
                         Total Questions Available: <span id="total-questions-count">Loading...</span>
@@ -50,7 +56,7 @@
             </div>
         </div>
 
-        <!-- Quiz Container (Hidden initially) -->
+        <!-- Exam Container (Hidden initially) -->
         <div id="quiz-container" class="hidden">
             <!-- Progress Bar -->
             <div class="mb-6 flex items-center justify-between text-sm text-gray-400">
@@ -98,7 +104,7 @@
         <div id="results-screen" class="hidden text-center py-10">
             <div class="bg-gray-900 p-8 rounded-2xl shadow-xl border border-gray-800 max-w-lg mx-auto">
                 <div id="result-icon" class="mb-6 mx-auto"></div>
-                <h2 class="text-3xl font-bold mb-2">Quiz Complete!</h2>
+                <h2 class="text-3xl font-bold mb-2">Exam Complete!</h2>
                 <p class="text-gray-400 mb-8">Here is how you did:</p>
 
                 <div class="text-6xl font-black text-white mb-2" id="final-score">0%</div>

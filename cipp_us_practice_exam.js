@@ -26,6 +26,8 @@ const progressBarFill = document.getElementById('progress-bar-fill');
 const finalScoreEl = document.getElementById('final-score');
 const finalStatsEl = document.getElementById('final-stats');
 
+const questionCountInput = document.getElementById('question-count');
+
 // Fetch Questions
 async function loadQuestions() {
     try {
@@ -37,6 +39,20 @@ async function loadQuestions() {
 
         // Update UI info
         totalQuestionsCountEl.textContent = questions.length;
+
+        // Update input max
+        if (questionCountInput) {
+            questionCountInput.max = questions.length;
+            questionCountInput.value = questions.length;
+        }
+
+        // Enforce max on input
+        questionCountInput.addEventListener('input', () => {
+            if (parseInt(questionCountInput.value) > questions.length) {
+                questionCountInput.value = questions.length;
+            }
+        });
+
         startBtn.disabled = false;
 
     } catch (error) {
@@ -46,8 +62,14 @@ async function loadQuestions() {
     }
 }
 
-// Start Quiz
+// Start Exam
 startBtn.addEventListener('click', () => {
+    // Limit questions based on input
+    const limit = parseInt(questionCountInput.value);
+    if (!isNaN(limit) && limit > 0) {
+        questions = questions.slice(0, limit);
+    }
+
     startScreen.classList.add('hidden');
     quizContainer.classList.remove('hidden');
     loadQuestion(currentQuestionIndex);
