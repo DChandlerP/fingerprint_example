@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-950 text-white">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SAST Remediation Guide</title>
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self';">
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body class="bg-gray-950 text-white min-h-screen flex flex-col">
+
+    <site-nav></site-nav>
+
+    <!-- Page Header -->
+    <header class="bg-gradient-to-r from-blue-900 to-gray-900 py-10 px-4 text-center shadow-lg">
+        <h1 class="text-4xl md:text-5xl font-bold mb-2 text-white tracking-tight">SAST Remediation Guide</h1>
+        <p class="max-w-2xl mx-auto text-gray-200 text-lg md:text-xl mb-6">
+            A Java-focused reference for understanding and resolving common SAST findings, organized by CWE.
+        </p>
+
+        <!-- Search & Controls -->
+        <div class="max-w-xl mx-auto flex flex-col sm:flex-row items-center gap-3 mt-4">
+            <div class="relative flex-1 w-full">
+                <input type="text" id="cwe-search" placeholder="Search by name or CWE # (e.g. 676)"
+                    class="w-full bg-gray-800 border border-gray-700 rounded-lg py-2.5 px-4 pl-10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.3-4.3" />
+                </svg>
+            </div>
+            <button id="random-btn"
+                class="inline-flex items-center px-4 py-2.5 bg-blue-700 hover:bg-blue-600 rounded-lg text-white font-semibold transition shadow-lg whitespace-nowrap">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22" />
+                    <path d="m18 2 4 4-4 4" />
+                    <path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2" />
+                    <path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8" />
+                    <path d="m18 14 4 4-4 4" />
+                </svg>
+                Random Finding
+            </button>
+        </div>
+    </header>
+
+    <!-- No Results Message -->
+    <div id="no-results" class="hidden text-center py-10 text-gray-400 text-lg">
+        No findings match your search. Try a different term or CWE number.
+    </div>
+
+    <main class="flex-1 px-4 py-10 max-w-5xl mx-auto space-y-12">
+
+        <!-- ============================================================ -->
+        <!-- CWE-676: Use of Potentially Dangerous Function                -->
+        <!-- ============================================================ -->
+        <section id="cwe-676" class="fade-in-section cwe-entry" data-cwe="676"
+            data-name="Use of Potentially Dangerous Function">
+
+            <!-- Section Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-6">
+                <span
+                    class="inline-block bg-red-900/60 text-red-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider w-max">CWE-676</span>
+                <h2 class="text-3xl font-semibold text-blue-400">Use of Potentially Dangerous Function</h2>
+            </div>
+
+            <!-- Overview -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    CWE-676 flags the use of functions that are inherently risky because they are difficult to use
+                    safely, can
+                    produce unpredictable results, or have well-known, safer alternatives. In Java, this commonly
+                    appears when a
+                    SAST tool detects calls to methods like <code
+                        class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">Runtime.exec()</code>,
+                    <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">Thread.stop()</code>, or
+                    <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">System.exit()</code>.
+                </p>
+                <p class="text-gray-300 leading-relaxed">
+                    The core danger isn't always a direct exploit — it's that these functions create fragile,
+                    hard-to-maintain code that can lead to security vulnerabilities such as command injection, resource
+                    leaks,
+                    or denial of service. Modern Java provides safer, more robust alternatives for nearly every case.
+                </p>
+            </div>
+
+            <!-- Vulnerable Examples -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+                <div class="space-y-6">
+
+                    <!-- Example 1: Runtime.exec() -->
+                    <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+                        <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="mr-2">
+                                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                                <path d="M12 9v4" />
+                                <path d="M12 17h.01" />
+                            </svg>
+                            Dangerous: Runtime.exec() with String argument
+                        </h4>
+                        <p class="text-gray-400 text-sm mb-3">
+                            Passing a single string to <code class="text-red-400">Runtime.exec()</code> relies on the
+                            platform's
+                            default tokenizer to split the command, which is unpredictable. If any part of the string is
+                            derived from
+                            user input, it opens a direct path to OS command injection.
+                        </p>
+                        <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Single string argument is tokenized unpredictably.
+// If 'filename' comes from user input, this is a command injection vulnerability.
+String filename = request.getParameter("file");
+Runtime.getRuntime().exec("ls -la " + filename);</code></div>
+                    </div>
+
+                    <!-- Example 2: Thread.stop() -->
+                    <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+                        <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="mr-2">
+                                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                                <path d="M12 9v4" />
+                                <path d="M12 17h.01" />
+                            </svg>
+                            Dangerous: Thread.stop()
+                        </h4>
+                        <p class="text-gray-400 text-sm mb-3">
+                            <code class="text-red-400">Thread.stop()</code> is deprecated because it is fundamentally
+                            unsafe. It
+                            causes the thread to immediately unlock all monitors it holds by throwing a
+                            <code class="text-yellow-400">ThreadDeath</code> error, which can leave shared objects in a
+                            corrupted,
+                            inconsistent state. This can lead to data corruption or security bypasses.
+                        </p>
+                        <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Forcefully stops a thread, corrupting shared state.
+Thread workerThread = new Thread(myRunnable);
+workerThread.start();
+// ... later ...
+workerThread.stop(); // This is UNSAFE and deprecated.</code></div>
+                    </div>
+
+                    <!-- Example 3: System.exit() -->
+                    <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+                        <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="mr-2">
+                                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                                <path d="M12 9v4" />
+                                <path d="M12 17h.01" />
+                            </svg>
+                            Dangerous: System.exit() in a Server Context
+                        </h4>
+                        <p class="text-gray-400 text-sm mb-3">
+                            Calling <code class="text-red-400">System.exit()</code> in a web application or shared
+                            library
+                            terminates the entire JVM, killing all running services. An attacker who can trigger a code
+                            path
+                            that calls <code class="text-red-400">System.exit()</code> can cause a complete Denial of
+                            Service (DoS).
+                        </p>
+                        <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: In a servlet or Spring controller, this kills the entire application server.
+@GetMapping("/process")
+public String processData(@RequestParam String data) {
+    if (data == null) {
+        System.exit(1); // DoS: Terminates the JVM for ALL users.
+    }
+    // ...
+}</code></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Remediation -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+                <div class="space-y-6">
+
+                    <!-- Fix 1: ProcessBuilder -->
+                    <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+                        <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="mr-2">
+                                <path d="M20 6 9 17l-5-5" />
+                            </svg>
+                            Fix: Replace Runtime.exec() with ProcessBuilder
+                        </h4>
+                        <p class="text-gray-400 text-sm mb-3">
+                            <code class="text-green-400">ProcessBuilder</code> takes an explicit list of arguments,
+                            preventing the
+                            shell from interpreting special characters. This eliminates the command injection vector.
+                            You should
+                            also <strong class="text-gray-200">validate and sanitize</strong> any user-provided input
+                            with an
+                            allowlist before passing it to any process.
+                        </p>
+                        <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Arguments are passed as a list, not a single string.
+// The OS will not interpret shell metacharacters in 'filename'.
+String filename = sanitize(request.getParameter("file"));
+
+ProcessBuilder pb = new ProcessBuilder("ls", "-la", filename);
+pb.redirectErrorStream(true);
+Process process = pb.start();
+
+// Always consume the output stream to prevent the process from hanging.
+try (BufferedReader reader = new BufferedReader(
+        new InputStreamReader(process.getInputStream()))) {
+    String line;
+    while ((line = reader.readLine()) != null) {
+        // process line
+    }
+}
+int exitCode = process.waitFor();</code></div>
+                    </div>
+
+                    <!-- Fix 2: Thread.interrupt() -->
+                    <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+                        <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="mr-2">
+                                <path d="M20 6 9 17l-5-5" />
+                            </svg>
+                            Fix: Replace Thread.stop() with Cooperative Interruption
+                        </h4>
+                        <p class="text-gray-400 text-sm mb-3">
+                            The safe pattern is cooperative: set a flag (or use <code
+                                class="text-green-400">Thread.interrupt()</code>) and let the thread check it
+                            periodically and shut
+                            down gracefully, releasing resources in a controlled manner.
+                        </p>
+                        <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Use a volatile flag or Thread.interrupt() for cooperative shutdown.
+public class SafeWorker implements Runnable {
+    private volatile boolean running = true;
+
+    public void shutdown() {
+        this.running = false;
+    }
+
+    @Override
+    public void run() {
+        while (running && !Thread.currentThread().isInterrupted()) {
+            try {
+                // Do work...
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                // Restore the interrupted status and exit the loop gracefully.
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+        // Clean up resources here.
+    }
+}</code></div>
+                    </div>
+
+                    <!-- Fix 3: Proper Error Handling -->
+                    <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+                        <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="mr-2">
+                                <path d="M20 6 9 17l-5-5" />
+                            </svg>
+                            Fix: Replace System.exit() with Proper Error Handling
+                        </h4>
+                        <p class="text-gray-400 text-sm mb-3">
+                            In web applications and libraries, never call <code
+                                class="text-red-400">System.exit()</code>. Use
+                            standard exception handling to signal errors. Frameworks like Spring Boot have built-in
+                            graceful shutdown mechanisms. Reserve <code class="text-green-400">System.exit()</code> only
+                            for
+                            standalone CLI tools where terminating the JVM is the intended behavior.
+                        </p>
+                        <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Throw an exception instead of killing the JVM.
+@GetMapping("/process")
+public ResponseEntity&lt;String&gt; processData(@RequestParam String data) {
+    if (data == null) {
+        // Return an error response; the server stays running.
+        return ResponseEntity.badRequest().body("Data parameter is required.");
+    }
+    // ... process data ...
+    return ResponseEntity.ok("Processed successfully.");
+}</code></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- References -->
+            <div>
+                <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+                <div class="grid sm:grid-cols-2 gap-3">
+                    <a href="https://cwe.mitre.org/data/definitions/676.html" target="_blank" rel="noopener noreferrer"
+                        class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+                        <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                                <polyline points="15 3 21 3 21 9" />
+                                <line x1="10" x2="21" y1="14" y2="3" />
+                            </svg>
+                        </span>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE
+                                CWE-676</p>
+                            <p class="text-xs text-gray-500">Official CWE definition and examples</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ProcessBuilder.html"
+                        target="_blank" rel="noopener noreferrer"
+                        class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+                        <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                                <polyline points="15 3 21 3 21 9" />
+                                <line x1="10" x2="21" y1="14" y2="3" />
+                            </svg>
+                        </span>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">Oracle —
+                                ProcessBuilder
+                                Javadoc</p>
+                            <p class="text-xs text-gray-500">Official API documentation for the safe alternative</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <site-footer></site-footer>
+
+    <script type="module" src="/main.js"></script>
+
+    <button id="scrollTopBtn"
+        class="fixed bottom-5 right-5 hidden z-50 bg-blue-600 hover:bg-blue-500 text-white p-3 rounded-full shadow-lg transition-all duration-300"
+        aria-label="Scroll to top">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m5 12 7-7 7 7" />
+            <path d="M12 19V5" />
+        </svg>
+    </button>
+
+    <script type="module" src="/sast_remediation.js"></script>
+</body>
+
+</html>

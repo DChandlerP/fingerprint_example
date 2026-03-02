@@ -30,7 +30,8 @@ import {
   Calculator,
   Box,
   Siren,
-  HelpCircle
+  HelpCircle,
+  Bug
 } from 'lucide';
 
 // --- Web Components ---
@@ -83,6 +84,9 @@ class SiteNav extends HTMLElement {
 
                 <a href="sast.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                   <i data-lucide="file-search" class="mr-2 w-4 h-4"></i>SAST
+                </a>
+                <a href="sast_remediation.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
+                  <i data-lucide="bug" class="mr-2 w-4 h-4"></i>SAST Remediation
                 </a>
                 <a href="sdlc.html" class="flex items-center px-4 py-2 text-sm text-blue-200 hover:bg-gray-700 hover:text-white" role="menuitem">
                       <i data-lucide="code-2" class="mr-2 w-4 h-4"></i>Secure SDLC
@@ -221,7 +225,8 @@ class SiteNav extends HTMLElement {
         Calculator,
         Box,
         Siren,
-        HelpCircle
+        HelpCircle,
+        Bug
       },
       nameAttr: 'data-lucide',
       attrs: {
