@@ -18,5 +18,15 @@
         "cwe": "78",
         "name": "Command Injection",
         "owasp": "OWASP:A03"
+    },
+    {
+        "cwe": "502",
+        "name": "Deserialization of Untrusted Data",
+        "owasp": "OWASP:A08"
+    },
+    {
+        "cwe": "352",
+        "name": "Cross-Site Request Forgery (CSRF)",
+        "owasp": "OWASP:A01"
     }
 ]
