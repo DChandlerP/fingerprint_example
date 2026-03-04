@@ -1,0 +1,418 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-113 covers two related SAST findings:
+    </p>
+    <ul class="list-disc list-inside text-gray-300 leading-relaxed mb-4 space-y-1 ml-2">
+        <li><strong class="text-gray-200">Improper Neutralization</strong> — user input is placed into HTTP headers
+            without stripping <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">\r\n</code> (CRLF) characters
+        </li>
+        <li><strong class="text-gray-200">Disabled Neutralization</strong> — the framework's built-in CRLF protection is
+            explicitly turned off</li>
+    </ul>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        HTTP headers are delimited by CRLF sequences (<code
+            class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">\r\n</code>).
+        If an attacker can inject these characters into a header value, they can
+        <strong class="text-gray-200">split the HTTP response</strong> — inserting arbitrary headers or
+        even a completely new response body. This enables:
+    </p>
+    <ul class="list-disc list-inside text-gray-300 leading-relaxed mb-4 space-y-1 ml-2">
+        <li><strong class="text-gray-200">HTTP Response Splitting</strong> — injecting a second response that the
+            browser interprets as a separate page</li>
+        <li><strong class="text-gray-200">Header Injection</strong> — adding headers like <code
+                class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">Set-Cookie</code> to hijack sessions</li>
+        <li><strong class="text-gray-200">Cache Poisoning</strong> — causing proxies and CDNs to cache malicious
+            responses</li>
+        <li><strong class="text-gray-200">XSS via response body injection</strong> — injecting HTML/JS after a double
+            CRLF</li>
+    </ul>
+    <p class="text-gray-300 leading-relaxed">
+        This weakness maps to <strong class="text-gray-200">OWASP A03:2021 — Injection</strong>.
+        Modern frameworks (Spring, Express, Servlet 4.0+) reject CRLF in headers by default — but
+        older versions or misconfigured applications remain vulnerable. The fix is to
+        <strong class="text-gray-200">validate and sanitize</strong> all user input before placing it
+        in headers, and <strong class="text-gray-200">never disable</strong> built-in CRLF protections.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Java servlet reflecting user input in header -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: User input placed directly in HTTP response header (Java)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                This servlet reads a user-supplied <code class="text-red-400">lang</code> parameter and
+                sets it as a custom response header. If the attacker submits
+                <code class="text-red-400">en\r\nSet-Cookie: session=hijacked</code>, the CRLF characters
+                terminate the current header and inject a malicious <code class="text-red-400">Set-Cookie</code>
+                header — hijacking the victim's session.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: User input injected into response header without sanitization.
+@WebServlet("/preferences")
+public class PreferencesServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        String language = req.getParameter("lang"); // Attacker-controlled
+
+        // If lang = "en\r\nSet-Cookie: session=hijacked\r\n\r\n&lt;script&gt;alert(1)&lt;/script&gt;"
+        // the response becomes:
+        //   X-User-Language: en
+        //   Set-Cookie: session=hijacked
+        //
+        //   &lt;script&gt;alert(1)&lt;/script&gt;
+        resp.setHeader("X-User-Language", language); // CRLF injection!
+
+        resp.getWriter().write("Preferences updated.");
+    }
+}</code></div>
+        </div>
+
+        <!-- Example 2: Express.js redirect with unsanitized URL -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: User input in Location header via redirect (Node.js)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                This Express route uses <code class="text-red-400">res.setHeader()</code> to set the
+                <code class="text-red-400">Location</code> header from a user-supplied
+                <code class="text-red-400">redirect</code> parameter. Older versions of Node.js
+                (before v14.18.0) did not block CRLF in <code class="text-red-400">setHeader()</code>,
+                allowing full response splitting. Even in newer versions, using raw HTTP writes bypasses
+                these protections.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: User-controlled value in Location header.
+const express = require('express');
+const app = express();
+
+app.get('/redirect', (req, res) =&gt; {
+    const target = req.query.url; // Attacker-controlled
+
+    // Vulnerable on Node &lt; 14.18.0 or if using raw response writes.
+    // If url = "/home\r\nSet-Cookie: admin=true\r\n\r\nMalicious body"
+    // the attacker injects headers AND a response body.
+    res.setHeader('Location', target);
+    res.status(302).end();
+});
+
+// Even worse — raw writes bypass ALL framework protections:
+app.get('/raw-redirect', (req, res) =&gt; {
+    const target = req.query.url;
+    // This completely bypasses Node's CRLF protections.
+    res.socket.write(
+        `HTTP/1.1 302 Found\r\nLocation: ${target}\r\n\r\n`
+    );
+    res.socket.end();
+});</code></div>
+        </div>
+
+        <!-- Example 3: Java - Disabling CRLF protection in Spring -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Explicitly disabling the framework's CRLF header protection (Java)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Spring Security's <code class="text-red-400">HeaderWriterFilter</code> includes CRLF
+                protection by default. Some developers disable the header security filter entirely
+                (or use a custom filter that skips validation) to work around formatting issues —
+                re-opening the application to CRLF injection. This is the "disabled neutralization"
+                variant that SAST tools flag.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Disabling Spring Security's header protection.
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            // THIS DISABLES ALL SECURITY HEADERS including CRLF protection!
+            .headers().disable()
+            .authorizeRequests()
+                .anyRequest().authenticated();
+    }
+}
+
+// Also dangerous — setting headers from user input in a Spring controller:
+@RestController
+public class ApiController {
+    @GetMapping("/api/data")
+    public ResponseEntity&lt;String&gt; getData(@RequestParam String format) {
+        return ResponseEntity.ok()
+                // User input directly in header — CRLF injection risk.
+                .header("X-Response-Format", format)
+                .body("{ \"data\": [] }");
+    }
+}</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Validate and strip CRLF in Java -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Strip CRLF characters and validate against an allowlist
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Always strip or reject <code class="text-green-400">\r</code> and <code class="text-green-400">\n</code>
+                from any user input before placing it in a header. Better yet, validate against an
+                <strong class="text-gray-200">allowlist</strong> of expected values so that arbitrary
+                strings are never reflected into headers at all.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Validate against allowlist + strip CRLF as defense in depth.
+@WebServlet("/preferences")
+public class PreferencesServlet extends HttpServlet {
+
+    // Allowlist of valid language codes.
+    private static final Set&lt;String&gt; VALID_LANGUAGES =
+            Set.of("en", "es", "fr", "de", "ja", "zh");
+
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        String language = req.getParameter("lang");
+
+        // Step 1: Validate against allowlist (best defense).
+        if (language == null || !VALID_LANGUAGES.contains(language)) {
+            language = "en"; // Safe default.
+        }
+
+        // Step 2: Defense in depth — strip CRLF even from allowlisted values.
+        language = sanitizeHeaderValue(language);
+
+        resp.setHeader("X-User-Language", language);
+        resp.getWriter().write("Preferences updated.");
+    }
+
+    /** Remove CR, LF, and null bytes from header values. */
+    private static String sanitizeHeaderValue(String value) {
+        return value.replaceAll("[\\r\\n\\0]", "");
+    }
+}</code></div>
+        </div>
+
+        <!-- Fix 2: Express.js URL validation for redirects -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): Validate redirect URLs and use framework APIs (never raw writes)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Use Express's <code class="text-green-400">res.redirect()</code> (which includes CRLF
+                protection in modern versions) instead of raw header writes. Validate redirect targets
+                against an allowlist of domains, and <strong class="text-gray-200">never</strong> write
+                directly to the socket to set headers.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Validate redirect target + use framework API.
+const { URL } = require('url');
+
+const ALLOWED_HOSTS = new Set(['example.com', 'app.example.com']);
+
+app.get('/redirect', (req, res) =&gt; {
+    const target = req.query.url;
+
+    // Step 1: Parse and validate the URL.
+    let parsedUrl;
+    try {
+        parsedUrl = new URL(target, `${req.protocol}://${req.get('host')}`);
+    } catch {
+        return res.status(400).send('Invalid URL.');
+    }
+
+    // Step 2: Check against domain allowlist.
+    if (!ALLOWED_HOSTS.has(parsedUrl.hostname)) {
+        return res.status(400).send('Redirect target not allowed.');
+    }
+
+    // Step 3: Use the framework's redirect — it handles CRLF protection.
+    // Express (v4.17+) rejects CRLF in res.redirect() and res.setHeader().
+    res.redirect(302, parsedUrl.toString());
+});
+
+// NEVER do this — raw socket writes bypass all protections:
+// res.socket.write(`HTTP/1.1 302 Found\r\nLocation: ${target}\r\n\r\n`);</code></div>
+        </div>
+
+        <!-- Fix 3: Keep Spring Security headers enabled -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Keep framework header protections enabled + centralized sanitization
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Never disable Spring Security's header protection. If you need to customize specific
+                headers, configure them individually rather than disabling the entire filter. Add a
+                centralized sanitization utility for any dynamic header values.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Header protections ON + selective customization.
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            // DO NOT call .headers().disable()!
+            // Customize individual headers instead:
+            .headers()
+                .contentTypeOptions().and()     // X-Content-Type-Options
+                .frameOptions().deny().and()    // X-Frame-Options
+                .xssProtection().and()          // X-XSS-Protection
+                .httpStrictTransportSecurity()
+                    .maxAgeInSeconds(31536000)
+                    .includeSubDomains(true)
+            .and().and()
+            .authorizeRequests()
+                .anyRequest().authenticated();
+    }
+}
+
+// Centralized header value sanitizer for dynamic values:
+@Component
+public class HeaderSanitizer {
+
+    private static final Pattern CRLF_PATTERN = Pattern.compile("[\\r\\n\\0]");
+
+    /** Sanitize a value before setting it as a response header. */
+    public String sanitize(String headerValue) {
+        if (headerValue == null) return "";
+        String sanitized = CRLF_PATTERN.matcher(headerValue).replaceAll("");
+        // Truncate to prevent header size attacks.
+        return sanitized.length() &gt; 256 ? sanitized.substring(0, 256) : sanitized;
+    }
+}
+
+// Usage in controller:
+@RestController
+public class ApiController {
+    @Autowired private HeaderSanitizer headerSanitizer;
+
+    @GetMapping("/api/data")
+    public ResponseEntity&lt;String&gt; getData(@RequestParam String format) {
+        // Map to allowlisted values when possible:
+        String safeFormat = Set.of("json", "xml", "csv").contains(format)
+                ? format : "json";
+
+        return ResponseEntity.ok()
+                .header("X-Response-Format", headerSanitizer.sanitize(safeFormat))
+                .body("{ \"data\": [] }");
+    }
+}</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://cwe.mitre.org/data/definitions/113.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-113</p>
+                <p class="text-xs text-gray-500">Improper Neutralization of CRLF Sequences in HTTP Headers</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/Top10/A03_2021-Injection/" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP A03:2021 —
+                    Injection</p>
+                <p class="text-xs text-gray-500">Top 10 category covering CRLF and header injection</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Strict_Transport_Security_Cheat_Sheet.html"
+            target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP Unvalidated
+                    Redirects Cheat Sheet</p>
+                <p class="text-xs text-gray-500">Preventing open redirects and header injection via redirects</p>
+            </div>
+        </a>
+
+        <a href="https://docs.spring.io/spring-security/reference/servlet/exploits/headers.html" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">Spring Security —
+                    Security Headers</p>
+                <p class="text-xs text-gray-500">Configuring security headers without disabling protections</p>
+            </div>
+        </a>
+    </div>
+</div>

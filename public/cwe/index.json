@@ -43,5 +43,20 @@
         "cwe": "798",
         "name": "Hardcoded Credentials & Secrets",
         "owasp": "OWASP:A07"
+    },
+    {
+        "cwe": "113",
+        "name": "CRLF Injection in HTTP Headers",
+        "owasp": "OWASP:A03"
+    },
+    {
+        "cwe": "326",
+        "name": "Inadequate Padding for AES Encryption",
+        "owasp": "OWASP:A02"
+    },
+    {
+        "cwe": "327",
+        "name": "Use of a Broken or Risky Cryptographic Algorithm",
+        "owasp": "OWASP:A02"
     }
 ]
