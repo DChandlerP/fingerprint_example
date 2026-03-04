@@ -28,5 +28,10 @@
         "cwe": "352",
         "name": "Cross-Site Request Forgery (CSRF)",
         "owasp": "OWASP:A01"
+    },
+    {
+        "cwe": "200",
+        "name": "Information Exposure",
+        "owasp": "OWASP:A01"
     }
 ]
