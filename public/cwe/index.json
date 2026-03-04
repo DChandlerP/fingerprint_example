@@ -1,0 +1,12 @@
+[
+    {
+        "cwe": "676",
+        "name": "Use of Potentially Dangerous Function",
+        "owasp": "OWASP:A06"
+    },
+    {
+        "cwe": "315",
+        "name": "Cleartext Storage of Sensitive Information in a Cookie",
+        "owasp": "OWASP:A05"
+    }
+]

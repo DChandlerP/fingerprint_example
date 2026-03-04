@@ -1,0 +1,265 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-315 flags code that stores sensitive information — such as session tokens, passwords, personal data, or
+        authentication credentials — in a cookie without encrypting it first. Cookies are transmitted in HTTP headers
+        and can be read by anyone who can intercept the traffic (e.g., via a man-in-the-middle attack on a
+        non-HTTPS connection), inspect browser storage, or exploit a cross-site scripting (XSS) vulnerability.
+    </p>
+    <p class="text-gray-300 leading-relaxed">
+        Storing sensitive data in cleartext cookies violates the principle of defense-in-depth. Even when HTTPS is
+        used, cookies can be leaked through browser extensions, referrer headers, or logs. The safest approach is
+        to <strong class="text-gray-200">never store sensitive data directly in a cookie</strong> — instead, store
+        a random, opaque session identifier and keep the sensitive data server-side.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Plaintext credentials in a cookie -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Storing a username and role in a cleartext cookie
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                The cookie value is completely readable. An attacker who intercepts the traffic or
+                accesses the browser can read the user's identity and role. Worse, they can
+                <strong class="text-gray-200">tamper</strong> with the value (e.g., change
+                <code class="text-red-400">role=user</code> to <code class="text-red-400">role=admin</code>)
+                to escalate privileges.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Sensitive user data stored directly in a cleartext cookie.
+Cookie userCookie = new Cookie("user_info", "username=jdoe&amp;role=admin");
+userCookie.setMaxAge(86400);
+response.addCookie(userCookie);</code></div>
+        </div>
+
+        <!-- Example 2: Auth token in cleartext cookie -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Storing an API token in a cookie without Secure or HttpOnly flags
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Without the <code class="text-red-400">Secure</code> flag, the cookie is sent over HTTP
+                (unencrypted). Without <code class="text-red-400">HttpOnly</code>, JavaScript (including XSS
+                payloads) can read the token. This gives an attacker easy access to a valid API credential.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: API token in a cookie with no protection flags.
+Cookie tokenCookie = new Cookie("api_token", apiToken);
+// Missing: tokenCookie.setSecure(true);
+// Missing: tokenCookie.setHttpOnly(true);
+response.addCookie(tokenCookie);</code></div>
+        </div>
+
+        <!-- Example 3: Session data in cookie -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Storing PII (email) directly in a cookie
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Personally identifiable information should never be stored directly in a cookie. If the
+                cookie is logged by a proxy, CDN, or WAF, the user's email is exposed in cleartext in server
+                logs — a privacy and compliance violation (GDPR, CCPA, etc.).
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: PII stored directly in a cookie value.
+String email = userService.getEmail(userId);
+Cookie prefsCookie = new Cookie("user_prefs", "email=" + email + "&amp;theme=dark");
+response.addCookie(prefsCookie);</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Server-side session -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix: Use server-side sessions instead of cookie-stored data
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                The gold standard is to store only an <strong class="text-gray-200">opaque, random session ID</strong>
+                in the cookie and keep all sensitive data server-side (in a database, Redis, or in-memory store).
+                The session ID itself carries no meaningful information if intercepted.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Store sensitive data in the server-side session, not the cookie.
+HttpSession session = request.getSession(true);
+session.setAttribute("username", "jdoe");
+session.setAttribute("role", "admin");
+
+// The JSESSIONID cookie contains only a random, opaque identifier.
+// No sensitive data is transmitted in the cookie itself.</code></div>
+        </div>
+
+        <!-- Fix 2: Secure cookie flags -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix: Always set Secure, HttpOnly, and SameSite flags
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Even when storing only a session ID, always harden the cookie with proper security flags.
+                <code class="text-green-400">Secure</code> ensures HTTPS-only transmission.
+                <code class="text-green-400">HttpOnly</code> prevents JavaScript access (mitigating XSS theft).
+                <code class="text-green-400">SameSite=Strict</code> prevents cross-site request forgery (CSRF).
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Cookie hardened with all recommended security flags.
+Cookie sessionCookie = new Cookie("SESSIONID", sessionId);
+sessionCookie.setSecure(true);      // Only sent over HTTPS
+sessionCookie.setHttpOnly(true);    // Not accessible via JavaScript
+sessionCookie.setMaxAge(3600);      // 1-hour expiry
+sessionCookie.setPath("/");
+
+// For SameSite (not directly in javax.servlet.http.Cookie API),
+// use the Set-Cookie header directly or Spring's ResponseCookie:
+// ResponseCookie cookie = ResponseCookie.from("SESSIONID", sessionId)
+//         .secure(true).httpOnly(true).sameSite("Strict").build();
+// response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+response.addCookie(sessionCookie);</code></div>
+        </div>
+
+        <!-- Fix 3: Encrypt if you must use a cookie -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix: Encrypt and sign the cookie value if client-side storage is required
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                If you absolutely must store data in a cookie (e.g., a stateless architecture), encrypt it with
+                AES-GCM and sign it with an HMAC. This ensures confidentiality (can't read it) and integrity
+                (can't tamper with it). Use a server-managed key that is rotated regularly.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Encrypt sensitive data before placing it in a cookie.
+// This example uses AES-GCM for authenticated encryption.
+SecretKey key = getEncryptionKey(); // Load from secure key store
+Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+byte[] iv = new byte[12];
+SecureRandom.getInstanceStrong().nextBytes(iv);
+cipher.init(Cipher.ENCRYPT_MODE, key, new GCMParameterSpec(128, iv));
+
+String plaintext = "username=jdoe&amp;role=admin";
+byte[] ciphertext = cipher.doFinal(plaintext.getBytes(StandardCharsets.UTF_8));
+
+// Combine IV + ciphertext, then Base64-encode for the cookie value
+byte[] combined = ByteBuffer.allocate(iv.length + ciphertext.length)
+        .put(iv).put(ciphertext).array();
+String cookieValue = Base64.getUrlEncoder().withoutPadding()
+        .encodeToString(combined);
+
+Cookie secureCookie = new Cookie("session_data", cookieValue);
+secureCookie.setSecure(true);
+secureCookie.setHttpOnly(true);
+response.addCookie(secureCookie);</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://cwe.mitre.org/data/definitions/315.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-315</p>
+                <p class="text-xs text-gray-500">Official CWE definition and examples</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP A05:2021 —
+                    Security Misconfiguration</p>
+                <p class="text-xs text-gray-500">Top 10 category covering cookie and session security</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP Session
+                    Management Cheat Sheet</p>
+                <p class="text-xs text-gray-500">Best practices for secure cookie and session handling</p>
+            </div>
+        </a>
+
+        <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/javax/crypto/Cipher.html" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">Oracle — Cipher
+                    (AES-GCM) Javadoc</p>
+                <p class="text-xs text-gray-500">API docs for authenticated encryption in Java</p>
+            </div>
+        </a>
+    </div>
+</div>
