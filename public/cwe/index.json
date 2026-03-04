@@ -33,5 +33,10 @@
         "cwe": "200",
         "name": "Information Exposure",
         "owasp": "OWASP:A01"
+    },
+    {
+        "cwe": "319",
+        "name": "Cleartext Transmission of Sensitive Information",
+        "owasp": "OWASP:A02"
     }
 ]

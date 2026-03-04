@@ -1,0 +1,378 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-319 flags code that transmits sensitive information — such as credentials, session tokens,
+        personal data, or API keys — over an unencrypted channel. When data travels in
+        <strong class="text-gray-200">cleartext</strong> (plain HTTP, unencrypted sockets, or FTP),
+        anyone on the network path can intercept it: Wi-Fi eavesdroppers, compromised routers, ISPs,
+        or attackers performing a <strong class="text-gray-200">man-in-the-middle (MITM)</strong> attack.
+    </p>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        This is not a hypothetical risk. Tools like <strong class="text-gray-200">Wireshark</strong> and
+        <strong class="text-gray-200">mitmproxy</strong> can capture and inspect unencrypted traffic in
+        seconds. Public Wi-Fi networks, shared hosting environments, and misconfigured load balancers
+        are common attack surfaces. Even internal traffic between services should be encrypted —
+        a compromised internal host can sniff all unencrypted traffic on the same network segment.
+    </p>
+    <p class="text-gray-300 leading-relaxed">
+        This weakness maps to <strong class="text-gray-200">OWASP A02:2021 — Cryptographic Failures</strong>.
+        The fix is to <strong class="text-gray-200">enforce TLS/HTTPS everywhere</strong>, redirect all
+        HTTP traffic to HTTPS, and use <code
+            class="bg-gray-800 px-1.5 py-0.5 rounded text-green-400">Strict-Transport-Security</code>
+        (HSTS) headers to prevent downgrade attacks.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Java HttpURLConnection over HTTP -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Sending credentials over plain HTTP
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                This Java code posts login credentials to an <code class="text-red-400">http://</code>
+                endpoint. The username and password travel across the network in plaintext — visible to
+                any packet sniffer. Even if the server-side application is secure, the transport layer
+                is not.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Credentials sent over unencrypted HTTP.
+URL url = new URL("http://api.example.com/login"); // NOT https!
+HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+conn.setRequestMethod("POST");
+conn.setDoOutput(true);
+conn.setRequestProperty("Content-Type", "application/json");
+
+String body = String.format("{\"username\":\"%s\",\"password\":\"%s\"}", username, password);
+
+try (OutputStream os = conn.getOutputStream()) {
+    os.write(body.getBytes(StandardCharsets.UTF_8));
+}
+
+// The credentials are visible to any network observer between client and server.
+int status = conn.getResponseCode();</code></div>
+        </div>
+
+        <!-- Example 2: Node.js HTTP server without TLS -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Express.js serving login form over HTTP without redirect
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                This Express server handles authentication over plain HTTP. The login form, session
+                cookies, and all subsequent requests travel unencrypted. Even if the session cookie has
+                <code class="text-red-400">httpOnly</code> set, an attacker on the network can steal it
+                via packet capture — <code class="text-red-400">httpOnly</code> only prevents JavaScript
+                access, not network interception.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Serving authentication over plain HTTP — no TLS.
+const express = require('express');
+const app = express();
+
+app.use(express.urlencoded({ extended: true }));
+
+app.post('/login', (req, res) =&gt; {
+    const { username, password } = req.body; // Cleartext on the wire!
+
+    if (authService.verify(username, password)) {
+        req.session.userId = username;
+        res.redirect('/dashboard');
+    } else {
+        res.status(401).send('Invalid credentials.');
+    }
+});
+
+// Listening on HTTP — no TLS certificate, no encryption.
+app.listen(3000, () =&gt; console.log('Running on http://localhost:3000'));</code></div>
+        </div>
+
+        <!-- Example 3: Java - Cookies without Secure flag -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Session cookie without the Secure flag
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                This servlet sets a session token cookie without the <code class="text-red-400">Secure</code>
+                flag. Even if the application is served over HTTPS, the browser will also send this cookie
+                over <strong class="text-gray-200">plain HTTP</strong> requests (e.g., if the user visits
+                <code class="text-red-400">http://</code> by mistake or an attacker forces a downgrade).
+                The session token is then exposed in cleartext on the wire.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Session cookie sent over both HTTP and HTTPS (no Secure flag).
+@WebServlet("/login")
+public class LoginServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        String user = req.getParameter("username");
+        String pass = req.getParameter("password");
+
+        if (authService.authenticate(user, pass)) {
+            String token = generateSessionToken();
+
+            Cookie sessionCookie = new Cookie("SESSION_ID", token);
+            sessionCookie.setHttpOnly(true);
+            sessionCookie.setPath("/");
+            // Missing: sessionCookie.setSecure(true);
+            // The cookie will be sent over HTTP too — exposed to MITM.
+            resp.addCookie(sessionCookie);
+
+            resp.sendRedirect("/dashboard");
+        }
+    }
+}</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Enforce HTTPS + HSTS in Java (Spring Boot) -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Enforce HTTPS with Spring Security + HSTS header
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Configure Spring Security to require HTTPS for all requests and add the
+                <code class="text-green-400">Strict-Transport-Security</code> (HSTS) header. HSTS tells
+                browsers to <strong class="text-gray-200">always</strong> use HTTPS for the domain, even
+                if the user types <code class="text-green-400">http://</code> — preventing protocol
+                downgrade attacks.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: All HTTP requests are redirected to HTTPS; HSTS prevents downgrades.
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            // Redirect all HTTP requests to HTTPS.
+            .requiresChannel()
+                .anyRequest().requiresSecure()
+            .and()
+            // HSTS: browser will refuse HTTP for 1 year after first visit.
+            .headers()
+                .httpStrictTransportSecurity()
+                    .includeSubDomains(true)
+                    .maxAgeInSeconds(31536000) // 1 year
+            .and().and()
+            .authorizeRequests()
+                .anyRequest().authenticated();
+    }
+}
+
+// application.properties — configure the TLS certificate:
+// server.port=8443
+// server.ssl.key-store=classpath:keystore.p12
+// server.ssl.key-store-password=${KEYSTORE_PASSWORD}
+// server.ssl.key-store-type=PKCS12</code></div>
+        </div>
+
+        <!-- Fix 2: Express.js HTTPS + HTTP redirect + HSTS -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): HTTPS server + HTTP-to-HTTPS redirect + Helmet HSTS
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Serve the application over HTTPS using Node's <code class="text-green-400">https</code>
+                module, run a minimal HTTP server that redirects to HTTPS, and use the
+                <code class="text-green-400">helmet</code> middleware to set HSTS and other security
+                headers automatically.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: HTTPS server with HTTP redirect and HSTS via Helmet.
+const https = require('https');
+const http = require('http');
+const fs = require('fs');
+const express = require('express');
+const helmet = require('helmet');
+
+const app = express();
+
+// Helmet sets Strict-Transport-Security and other security headers.
+app.use(helmet({
+    hsts: {
+        maxAge: 31536000,        // 1 year
+        includeSubDomains: true,
+        preload: true
+    }
+}));
+
+// Configure secure session cookies.
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    cookie: {
+        secure: true,       // Cookie only sent over HTTPS
+        httpOnly: true,      // Not accessible via JavaScript
+        sameSite: 'lax'
+    }
+}));
+
+// HTTPS server with TLS certificate.
+const httpsServer = https.createServer({
+    key: fs.readFileSync('/etc/ssl/private/server.key'),
+    cert: fs.readFileSync('/etc/ssl/certs/server.crt')
+}, app);
+httpsServer.listen(443);
+
+// HTTP server that redirects everything to HTTPS.
+http.createServer((req, res) =&gt; {
+    res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
+    res.end();
+}).listen(80);</code></div>
+        </div>
+
+        <!-- Fix 3: Secure cookie flags in Java -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Always set the Secure flag on sensitive cookies
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                The <code class="text-green-400">Secure</code> flag instructs the browser to
+                <strong class="text-gray-200">only send the cookie over HTTPS</strong>. Combined with
+                <code class="text-green-400">HttpOnly</code> and <code class="text-green-400">SameSite</code>,
+                this provides defense in depth against both network interception and cross-site attacks.
+                Always set all three flags on session and authentication cookies.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Cookie is only sent over HTTPS — never exposed in cleartext.
+@WebServlet("/login")
+public class LoginServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        String user = req.getParameter("username");
+        String pass = req.getParameter("password");
+
+        if (authService.authenticate(user, pass)) {
+            String token = generateSessionToken();
+
+            Cookie sessionCookie = new Cookie("SESSION_ID", token);
+            sessionCookie.setSecure(true);    // HTTPS only — never sent over HTTP
+            sessionCookie.setHttpOnly(true);  // Not accessible via JavaScript
+            sessionCookie.setPath("/");
+            sessionCookie.setMaxAge(3600);    // 1 hour
+
+            // Set SameSite via Set-Cookie header (no direct API before Servlet 6.0).
+            resp.setHeader("Set-Cookie",
+                    String.format("SESSION_ID=%s; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=3600",
+                            token));
+
+            resp.sendRedirect("/dashboard");
+        }
+    }
+}</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://cwe.mitre.org/data/definitions/319.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-319</p>
+                <p class="text-xs text-gray-500">Official CWE definition and examples</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP A02:2021 —
+                    Cryptographic Failures</p>
+                <p class="text-xs text-gray-500">Top 10 category covering cleartext transmission</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Security_Cheat_Sheet.html"
+            target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP Transport Layer
+                    Security Cheat Sheet</p>
+                <p class="text-xs text-gray-500">TLS configuration, cipher suites, and certificate management</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Strict_Transport_Security_Cheat_Sheet.html"
+            target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP HSTS Cheat
+                    Sheet</p>
+                <p class="text-xs text-gray-500">Strict-Transport-Security configuration and preload</p>
+            </div>
+        </a>
+    </div>
+</div>
