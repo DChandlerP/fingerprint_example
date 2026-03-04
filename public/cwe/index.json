@@ -8,5 +8,15 @@
         "cwe": "315",
         "name": "Cleartext Storage of Sensitive Information in a Cookie",
         "owasp": "OWASP:A05"
+    },
+    {
+        "cwe": "94",
+        "name": "Code Injection",
+        "owasp": "OWASP:A03"
+    },
+    {
+        "cwe": "78",
+        "name": "Command Injection",
+        "owasp": "OWASP:A03"
     }
 ]
