@@ -38,5 +38,10 @@
         "cwe": "319",
         "name": "Cleartext Transmission of Sensitive Information",
         "owasp": "OWASP:A02"
+    },
+    {
+        "cwe": "798",
+        "name": "Hardcoded Credentials & Secrets",
+        "owasp": "OWASP:A07"
     }
 ]
