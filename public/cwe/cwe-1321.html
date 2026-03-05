@@ -1,0 +1,274 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-1321 covers <strong class="text-gray-200">Prototype Pollution</strong> — a vulnerability unique to
+        JavaScript (Node.js and Browser) where an attacker can <strong class="text-gray-200">modify the properties of
+            the base Object prototype</strong>. Because almost every object in JavaScript inherits from this
+        prototype, these changes "pollute" all objects in the application.
+    </p>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        This occurs when user-controlled data is recursively merged into an object (e.g., via <code
+            class="text-red-400">_.merge</code> or a custom deep-copy function) without checking for the magic
+        properties <code class="text-red-400">__proto__</code> or <code class="text-red-400">constructor</code>.
+    </p>
+    <ul class="list-disc list-inside text-gray-300 leading-relaxed mb-4 space-y-1 ml-2">
+        <li><strong class="text-gray-200">Denial of Service (DoS)</strong> — Overwriting essential methods like
+            <code class="text-red-400">toString</code>, causing the application to crash.
+        </li>
+        <li><strong class="text-gray-200">Privilege Escalation</strong> — Injecting properties like <code
+                class="text-red-400">isAdmin: true</code> into the global prototype so all users are treated as admins.
+        </li>
+        <li><strong class="text-gray-200">Remote Code Execution (RCE)</strong> — Polluting configuration objects used
+            by secondary libraries (e.g., template engines or child process spawners).</li>
+    </ul>
+    <p class="text-gray-300 leading-relaxed">
+        Prototype Pollution is a "source-to-sink" vulnerability. The <strong class="text-gray-200">source</strong> is
+        usually
+        a JSON merge, and the <strong class="text-gray-200">sink</strong> is the execution of a feature that depends on
+        the polluted property.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Vulnerable Deep Merge -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Unsafe Recursive Merge (JavaScript / Node.js)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Recursive merge functions that don't specifically block access to <code
+                    class="text-red-400">__proto__</code>
+                allow an attacker to traverse to the global <code class="text-red-400">Object.prototype</code>.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Recursive merge without prototype checking.
+function merge(target, source) {
+    for (let key in source) {
+        if (typeof target[key] === 'object' && typeof source[key] === 'object') {
+            merge(target[key], source[key]); // RECURSIVE CALL
+        } else {
+            target[key] = source[key];
+        }
+    }
+}
+
+// Attacker Payload (JSON):
+// { "__proto__": { "isAdmin": true } }
+
+const userProfile = { name: "Bob" };
+merge(userProfile, JSON.parse(attackerJson));
+
+// Now EVERY object has isAdmin: true!
+const guest = {};
+console.log(guest.isAdmin); // true</code></div>
+        </div>
+
+        <!-- Example 2: Express Query Parameter Pollution -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Prototype Pollution via URL Parameters
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                If the application uses a query parser (like <code class="text-red-400">qs</code> with certain
+                configurations) that allows object nesting, an attacker can pollute the prototype via the URL.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Passing unvalidated query params to a merge.
+app.get('/settings', (req, res) =&gt; {
+    const defaultSettings = { theme: 'dark' };
+    const userSettings = req.query.settings; // ?settings[__proto__][polluted]=true
+    
+    _.merge(defaultSettings, userSettings); 
+    // Old versions of Lodash/Underscore were vulnerable to this.
+});</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Protocol Blocking -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): Sanitize Keys and Block Magic Properties
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Explicitly block the <code class="text-green-400">__proto__</code>, <code
+                    class="text-green-400">constructor</code>,
+                and <code class="text-green-400">prototype</code> keys in any merge or assignment logic involving user
+                data.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Explicitly blocking prototype keys.
+function safeMerge(target, source) {
+    for (let key in source) {
+        // BLOCK DANGEROUS KEYS
+        if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+            continue;
+        }
+
+        if (typeof target[key] === 'object' && typeof source[key] === 'object') {
+            safeMerge(target[key], source[key]);
+        } else {
+            target[key] = source[key];
+        }
+    }
+}</code></div>
+        </div>
+
+        <!-- Fix 2: Object.create(null) -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): Objects without Prototypes
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                When creating objects that will hold user-controlled key-value pairs (like query parameters or
+                map data), use <code class="text-green-400">Object.create(null)</code>. This creates an object
+                that does <strong class="text-green-300">not inherit from Object.prototype</strong>, making it
+                impossible to pollute.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Create a map without a prototype.
+const safeMap = Object.create(null);
+
+// Even if someone pollutes Object.prototype, it won't affect safeMap.
+console.log(safeMap.__proto__); // undefined
+console.log(safeMap.toString);   // undefined</code></div>
+        </div>
+
+        <!-- Fix 3: Schema Validation (JSON Schema) -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Architecture): Input Validation via Schema
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Use a library like <code class="text-green-400">ajv</code> (JSON Schema) to validate the structure
+                of incoming JSON objects. A strict schema that only allows expected fields will naturally reject
+                <code class="text-red-400">__proto__</code> keys.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Validate JSON against a strict schema.
+const Ajv = require("ajv");
+const ajv = new Ajv();
+
+const schema = {
+    type: "object",
+    properties: {
+        theme: { type: "string" }
+    },
+    additionalProperties: false // ← This is critical
+};
+
+const validate = ajv.compile(schema);
+if (validate(req.body)) {
+    // Process data...
+} else {
+    // Reject data...
+}</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://portswigger.net/web-security/prototype-pollution" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">PortSwigger — Prototype
+                    Pollution</p>
+                <p class="text-xs text-gray-500">Official Web Security Academy guide with labs</p>
+            </div>
+        </a>
+
+        <a href="https://cwe.mitre.org/data/definitions/1321.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-1321</p>
+                <p class="text-xs text-gray-500">Official definition for Prototype Pollution</p>
+            </div>
+        </a>
+
+        <a href="https://learn.snyk.io/lesson/prototype-pollution/?ecosystem=javascript" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">Snyk — Prototype
+                    Pollution Lesson</p>
+                <p class="text-xs text-gray-500">Interactive lesson on detecting and fixing prototype pollution in
+                    Node.js</p>
+            </div>
+        </a>
+
+        <a href="https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/Prototype_pollution" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MDN — Prototype
+                    Pollution</p>
+                <p class="text-xs text-gray-500">Official MDN documentation on prototype pollution vulnerabilities
+                </p>
+            </div>
+        </a>
+    </div>
+</div>

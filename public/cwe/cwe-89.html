@@ -1,0 +1,515 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-89 covers <strong class="text-gray-200">SQL Injection (SQLi)</strong> — a vulnerability where
+        <strong class="text-gray-200">user-controlled input is concatenated directly into SQL queries</strong>
+        without parameterization or proper escaping. An attacker can inject SQL syntax to alter the query's
+        logic, bypass authentication, extract sensitive data, modify or delete records, and in some cases
+        execute operating system commands on the database server.
+    </p>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        SQL injection remains one of the most critical and commonly exploited web vulnerabilities. It enables:
+    </p>
+    <ul class="list-disc list-inside text-gray-300 leading-relaxed mb-4 space-y-1 ml-2">
+        <li><strong class="text-gray-200">Authentication bypass</strong> — injecting
+            <code class="text-red-400">' OR '1'='1</code> to log in without valid credentials
+        </li>
+        <li><strong class="text-gray-200">Data exfiltration</strong> — using <code
+                class="text-red-400">UNION SELECT</code>
+            to dump tables containing passwords, PII, or financial data</li>
+        <li><strong class="text-gray-200">Data manipulation</strong> — injecting <code
+                class="text-red-400">UPDATE</code>,
+            <code class="text-red-400">DELETE</code>, or <code class="text-red-400">INSERT</code> statements
+            to corrupt or destroy data
+        </li>
+        <li><strong class="text-gray-200">Privilege escalation</strong> — reading database admin credentials
+            or modifying user roles</li>
+        <li><strong class="text-gray-200">Remote code execution</strong> — leveraging database features like
+            <code class="text-red-400">xp_cmdshell</code> (SQL Server) or
+            <code class="text-red-400">LOAD_FILE()</code> / <code class="text-red-400">INTO OUTFILE</code> (MySQL)
+            to execute OS commands
+        </li>
+    </ul>
+    <div class="grid sm:grid-cols-3 gap-3 mb-4">
+        <div class="bg-gray-900 p-3 rounded-lg border border-gray-800">
+            <p class="text-sm font-semibold text-red-400 mb-1">Classic / In-Band SQLi</p>
+            <p class="text-gray-400 text-xs">Attacker's injected query results are returned directly in the
+                application's response. Easiest to exploit; includes UNION-based and error-based techniques.</p>
+        </div>
+        <div class="bg-gray-900 p-3 rounded-lg border border-gray-800">
+            <p class="text-sm font-semibold text-red-400 mb-1">Blind SQLi</p>
+            <p class="text-gray-400 text-xs">Application does not display query results, but the attacker infers
+                data by observing response differences (boolean-based) or time delays (time-based).</p>
+        </div>
+        <div class="bg-gray-900 p-3 rounded-lg border border-gray-800">
+            <p class="text-sm font-semibold text-red-400 mb-1">Second-Order SQLi</p>
+            <p class="text-gray-400 text-xs">Malicious input is stored safely, then later incorporated into a SQL
+                query without parameterization — the injection triggers on a subsequent request.</p>
+        </div>
+    </div>
+    <p class="text-gray-300 leading-relaxed">
+        This weakness is part of <strong class="text-gray-200">OWASP A03:2021 — Injection</strong> and the
+        <strong class="text-gray-200">SANS/CWE Top 25</strong>. The primary and most effective defense is
+        <strong class="text-gray-200">parameterized queries (prepared statements)</strong> — they separate
+        SQL structure from data, making injection structurally impossible regardless of the input.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Java JDBC string concatenation -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: String concatenation in SQL queries (Java / JDBC / JPA)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Directly concatenating user input into SQL strings is the classic SQLi pattern. An attacker
+                submits <code class="text-gray-300 text-xs">' OR '1'='1' --</code> as the username to bypass
+                login, or uses <code class="text-red-400">UNION SELECT</code> to extract data from other tables.
+                This applies to raw JDBC, Spring JDBC, and even JPA/Hibernate when using string-built queries.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: User input concatenated into SQL — SQL injection.
+
+// --- JDBC: classic string concatenation ---
+public User login(String username, String password) throws SQLException {
+    String sql = "SELECT * FROM users WHERE username = '"
+        + username + "' AND password = '" + password + "'";
+    //  ↑ Attacker input: ' OR '1'='1' --
+    //  Resulting query: SELECT * FROM users WHERE username = '' OR '1'='1' --'
+    //  Returns all users — authentication bypassed!
+
+    Statement stmt = conn.createStatement();
+    ResultSet rs = stmt.executeQuery(sql);
+    // ...
+}
+
+// --- Spring JDBC: string concatenation in JdbcTemplate ---
+public List&lt;Product&gt; search(String category) {
+    String sql = "SELECT * FROM products WHERE category = '" + category + "'";
+    // Attacker: ' UNION SELECT username, password, null FROM users --
+    return jdbcTemplate.query(sql, productRowMapper);
+}
+
+// --- JPA / Hibernate: string-built JPQL ---
+public List&lt;User&gt; findByName(String name) {
+    String jpql = "SELECT u FROM User u WHERE u.name = '" + name + "'";
+    // Even JPQL is injectable when built with string concatenation!
+    return em.createQuery(jpql, User.class).getResultList();
+}
+
+// --- Stored procedure call with concatenation ---
+String sql = "CALL get_user_orders('" + userId + "')";
+// Attacker: '); DROP TABLE orders; --</code></div>
+        </div>
+
+        <!-- Example 2: Node.js / Express SQL injection -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Template literals and string concatenation in SQL (Node.js / Express)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                JavaScript template literals (<code class="text-red-400">`${variable}`</code>) make SQL injection
+                easy to introduce. Whether using <code class="text-red-400">mysql</code>,
+                <code class="text-red-400">pg</code>, or <code class="text-red-400">better-sqlite3</code>,
+                interpolating request parameters into query strings creates the same vulnerability. ORMs like
+                Sequelize and Knex are safe by default, but their raw query methods are not.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: User input interpolated into SQL — SQL injection.
+const express = require('express');
+const mysql = require('mysql2');
+const app = express();
+
+const db = mysql.createConnection({ /* config */ });
+
+// Login bypass via template literal interpolation.
+app.post('/login', (req, res) =&gt; {
+    const { username, password } = req.body;
+    const sql = `SELECT * FROM users
+        WHERE username = '${username}' AND password = '${password}'`;
+    //                    ↑ SQL injection — template literal!
+    // Attacker: username = "admin' --"  → password check is commented out.
+
+    db.query(sql, (err, results) =&gt; {
+        if (results.length &gt; 0) res.json({ success: true });
+    });
+});
+
+// Data exfiltration via search endpoint.
+app.get('/products', (req, res) =&gt; {
+    const sql = "SELECT * FROM products WHERE name LIKE '%" + req.query.q + "%'";
+    // Attacker: q = %' UNION SELECT id, email, password FROM users --
+    db.query(sql, (err, results) =&gt; res.json(results));
+});
+
+// Sequelize raw query — ORM does NOT protect raw queries!
+const results = await sequelize.query(
+    `SELECT * FROM orders WHERE user_id = ${req.params.id}`,
+    { type: QueryTypes.SELECT }
+);
+// Attacker: /orders/1; DROP TABLE orders;</code></div>
+        </div>
+
+        <!-- Example 3: Dynamic ORDER BY / table names -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: SQL injection in ORDER BY, table names, and dynamic identifiers (Java &amp; JavaScript)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Prepared statements <strong class="text-gray-200">cannot parameterize identifiers</strong>
+                (column names, table names) or SQL keywords like <code class="text-red-400">ORDER BY</code>
+                direction. These are common blind spots where developers concatenate input even when using
+                parameterized queries elsewhere. Attackers exploit <code class="text-red-400">ORDER BY</code>
+                injection for blind data extraction via conditional sorting.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Identifiers and ORDER BY cannot use query parameters.
+
+// --- Java: ORDER BY with user-controlled column ---
+String sortCol = req.getParameter("sort");  // e.g. "name"
+String sql = "SELECT * FROM products ORDER BY " + sortCol;
+// Attacker: sort = (CASE WHEN (SELECT password FROM users LIMIT 1)
+//   LIKE 'a%' THEN name ELSE price END)
+// Blind SQLi — response order reveals data character by character.
+
+// --- Java: dynamic table name ---
+String table = req.getParameter("report");
+String sql = "SELECT * FROM " + table + " WHERE year = 2024";
+// Attacker: report = users; DROP TABLE audit_log; --
+
+// --- JavaScript: dynamic column in Knex ---
+app.get('/products', (req, res) =&gt; {
+    const sortBy = req.query.sort || 'name';
+    // Knex orderBy does NOT sanitize — it's treated as a raw identifier.
+    knex('products').orderBy(sortBy).then(rows =&gt; res.json(rows));
+    // Attacker: sort = (CASE WHEN 1=1 THEN name ELSE price END)
+});
+
+// --- JavaScript: dynamic WHERE column ---
+const col = req.query.field;   // "email"
+const val = req.query.value;   // attacker-controlled
+const sql = `SELECT * FROM users WHERE ${col} = ?`;
+//                                      ↑ Identifier — can't be parameterized!
+// Attacker: field = 1=1 UNION SELECT * FROM secrets WHERE 1</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Java prepared statements -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Parameterized queries with PreparedStatement, JPA, and Spring JDBC
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                <strong class="text-green-300">Parameterized queries</strong> (prepared statements) are the
+                definitive fix for SQL injection. The database driver separates the query structure from the
+                data — user input is <em>always</em> treated as a literal value, never as SQL syntax.
+                This applies to JDBC <code class="text-green-400">PreparedStatement</code>, JPA named
+                parameters, and Spring's <code class="text-green-400">JdbcTemplate</code>.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Parameterized queries — SQL injection is structurally impossible.
+
+// --- JDBC PreparedStatement ---
+public User login(String username, String password) throws SQLException {
+    String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+    PreparedStatement ps = conn.prepareStatement(sql);
+    ps.setString(1, username);  // Bound as data, not SQL syntax.
+    ps.setString(2, password);  // ' OR '1'='1 is treated as a literal string.
+    ResultSet rs = ps.executeQuery();
+    // ...
+}
+
+// --- Spring JdbcTemplate with positional parameters ---
+public List&lt;Product&gt; search(String category) {
+    String sql = "SELECT * FROM products WHERE category = ?";
+    return jdbcTemplate.query(sql, productRowMapper, category);
+    // category is bound — UNION SELECT is impossible.
+}
+
+// --- JPA / Hibernate with named parameters ---
+public List&lt;User&gt; findByName(String name) {
+    return em.createQuery("SELECT u FROM User u WHERE u.name = :name", User.class)
+        .setParameter("name", name)
+        .getResultList();
+}
+
+// --- Spring Data JPA repository (parameterized by default) ---
+public interface UserRepository extends JpaRepository&lt;User, Long&gt; {
+    List&lt;User&gt; findByUsername(String username);
+    // Spring generates a parameterized query automatically.
+
+    @Query("SELECT u FROM User u WHERE u.email = :email")
+    Optional&lt;User&gt; findByEmail(@Param("email") String email);
+}
+
+// --- ORDER BY: use an allowlist, never concatenate ---
+private static final Set&lt;String&gt; ALLOWED_SORT_COLS =
+    Set.of("name", "price", "created_at");
+
+String sortCol = ALLOWED_SORT_COLS.contains(req.getParameter("sort"))
+    ? req.getParameter("sort")
+    : "name";  // Default to safe value.
+String sql = "SELECT * FROM products ORDER BY " + sortCol;
+// Column name is validated against allowlist — safe.</code></div>
+        </div>
+
+        <!-- Fix 2: JavaScript parameterized queries -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): Parameterized queries with mysql2, pg, Knex, and Sequelize
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                All major Node.js database libraries support parameterized queries via
+                <code class="text-green-400">?</code> placeholders (MySQL) or
+                <code class="text-green-400">$1, $2</code> placeholders (PostgreSQL). ORMs like Sequelize
+                and query builders like Knex parameterize automatically when used correctly — but their
+                raw query methods require explicit parameter binding.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Parameterized queries in Node.js — all major drivers.
+
+// --- mysql2: placeholder parameters ---
+app.post('/login', (req, res) =&gt; {
+    const { username, password } = req.body;
+    const sql = 'SELECT * FROM users WHERE username = ? AND password = ?';
+    db.query(sql, [username, password], (err, results) =&gt; {
+        //          ↑ Parameters bound separately — safe.
+        if (results.length &gt; 0) res.json({ success: true });
+    });
+});
+
+// --- pg (PostgreSQL): $1, $2 placeholders ---
+const { Pool } = require('pg');
+const pool = new Pool();
+
+app.get('/products', async (req, res) =&gt; {
+    const sql = 'SELECT * FROM products WHERE name ILIKE $1';
+    const results = await pool.query(sql, [`%${req.query.q}%`]);
+    res.json(results.rows);
+});
+
+// --- Knex query builder (parameterized by default) ---
+app.get('/users/:id', async (req, res) =&gt; {
+    const user = await knex('users').where({ id: req.params.id }).first();
+    // Knex generates: SELECT * FROM users WHERE id = ?  with bound param.
+    res.json(user);
+});
+
+// --- Sequelize ORM (parameterized by default) ---
+const user = await User.findOne({
+    where: { username: req.body.username }
+    // Sequelize generates parameterized query automatically.
+});
+
+// --- Sequelize raw query: MUST use replacements ---
+const results = await sequelize.query(
+    'SELECT * FROM orders WHERE user_id = :userId',
+    {
+        replacements: { userId: req.params.id },
+        type: QueryTypes.SELECT
+    }
+);
+
+// --- ORDER BY: allowlist validation ---
+const ALLOWED_SORT = ['name', 'price', 'created_at'];
+const sortBy = ALLOWED_SORT.includes(req.query.sort)
+    ? req.query.sort
+    : 'name';
+const rows = await knex('products').orderBy(sortBy);
+// Only allowlisted column names are used — safe.</code></div>
+        </div>
+
+        <!-- Fix 3: Defense-in-depth -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Defense-in-Depth: Least-privilege database accounts, WAF rules, and input validation
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Parameterized queries are the primary defense, but defense-in-depth reduces blast radius if
+                a query is missed. Use <strong class="text-green-300">least-privilege database accounts</strong>
+                (the app account cannot DROP or ALTER), <strong class="text-green-300">stored procedures</strong>
+                for complex queries, <strong class="text-green-300">input validation</strong> as a secondary
+                layer, and <strong class="text-green-300">WAF rules</strong> to catch common injection patterns.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Defense-in-depth layers beyond parameterized queries.
+
+// --- 1. Least-privilege database accounts ---
+// Application account should ONLY have SELECT, INSERT, UPDATE on
+// the tables it needs. Never use root or admin accounts.
+//
+// MySQL example:
+// GRANT SELECT, INSERT, UPDATE ON myapp.* TO 'app_user'@'%';
+// REVOKE DROP, ALTER, CREATE, DELETE ON myapp.* FROM 'app_user'@'%';
+//
+// Even if SQLi occurs, the attacker cannot DROP TABLE or read
+// system tables.
+
+// --- 2. Input validation as a secondary layer (Java) ---
+// Validate expected format BEFORE the query — reduces attack surface.
+public void validateUserId(String userId) {
+    if (!userId.matches("^[0-9]{1,10}$")) {
+        throw new IllegalArgumentException("Invalid user ID format");
+    }
+    // Even though we'll use a PreparedStatement, validating input
+    // provides a second layer of protection.
+}
+
+// --- 3. Input validation (JavaScript) ---
+function validateProductId(id) {
+    const parsed = parseInt(id, 10);
+    if (isNaN(parsed) || parsed &lt; 1) {
+        throw new Error('Invalid product ID');
+    }
+    return parsed;
+}
+
+// --- 4. Error handling — never expose SQL errors to users ---
+// DANGEROUS: res.status(500).send(err.message);
+//   → Reveals table names, column names, DB version.
+// SAFE:
+app.use((err, req, res, next) =&gt; {
+    console.error('DB error:', err);  // Log full error internally.
+    res.status(500).json({ error: 'An internal error occurred.' });
+    // Generic message — no SQL details leaked.
+});
+
+// --- 5. WAF / middleware SQL injection detection ---
+// Cloud Armor, AWS WAF, or ModSecurity rules can catch common
+// patterns like: ' OR 1=1, UNION SELECT, DROP TABLE, etc.
+// These are a safety net, NOT a primary defense.
+//
+// Example Cloud Armor rule:
+// evaluatePreconfiguredExpr('sqli-v33-stable')</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">PortSwigger — SQL
+                    Injection</p>
+                <p class="text-xs text-gray-500">Comprehensive explanation and interactive labs for SQLi vulnerabilities
+                </p>
+            </div>
+        </a>
+
+        <a href="https://cwe.mitre.org/data/definitions/89.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-89</p>
+                <p class="text-xs text-gray-500">Improper Neutralization of Special Elements used in an SQL
+                    Command ('SQL Injection')</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/Top10/A03_2021-Injection/" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP A03:2021 —
+                    Injection</p>
+                <p class="text-xs text-gray-500">Top 10 category covering SQL injection and other injection flaws</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html"
+            target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP SQL
+                    Injection Prevention Cheat Sheet</p>
+                <p class="text-xs text-gray-500">Parameterized queries, stored procedures, and defense strategies</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Query_Parameterization_Cheat_Sheet.html" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP Query
+                    Parameterization Cheat Sheet</p>
+                <p class="text-xs text-gray-500">Language-specific examples of parameterized queries</p>
+            </div>
+        </a>
+    </div>
+</div>

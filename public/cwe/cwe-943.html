@@ -1,0 +1,313 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-943 covers <strong class="text-gray-200">NoSQL Injection</strong> — a vulnerability where
+        <strong class="text-gray-200">user-controlled input is used to build NoSQL queries</strong> without
+        proper sanitization or type enforcement. Unlike traditional SQL injection which targets query strings, NoSQL
+        injection often targets the <strong class="text-gray-200">JSON/BSON structure</strong> of the query itself.
+    </p>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        This is particularly common in Node.js applications using MongoDB, where attackers can inject
+        special operators (like <code class="text-red-400">$gt</code>, <code class="text-red-400">$ne</code>, or
+        <code class="text-red-400">$where</code>) to bypass authentication or extract sensitive data.
+    </p>
+    <ul class="list-disc list-inside text-gray-300 leading-relaxed mb-4 space-y-1 ml-2">
+        <li><strong class="text-gray-200">Operator Injection</strong> — using objects like <code
+                class="text-red-400">{"$ne": null}</code> to make a query true for any record.</li>
+        <li><strong class="text-gray-200">Authentication Bypass</strong> — bypassing login checks by making the password
+            comparison always true.</li>
+        <li><strong class="text-gray-200">JavaScript Injection</strong> — exploiting the <code
+                class="text-red-400">$where</code> operator to execute arbitrary JavaScript on the database server.</li>
+        <li><strong class="text-gray-200">Data Exfiltration</strong> — leaking hidden fields or other users' data by
+            altering query logic.</li>
+    </ul>
+    <p class="text-gray-300 leading-relaxed">
+        WhileNoSQL databases don't use SQL, they are <strong class="text-gray-200">not "injection-proof"</strong>. The
+        primary defense is <strong class="text-gray-200">strict input validation</strong>, using <strong
+            class="text-gray-200">schema-based ORMs (like Mongoose)</strong>, and disabling server-side JavaScript
+        execution features.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: MongoDB Operator Injection -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: NoSQL Operator Injection (Node.js / Express / MongoDB)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                If an application passes an untrusted object (e.g., from <code class="text-red-400">req.body</code>)
+                directly into a MongoDB query, an attacker can substitute a string with an object containing
+                operators like <code class="text-red-400">$ne</code> (not equal).
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: req.body used directly in query.
+app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+
+    // If an attacker sends: {"username": "admin", "password": {"$ne": null}}
+    // The query becomes: { username: "admin", password: { $ne: null } }
+    // This matches the admin user regardless of their actual password!
+
+    const user = await db.collection('users').findOne({
+        username: username,
+        password: password
+    });
+
+    if (user) {
+        res.send("Logged in!");
+    } else {
+        res.status(401).send("Failed");
+    }
+});</code></div>
+        </div>
+
+        <!-- Example 2: JavaScript Injection via $where -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: JavaScript Injection using $where operator
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                The <code class="text-red-400">$where</code> operator allows running arbitrary JavaScript on
+                the MongoDB server. If user input is concatenated into this string, it's equivalent to
+                classic SQL injection but with the full power of JavaScript.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: String concatenation in $where clause.
+app.get('/users/search', async (req, res) => {
+    const name = req.query.name;
+
+    // Attacker sends: ?name='; return true; var dummy='
+    // The query becomes: { $where: "this.name == ''; return true; var dummy=''" }
+    // This returns EVERY user in the database.
+
+    const users = await db.collection('users').find({
+        $where: `this.name == '${name}'`
+    }).toArray();
+
+    res.json(users);
+});</code></div>
+        </div>
+
+        <!-- Example 3: Spring Data MongoDB (Java) -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: JSON Query Injection in Spring Data MongoDB
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                In Java, using <code class="text-red-400">@Query</code> with placeholders value
+                can still be vulnerable if the query is structurally manipulated by the input or if
+                the input is not properly typed by the driver.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Potential structural injection.
+public interface UserRepository extends MongoRepository<User, String> {
+
+    // If the input is not strictly a string, it might be interpreted as an object.
+    @Query("{ 'username' : ?0, 'password' : ?1 }")
+    User findByCustomQuery(Object username, Object password);
+    
+    // Attacker passes a Map for password: Map.of("$ne", null)
+}</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Type Enforcement and Sanitization -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): Sanitize inputs and enforce types (mongo-sanitize)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Strip any keys starting with <code class="text-green-400">$</code> from user input.
+                The <code class="text-green-400">mongo-sanitize</code> middleware is a common tool for this.
+                Alternatively, always ensure inputs are cast to strings before using them in a query.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Sanitizing req.body to remove operators.
+const sanitize = require('mongo-sanitize');
+
+app.post('/login', async (req, res) => {
+    // Strips out any keys starting with "$"
+    const username = sanitize(req.body.username);
+    const password = sanitize(req.body.password);
+
+    // Or explicitly cast to string:
+    // const password = String(req.body.password);
+
+    const user = await db.collection('users').findOne({
+        username: username,
+        password: password
+    });
+    // ...
+});</code></div>
+        </div>
+
+        <!-- Fix 2: Use Mongoose Schemas -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): Use Mongoose for Schema Enforcement
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Mongoose (an ODM) provides <strong class="text-green-300">automatic type casting</strong>
+                based on your schema. If your schema says a field is a <code class="text-green-400">String</code>,
+                Mongoose will cast an injected object like <code class="text-red-400">{$ne: null}</code> to the
+                literal string <code class="text-green-400">"[object Object]"</code>, effectively neutralizing the
+                attack.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Mongoose casts inputs to schema-defined types.
+const UserSchema = new mongoose.Schema({
+    username: String,
+    password: String
+});
+const User = mongoose.model('User', UserSchema);
+
+app.post('/login', async (req, res) => {
+    // Even if req.body.password is {"$ne": null}, 
+    // Mongoose treats it as a string literal.
+    const user = await User.findOne({
+        username: req.body.username,
+        password: req.body.password
+    });
+    // ...
+});</code></div>
+        </div>
+
+        <!-- Fix 3: Disable Server-Side JS and avoid $where -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Config): Harden Database and avoid dangerous operators
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Avoid the <code class="text-red-400">$where</code> and <code class="text-red-400">$mapReduce</code>
+                operators entirely if possible. Most queries can be rewritten using standard MongoDB query operators.
+                Additionally, disable server-side JavaScript execution in the MongoDB configuration.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Rewriting $where to standard query operators.
+// DANGEROUS: { $where: "this.name == '" + name + "'" }
+// SAFE:
+const users = await db.collection('users').find({
+    name: name // Simple, parameterized matching
+}).toArray();
+
+// --- DATABASE CONFIGURATION ---
+// In mongod.conf, disable server-side JS execution:
+// security:
+//   javascriptEnabled: false</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://cwe.mitre.org/data/definitions/943.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-943</p>
+                <p class="text-xs text-gray-500">Improper Neutralization of Special Elements in Data Query Logic</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/05.6-Testing_for_NoSQL_Injection"
+            target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP WSTG — Testing
+                    for
+                    NoSQL Injection</p>
+                <p class="text-xs text-gray-500">Comprehensive testing guide for identifying NoSQL injection
+                    vulnerabilities</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/NoSQL_Security_Cheat_Sheet.html" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP NoSQL Security
+                    Cheat Sheet</p>
+                <p class="text-xs text-gray-500">Detailed prevention techniques and examples</p>
+            </div>
+        </a>
+
+        <a href="https://portswigger.net/web-security/nosql-injection" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">PortSwigger — NoSQL
+                    Injection</p>
+                <p class="text-xs text-gray-500">Detailed explanation and interactive labs for NoSQL injection
+                    vulnerabilities</p>
+            </div>
+        </a>
+    </div>
+</div>

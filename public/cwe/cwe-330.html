@@ -1,0 +1,442 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-330 flags code that uses a <strong class="text-gray-200">non-cryptographic random number generator</strong>
+        (e.g., <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">Math.random()</code>,
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">java.util.Random</code>,
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">random.random()</code>) in a context
+        where unpredictability matters for security. These generators are fast and produce statistically
+        uniform output, but their sequences are <strong class="text-gray-200">predictable</strong> — an
+        attacker who observes a few outputs can reconstruct the internal state and predict all future values.
+    </p>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        This weakness maps to <strong class="text-gray-200">OWASP A02:2021 — Cryptographic Failures</strong>.
+        The fix depends entirely on context: replace the weak RNG with a cryptographically secure one
+        (<code class="bg-gray-800 px-1.5 py-0.5 rounded text-green-400">SecureRandom</code>,
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-green-400">crypto.randomBytes()</code>,
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-green-400">secrets</code>) — but
+        <strong class="text-gray-200">only when the use case demands it</strong>.
+    </p>
+
+    <!-- Context Guidance Box -->
+    <div class="bg-gray-900 p-5 rounded-xl border border-yellow-800/60 mb-4">
+        <h4 class="font-semibold text-yellow-400 mb-3 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4" />
+                <path d="M12 8h.01" />
+            </svg>
+            SAST False Positive Guidance — Context Matters
+        </h4>
+        <p class="text-gray-300 text-sm leading-relaxed mb-3">
+            SAST tools flag <strong class="text-gray-200">every</strong> use of non-cryptographic RNGs,
+            but not every use is a security issue. The key question is:
+            <em class="text-yellow-300">"Could an attacker gain any advantage by predicting this value?"</em>
+            If the answer is no, the finding is a <strong class="text-yellow-300">false positive</strong>.
+        </p>
+        <div class="grid sm:grid-cols-2 gap-4 mt-3">
+            <div>
+                <p class="text-sm font-semibold text-red-400 mb-2">🔴 True Positive — Requires CSPRNG</p>
+                <ul class="list-disc list-inside text-gray-300 text-sm space-y-1 ml-1">
+                    <li>Session tokens / session IDs</li>
+                    <li>CSRF tokens</li>
+                    <li>Password reset links / OTP codes</li>
+                    <li>API keys and secret generation</li>
+                    <li>Cryptographic nonces / IVs</li>
+                    <li>OAuth state parameters</li>
+                    <li>Email verification tokens</li>
+                    <li>Any value an attacker could exploit if predicted</li>
+                </ul>
+            </div>
+            <div>
+                <p class="text-sm font-semibold text-green-400 mb-2">🟢 Likely False Positive — CSPRNG Not Needed</p>
+                <ul class="list-disc list-inside text-gray-300 text-sm space-y-1 ml-1">
+                    <li>UI animations and visual effects</li>
+                    <li>Randomizing display order (e.g., carousel)</li>
+                    <li>A/B test group assignment (non-security)</li>
+                    <li>Load balancing / jitter timers</li>
+                    <li>Shuffling quiz questions</li>
+                    <li>Random placeholder text or colors</li>
+                    <li>Monte Carlo simulations / math modeling</li>
+                    <li>Test data and fixture generation</li>
+                </ul>
+            </div>
+        </div>
+        <p class="text-gray-400 text-sm mt-3 italic">
+            Tip: When triaging, search the surrounding code for keywords like
+            <code class="text-yellow-400">token</code>, <code class="text-yellow-400">session</code>,
+            <code class="text-yellow-400">password</code>, <code class="text-yellow-400">secret</code>,
+            <code class="text-yellow-400">nonce</code>, or <code class="text-yellow-400">csrf</code>.
+            If none of these are present and the value is only used for display or non-security logic,
+            mark the finding as a false positive with a justification.
+        </p>
+    </div>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Java session token with java.util.Random -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: java.util.Random for session tokens and CSRF tokens (Java)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                <code class="text-red-400">java.util.Random</code> uses a 48-bit linear congruential generator (LCG).
+                Given just <strong class="text-gray-200">two consecutive outputs</strong>, an attacker can recover the
+                internal seed and predict every future token. When used for session IDs or CSRF tokens, this allows
+                session hijacking and cross-site request forgery. The
+                <code class="text-red-400">ThreadLocalRandom</code> variant has the same predictability problem.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: java.util.Random is predictable — never use for security tokens.
+import java.util.Random;
+
+public class TokenService {
+
+    // LCG with 48-bit state — output is predictable from 2 samples.
+    private static final Random rng = new Random();
+
+    /** Generate a session token. */
+    public String generateSessionToken() {
+        // Attacker can predict future tokens after observing ≤2 values.
+        StringBuilder token = new StringBuilder();
+        for (int i = 0; i < 32; i++) {
+            token.append(Integer.toHexString(rng.nextInt(16)));
+        }
+        return token.toString();
+    }
+
+    /** Generate a CSRF token. */
+    public String generateCsrfToken() {
+        // Same predictable RNG — CSRF protection is effectively bypassed.
+        return Long.toHexString(rng.nextLong());
+    }
+}
+
+// Also dangerous — ThreadLocalRandom is fast but equally predictable:
+long token = ThreadLocalRandom.current().nextLong(); // Don't use for security!</code></div>
+        </div>
+
+        <!-- Example 2: Node.js Math.random() for password resets -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Math.random() for password reset tokens and OTP codes (Node.js)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                <code class="text-red-400">Math.random()</code> uses the V8 engine's xorshift128+ algorithm, which
+                produces output that can be <strong class="text-gray-200">reversed to recover the internal
+                    state</strong>
+                from a handful of observed values. When used for password reset links or one-time codes, an attacker
+                who can trigger and observe a few resets can predict the token for any target account.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Math.random() is predictable — state recoverable from ~5 outputs.
+
+/** Generate a 6-digit OTP code. */
+function generateOTP() {
+    // xorshift128+ can be reversed — attacker predicts future OTPs.
+    return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+/** Generate a password reset token. */
+function generateResetToken() {
+    // Token is predictable after observing a few resets.
+    let token = '';
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    for (let i = 0; i < 32; i++) {
+        token += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return token;
+}
+
+/** Generate an API key for a new user. */
+function generateApiKey() {
+    // API key derived from Math.random — can be predicted and forged.
+    return 'ak_' + Math.random().toString(36).substring(2) +
+                    Math.random().toString(36).substring(2);
+}</code></div>
+        </div>
+
+        <!-- Example 3: Python random for secret generation -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: random module for secrets and cryptographic nonces (Python)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Python's <code class="text-red-400">random</code> module uses the Mersenne Twister (MT19937),
+                which is <strong class="text-gray-200">completely reversible after observing 624 outputs</strong>.
+                The module's own documentation explicitly warns:
+                <em>"should not be used for security purposes."</em> When used for tokens, nonces, or
+                invitation codes with access implications, the system is vulnerable to prediction attacks.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code># DANGEROUS: random module uses Mersenne Twister — fully reversible.
+import random
+import string
+
+def generate_invite_code():
+    """Generate an invitation code that grants account access."""
+    # MT19937: internal state recoverable after 624 observed outputs.
+    chars = string.ascii_letters + string.digits
+    return ''.join(random.choice(chars) for _ in range(24))
+
+def generate_nonce():
+    """Generate a nonce for a cryptographic protocol."""
+    # Predictable nonce = broken protocol (e.g., AES-GCM nonce reuse).
+    return random.getrandbits(128)
+
+def generate_temp_password():
+    """Generate a temporary password for new accounts."""
+    # Attacker can predict passwords issued to other users.
+    chars = string.ascii_letters + string.digits + '!@#$%'
+    return ''.join(random.choices(chars, k=12))</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Java SecureRandom -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Replace java.util.Random with SecureRandom
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                <code class="text-green-400">java.security.SecureRandom</code> reads from the OS entropy pool
+                (<code class="text-green-400">/dev/urandom</code> on Linux, CryptGenRandom on Windows). Its output
+                is computationally indistinguishable from true randomness. It is a drop-in replacement for
+                <code class="text-red-400">Random</code> — both implement the same interface.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: SecureRandom is backed by OS entropy — output is unpredictable.
+import java.security.SecureRandom;
+import java.util.HexFormat;
+
+public class TokenService {
+
+    // SecureRandom is thread-safe and seeds from /dev/urandom.
+    private static final SecureRandom rng = new SecureRandom();
+
+    /** Generate a cryptographically secure session token. */
+    public String generateSessionToken() {
+        byte[] bytes = new byte[32]; // 256 bits of entropy
+        rng.nextBytes(bytes);
+        return HexFormat.of().formatHex(bytes);
+    }
+
+    /** Generate a cryptographically secure CSRF token. */
+    public String generateCsrfToken() {
+        byte[] bytes = new byte[32];
+        rng.nextBytes(bytes);
+        return HexFormat.of().formatHex(bytes);
+    }
+}
+
+// Note: java.util.Random is FINE for non-security contexts:
+//   - Shuffling UI elements
+//   - Random delays / jitter
+//   - Test data generation
+//   - Game mechanics
+// Only replace with SecureRandom when the value is security-sensitive.</code></div>
+        </div>
+
+        <!-- Fix 2: Node.js crypto.randomBytes / crypto.randomUUID -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): crypto.randomBytes / crypto.randomUUID for security-sensitive values
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Use Node.js <code class="text-green-400">crypto.randomBytes()</code> or the Web Crypto API
+                <code class="text-green-400">crypto.getRandomValues()</code> for any value that must be
+                unpredictable. For simple unique identifiers,
+                <code class="text-green-400">crypto.randomUUID()</code> provides a cryptographically random
+                UUID v4 with zero configuration.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: crypto module uses OS-level CSPRNG.
+const crypto = require('crypto');
+
+/** Generate a 6-digit OTP code (cryptographically random). */
+function generateOTP() {
+    // randomInt uses rejection sampling for uniform distribution.
+    return crypto.randomInt(100000, 999999).toString();
+}
+
+/** Generate a password reset token (256 bits of entropy). */
+function generateResetToken() {
+    return crypto.randomBytes(32).toString('hex');
+}
+
+/** Generate an API key. */
+function generateApiKey() {
+    return 'ak_' + crypto.randomBytes(24).toString('base64url');
+}
+
+/** Generate a UUID v4 (122 bits of randomness). */
+function generateId() {
+    return crypto.randomUUID(); // Built-in since Node 19+
+}
+
+// Browser equivalent (Web Crypto API):
+// const array = new Uint8Array(32);
+// crypto.getRandomValues(array);
+
+// Note: Math.random() is FINE for non-security contexts:
+//   - Randomizing UI animations or transitions
+//   - Shuffling display order of items
+//   - A/B test group assignment (non-auth)
+//   - Adding jitter to retry timers
+// Only switch to crypto when predictability = security risk.</code></div>
+        </div>
+
+        <!-- Fix 3: Python secrets module -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Python): Use the secrets module (or os.urandom) for security-sensitive values
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Python 3.6+ provides the <code class="text-green-400">secrets</code> module specifically
+                for generating cryptographically strong random values. It wraps
+                <code class="text-green-400">os.urandom()</code> with convenient helpers for tokens, URLs,
+                and passwords. For older codebases, <code class="text-green-400">os.urandom()</code> or
+                <code class="text-green-400">random.SystemRandom()</code> provide the same entropy source.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code># SAFE: secrets module is purpose-built for security tokens.
+import secrets
+import string
+
+def generate_invite_code():
+    """Generate a cryptographically secure invitation code."""
+    return secrets.token_urlsafe(24)  # 192 bits, URL-safe base64
+
+def generate_nonce():
+    """Generate a cryptographically secure 128-bit nonce."""
+    return secrets.token_bytes(16)  # 128 bits from os.urandom
+
+def generate_temp_password():
+    """Generate a secure temporary password."""
+    chars = string.ascii_letters + string.digits + '!@#$%'
+    return ''.join(secrets.choice(chars) for _ in range(12))
+
+# Other useful secrets functions:
+secrets.token_hex(32)       # 64-char hex string (256 bits)
+secrets.token_urlsafe(32)   # URL-safe base64 string
+secrets.randbelow(1000000)  # Secure random int below N (for OTPs)
+secrets.compare_digest(a,b) # Constant-time comparison (anti-timing)
+
+# Note: random module is FINE for non-security contexts:
+#   - random.shuffle() for quiz question order
+#   - random.choice() for placeholder data
+#   - random.gauss() for statistical simulations
+#   - numpy.random for ML / scientific computing
+# Only switch to secrets when the value protects something.</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://cwe.mitre.org/data/definitions/330.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-330</p>
+                <p class="text-xs text-gray-500">Use of Insufficiently Random Values</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP A02:2021 —
+                    Cryptographic Failures</p>
+                <p class="text-xs text-gray-500">Top 10 category covering insufficient randomness</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html#secure-random-number-generation"
+            target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP Secure Random
+                    Number Generation</p>
+                <p class="text-xs text-gray-500">Cheat sheet section on CSPRNG best practices</p>
+            </div>
+        </a>
+
+        <a href="https://docs.python.org/3/library/secrets.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">Python secrets Module
+                    Documentation</p>
+                <p class="text-xs text-gray-500">Official docs — generating secure tokens, passwords, and URLs</p>
+            </div>
+        </a>
+    </div>
+</div>

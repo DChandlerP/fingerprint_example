@@ -1,0 +1,282 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-611 covers <strong class="text-gray-200">XML External Entity (XXE) Injection</strong> — a vulnerability
+        that occurs when an XML parser <strong class="text-gray-200">processes untrusted XML input containing
+            references to external entities</strong>. Attackers can leverage this to read local files, probe internal
+        networks (SSRF), or cause a Denial of Service.
+    </p>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        XXE is particularly dangerous in Java because many legacy XML parsers (like <code
+            class="text-red-400">DocumentBuilderFactory</code> and <code class="text-red-400">SAXParserFactory</code>)
+        have external entity resolution <strong class="text-gray-200">enabled by default</strong>.
+    </p>
+    <ul class="list-disc list-inside text-gray-300 leading-relaxed mb-4 space-y-1 ml-2">
+        <li><strong class="text-gray-200">File Disclosure</strong> — Reading configuration files or secrets using the
+            <code class="text-red-400">file://</code> protocol.
+        </li>
+        <li><strong class="text-gray-200">SSRF</strong> — Making the server perform requests to internal metadata or
+            admin services.</li>
+        <li><strong class="text-gray-200">Billion Laughs Attack</strong> — Causing an exponential memory exhaustion DOS
+            via recursive entity expansion.</li>
+    </ul>
+    <p class="text-gray-300 leading-relaxed">
+        This weakness is part of <strong class="text-gray-200">OWASP A05:2021 — Security Misconfiguration</strong>. The
+        primary defense is to <strong class="text-gray-200">disable DTD (Document Type Definition)</strong> and
+        external entity processing in your XML parser configuration.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Java DocumentBuilderFactory (Legacy) -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: XML Parsing with Default Configuration (Java / DocumentBuilder)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                By default, <code class="text-red-400">DocumentBuilderFactory</code> resolves external entities.
+                An attacker can submit an XML payload that defines a custom entity pointing to a local file
+                (like <code class="text-red-400">/etc/passwd</code>) and then reference it in the XML body.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Default configuration allows XXE.
+public void parseXml(InputStream is) throws Exception {
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    // No security features set — DTD processing is enabled by default!
+    
+    DocumentBuilder builder = factory.newDocumentBuilder();
+    Document doc = builder.parse(is);
+    // If the XML is:
+    // &lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+    // &lt;!DOCTYPE foo [ &lt;!ENTITY xxe SYSTEM "file:///etc/passwd" &gt; ]&gt;
+    // &lt;root&gt;&amp;xxe;&lt;/root&gt;
+    // The parser will read /etc/passwd and include it in 'doc'
+}</code></div>
+        </div>
+
+        <!-- Example 2: Node.js / libxmljs -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: XML Parsing with Entity Resolution (Node.js / libxmljs)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                JavaScript parsers like <code class="text-red-400">libxmljs</code> have options to enable
+                entity resolution. If <code class="text-red-400">noent: true</code> is passed, the parser
+                becomes vulnerable to XXE.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: 'noent: true' enables external entity resolution.
+const libxmljs = require("libxmljs");
+
+app.post('/upload-xml', (req, res) =&gt; {
+    const xml = req.body.data;
+    const doc = libxmljs.parseXml(xml, { 
+        noent: true, // ← This enables XXE vulnerability!
+        dtdvalid: false 
+    });
+    res.send(doc.toString());
+});</code></div>
+        </div>
+
+        <!-- Example 3: SAX/StAX Parsers -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Unsecured SAX or StAX Parsers (Java)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Stream-based parsers like <code class="text-red-400">SAXParser</code> and <code
+                    class="text-red-400">XMLInputFactory</code> (StAX)
+                are also vulnerable if features like <code class="text-red-400">DISALLOW_DOCTYPE_DECL</code> are not
+                manually set.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Unsecured XMLInputFactory.
+XMLInputFactory factory = XMLInputFactory.newInstance();
+// Default values allow DTD and external entities!
+XMLStreamReader reader = factory.createXMLStreamReader(new FileInputStream("data.xml"));</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Disabling DTDs in Java -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Fully Disabling DTD and External Entities
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                The most recommended defense is to <strong class="text-green-300">completely disable DTDs</strong>.
+                If the parser cannot process DTDs, it cannot process external entities. This is the "Nuclear Option"
+                and protects against both XXE and XML Denial of Service.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Securely configuring DocumentBuilderFactory.
+DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+
+try {
+    // 1. Disable DTDs entirely (Best protection)
+    String FEATURE = "http://apache.org/xml/features/disallow-doctype-decl";
+    dbf.setFeature(FEATURE, true);
+
+    // 2. If you MUST support DTDs, disable external entity resolution specifically:
+    dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+    dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+    dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+
+    // 3. Optional: Disable Billion Laughs (entity expansion limit)
+    dbf.setXIncludeAware(false);
+    dbf.setExpandEntityReferences(false);
+} catch (ParserConfigurationException e) {
+    // This can happen if the parser doesn't support the feature
+}
+
+DocumentBuilder builder = dbf.newDocumentBuilder();</code></div>
+        </div>
+
+        <!-- Fix 2: Secure Node.js XML Parsing -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): Secure XML parsing options
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                In Node.js, ensure that <code class="text-green-400">noent</code> is set to <code
+                    class="text-green-400">false</code> (or omitted, as it's the default in most modern versions)
+                and that external entity resolution is disabled.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Default parsing (noent is false by default).
+const libxmljs = require("libxmljs");
+
+// Do NOT set noent: true.
+const doc = libxmljs.parseXml(xml); // Safe by default.
+
+// If you really need DTD validation, use a safe validator that doesn't 
+// resolve network-based entities.</code></div>
+        </div>
+
+        <!-- Fix 3: Using a Safe XML Format (JSON) -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Defense-in-Depth: Prefer JSON or newer XML APIs
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                The best way to prevent XXE is to <strong class="text-green-300">avoid XML entirely</strong>
+                in favor of simpler formats like JSON or Protocol Buffers. If XML is required, use modern
+                APIs that are secure by default, such as <strong class="text-green-300">Jackson XML</strong>
+                (which doesn't process DTDs by default).
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Using Jackson XML (Secure by default).
+XmlMapper xmlMapper = new XmlMapper();
+// Jackson does not enable DTD processing or external entities by default.
+MyData data = xmlMapper.readValue(is, MyData.class);</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">PortSwigger — XXE
+                    Injection</p>
+                <p class="text-xs text-gray-500">Comprehensive explanation and interactive labs for XXE vulnerabilities
+                </p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html"
+            target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP XXE Prevention
+                    Cheat Sheet</p>
+                <p class="text-xs text-gray-500">Detailed security configurations for dozens of XML parsers</p>
+            </div>
+        </a>
+
+        <a href="https://cwe.mitre.org/data/definitions/611.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-611</p>
+                <p class="text-xs text-gray-500">Official definition and security recommendations</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP A05:2021</p>
+                <p class="text-xs text-gray-500">The Top 10 category covering XXE and misconfigurations</p>
+            </div>
+        </a>
+    </div>
+</div>

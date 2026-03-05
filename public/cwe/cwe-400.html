@@ -1,0 +1,231 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-400 (specifically <strong class="text-gray-200">Regular Expression Denial of Service or ReDoS</strong>)
+        occurs when a Regular Expression is applied to a long string in a way that causes the regex engine to
+        take an <strong class="text-gray-200">exponential amount of time</strong> to finish.
+    </p>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        This is caused by <strong class="text-gray-200">catastrophic backtracking</strong>. When a regex contains
+        nested quantifiers or overlapping groups (like <code class="text-red-400">(a+)+$</code>) and is matched against
+        a
+        non-matching string, the engine tries every possible combination of splits before finally failing.
+    </p>
+    <ul class="list-disc list-inside text-gray-300 leading-relaxed mb-4 space-y-1 ml-2">
+        <li><strong class="text-gray-200">CPU Exhaustion</strong> — A single malicious request can peg a CPU core at
+            100% for minutes or even hours.</li>
+        <li><strong class="text-gray-200">Service Outage</strong> — Because many web servers (like Node.js) are
+            single-threaded or have a limited pool of workers, a few ReDoS requests can completely freeze the entire
+            application.</li>
+        <li><strong class="text-gray-200">Low Cost, High Impact</strong> — Unlike a volumetric DDoS, a ReDoS attack
+            requires very little bandwidth from the attacker.</li>
+    </ul>
+    <p class="text-gray-300 leading-relaxed">
+        SAST tools flag complex regex patterns that contain "evil" structures like nested repetitions or
+        ambiguous alternations. The primary defense is <strong class="text-gray-200">simplifying the regex</strong>,
+        using <strong class="text-gray-200">timeout mechanisms</strong>, or choosing a <strong
+            class="text-gray-200">non-backtracking regex engine</strong>.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Evil Regex in JavaScript -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Evil Regex pattern (JavaScript / Node.js)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                This regex for validating a comma-separated list is "evil" because of the nested <code
+                    class="text-red-400">+</code> inside the <code class="text-red-400">*</code>.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Nested quantifiers lead to exponential backtracking.
+const regex = /^([a-zA-Z0-9 ]+,)*[a-zA-Z0-9 ]+$/;
+
+app.post('/validate', (req, res) =&gt; {
+    const input = req.body.list;
+    
+    // Attacker input: "a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,!"
+    // The engine tries to split the 'a's between the two groups.
+    // For 20 'a's, this takes millions of steps.
+    
+    if (regex.test(input)) {
+        res.send("Valid");
+    } else {
+        res.send("Invalid");
+    }
+});</code></div>
+        </div>
+
+        <!-- Example 2: Insecure Java Regex -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Ambiguous Alternation (Java)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Patterns like <code class="text-red-400">(a|a)+$</code> are ambiguous because a single character
+                can match multiple parts of the regex. This leads to the same backtracking death spiral.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Ambiguous groups.
+Pattern p = Pattern.compile("(a|aa)+$");
+Matcher m = p.matcher("aaaaaaaaaaaaaaaaaaaaaaaaaaaa!"); // Long string of 'a's
+
+// m.matches() will hang the thread.
+if (m.matches()) { 
+    // ...
+}</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Simplify and Flatten -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix: Simplify the Regex (Flattening)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Most ReDoS-vulnerable regexes can be rewritten to be linear. Avoid nesting quantifiers
+                and ensure that each part of an alternation matches a distinct, non-overlapping set of characters.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Linear regex for comma-separated list.
+// Instead of /^([a-z]+,)*[a-z]+$/
+// Use a simpler approach:
+const safeRegex = /^[a-z,]+$/; 
+
+// Or even better, split and validate individual items:
+const items = input.split(',');
+const allValid = items.every(item =&gt; /^[a-z]+$/.test(item.trim()));</code></div>
+        </div>
+
+        <!-- Fix 2: Timeouts -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix: Enforce Regex Timeouts
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                If you must use complex regex, wrap the execution in a timeout. Some languages (.NET) support this
+                natively,
+                while in others (Java/JS) you may need a wrapper or a specialized engine.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE (Conceptual): Limit execution time.
+
+// Node.js doesn't have a built-in regex timeout. 
+// Use an external library like 'safe-regex' to detect evil patterns 
+// or 'vm2' to run regex in a separate, timed context.
+
+// Java doesn't have a direct timeout for Matcher.matches(),
+// but you can implement a CharSequence wrapper that checks for 
+// thread interruption or elapsed time.</code></div>
+        </div>
+
+        <!-- Fix 3: Non-Backtracking Engines (re2) -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix: Use a Non-Backtracking Engine (RE2)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Google's <strong class="text-green-300">RE2 engine</strong> uses an automata-based approach that is
+                guaranteed to run in linear time. It does not support features like backreferences (which require
+                backtracking), making it <strong class="text-green-300">immune to ReDoS</strong>.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Using re2 in Node.js instead of native RegExp.
+const RE2 = require('re2');
+const regex = new RE2('^([a-z]+,)*[a-z]+$');
+
+// Even with an 'evil' pattern, RE2 will finish in linear time.
+regex.test(maliciousInput); 
+
+// Similar libraries exist for Java: com.google.re2j</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+
+        <a href="https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP — ReDoS Attack
+                </p>
+                <p class="text-xs text-gray-500">In-depth community guide on "evil" regex patterns</p>
+            </div>
+        </a>
+
+        <a href="https://learn.snyk.io/lessons/redos/javascript/" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">Snyk — ReDoS Lesson</p>
+                <p class="text-xs text-gray-500">Interactive lesson on detecting and fixing ReDoS</p>
+            </div>
+        </a>
+
+        <a href="https://cwe.mitre.org/data/definitions/400.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-400</p>
+                <p class="text-xs text-gray-500">Uncontrolled Resource Consumption</p>
+            </div>
+        </a>
+    </div>
+</div>

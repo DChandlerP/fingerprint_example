@@ -26,8 +26,8 @@
     },
     {
         "cwe": "352",
-        "name": "Cross-Site Request Forgery (CSRF)",
-        "owasp": "OWASP:A01"
+        "name": "Spring Cross-Site Request Forgery (CSRF)",
+        "owasp": "Sans Top 25, OWASP:A01"
     },
     {
         "cwe": "200",
@@ -58,5 +58,80 @@
         "cwe": "327",
         "name": "Use of a Broken or Risky Cryptographic Algorithm",
         "owasp": "OWASP:A02"
+    },
+    {
+        "cwe": "916",
+        "name": "Use of Password Hash With Insufficient Computational Effort",
+        "owasp": "OWASP:A02"
+    },
+    {
+        "cwe": "330",
+        "name": "Use of Insufficiently Random Values",
+        "owasp": "OWASP:A02"
+    },
+    {
+        "cwe": "297",
+        "name": "Improper Validation of Certificate with Host Mismatch",
+        "owasp": "OWASP:A07"
+    },
+    {
+        "cwe": "79",
+        "name": "Cross-Site Scripting (XSS)",
+        "owasp": "Sans Top 25, OWASP:A03"
+    },
+    {
+        "cwe": "347",
+        "name": "JWT Signature Verification Bypass",
+        "owasp": "OWASP:A02"
+    },
+    {
+        "cwe": "287",
+        "name": "Improper Authentication",
+        "owasp": "Sans Top 25, OWASP:A07"
+    },
+    {
+        "cwe": "90",
+        "name": "LDAP Injection",
+        "owasp": "OWASP:A03"
+    },
+    {
+        "cwe": "601",
+        "name": "Open Redirect",
+        "owasp": "OWASP:A01"
+    },
+    {
+        "cwe": "23",
+        "name": "Path Traversal",
+        "owasp": "OWASP:A01"
+    },
+    {
+        "cwe": "89",
+        "name": "SQL Injection",
+        "owasp": "Sans Top 25, OWASP:A03"
+    },
+    {
+        "cwe": "918",
+        "name": "Server-Side Request Forgery (SSRF)",
+        "owasp": "OWASP:A10"
+    },
+    {
+        "cwe": "943",
+        "name": "NoSQL Injection",
+        "owasp": "OWASP:A03"
+    },
+    {
+        "cwe": "611",
+        "name": "XML External Entity (XXE) Injection",
+        "owasp": "OWASP:A05"
+    },
+    {
+        "cwe": "1321",
+        "name": "Prototype Pollution",
+        "owasp": "OWASP:A06"
+    },
+    {
+        "cwe": "400",
+        "name": "Regular Expression Denial of Service (ReDoS)",
+        "owasp": "OWASP:A04"
     }
 ]
