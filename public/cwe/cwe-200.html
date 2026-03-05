@@ -1,0 +1,365 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-200 flags code that exposes sensitive information to actors who are not explicitly authorized
+        to access it. This includes leaking <strong class="text-gray-200">stack traces</strong>,
+        <strong class="text-gray-200">database connection strings</strong>,
+        <strong class="text-gray-200">internal IP addresses</strong>,
+        <strong class="text-gray-200">user PII</strong>, or
+        <strong class="text-gray-200">application internals</strong> through error messages, HTTP headers,
+        logs, or API responses.
+    </p>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        Information exposure is dangerous because it gives attackers a detailed map of your system.
+        A stack trace reveals framework versions, file paths, and database schemas. Verbose error
+        messages disclose which fields exist in a query. Even seemingly harmless details like server
+        software versions help attackers select the right exploit. This information turns a blind
+        attack into a <strong class="text-gray-200">targeted</strong> one.
+    </p>
+    <p class="text-gray-300 leading-relaxed">
+        This weakness maps to <strong class="text-gray-200">OWASP A01:2021 — Broken Access Control</strong>.
+        The fix is straightforward: return <strong class="text-gray-200">generic error messages</strong>
+        to clients, log detailed diagnostics server-side only, and strip sensitive headers and metadata
+        from production responses.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Java stack trace in HTTP response -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Returning full stack traces to the client
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                This servlet catches exceptions and writes the entire stack trace to the HTTP response.
+                The stack trace reveals the framework version, internal class names, file paths, line
+                numbers, and the database driver — giving an attacker a detailed blueprint of the
+                application's internals.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Full stack trace sent to the client.
+@WebServlet("/user")
+public class UserServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        try {
+            String userId = req.getParameter("id");
+            User user = userDao.findById(userId);
+            resp.getWriter().write(user.toJson());
+        } catch (Exception e) {
+            // EXPOSED: Stack trace reveals internal paths, DB driver, and framework version.
+            // e.g. "com.mysql.cj.jdbc.exceptions.CommunicationsException:
+            //        at com.myapp.dao.UserDao.findById(UserDao.java:42)"
+            resp.setStatus(500);
+            e.printStackTrace(resp.getWriter());
+        }
+    }
+}</code></div>
+        </div>
+
+        <!-- Example 2: Express.js leaking error details -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Express.js error handler returning full error object to client
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                This global error handler sends the complete error object — including the
+                <code class="text-red-400">stack</code> property and any attached metadata — directly
+                in the JSON response. In development this is convenient, but in production it exposes
+                file paths, dependency versions, and database query details.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Full error details returned to the client.
+const express = require('express');
+const app = express();
+
+app.get('/api/users/:id', async (req, res, next) =&gt; {
+    try {
+        const user = await db.query('SELECT * FROM users WHERE id = $1', [req.params.id]);
+        res.json(user.rows[0]);
+    } catch (err) {
+        next(err);
+    }
+});
+
+// Global error handler leaks everything.
+app.use((err, req, res, next) =&gt; {
+    res.status(500).json({
+        message: err.message,   // e.g. "relation 'users' does not exist"
+        stack: err.stack,       // Full file paths and line numbers
+        query: err.query,       // The raw SQL query
+        code: err.code          // e.g. "42P01" (PostgreSQL error code)
+    });
+});</code></div>
+        </div>
+
+        <!-- Example 3: Java - Exposing sensitive data in API responses -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Serializing entire entity objects — exposing internal fields
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                This Spring controller returns the full JPA entity directly. The entity includes fields
+                like <code class="text-red-400">passwordHash</code>, <code class="text-red-400">ssn</code>,
+                and <code class="text-red-400">internalNotes</code> that are persisted in the database
+                but should never be sent to the client. Jackson serializes every field by default.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Returning the full JPA entity exposes sensitive fields.
+@Entity
+public class User {
+    @Id private Long id;
+    private String username;
+    private String email;
+    private String passwordHash;    // EXPOSED to the client!
+    private String ssn;             // EXPOSED to the client!
+    private String internalNotes;   // EXPOSED to the client!
+    private LocalDateTime createdAt;
+    // ... getters and setters
+}
+
+@RestController
+public class UserController {
+    @GetMapping("/api/users/{id}")
+    public User getUser(@PathVariable Long id) {
+        // Jackson serializes ALL fields — including passwordHash, ssn, internalNotes.
+        return userRepository.findById(id)
+                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+}</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Generic error messages + server-side logging -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Return generic messages to the client, log details server-side
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Never send exception details to the client. Return a generic error message with a
+                correlation ID that maps to your server-side logs. This gives operations teams full
+                diagnostic context while revealing <strong class="text-gray-200">nothing</strong>
+                to the attacker.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Generic error to client, full details in server logs only.
+@WebServlet("/user")
+public class UserServlet extends HttpServlet {
+    private static final Logger log = LoggerFactory.getLogger(UserServlet.class);
+
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        try {
+            String userId = req.getParameter("id");
+            User user = userDao.findById(userId);
+            resp.getWriter().write(user.toJson());
+        } catch (Exception e) {
+            // Generate a correlation ID for traceability.
+            String errorId = UUID.randomUUID().toString();
+
+            // Log the full exception server-side with the correlation ID.
+            log.error("Error processing request [errorId={}]", errorId, e);
+
+            // Return a generic message — no internal details.
+            resp.setStatus(500);
+            resp.setContentType("application/json");
+            resp.getWriter().write(String.format(
+                    "{\"error\": \"An internal error occurred.\", \"errorId\": \"%s\"}", errorId));
+        }
+    }
+}</code></div>
+        </div>
+
+        <!-- Fix 2: Express.js environment-aware error handler -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): Environment-aware error handler — suppress details in production
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Use <code class="text-green-400">NODE_ENV</code> to control error verbosity. In production,
+                return only a generic message and correlation ID. In development, include the stack trace
+                for debugging convenience. Always log the full error server-side.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Production errors hide internals; dev errors include stack traces.
+const { randomUUID } = require('crypto');
+
+app.use((err, req, res, next) =&gt; {
+    const errorId = randomUUID();
+
+    // Always log the full error server-side.
+    console.error(`[${errorId}]`, err);
+
+    const isProd = process.env.NODE_ENV === 'production';
+
+    res.status(err.status || 500).json({
+        error: 'An internal error occurred.',
+        errorId,
+        // Only include details in development.
+        ...(isProd ? {} : { message: err.message, stack: err.stack })
+    });
+});</code></div>
+        </div>
+
+        <!-- Fix 3: DTO pattern to control exposed fields -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Use DTOs to explicitly control which fields are exposed
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Never return JPA entities directly. Create a <strong class="text-gray-200">Data Transfer
+                    Object (DTO)</strong> that contains only the fields the client needs. This is an explicit
+                allowlist — even if new sensitive columns are added to the database later, they won't
+                appear in API responses unless deliberately added to the DTO.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: DTO exposes only approved fields — passwordHash, ssn, etc. are excluded.
+public record UserDto(Long id, String username, String email, LocalDateTime createdAt) {
+
+    /** Factory method to map entity → DTO. Sensitive fields are never included. */
+    public static UserDto from(User entity) {
+        return new UserDto(
+                entity.getId(),
+                entity.getUsername(),
+                entity.getEmail(),
+                entity.getCreatedAt()
+                // passwordHash, ssn, internalNotes are deliberately omitted.
+        );
+    }
+}
+
+@RestController
+public class UserController {
+    @GetMapping("/api/users/{id}")
+    public UserDto getUser(@PathVariable Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        // Only DTO fields are serialized — sensitive data never leaves the server.
+        return UserDto.from(user);
+    }
+
+    // Also configure Spring's global exception handler for safety:
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity&lt;Map&lt;String, String&gt;&gt; handleException(Exception e) {
+        String errorId = UUID.randomUUID().toString();
+        log.error("Unhandled exception [errorId={}]", errorId, e);
+        return ResponseEntity.status(500).body(Map.of(
+                "error", "An internal error occurred.",
+                "errorId", errorId
+        ));
+    }
+}</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://cwe.mitre.org/data/definitions/200.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-200</p>
+                <p class="text-xs text-gray-500">Official CWE definition and examples</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP A01:2021 —
+                    Broken Access Control</p>
+                <p class="text-xs text-gray-500">Top 10 category covering information exposure and access failures</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Error_Handling_Cheat_Sheet.html" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP Error Handling
+                    Cheat Sheet</p>
+                <p class="text-xs text-gray-500">Patterns for safe error responses and logging</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP Logging Cheat
+                    Sheet</p>
+                <p class="text-xs text-gray-500">Best practices for secure logging without data leakage</p>
+            </div>
+        </a>
+    </div>
+</div>

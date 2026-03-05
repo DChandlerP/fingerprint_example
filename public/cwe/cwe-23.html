@@ -1,0 +1,520 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-23 flags code that <strong class="text-gray-200">constructs file paths from user-controlled input
+            without proper validation</strong>, allowing an attacker to traverse directories with sequences like
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">../</code> to read, overwrite, or delete
+        files outside the intended directory. This is commonly known as a <strong class="text-gray-200">directory
+            traversal</strong> or <strong class="text-gray-200">path traversal</strong> attack.
+    </p>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        Path traversal vulnerabilities can lead to:
+    </p>
+    <ul class="list-disc list-inside text-gray-300 leading-relaxed mb-4 space-y-1 ml-2">
+        <li><strong class="text-gray-200">Sensitive file disclosure</strong> — reading
+            <code class="text-red-400">/etc/passwd</code>, configuration files, or application source code
+        </li>
+        <li><strong class="text-gray-200">Credential theft</strong> — accessing
+            <code class="text-red-400">.env</code> files, database connection strings, or API keys
+        </li>
+        <li><strong class="text-gray-200">Remote code execution</strong> — overwriting application code,
+            templates, or uploading web shells to executable directories</li>
+        <li><strong class="text-gray-200">Denial of service</strong> — deleting critical files or filling disk
+            with attacker-controlled uploads</li>
+    </ul>
+    <p class="text-gray-300 leading-relaxed">
+        This weakness is part of <strong class="text-gray-200">OWASP A01:2021 — Broken Access Control</strong>.
+        The primary defense is to <strong class="text-gray-200">canonicalize the resolved path and verify it
+            stays within the intended base directory</strong>. Never rely on stripping <code
+            class="text-red-400">../</code>
+        sequences alone — there are dozens of encoding and double-encoding bypasses.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Java file read via path traversal -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: File read/download with unvalidated path (Java / Servlet / Spring)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Concatenating user input directly into a file path allows an attacker to escape the intended
+                directory. A request like
+                <code class="text-gray-300 text-xs">GET /download?file=../../../etc/passwd</code>
+                reads arbitrary files from the server. Even using <code class="text-red-400">replace("../", "")</code>
+                is insufficient — attackers use <code class="text-red-400">....//</code> or URL-encoded
+                sequences to bypass it.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: User-controlled file path — path traversal.
+
+// --- Servlet: direct file download ---
+@WebServlet("/download")
+public class DownloadServlet extends HttpServlet {
+    private static final String UPLOAD_DIR = "/var/app/uploads/";
+
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+        String filename = req.getParameter("file");
+
+        // Attacker sends: ?file=../../../etc/passwd
+        File file = new File(UPLOAD_DIR + filename);
+        //                   ↑ Path traversal — no validation!
+
+        resp.setContentType("application/octet-stream");
+        Files.copy(file.toPath(), resp.getOutputStream());
+    }
+}
+
+// --- Spring MVC: serving user-uploaded files ---
+@GetMapping("/files/{name}")
+public ResponseEntity&lt;Resource&gt; getFile(@PathVariable String name) {
+    // Attacker sends: /files/..%2F..%2F..%2Fetc%2Fpasswd
+    Path path = Paths.get("/var/app/uploads/" + name);
+    Resource resource = new UrlResource(path.toUri());
+    return ResponseEntity.ok().body(resource);
+    //                         ↑ No path validation!
+}
+
+// --- Weak sanitization that is easily bypassed ---
+String filename = req.getParameter("file");
+filename = filename.replace("../", "");  // INSUFFICIENT!
+// Bypass: ....// → after replace → ../
+// Bypass: ..%2F → URL decoding happens before replace
+// Bypass: ..\   → backslash on Windows</code></div>
+        </div>
+
+        <!-- Example 2: Node.js / Express path traversal -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: File serving and uploads with unvalidated paths (Node.js / Express)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Using <code class="text-red-400">path.join()</code> or string concatenation with user input
+                does <strong class="text-gray-200">not</strong> prevent path traversal — <code
+                    class="text-red-400">path.join()</code>
+                resolves <code class="text-red-400">..</code> segments rather than rejecting them. Express's
+                static middleware is safe, but custom file-serving routes are a common source of this vulnerability.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: User-controlled path — arbitrary file read.
+const express = require('express');
+const path = require('path');
+const fs = require('fs');
+
+const app = express();
+const UPLOAD_DIR = '/var/app/uploads';
+
+// Custom file-serving route — path traversal!
+app.get('/files/:name', (req, res) =&gt; {
+    const filePath = path.join(UPLOAD_DIR, req.params.name);
+    // path.join('/var/app/uploads', '../../etc/passwd')
+    //   → '/var/etc/passwd'  — RESOLVES the traversal!
+    res.sendFile(filePath);
+});
+
+// File upload with user-controlled destination — path traversal!
+app.post('/upload', (req, res) =&gt; {
+    const destName = req.body.filename;  // Attacker controls this
+    const destPath = path.join(UPLOAD_DIR, destName);
+    // Attacker sends filename: ../../app/server.js
+    // Overwrites application code!
+    fs.writeFileSync(destPath, req.body.content);
+    res.json({ saved: destPath });
+});
+
+// Template/view rendering with user-controlled path
+app.get('/page/:name', (req, res) =&gt; {
+    res.render(req.params.name);
+    // Attacker: /page/../../etc/passwd
+    // Some template engines will read arbitrary files!
+});</code></div>
+        </div>
+
+        <!-- Example 3: Zip Slip and file write attacks -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Zip Slip — path traversal during archive extraction (Java &amp; JavaScript)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Zip Slip is a path traversal variant where a malicious archive contains entries with names like
+                <code class="text-red-400">../../../webapps/ROOT/shell.jsp</code>. When the archive is extracted
+                without validating each entry's resolved path, the attacker writes files to arbitrary locations —
+                commonly used to deploy web shells.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Zip Slip — archive entry names not validated.
+
+// --- Java: extracting a ZIP file ---
+ZipInputStream zis = new ZipInputStream(new FileInputStream(uploadedZip));
+ZipEntry entry;
+while ((entry = zis.getNextEntry()) != null) {
+    // entry.getName() could be: ../../../opt/tomcat/webapps/ROOT/shell.jsp
+    File outFile = new File(EXTRACT_DIR, entry.getName());
+    //                                     ↑ Path traversal via archive entry name!
+
+    FileOutputStream fos = new FileOutputStream(outFile);
+    byte[] buf = new byte[1024];
+    int len;
+    while ((len = zis.read(buf)) &gt; 0) {
+        fos.write(buf, 0, len);
+    }
+    fos.close();
+}
+
+// --- JavaScript (Node.js): extracting with adm-zip ---
+const AdmZip = require('adm-zip');
+const zip = new AdmZip(uploadedFile);
+
+zip.getEntries().forEach(entry =&gt; {
+    // entry.entryName could contain: ../../config/secrets.json
+    const outPath = path.join(extractDir, entry.entryName);
+    fs.writeFileSync(outPath, entry.getData());
+    //               ↑ Zip Slip — writes outside extractDir!
+});</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Java canonical path validation -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Canonicalize and validate the resolved path stays within the base directory
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Resolve the path to its <strong class="text-green-300">canonical (absolute, normalized) form</strong>,
+                then verify it starts with the canonical base directory. This handles all encoding tricks,
+                symbolic links, and double-dot bypasses. Apply the same check to Zip Slip — validate every
+                archive entry's resolved path before extraction.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Canonical path validation prevents all traversal bypasses.
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+
+public class SafeFileUtil {
+
+    private static final String BASE_DIR = "/var/app/uploads";
+
+    /**
+     * Resolves a user-supplied filename and validates it stays
+     * within the base directory. Returns null if invalid.
+     */
+    public static File safeResolve(String userFilename) throws IOException {
+        if (userFilename == null || userFilename.isBlank()) return null;
+
+        File base = new File(BASE_DIR).getCanonicalFile();
+        File requested = new File(base, userFilename).getCanonicalFile();
+
+        // Canonical path resolves ../, symlinks, encoding — then we check.
+        if (!requested.toPath().startsWith(base.toPath())) {
+            return null;  // Traversal attempt — reject.
+        }
+
+        return requested;
+    }
+}
+
+// --- Usage in Servlet ---
+@WebServlet("/download")
+public class SafeDownloadServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+        File file = SafeFileUtil.safeResolve(req.getParameter("file"));
+        if (file == null || !file.exists()) {
+            resp.sendError(404, "File not found");
+            return;
+        }
+        resp.setContentType("application/octet-stream");
+        Files.copy(file.toPath(), resp.getOutputStream());
+    }
+}
+
+// --- Zip Slip fix: validate every entry before extraction ---
+ZipEntry entry;
+File baseDir = new File(EXTRACT_DIR).getCanonicalFile();
+
+while ((entry = zis.getNextEntry()) != null) {
+    File outFile = new File(baseDir, entry.getName()).getCanonicalFile();
+
+    if (!outFile.toPath().startsWith(baseDir.toPath())) {
+        throw new SecurityException("Zip Slip detected: " + entry.getName());
+    }
+
+    // Safe to extract — path is within the base directory.
+    FileOutputStream fos = new FileOutputStream(outFile);
+    // ... write file contents ...
+}</code></div>
+        </div>
+
+        <!-- Fix 2: JavaScript / Express path validation -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): path.resolve() + startsWith() guard and express.static()
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Use <code class="text-green-400">path.resolve()</code> (not <code
+                    class="text-red-400">path.join()</code>)
+                to get the absolute, normalized path, then verify it starts with the base directory.
+                For static file serving, prefer Express's built-in <code class="text-green-400">express.static()</code>
+                middleware, which has path traversal protections built in.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Resolve + startsWith validation for Node.js / Express.
+const express = require('express');
+const path = require('path');
+const fs = require('fs');
+
+const app = express();
+const UPLOAD_DIR = path.resolve('/var/app/uploads');
+
+/**
+ * Resolves a user-supplied filename and validates it stays
+ * within the base directory. Returns null if traversal detected.
+ */
+function safeResolvePath(baseDir, userInput) {
+    const resolved = path.resolve(baseDir, userInput);
+
+    if (!resolved.startsWith(baseDir + path.sep) &amp;&amp; resolved !== baseDir) {
+        return null;  // Traversal attempt — reject.
+    }
+
+    return resolved;
+}
+
+// --- Safe file download route ---
+app.get('/files/:name', (req, res) =&gt; {
+    const safePath = safeResolvePath(UPLOAD_DIR, req.params.name);
+
+    if (!safePath || !fs.existsSync(safePath)) {
+        return res.status(404).json({ error: 'File not found' });
+    }
+
+    res.sendFile(safePath);
+});
+
+// --- Safe file upload route ---
+app.post('/upload', (req, res) =&gt; {
+    const safePath = safeResolvePath(UPLOAD_DIR, req.body.filename);
+
+    if (!safePath) {
+        return res.status(400).json({ error: 'Invalid filename' });
+    }
+
+    fs.writeFileSync(safePath, req.body.content);
+    res.json({ saved: path.basename(safePath) });
+});
+
+// --- Best practice: use express.static for serving files ---
+// express.static already prevents path traversal internally.
+app.use('/uploads', express.static(UPLOAD_DIR));
+
+// --- Zip Slip fix (adm-zip) ---
+const AdmZip = require('adm-zip');
+const zip = new AdmZip(uploadedFile);
+const extractDir = path.resolve('/var/app/extracted');
+
+zip.getEntries().forEach(entry =&gt; {
+    const outPath = path.resolve(extractDir, entry.entryName);
+
+    if (!outPath.startsWith(extractDir + path.sep)) {
+        throw new Error('Zip Slip detected: ' + entry.entryName);
+    }
+
+    fs.writeFileSync(outPath, entry.getData());
+});</code></div>
+        </div>
+
+        <!-- Fix 3: Defense-in-depth -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Defense-in-Depth: Indirect references, chroot, and least-privilege file access
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                The most robust approach avoids user-controlled file paths entirely. Use
+                <strong class="text-green-300">indirect references</strong> (database IDs or UUIDs) that map
+                to file paths server-side. Combine with <strong class="text-green-300">OS-level
+                    restrictions</strong> like chroot jails, container filesystem isolation, and
+                least-privilege file permissions as defense-in-depth.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Indirect references — user never controls file paths.
+
+// --- Java: database-backed file downloads ---
+@WebServlet("/download")
+public class IndirectDownloadServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException, SQLException {
+        String fileId = req.getParameter("id");  // UUID, not a filename
+
+        // Look up actual path from database — user cannot control it.
+        FileRecord record = fileDao.findById(fileId);
+        if (record == null || !record.belongsTo(currentUser(req))) {
+            resp.sendError(403, "Access denied");
+            return;
+        }
+
+        File file = new File(record.getStoragePath());
+        resp.setContentType(record.getContentType());
+        resp.setHeader("Content-Disposition",
+            "attachment; filename=\"" + record.getOriginalName() + "\"");
+        Files.copy(file.toPath(), resp.getOutputStream());
+    }
+}
+
+// --- JavaScript (Express): UUID-based file access ---
+app.get('/files/:id', async (req, res) =&gt; {
+    // Look up by UUID — no file path in the request.
+    const record = await db.files.findOne({
+        id: req.params.id,
+        userId: req.user.id  // Authorization check!
+    });
+
+    if (!record) return res.status(404).json({ error: 'Not found' });
+
+    res.download(record.storagePath, record.originalName);
+});
+
+// --- Additional hardening ---
+// 1. Allowlist file extensions:
+//    if (!['.pdf','.png','.docx'].includes(path.extname(filename)))
+//        return res.status(400).send('Unsupported file type');
+//
+// 2. Run app in a container with read-only filesystem
+//    (only the upload volume is writable).
+//
+// 3. Use chroot or Linux namespaces to limit visible filesystem.
+//
+// 4. Set restrictive file permissions:
+//    chmod 640 on uploaded files, chown to app user.</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://portswigger.net/web-security/file-path-traversal" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">PortSwigger — File Path
+                    Traversal</p>
+                <p class="text-xs text-gray-500">Comprehensive explanation and interactive labs for path traversal
+                    vulnerabilities</p>
+            </div>
+        </a>
+
+        <a href="https://cwe.mitre.org/data/definitions/23.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-23</p>
+                <p class="text-xs text-gray-500">Relative Path Traversal</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP A01:2021 —
+                    Broken Access Control</p>
+                <p class="text-xs text-gray-500">Top 10 category covering path traversal and access control flaws</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP Input
+                    Validation Cheat Sheet</p>
+                <p class="text-xs text-gray-500">Validation strategies including file path canonicalization</p>
+            </div>
+        </a>
+
+        <a href="https://security.snyk.io/research/zip-slip-vulnerability" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">Snyk — Zip Slip
+                    Vulnerability</p>
+                <p class="text-xs text-gray-500">Deep-dive into path traversal via archive extraction</p>
+            </div>
+        </a>
+    </div>
+</div>

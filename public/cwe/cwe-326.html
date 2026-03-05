@@ -1,0 +1,423 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-326 flags the use of encryption configurations that do not provide adequate security.
+        When SAST tools report <strong class="text-gray-200">"Inadequate Padding for AES encryption"</strong>,
+        they are identifying code that uses AES with a weak or dangerous <strong class="text-gray-200">mode
+            of operation</strong> or <strong class="text-gray-200">padding scheme</strong>, such as:
+    </p>
+    <ul class="list-disc list-inside text-gray-300 leading-relaxed mb-4 space-y-1 ml-2">
+        <li><strong class="text-gray-200">ECB mode</strong> — encrypts each block independently, leaking patterns in the
+            plaintext (the classic "ECB penguin" problem)</li>
+        <li><strong class="text-gray-200">CBC without integrity</strong> — vulnerable to <strong
+                class="text-gray-200">padding oracle attacks</strong> that can decrypt ciphertext without the key</li>
+        <li><strong class="text-gray-200">NoPadding with block ciphers</strong> — requires exact block-size inputs,
+            causing data loss or crashes</li>
+        <li><strong class="text-gray-200">PKCS5Padding with CBC and no HMAC</strong> — enables bit-flipping and padding
+            oracle attacks</li>
+    </ul>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        Even though AES itself is a strong cipher, choosing the wrong mode or padding scheme can make the
+        encryption <strong class="text-gray-200">trivially breakable</strong>. ECB mode reveals identical
+        plaintext blocks as identical ciphertext blocks. CBC mode without authentication allows attackers
+        to manipulate ciphertext and recover plaintext through padding oracle attacks.
+    </p>
+    <p class="text-gray-300 leading-relaxed">
+        This weakness maps to <strong class="text-gray-200">OWASP A02:2021 — Cryptographic Failures</strong>.
+        The fix is to use an <strong class="text-gray-200">authenticated encryption</strong> mode like
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-green-400">AES/GCM/NoPadding</code>, which
+        provides both confidentiality and integrity in a single operation — eliminating padding oracle
+        attacks entirely.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Java AES/ECB -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: AES in ECB mode — leaks plaintext patterns (Java)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                ECB (Electronic Codebook) mode encrypts each 16-byte block independently with the same
+                key. Identical plaintext blocks produce identical ciphertext blocks, revealing patterns
+                in the data. This is why encrypted images in ECB mode still show the outline of the
+                original image — the famous "ECB penguin" demonstration. Using
+                <code class="text-red-400">Cipher.getInstance("AES")</code> without specifying a mode
+                defaults to ECB on most JVMs.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: AES with no mode specified — defaults to ECB on most JVMs.
+public class InsecureEncryption {
+
+    public static byte[] encrypt(byte[] plaintext, SecretKey key) throws Exception {
+        // "AES" alone = AES/ECB/PKCS5Padding on most providers.
+        // ECB encrypts each block independently — identical blocks produce
+        // identical ciphertext, leaking structural patterns.
+        Cipher cipher = Cipher.getInstance("AES"); // Defaults to ECB!
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        return cipher.doFinal(plaintext);
+    }
+}
+
+// Also dangerous — explicitly requesting ECB:
+Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding"); // Never use ECB!</code></div>
+        </div>
+
+        <!-- Example 2: Java AES/CBC without HMAC -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: AES/CBC with PKCS5Padding but no integrity check (Java)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                CBC mode with PKCS5Padding is better than ECB, but without an authentication tag (HMAC),
+                it is vulnerable to <strong class="text-gray-200">padding oracle attacks</strong>. An
+                attacker who can submit modified ciphertexts and observe whether the server returns a
+                padding error vs. an application error can decrypt the entire message — one byte at a
+                time — without knowing the key.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: AES/CBC without authentication — vulnerable to padding oracle.
+public class CbcEncryption {
+
+    public static byte[] encrypt(byte[] plaintext, SecretKey key) throws Exception {
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        byte[] iv = cipher.getIV();
+        byte[] ciphertext = cipher.doFinal(plaintext);
+
+        // Returning IV + ciphertext, but NO authentication tag.
+        // An attacker can modify the ciphertext and exploit padding errors.
+        ByteBuffer buffer = ByteBuffer.allocate(iv.length + ciphertext.length);
+        buffer.put(iv);
+        buffer.put(ciphertext);
+        return buffer.array();
+    }
+
+    public static byte[] decrypt(byte[] data, SecretKey key) throws Exception {
+        ByteBuffer buffer = ByteBuffer.wrap(data);
+        byte[] iv = new byte[16];
+        buffer.get(iv);
+        byte[] ciphertext = new byte[buffer.remaining()];
+        buffer.get(ciphertext);
+
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
+        return cipher.doFinal(ciphertext); // Padding error = oracle for attacker!
+    }
+}</code></div>
+        </div>
+
+        <!-- Example 3: Node.js createCipher (deprecated) -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Node.js deprecated createCipher with weak key derivation (JS)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                The deprecated <code class="text-red-400">crypto.createCipher()</code> uses a single
+                iteration of MD5 to derive the key from a password — making it trivially brute-forceable.
+                It also uses CBC mode without authentication, combining weak key derivation with a
+                padding-oracle-vulnerable mode.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Deprecated API with weak key derivation + no auth tag.
+const crypto = require('crypto');
+
+function encrypt(text, password) {
+    // createCipher is DEPRECATED — derives key via single MD5 iteration.
+    // Uses aes-256-cbc without an authentication tag.
+    const cipher = crypto.createCipher('aes-256-cbc', password);
+    let encrypted = cipher.update(text, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+    return encrypted;
+}
+
+function decrypt(encrypted, password) {
+    const decipher = crypto.createDecipher('aes-256-cbc', password);
+    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+    decrypted += decipher.final('utf8'); // Padding error = oracle!
+    return decrypted;
+}</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Java AES/GCM -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Use AES/GCM/NoPadding — authenticated encryption
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                GCM (Galois/Counter Mode) provides <strong class="text-gray-200">authenticated encryption</strong>
+                — it encrypts the data <em>and</em> generates an authentication tag in a single operation.
+                Any tampering with the ciphertext causes decryption to fail with an
+                <code class="text-green-400">AEADBadTagException</code>, completely eliminating padding
+                oracle attacks. Always use a <strong class="text-gray-200">random 12-byte IV</strong> and
+                never reuse an IV with the same key.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: AES/GCM provides confidentiality + integrity (authenticated encryption).
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
+import java.security.SecureRandom;
+import java.nio.ByteBuffer;
+
+public class SecureEncryption {
+
+    private static final int GCM_IV_LENGTH = 12;   // 96 bits — recommended for GCM
+    private static final int GCM_TAG_LENGTH = 128;  // 128-bit auth tag
+
+    public static byte[] encrypt(byte[] plaintext, SecretKey key) throws Exception {
+        // Generate a random IV for each encryption — NEVER reuse with same key.
+        byte[] iv = new byte[GCM_IV_LENGTH];
+        new SecureRandom().nextBytes(iv);
+
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+        cipher.init(Cipher.ENCRYPT_MODE, key, new GCMParameterSpec(GCM_TAG_LENGTH, iv));
+
+        byte[] ciphertext = cipher.doFinal(plaintext);
+
+        // Prepend IV to ciphertext for storage/transmission.
+        ByteBuffer buffer = ByteBuffer.allocate(iv.length + ciphertext.length);
+        buffer.put(iv);
+        buffer.put(ciphertext); // Includes the GCM auth tag automatically.
+        return buffer.array();
+    }
+
+    public static byte[] decrypt(byte[] data, SecretKey key) throws Exception {
+        ByteBuffer buffer = ByteBuffer.wrap(data);
+        byte[] iv = new byte[GCM_IV_LENGTH];
+        buffer.get(iv);
+        byte[] ciphertext = new byte[buffer.remaining()];
+        buffer.get(ciphertext);
+
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+        cipher.init(Cipher.DECRYPT_MODE, key, new GCMParameterSpec(GCM_TAG_LENGTH, iv));
+
+        // If ciphertext was tampered with, this throws AEADBadTagException.
+        return cipher.doFinal(ciphertext);
+    }
+}</code></div>
+        </div>
+
+        <!-- Fix 2: Node.js AES-256-GCM -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): Node.js crypto with aes-256-gcm + proper key derivation
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Use <code class="text-green-400">crypto.createCipheriv()</code> with
+                <code class="text-green-400">aes-256-gcm</code> instead of the deprecated
+                <code class="text-green-400">createCipher()</code>. Derive keys from passwords using
+                <code class="text-green-400">scrypt</code> or <code class="text-green-400">pbkdf2</code>
+                with a random salt. Store the IV, salt, and auth tag alongside the ciphertext.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: AES-256-GCM with proper key derivation and random IV.
+const crypto = require('crypto');
+
+const ALGORITHM = 'aes-256-gcm';
+const IV_LENGTH = 12;      // 96 bits for GCM
+const SALT_LENGTH = 16;    // 128-bit salt
+const TAG_LENGTH = 16;     // 128-bit auth tag
+const KEY_LENGTH = 32;     // 256-bit key
+
+/** Derive a key from a password using scrypt. */
+function deriveKey(password, salt) {
+    return crypto.scryptSync(password, salt, KEY_LENGTH);
+}
+
+function encrypt(text, password) {
+    const salt = crypto.randomBytes(SALT_LENGTH);
+    const key = deriveKey(password, salt);
+    const iv = crypto.randomBytes(IV_LENGTH);
+
+    const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
+    const encrypted = Buffer.concat([cipher.update(text, 'utf8'), cipher.final()]);
+    const tag = cipher.getAuthTag();
+
+    // Pack: salt + iv + tag + ciphertext
+    return Buffer.concat([salt, iv, tag, encrypted]).toString('base64');
+}
+
+function decrypt(packed, password) {
+    const data = Buffer.from(packed, 'base64');
+    const salt = data.subarray(0, SALT_LENGTH);
+    const iv = data.subarray(SALT_LENGTH, SALT_LENGTH + IV_LENGTH);
+    const tag = data.subarray(SALT_LENGTH + IV_LENGTH, SALT_LENGTH + IV_LENGTH + TAG_LENGTH);
+    const ciphertext = data.subarray(SALT_LENGTH + IV_LENGTH + TAG_LENGTH);
+
+    const key = deriveKey(password, salt);
+    const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
+    decipher.setAuthTag(tag);
+
+    // Throws if ciphertext was tampered with.
+    return Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('utf8');
+}</code></div>
+        </div>
+
+        <!-- Fix 3: Java - Key generation best practices -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Generate strong AES keys with KeyGenerator
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Never derive AES keys from simple strings or short passwords without a proper KDF.
+                Use <code class="text-green-400">KeyGenerator</code> for random key generation, or
+                <code class="text-green-400">PBKDF2</code> with a high iteration count when deriving
+                from a password. Always use 256-bit keys when possible.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Proper AES key generation and password-based key derivation.
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.SecureRandom;
+
+public class KeyUtils {
+
+    /** Generate a random 256-bit AES key. Use when no password is involved. */
+    public static SecretKey generateRandomKey() throws Exception {
+        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+        keyGen.init(256, new SecureRandom());
+        return keyGen.generateKey();
+    }
+
+    /** Derive an AES key from a password using PBKDF2. */
+    public static SecretKey deriveKeyFromPassword(String password, byte[] salt)
+            throws Exception {
+        PBEKeySpec spec = new PBEKeySpec(
+                password.toCharArray(),
+                salt,
+                310_000,  // OWASP recommended minimum iterations for PBKDF2-SHA256
+                256       // Key length in bits
+        );
+
+        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+        byte[] keyBytes = factory.generateSecret(spec).getEncoded();
+        spec.clearPassword(); // Wipe password from memory.
+
+        return new SecretKeySpec(keyBytes, "AES");
+    }
+
+    /** Generate a random salt for key derivation. */
+    public static byte[] generateSalt() {
+        byte[] salt = new byte[16]; // 128-bit salt
+        new SecureRandom().nextBytes(salt);
+        return salt;
+    }
+}</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://cwe.mitre.org/data/definitions/326.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-326</p>
+                <p class="text-xs text-gray-500">Inadequate Encryption Strength</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP A02:2021 —
+                    Cryptographic Failures</p>
+                <p class="text-xs text-gray-500">Top 10 category covering weak encryption and padding</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP Cryptographic
+                    Storage Cheat Sheet</p>
+                <p class="text-xs text-gray-500">AES mode selection, key management, and storage best practices</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP Password Storage
+                    Cheat Sheet</p>
+                <p class="text-xs text-gray-500">PBKDF2, scrypt, Argon2 — key derivation best practices</p>
+            </div>
+        </a>
+    </div>
+</div>

@@ -1,0 +1,451 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-90 flags code that constructs <strong class="text-gray-200">LDAP queries using unsanitized
+            user input</strong>. When user-controlled data is concatenated directly into an LDAP search
+        filter, an attacker can inject LDAP filter metacharacters —
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">(</code>,
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">)</code>,
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">*</code>,
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">\</code>,
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">|</code>,
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">&amp;</code> — to modify the
+        query's logic.
+    </p>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        Successful LDAP injection can allow an attacker to:
+    </p>
+    <ul class="list-disc list-inside text-gray-300 leading-relaxed mb-4 space-y-1 ml-2">
+        <li><strong class="text-gray-200">Bypass authentication</strong> — inject a filter that always
+            evaluates to true (e.g., <code class="text-red-400">*)(uid=*))(|(uid=*</code>)</li>
+        <li><strong class="text-gray-200">Enumerate users and groups</strong> — extract directory
+            information by manipulating search filters</li>
+        <li><strong class="text-gray-200">Elevate privileges</strong> — modify filters to return
+            admin accounts or privileged group memberships</li>
+        <li><strong class="text-gray-200">Exfiltrate data</strong> — read sensitive attributes
+            (emails, phone numbers, organizational structure) from the directory</li>
+    </ul>
+    <p class="text-gray-300 leading-relaxed">
+        This weakness maps to <strong class="text-gray-200">OWASP A03:2021 — Injection</strong>.
+        LDAP injection is especially dangerous in enterprise environments where Active Directory or
+        OpenLDAP backs authentication and authorization. The fix requires
+        <strong class="text-gray-200">escaping LDAP special characters</strong> in user input or
+        using framework-provided filter builders that handle encoding automatically.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Java JNDI string concatenation -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: String concatenation in JNDI LDAP filters (Java)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Directly concatenating user input into LDAP filter strings via
+                <code class="text-red-400">DirContext.search()</code> is the classic injection vector.
+                An attacker submitting <code class="text-red-400">*)(uid=*))(|(uid=*</code> as a
+                username transforms the filter into one that matches all users, bypassing authentication.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: User input concatenated directly into LDAP filter.
+import javax.naming.directory.*;
+
+public class LdapAuthService {
+
+    public boolean authenticate(String username, String password) {
+        DirContext ctx = new InitialDirContext(env);
+
+        // ❌ Attacker input: username = "*)(uid=*))(|(uid=*"
+        // Resulting filter: (&(uid=*)(uid=*))(|(uid=*)(userPassword=...))
+        // This matches ALL users — authentication bypassed.
+        String filter = "(&(uid=" + username + ")"
+                      + "(userPassword=" + password + "))";
+
+        NamingEnumeration&lt;?&gt; results = ctx.search(
+            "ou=users,dc=example,dc=com",
+            filter,              // ❌ Unescaped user input in filter!
+            new SearchControls()
+        );
+        return results.hasMore();
+    }
+}
+
+// Also dangerous — in a user lookup service:
+public UserInfo findUser(String searchTerm) {
+    // ❌ searchTerm = "*)(objectClass=*" → returns all objects.
+    String filter = "(|(cn=" + searchTerm + ")"
+                  + "(mail=" + searchTerm + "))";
+    return ldapSearch(filter);
+}</code></div>
+        </div>
+
+        <!-- Example 2: Spring LDAP with raw filters -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Raw filter strings in Spring LDAP and Spring Security (Java/Spring)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Using <code class="text-red-400">HardcodedFilter</code> or raw string filters in
+                Spring's <code class="text-red-400">LdapTemplate</code> bypasses Spring LDAP's
+                built-in encoding. Similarly, custom Spring Security LDAP configurations that
+                build search filters via string concatenation are vulnerable even though the
+                framework provides safe alternatives.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Raw string filter in Spring LdapTemplate.
+import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.filter.HardcodedFilter;
+
+@Service
+public class LdapUserService {
+
+    @Autowired
+    private LdapTemplate ldapTemplate;
+
+    public List&lt;User&gt; searchUsers(String query) {
+        // ❌ HardcodedFilter passes the string as-is — no encoding.
+        String filter = "(|(cn=" + query + ")(sn=" + query + "))";
+        return ldapTemplate.search(
+            "ou=users",
+            filter,                   // ❌ Raw, unescaped filter!
+            new UserAttributesMapper()
+        );
+    }
+
+    // Also dangerous — using LdapTemplate with string format:
+    public User findByEmail(String email) {
+        String filter = String.format("(mail=%s)", email);
+        // ❌ email = "admin@co)(uid=*" → matches unintended entries.
+        return ldapTemplate.searchForObject("ou=users", filter, mapper);
+    }
+}
+
+// Also dangerous — MessageFormat in LDAP auth provider:
+// spring.security.ldap.user-search-filter=(uid={0})
+// If overridden with raw string building, injection is possible.</code></div>
+        </div>
+
+        <!-- Example 3: Node.js ldapjs -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Template literals in ldapjs search filters (Node.js)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Node.js LDAP libraries like <code class="text-red-400">ldapjs</code> and
+                <code class="text-red-400">ldapts</code> accept string filters. Using template
+                literals or concatenation to insert user input creates the same injection risk.
+                The <code class="text-red-400">ldapjs</code> library provides filter classes but
+                many codebases skip them for convenience.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Template literal in ldapjs filter — LDAP injection.
+const ldap = require('ldapjs');
+
+const client = ldap.createClient({ url: 'ldap://ldap.example.com' });
+
+function lookupUser(username) {
+    return new Promise((resolve, reject) => {
+        // ❌ username = "*)(objectClass=*" → matches everything.
+        const filter = `(uid=${username})`;
+
+        client.search('ou=users,dc=example,dc=com', {
+            filter: filter,   // ❌ Unescaped user input!
+            scope: 'sub'
+        }, (err, res) => {
+            const entries = [];
+            res.on('searchEntry', e => entries.push(e.ppiObject));
+            res.on('end', () => resolve(entries));
+        });
+    });
+}
+
+// Also dangerous — in Express route with concatenation:
+app.get('/api/users/search', (req, res) => {
+    const q = req.query.q;
+    // ❌ q = "*)(cn=admin)" → retrieves admin entries.
+    const filter = `(|(cn=${q})(mail=${q}))`;
+    ldapSearch(filter).then(users => res.json(users));
+});</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Java — JNDI with escaping -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Escape LDAP metacharacters or use filter parameterization
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                For raw JNDI, escape all LDAP special characters
+                (<code class="text-green-400">* ( ) \ / NUL</code>) in user input before inserting
+                into filter strings. Better yet, use JNDI's built-in parameterized filter format
+                with <code class="text-green-400">filterArgs</code>, which handles escaping
+                automatically.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: JNDI parameterized filter — automatic escaping.
+import javax.naming.directory.*;
+
+public class LdapAuthService {
+
+    public boolean authenticate(String username, String password) {
+        DirContext ctx = new InitialDirContext(env);
+
+        // ✅ Parameterized filter — {0} and {1} are auto-escaped.
+        String filter = "(&(uid={0})(userPassword={1}))";
+        Object[] filterArgs = { username, password };
+
+        NamingEnumeration&lt;?&gt; results = ctx.search(
+            "ou=users,dc=example,dc=com",
+            filter,
+            filterArgs,        // ✅ Special chars escaped automatically.
+            new SearchControls()
+        );
+        return results.hasMore();
+    }
+
+    // Manual escaping helper (RFC 4515):
+    public static String escapeLdapFilter(String input) {
+        if (input == null) return null;
+        StringBuilder sb = new StringBuilder();
+        for (char c : input.toCharArray()) {
+            switch (c) {
+                case '*':  sb.append("\\2a"); break;
+                case '(':  sb.append("\\28"); break;
+                case ')':  sb.append("\\29"); break;
+                case '\\': sb.append("\\5c"); break;
+                case '\0': sb.append("\\00"); break;
+                default:   sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+}</code></div>
+        </div>
+
+        <!-- Fix 2: Spring LDAP filter builder -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Spring): Use Spring LDAP's type-safe filter builder + LdapQueryBuilder
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Spring LDAP provides <code class="text-green-400">LdapQueryBuilder</code> and
+                filter classes (<code class="text-green-400">EqualsFilter</code>,
+                <code class="text-green-400">OrFilter</code>, etc.) that automatically encode
+                LDAP special characters. For Spring Security LDAP, use the built-in
+                <code class="text-green-400">{0}</code> placeholder in search filters, which is
+                auto-escaped by the framework.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Spring LDAP type-safe filter builder — auto-encoding.
+import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.query.LdapQueryBuilder;
+import org.springframework.ldap.filter.*;
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
+
+@Service
+public class LdapUserService {
+
+    @Autowired
+    private LdapTemplate ldapTemplate;
+
+    // ─── Pattern 1: LdapQueryBuilder (preferred) ───
+    public List&lt;User&gt; searchUsers(String searchTerm) {
+        return ldapTemplate.search(
+            query()
+                .base("ou=users")
+                .where("cn").is(searchTerm)       // ✅ Auto-escaped.
+                .or("sn").is(searchTerm)           // ✅ Auto-escaped.
+                .or("mail").is(searchTerm),        // ✅ Auto-escaped.
+            new UserAttributesMapper()
+        );
+    }
+
+    // ─── Pattern 2: Filter objects ───
+    public User findByEmail(String email) {
+        Filter filter = new EqualsFilter("mail", email); // ✅ Auto-escaped.
+        return ldapTemplate.searchForObject(
+            "ou=users", filter.encode(), mapper
+        );
+    }
+
+    // ─── Pattern 3: OrFilter for multi-attribute search ───
+    public List&lt;User&gt; multiSearch(String term) {
+        OrFilter orFilter = new OrFilter();
+        orFilter.or(new LikeFilter("cn", term));    // ✅ Wildcards escaped.
+        orFilter.or(new LikeFilter("mail", term));
+        return ldapTemplate.search("ou=users",
+            orFilter.encode(), mapper);
+    }
+}
+
+// Spring Security LDAP — {0} placeholder is auto-escaped:
+// auth.ldapAuthentication()
+//     .userSearchFilter("(uid={0})")   // ✅ Safe — {0} is encoded.
+//     .groupSearchFilter("(member={0})")</code></div>
+        </div>
+
+        <!-- Fix 3: Node.js ldapjs filter objects -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): Use ldapjs filter objects or manual escaping (Node.js)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Use <code class="text-green-400">ldapjs</code> filter classes
+                (<code class="text-green-400">EqualityFilter</code>,
+                <code class="text-green-400">OrFilter</code>) instead of string templates.
+                These classes encode special characters automatically. If you must use string
+                filters, apply manual escaping per RFC 4515 before interpolation.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: ldapjs filter objects — automatic encoding.
+const ldap = require('ldapjs');
+
+function lookupUser(username) {
+    // ✅ EqualityFilter encodes LDAP metacharacters automatically.
+    const filter = new ldap.EqualityFilter({
+        attribute: 'uid',
+        value: username     // * ( ) \ are escaped by the filter class.
+    });
+
+    return new Promise((resolve, reject) => {
+        client.search('ou=users,dc=example,dc=com', {
+            filter: filter,     // ✅ Safe — uses filter object.
+            scope: 'sub'
+        }, (err, res) => {
+            const entries = [];
+            res.on('searchEntry', e => entries.push(e.ppiObject));
+            res.on('end', () => resolve(entries));
+        });
+    });
+}
+
+// Multi-attribute search with OrFilter:
+function searchUsers(term) {
+    const filter = new ldap.OrFilter({
+        filters: [
+            new ldap.EqualityFilter({ attribute: 'cn', value: term }),
+            new ldap.EqualityFilter({ attribute: 'mail', value: term })
+        ]
+    });
+    return ldapSearch(filter);
+}
+
+// Manual escaping function (RFC 4515) if filter objects aren't available:
+function escapeLdapFilter(input) {
+    return input.replace(/([\\*()\/\0])/g, (match) => {
+        return '\\' + match.charCodeAt(0).toString(16).padStart(2, '0');
+    });
+}
+// Usage: const safe = `(uid=${escapeLdapFilter(username)})`;</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://cwe.mitre.org/data/definitions/90.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-90</p>
+                <p class="text-xs text-gray-500">Improper Neutralization of Special Elements in an LDAP Query</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/Top10/A03_2021-Injection/" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP A03:2021 —
+                    Injection</p>
+                <p class="text-xs text-gray-500">Top 10 category covering LDAP injection and other injection flaws</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/LDAP_Injection_Prevention_Cheat_Sheet.html"
+            target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP LDAP Injection
+                    Prevention Cheat Sheet</p>
+                <p class="text-xs text-gray-500">Escaping rules and safe LDAP query construction</p>
+            </div>
+        </a>
+
+        <a href="https://datatracker.ietf.org/doc/html/rfc4515" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">RFC 4515 — LDAP
+                    String Search Filters</p>
+                <p class="text-xs text-gray-500">The specification defining LDAP filter encoding rules</p>
+            </div>
+        </a>
+    </div>
+</div>

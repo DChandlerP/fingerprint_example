@@ -1,0 +1,510 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-352 flags web applications that process state-changing requests without verifying that the
+        request was intentionally initiated by the authenticated user. In a <strong class="text-gray-200">CSRF
+            attack</strong>, a malicious website tricks the victim's browser into sending a forged request
+        — complete with the victim's session cookie — to the vulnerable application. Because the browser
+        automatically attaches cookies, the server <strong class="text-gray-200">cannot distinguish</strong>
+        legitimate requests from forged ones.
+    </p>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        Spring Security enables CSRF protection <strong class="text-gray-200">by default</strong>.
+        SAST tools flag this weakness when they detect <code class="text-red-400">csrf().disable()</code>
+        or <code class="text-red-400">csrf(csrf -> csrf.disable())</code> in your Spring Security
+        configuration — or when state-changing endpoints in plain Servlets or Express lack any token
+        verification.
+    </p>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        The impact depends on what the targeted endpoint does. CSRF can change passwords, transfer funds,
+        modify account settings, or elevate privileges — all without the user's knowledge.
+    </p>
+    <p class="text-gray-300 leading-relaxed">
+        This weakness is ranked in the <strong class="text-gray-200">SANS/CWE Top 25</strong> and maps to
+        <strong class="text-gray-200">OWASP A01:2021 — Broken Access Control</strong>. The primary
+        defense is the <strong class="text-gray-200">Synchronizer Token Pattern</strong> — which Spring
+        Security implements automatically when CSRF is not disabled.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Spring Security csrf().disable() -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Disabling Spring Security's built-in CSRF protection
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Spring Security enables CSRF protection <strong class="text-gray-200">by default</strong>.
+                Calling <code class="text-red-400">csrf().disable()</code> turns it off entirely — a common
+                but dangerous shortcut developers take during development and forget to revert. This is the
+                <strong class="text-gray-200">most frequent SAST finding for CWE-352</strong> in Spring
+                applications. Both the legacy <code class="text-red-400">WebSecurityConfigurerAdapter</code>
+                style and the modern <code class="text-red-400">SecurityFilterChain</code> bean style are shown.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Disabling Spring Security's built-in CSRF protection.
+
+// --- Legacy style (Spring Security 5.x / WebSecurityConfigurerAdapter) ---
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            .csrf().disable()  // ← SAST flags this — CSRF is off globally
+            .authorizeRequests()
+                .antMatchers("/login", "/register").permitAll()
+                .anyRequest().authenticated()
+            .and()
+            .formLogin()
+                .loginPage("/login");
+    }
+}
+
+// --- Modern style (Spring Security 6.x / SecurityFilterChain bean) ---
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(csrf -&gt; csrf.disable())  // ← Same problem, lambda DSL
+            .authorizeHttpRequests(auth -&gt; auth
+                .requestMatchers("/login", "/register").permitAll()
+                .anyRequest().authenticated()
+            )
+            .formLogin(form -&gt; form.loginPage("/login"));
+
+        return http.build();
+    }
+}</code></div>
+        </div>
+
+        <!-- Example 2: Spring REST API without CSRF + cookie auth -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Spring REST API with cookie-based auth but CSRF disabled
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                A common misconception is that REST APIs don't need CSRF protection. This is true
+                <strong class="text-gray-200">only</strong> if the API uses stateless authentication
+                (e.g., <code class="text-red-400">Authorization: Bearer</code> headers). If the API uses
+                <strong class="text-gray-200">cookie-based sessions</strong> (common in SPAs served from
+                the same origin), CSRF is still required — the browser will attach session cookies to
+                cross-origin requests just like it does for form submissions.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: REST API uses session cookies but disables CSRF.
+
+@Configuration
+@EnableWebSecurity
+public class ApiSecurityConfig {
+
+    @Bean
+    public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(csrf -&gt; csrf.disable())  // ← Dangerous with cookie auth!
+            .sessionManagement(session -&gt;
+                session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                //                          ↑ Sessions ARE used — cookies are sent!
+            )
+            .authorizeHttpRequests(auth -&gt; auth
+                .requestMatchers("/api/public/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .formLogin(Customizer.withDefaults());
+
+        return http.build();
+    }
+}
+
+// The SPA makes requests with credentials:
+// fetch('/api/transfer', {
+//     method: 'POST',
+//     credentials: 'include',  ← Browser sends session cookie
+//     body: JSON.stringify({ to: 'attacker', amount: 10000 })
+// });
+//
+// An attacker's page can do the same thing — the session cookie
+// is attached automatically. Without CSRF tokens, the server
+// cannot tell the difference.</code></div>
+        </div>
+
+        <!-- Example 3: Servlet with no CSRF + Express with no CSRF -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: No CSRF token verification in plain Java Servlet and Express.js
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Applications not using Spring Security (plain Servlets, Express.js) have no CSRF protection
+                unless explicitly implemented. The server trusts the session cookie alone, making every
+                state-changing endpoint vulnerable to cross-origin form submissions.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: No CSRF token — server trusts cookie alone.
+
+// --- Java Servlet: no token verification ---
+@WebServlet("/update-email")
+public class UpdateEmailServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+        HttpSession session = req.getSession(false);
+        if (session == null) { resp.sendRedirect("/login"); return; }
+
+        String userId = (String) session.getAttribute("userId");
+        String newEmail = req.getParameter("email"); // Attacker-controlled
+
+        // No CSRF verification — cookie is the only check.
+        userService.updateEmail(userId, newEmail);
+    }
+}
+
+// --- Express.js: no CSRF protection ---
+app.post('/change-password', (req, res) =&gt; {
+    if (!req.session.userId) return res.status(401).send('Not logged in.');
+    // No CSRF token — session cookie is the only authentication.
+    userService.changePassword(req.session.userId, req.body.password);
+    res.send('Password changed.');
+});
+
+// --- Attacker's page performs the attack ---
+// &lt;form action="https://vulnerable-app.com/update-email" method="POST"&gt;
+//     &lt;input type="hidden" name="email" value="attacker@evil.com" /&gt;
+// &lt;/form&gt;
+// &lt;script&gt;document.forms[0].submit();&lt;/script&gt;</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Spring Security CSRF enabled (default) + Thymeleaf + AJAX -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Keep Spring Security CSRF enabled — Thymeleaf, JSP, and AJAX patterns
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                The simplest fix is to <strong class="text-green-300">remove <code>csrf().disable()</code></strong>.
+                Spring Security's CSRF is on by default. Thymeleaf and Spring's JSP form tag library inject
+                the token automatically. For AJAX/SPA patterns, use
+                <code class="text-green-400">CookieCsrfTokenRepository</code> so JavaScript can read the
+                token from a cookie and send it as a header.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: CSRF protection enabled (the default). Remove csrf().disable().
+
+// --- Spring Security 6.x (SecurityFilterChain bean) ---
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            // CSRF is ON by default — simply omit any csrf().disable() call.
+            // For server-rendered forms (Thymeleaf/JSP), no extra config needed.
+            .authorizeHttpRequests(auth -&gt; auth
+                .requestMatchers("/login", "/register").permitAll()
+                .anyRequest().authenticated()
+            )
+            .formLogin(form -&gt; form.loginPage("/login"));
+
+        return http.build();
+    }
+}
+
+// --- Thymeleaf: token is injected automatically ---
+// &lt;form th:action="@{/update-email}" method="post"&gt;
+//     &lt;!-- Hidden _csrf field is added automatically by Thymeleaf --&gt;
+//     &lt;input type="email" name="email" /&gt;
+//     &lt;button type="submit"&gt;Update&lt;/button&gt;
+// &lt;/form&gt;
+
+// --- JSP with Spring form tags: also automatic ---
+// &lt;form:form action="/update-email" method="POST"&gt;
+//     &lt;!-- _csrf hidden field injected by Spring form tag --&gt;
+//     &lt;form:input path="email" /&gt;
+//     &lt;input type="submit" value="Update" /&gt;
+// &lt;/form:form&gt;
+
+// --- Plain JSP (without form tags): include manually ---
+// &lt;form method="POST" action="/update-email"&gt;
+//     &lt;input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /&gt;
+//     &lt;input type="email" name="email" /&gt;
+//     &lt;button type="submit"&gt;Update&lt;/button&gt;
+// &lt;/form&gt;</code></div>
+        </div>
+
+        <!-- Fix 2: Spring CSRF for SPA / AJAX with CookieCsrfTokenRepository -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Spring CSRF with SPA / AJAX — CookieCsrfTokenRepository
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                For SPAs and AJAX-heavy applications, configure Spring to store the CSRF token in a cookie
+                that JavaScript can read. The SPA reads the <code class="text-green-400">XSRF-TOKEN</code>
+                cookie and sends it back as the <code class="text-green-400">X-XSRF-TOKEN</code> header on
+                every state-changing request. This is the recommended pattern for React/Angular/Vue frontends
+                backed by Spring Boot.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Cookie-based CSRF token for SPA / AJAX applications.
+
+@Configuration
+@EnableWebSecurity
+public class SpaSecurityConfig {
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(csrf -&gt; csrf
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                // ↑ Stores token in XSRF-TOKEN cookie (readable by JS).
+                // Spring validates the X-XSRF-TOKEN header automatically.
+                .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
+            )
+            .authorizeHttpRequests(auth -&gt; auth
+                .requestMatchers("/api/public/**").permitAll()
+                .anyRequest().authenticated()
+            );
+
+        return http.build();
+    }
+}
+
+// Spring Security 6.x requires a CsrfTokenRequestHandler for SPAs:
+public class SpaCsrfTokenRequestHandler extends CsrfTokenRequestAttributeHandler {
+    private final CsrfTokenRequestHandler delegate = new XorCsrfTokenRequestAttributeHandler();
+
+    @Override
+    public void handle(HttpServletRequest req, HttpServletResponse res,
+                       Supplier&lt;CsrfToken&gt; csrfToken) {
+        this.delegate.handle(req, res, csrfToken);
+    }
+
+    @Override
+    public String resolveCsrfTokenValue(HttpServletRequest req, CsrfToken csrfToken) {
+        String headerValue = req.getHeader(csrfToken.getHeaderName());
+        return (headerValue != null)
+            ? super.resolveCsrfTokenValue(req, csrfToken)
+            : this.delegate.resolveCsrfTokenValue(req, csrfToken);
+    }
+}
+
+// --- SPA JavaScript (React, Angular, Vue) ---
+// Read the XSRF-TOKEN cookie and send it as a header:
+//
+// const token = document.cookie
+//     .split('; ')
+//     .find(row =&gt; row.startsWith('XSRF-TOKEN='))
+//     ?.split('=')[1];
+//
+// fetch('/api/transfer', {
+//     method: 'POST',
+//     credentials: 'include',
+//     headers: {
+//         'Content-Type': 'application/json',
+//         'X-XSRF-TOKEN': token   // ← Spring validates this header
+//     },
+//     body: JSON.stringify({ to: 'alice', amount: 50 })
+// });
+//
+// Angular's HttpClient sends X-XSRF-TOKEN automatically.</code></div>
+        </div>
+
+        <!-- Fix 3: When it's OK to disable + Express CSRF + defense-in-depth -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                When to disable CSRF, Express.js protection, and defense-in-depth
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                CSRF protection can be safely disabled <strong class="text-green-300">only</strong> for
+                <strong class="text-green-300">truly stateless APIs</strong> that authenticate exclusively
+                via <code class="text-green-400">Authorization</code> headers (Bearer tokens, API keys) and
+                never use cookies. For Express.js applications, use the <code class="text-green-400">csrf-csrf</code>
+                middleware. Always combine CSRF tokens with <code class="text-green-400">SameSite</code>
+                cookie attributes for defense-in-depth.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// --- When it IS safe to disable CSRF (Spring) ---
+// Only for purely stateless APIs with NO cookie-based auth:
+
+@Bean
+public SecurityFilterChain statelessApiChain(HttpSecurity http) throws Exception {
+    http
+        .csrf(csrf -&gt; csrf.disable())  // OK here — no cookies used at all.
+        .sessionManagement(session -&gt;
+            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            //                           ↑ STATELESS — no session cookie created.
+        )
+        .oauth2ResourceServer(oauth2 -&gt;
+            oauth2.jwt(Customizer.withDefaults())
+            // Auth via Authorization: Bearer header only.
+        );
+
+    return http.build();
+}
+
+// --- Express.js: csrf-csrf middleware ---
+const { doubleCsrf } = require('csrf-csrf');
+const cookieParser = require('cookie-parser');
+
+app.use(cookieParser('signing-secret'));
+
+const { doubleCsrfProtection, generateToken } = doubleCsrf({
+    getSecret: () =&gt; 'csrf-secret',
+    cookieName: '__csrf',
+    cookieOptions: { sameSite: 'lax', secure: true, httpOnly: true }
+});
+
+app.use((req, res, next) =&gt; {
+    res.locals.csrfToken = generateToken(req, res);
+    next();
+});
+
+app.post('/change-password', doubleCsrfProtection, (req, res) =&gt; {
+    // Token validated by middleware — legitimate request.
+    userService.changePassword(req.session.userId, req.body.password);
+});
+
+// --- Defense-in-depth: SameSite cookies ---
+// Set on ALL session cookies (Spring Boot application.properties):
+// server.servlet.session.cookie.same-site=lax
+// server.servlet.session.cookie.secure=true
+// server.servlet.session.cookie.http-only=true
+//
+// SameSite=Lax blocks cross-origin POST requests from sending cookies.
+// This alone prevents most CSRF, but tokens remain essential because:
+//   1. SameSite=Lax still allows top-level GET navigations with cookies.
+//   2. Older browsers may not support SameSite.
+//   3. Defense-in-depth is a security best practice.</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://portswigger.net/web-security/csrf" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">PortSwigger —
+                    Cross-Site Request Forgery (CSRF)</p>
+                <p class="text-xs text-gray-500">Comprehensive explanation and interactive labs for CSRF vulnerabilities
+                </p>
+            </div>
+        </a>
+
+        <a href="https://cwe.mitre.org/data/definitions/352.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-352</p>
+                <p class="text-xs text-gray-500">Cross-Site Request Forgery (CSRF)</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP A01:2021 —
+                    Broken Access Control</p>
+                <p class="text-xs text-gray-500">Top 10 category covering CSRF and access control failures</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html"
+            target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP CSRF Prevention
+                    Cheat Sheet</p>
+                <p class="text-xs text-gray-500">Token patterns, SameSite cookies, and defense-in-depth</p>
+            </div>
+        </a>
+
+        <a href="https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">Spring Security — CSRF
+                    Protection</p>
+                <p class="text-xs text-gray-500">Official Spring Security docs for CSRF token configuration</p>
+            </div>
+        </a>
+    </div>
+</div>

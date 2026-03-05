@@ -1,0 +1,331 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-94 flags code that constructs and executes program logic from untrusted input at runtime.
+        Unlike command injection (CWE-78), which targets the operating system, code injection targets
+        the <strong class="text-gray-200">application's own runtime</strong> — allowing an attacker to
+        execute arbitrary Java, JavaScript, or other interpreted code within the application's process.
+    </p>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        Common attack surface includes calls to <code
+            class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">eval()</code>,
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">ScriptEngine.eval()</code>,
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">new Function()</code>, or any mechanism
+        that interprets a string as executable code. When the string is influenced by user input, an attacker can
+        inject logic to steal data, bypass authentication, modify application state, or pivot to further attacks.
+    </p>
+    <p class="text-gray-300 leading-relaxed">
+        This weakness is ranked in the <strong class="text-gray-200">SANS/CWE Top 25</strong> and maps to
+        <strong class="text-gray-200">OWASP A03:2021 — Injection</strong>. The fix is straightforward:
+        <strong class="text-gray-200">never execute untrusted strings as code</strong>. Use safe parsers,
+        allowlists, or purpose-built libraries instead.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Java ScriptEngine.eval() -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Java ScriptEngine.eval() with user-supplied expression
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                A servlet accepts a "calculator" expression from the user and evaluates it with the
+                built-in JavaScript engine. An attacker can submit a payload like
+                <code class="text-red-400">java.lang.Runtime.getRuntime().exec("rm -rf /")</code>
+                instead of a math expression — gaining full remote code execution on the server.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: User input is executed as code by the ScriptEngine.
+@WebServlet("/calculate")
+public class CalcServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        String expression = req.getParameter("expr"); // e.g. "2+2" or malicious code!
+
+        ScriptEngineManager mgr = new ScriptEngineManager();
+        ScriptEngine engine = mgr.getEngineByName("js");
+        try {
+            Object result = engine.eval(expression); // RCE: attacker controls the code
+            resp.getWriter().write("Result: " + result);
+        } catch (ScriptException e) {
+            resp.getWriter().write("Error: " + e.getMessage());
+        }
+    }
+}</code></div>
+        </div>
+
+        <!-- Example 2: JavaScript eval() -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Node.js eval() with user input
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                A Node.js/Express route uses <code class="text-red-400">eval()</code> to dynamically compute
+                a value from a query parameter. An attacker can inject
+                <code class="text-red-400">require('child_process').execSync('cat /etc/passwd')</code> to
+                execute arbitrary system commands on the server.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: eval() executes arbitrary code from the query string.
+const express = require('express');
+const app = express();
+
+app.get('/calc', (req, res) =&gt; {
+    const expr = req.query.expr; // e.g. "2+2" or malicious code!
+    try {
+        const result = eval(expr); // RCE: attacker controls the code
+        res.json({ result });
+    } catch (e) {
+        res.status(400).json({ error: e.message });
+    }
+});</code></div>
+        </div>
+
+        <!-- Example 3: JavaScript new Function() -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: new Function() with user-controlled body
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                <code class="text-red-400">new Function()</code> is functionally identical to
+                <code class="text-red-400">eval()</code> — it compiles a string into executable code.
+                In this example, an API endpoint builds a discount-calculation function from user input,
+                allowing an attacker to inject arbitrary logic that runs with the application's full privileges.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: new Function() compiles user input into executable code.
+app.post('/discount', (req, res) =&gt; {
+    const formula = req.body.formula; // e.g. "return price * 0.9" or malicious code!
+
+    // Attacker can submit: "return require('fs').readFileSync('/etc/passwd','utf8')"
+    const calcDiscount = new Function('price', formula);
+
+    const finalPrice = calcDiscount(100);
+    res.json({ finalPrice });
+});</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Java - Use a safe expression library -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Replace ScriptEngine with a safe expression parser
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Instead of evaluating arbitrary code, use a purpose-built math expression library like
+                <strong class="text-gray-200">exp4j</strong> that only understands numbers and arithmetic
+                operators. It cannot execute Java classes, access the filesystem, or perform any
+                action beyond basic math — completely eliminating the code injection vector.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: exp4j only parses mathematical expressions — no code execution.
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
+
+@WebServlet("/calculate")
+public class CalcServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        String expression = req.getParameter("expr");
+
+        // Allowlist: reject anything that isn't a number, operator, or parenthesis.
+        if (!expression.matches("[0-9+\\-*/().\\s]+")) {
+            resp.sendError(400, "Invalid expression.");
+            return;
+        }
+
+        try {
+            Expression exp = new ExpressionBuilder(expression).build();
+            double result = exp.evaluate();
+            resp.getWriter().write("Result: " + result);
+        } catch (Exception e) {
+            resp.sendError(400, "Could not evaluate expression.");
+        }
+    }
+}</code></div>
+        </div>
+
+        <!-- Fix 2: JS - Replace eval() with safe parsing -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): Replace eval() with a safe math parser or JSON.parse()
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                For math expressions, use a dedicated library like <strong class="text-gray-200">mathjs</strong>
+                that parses expressions without executing arbitrary code. For data, use
+                <code class="text-green-400">JSON.parse()</code> which only deserializes data and never
+                executes code. Pair these with a strict
+                <code class="text-green-400">Content-Security-Policy</code> header that blocks
+                <code class="text-green-400">unsafe-eval</code> in the browser.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: mathjs only evaluates mathematical expressions, not arbitrary code.
+const { evaluate } = require('mathjs');
+
+app.get('/calc', (req, res) =&gt; {
+    const expr = req.query.expr;
+
+    // Allowlist: reject anything that isn't a number, operator, or parenthesis.
+    if (!/^[0-9+\-*/().\s]+$/.test(expr)) {
+        return res.status(400).json({ error: 'Invalid expression' });
+    }
+
+    try {
+        const result = evaluate(expr); // Safe: cannot execute system commands
+        res.json({ result });
+    } catch (e) {
+        res.status(400).json({ error: 'Could not evaluate expression' });
+    }
+});
+
+// For data parsing, use JSON.parse() — it never executes code:
+// const data = JSON.parse(req.body.payload); // Safe</code></div>
+        </div>
+
+        <!-- Fix 3: JS - Replace new Function() with a strategy pattern -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): Replace new Function() with a lookup map / strategy pattern
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Instead of dynamically compiling code from user input, define all allowed behaviors
+                ahead of time in a <strong class="text-gray-200">lookup map</strong>. The user selects
+                a named strategy (e.g., <code class="text-green-400">"percent_off"</code>), and the
+                server executes the corresponding pre-written function. Unknown keys are rejected — no
+                code is ever constructed from input.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Pre-defined discount strategies — no dynamic code generation.
+const discountStrategies = {
+    'percent_10': (price) =&gt; price * 0.90,
+    'percent_20': (price) =&gt; price * 0.80,
+    'flat_5':     (price) =&gt; price - 5,
+    'bogo':       (price) =&gt; price / 2,
+};
+
+app.post('/discount', (req, res) =&gt; {
+    const strategyName = req.body.strategy; // e.g. "percent_10"
+
+    const calcDiscount = discountStrategies[strategyName];
+    if (!calcDiscount) {
+        return res.status(400).json({ error: 'Unknown discount strategy' });
+    }
+
+    const finalPrice = calcDiscount(100);
+    res.json({ finalPrice });
+});</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://cwe.mitre.org/data/definitions/94.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-94</p>
+                <p class="text-xs text-gray-500">Official CWE definition and examples</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/Top10/A03_2021-Injection/" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP A03:2021 —
+                    Injection</p>
+                <p class="text-xs text-gray-500">Top 10 category covering code, SQL, and OS injection</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP Injection
+                    Prevention Cheat Sheet</p>
+                <p class="text-xs text-gray-500">Comprehensive prevention strategies for all injection types</p>
+            </div>
+        </a>
+
+        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MDN — Never use
+                    eval()!</p>
+                <p class="text-xs text-gray-500">Mozilla's guidance on the dangers of eval() and safer alternatives</p>
+            </div>
+        </a>
+    </div>
+</div>

@@ -1,0 +1,458 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-287 flags code where the application <strong class="text-gray-200">fails to sufficiently
+            verify that a user is who they claim to be</strong>, or allows access to resources without
+        proper identity checks. This is a broad weakness that encompasses missing authentication on
+        endpoints, broken authentication logic, and
+        <strong class="text-gray-200">Broken Object Level Authorization (BOLA)</strong> — where a
+        user can access or modify another user's data simply by changing an ID in the request.
+    </p>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        Common manifestations include:
+    </p>
+    <ul class="list-disc list-inside text-gray-300 leading-relaxed mb-4 space-y-1 ml-2">
+        <li><strong class="text-gray-200">Missing authentication</strong> — sensitive endpoints are
+            accessible without any login or token</li>
+        <li><strong class="text-gray-200">BOLA / IDOR</strong> — authenticated users can access other
+            users' resources by manipulating IDs in URLs, request bodies, or query parameters
+            (e.g., <code class="text-red-400">GET /api/users/1234/records</code> → change to
+            <code class="text-red-400">/api/users/5678/records</code>)
+        </li>
+        <li><strong class="text-gray-200">Broken session management</strong> — sessions that don't
+            expire, can be fixated, or are shared across users</li>
+        <li><strong class="text-gray-200">Authentication bypass</strong> — logic flaws that allow
+            skipping authentication checks (e.g., checking a flag the client controls)</li>
+    </ul>
+    <p class="text-gray-300 leading-relaxed">
+        This weakness maps to <strong class="text-gray-200">OWASP A07:2021 — Identification and
+            Authentication Failures</strong> and appears in the
+        <strong class="text-gray-200">SANS/CWE Top 25</strong>. BOLA is also consistently the
+        <strong class="text-gray-200">#1 API security risk</strong> in the OWASP API Security Top 10.
+        The fix requires enforcing authentication on all sensitive endpoints and verifying that
+        the authenticated user is authorized to access the specific resource they're requesting.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Spring Controller with BOLA -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: BOLA — Spring controller trusts client-supplied user ID (Java/Spring)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                The most common BOLA pattern: the controller accepts a user ID from the URL path or
+                request body and returns that user's data <strong class="text-gray-200">without verifying
+                    that the authenticated user owns the resource</strong>. An attacker simply iterates
+                through IDs to exfiltrate every user's records. This is
+                <strong class="text-gray-200">OWASP API Security #1</strong> — the single most
+                exploited API vulnerability.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: BOLA — any authenticated user can access any other user's data.
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+    @GetMapping("/{userId}/profile")
+    public ResponseEntity&lt;UserProfile&gt; getProfile(@PathVariable Long userId) {
+        // ❌ No ownership check — trusts the userId from the URL.
+        // Attacker changes /api/users/1234/profile → /api/users/5678/profile
+        UserProfile profile = userService.findById(userId);
+        return ResponseEntity.ok(profile);
+    }
+
+    @GetMapping("/{userId}/documents")
+    public ResponseEntity&lt;List&lt;Document&gt;&gt; getDocuments(@PathVariable Long userId) {
+        // ❌ Same problem — any user can download any user's documents.
+        return ResponseEntity.ok(documentService.findByUserId(userId));
+    }
+
+    @PutMapping("/{userId}/email")
+    public ResponseEntity&lt;Void&gt; updateEmail(
+            @PathVariable Long userId,
+            @RequestBody EmailUpdateRequest request) {
+        // ❌ Attacker can change OTHER users' email addresses.
+        userService.updateEmail(userId, request.getNewEmail());
+        return ResponseEntity.ok().build();
+    }
+}</code></div>
+        </div>
+
+        <!-- Example 2: Spring Security misconfiguration — unauthenticated endpoints -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Overly permissive Spring Security config and missing auth (Java/Spring)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Misconfigured Spring Security can silently expose sensitive endpoints. Using
+                <code class="text-red-400">permitAll()</code> too broadly, disabling CSRF on state-changing
+                endpoints, or relying on URL patterns that don't match all request variants
+                (e.g., trailing slashes, case variations) leaves gaps that attackers exploit.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Overly permissive security configuration.
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+            .csrf(csrf -> csrf.disable())         // ❌ CSRF disabled globally!
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/public/**").permitAll()
+                .requestMatchers("/api/**").permitAll()  // ❌ Too broad — ALL API
+                //                                          endpoints are public!
+                .anyRequest().authenticated()
+            )
+            .build();
+    }
+}
+
+// Also dangerous — relying on security by obscurity:
+@RestController
+public class AdminController {
+
+    // No @PreAuthorize, no role check — anyone with the URL can access.
+    @GetMapping("/api/internal/admin/users")
+    public List&lt;User&gt; getAllUsers() {
+        return userService.findAll();  // ❌ "Hidden" endpoint, but no auth.
+    }
+
+    @DeleteMapping("/api/internal/admin/users/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.delete(id);        // ❌ No auth, no authorization.
+    }
+}</code></div>
+        </div>
+
+        <!-- Example 3: Node.js Express missing auth + BOLA -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: BOLA and missing authentication middleware (Node.js / Express)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                In Express applications, forgetting to apply authentication middleware to a route —
+                or applying it but trusting a user-supplied ID without ownership verification — creates
+                the same BOLA vulnerability. This is especially common when routes are added
+                incrementally and new endpoints skip the middleware chain.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: No auth middleware on sensitive routes + BOLA.
+const express = require('express');
+const app = express();
+
+// ❌ No authentication middleware — anyone can call this.
+app.get('/api/users/:userId/orders', async (req, res) => {
+    const orders = await db.getOrders(req.params.userId);
+    res.json(orders);  // Any visitor can enumerate all users' orders.
+});
+
+// Even WITH auth middleware, BOLA if you trust the URL param:
+const authMiddleware = require('./middleware/auth');
+
+app.get('/api/users/:userId/settings',
+    authMiddleware,  // ✅ User is authenticated...
+    async (req, res) => {
+        // ❌ ...but no ownership check. req.user.id might be 1234,
+        //    while req.params.userId is 5678. Still returns 5678's data.
+        const settings = await db.getUserSettings(req.params.userId);
+        res.json(settings);
+    }
+);
+
+// ❌ Same pattern with POST — attacker modifies another user's data:
+app.post('/api/users/:userId/address',
+    authMiddleware,
+    async (req, res) => {
+        // Trusts :userId from URL, ignores req.user.id.
+        await db.updateAddress(req.params.userId, req.body);
+        res.json({ success: true });
+    }
+);</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Spring — ownership check with @PreAuthorize + Principal -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Spring): Enforce ownership — use the authenticated principal, not the URL
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                The core BOLA fix: <strong class="text-green-300">derive the user identity from the
+                    authenticated session/token, not from the request</strong>. Use Spring Security's
+                <code class="text-green-400">@AuthenticationPrincipal</code> to inject the verified
+                user, and either scope queries to that user's ID or explicitly verify ownership
+                before returning data. For admin-level access, use
+                <code class="text-green-400">@PreAuthorize</code> role checks.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: User identity comes from the authenticated token, not the URL.
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+    // ─── Pattern 1: Remove userId from URL entirely ───
+    @GetMapping("/me/profile")
+    public ResponseEntity&lt;UserProfile&gt; getMyProfile(
+            @AuthenticationPrincipal UserDetails principal) {
+        // User ID from the verified JWT/session — not the request.
+        UserProfile profile = userService.findByUsername(
+            principal.getUsername()
+        );
+        return ResponseEntity.ok(profile);
+    }
+
+    // ─── Pattern 2: Keep userId in URL but verify ownership ───
+    @GetMapping("/{userId}/documents")
+    @PreAuthorize("#userId == authentication.principal.id or hasRole('ADMIN')")
+    public ResponseEntity&lt;List&lt;Document&gt;&gt; getDocuments(
+            @PathVariable Long userId) {
+        // SpEL expression ensures userId matches the authenticated user,
+        // OR the caller has ADMIN role. Rejects mismatched IDs with 403.
+        return ResponseEntity.ok(documentService.findByUserId(userId));
+    }
+
+    // ─── Pattern 3: Service-layer ownership check ───
+    @PutMapping("/{userId}/email")
+    public ResponseEntity&lt;Void&gt; updateEmail(
+            @PathVariable Long userId,
+            @RequestBody EmailUpdateRequest request,
+            @AuthenticationPrincipal CustomUser principal) {
+        if (!principal.getId().equals(userId)) {
+            throw new AccessDeniedException("Cannot modify another user");
+        }
+        userService.updateEmail(userId, request.getNewEmail());
+        return ResponseEntity.ok().build();
+    }
+}</code></div>
+        </div>
+
+        <!-- Fix 2: Spring Security — least-privilege configuration -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Spring): Deny-by-default security configuration with method security
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Configure Spring Security with a <strong class="text-green-300">deny-by-default</strong>
+                posture: require authentication on all endpoints and explicitly whitelist only truly
+                public ones. Enable <code class="text-green-400">@EnableMethodSecurity</code> for
+                fine-grained <code class="text-green-400">@PreAuthorize</code> checks at the
+                controller/service level. This ensures new endpoints are protected by default.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Deny-by-default — new endpoints are protected automatically.
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity  // Enables @PreAuthorize, @Secured, etc.
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+            .csrf(Customizer.withDefaults())        // ✅ CSRF enabled
+            .authorizeHttpRequests(auth -> auth
+                // Whitelist ONLY truly public endpoints:
+                .requestMatchers("/api/public/**").permitAll()
+                .requestMatchers("/health", "/info").permitAll()
+                // Everything else requires authentication:
+                .anyRequest().authenticated()        // ✅ Deny-by-default
+            )
+            .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+            .sessionManagement(s -> s
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+            .build();
+    }
+}
+
+// Controller with method-level authorization:
+@RestController
+@RequestMapping("/api/admin")
+@PreAuthorize("hasRole('ADMIN')")               // ✅ Class-level role check
+public class AdminController {
+
+    @GetMapping("/users")
+    public List&lt;User&gt; getAllUsers() {
+        return userService.findAll();            // Only ADMIN can access.
+    }
+
+    @DeleteMapping("/users/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")      // ✅ Elevated privilege
+    public void deleteUser(@PathVariable Long id) {
+        userService.delete(id);
+    }
+}</code></div>
+        </div>
+
+        <!-- Fix 3: Node.js Express — ownership middleware -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): Auth middleware + ownership verification on every route (Express)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Apply authentication middleware <strong class="text-green-300">globally</strong>
+                (via <code class="text-green-400">app.use()</code>) so new routes are protected by
+                default. Then add an ownership middleware that compares
+                <code class="text-green-400">req.user.id</code> to the requested resource's owner.
+                For routes that don't need a userId param at all, derive it from the token.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Global auth + ownership verification middleware.
+const express = require('express');
+const app = express();
+
+// ─── Global auth — all routes require authentication by default ───
+app.use('/api', authMiddleware);  // Applied to ALL /api routes.
+
+// ─── Pattern 1: Derive userId from token (best for BOLA prevention) ───
+app.get('/api/me/orders', async (req, res) => {
+    // req.user.id comes from the verified JWT — not the URL.
+    const orders = await db.getOrders(req.user.id);
+    res.json(orders);
+});
+
+// ─── Pattern 2: Ownership middleware for resource routes ───
+function ownershipCheck(paramName) {
+    return async (req, res, next) => {
+        const resourceUserId = req.params[paramName];
+        if (req.user.id !== resourceUserId && req.user.role !== 'admin') {
+            return res.status(403).json({ error: 'Forbidden' });
+        }
+        next();
+    };
+}
+
+app.get('/api/users/:userId/settings',
+    ownershipCheck('userId'),     // ✅ Verifies caller owns the resource.
+    async (req, res) => {
+        const settings = await db.getUserSettings(req.params.userId);
+        res.json(settings);
+    }
+);
+
+// ─── Pattern 3: Query scoped to authenticated user at DB level ───
+app.get('/api/documents/:docId', async (req, res) => {
+    // WHERE clause includes req.user.id — impossible to access others'.
+    const doc = await db.query(
+        'SELECT * FROM documents WHERE id = $1 AND owner_id = $2',
+        [req.params.docId, req.user.id]
+    );
+    if (!doc) return res.status(404).json({ error: 'Not found' });
+    res.json(doc);
+});</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://cwe.mitre.org/data/definitions/287.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-287</p>
+                <p class="text-xs text-gray-500">Improper Authentication</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP A07:2021 —
+                    Identification &amp; Authentication Failures</p>
+                <p class="text-xs text-gray-500">Top 10 category for broken authentication</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/API-Security/editions/2023/en/0xa1-broken-object-level-authorization/"
+            target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP API Security
+                    #1 — BOLA</p>
+                <p class="text-xs text-gray-500">Broken Object Level Authorization — the #1 API risk</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP Authentication
+                    Cheat Sheet</p>
+                <p class="text-xs text-gray-500">Best practices for authentication and session management</p>
+            </div>
+        </a>
+    </div>
+</div>

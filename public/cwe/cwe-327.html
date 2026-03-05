@@ -1,0 +1,393 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-327 flags code that uses cryptographic algorithms known to be
+        <strong class="text-gray-200">broken, weak, or deprecated</strong>. These algorithms were once
+        considered secure but have been defeated by advances in cryptanalysis and computing power.
+        Common offenders include:
+    </p>
+    <ul class="list-disc list-inside text-gray-300 leading-relaxed mb-4 space-y-1 ml-2">
+        <li><strong class="text-gray-200">MD5</strong> — collision attacks demonstrated in seconds; used to forge SSL
+            certificates</li>
+        <li><strong class="text-gray-200">SHA-1</strong> — practical collision attacks since 2017 (SHAttered);
+            deprecated by NIST, browsers, and CAs</li>
+        <li><strong class="text-gray-200">DES / 3DES</strong> — 56-bit (DES) and 112-bit effective (3DES) key lengths;
+            vulnerable to brute force and Sweet32 attacks</li>
+        <li><strong class="text-gray-200">RC4</strong> — statistical biases in output; prohibited by RFC 7465 in TLS
+        </li>
+        <li><strong class="text-gray-200">MD5 / SHA-1 for password hashing</strong> — far too fast; billions of hashes
+            per second on a GPU</li>
+    </ul>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        Using these algorithms gives a <strong class="text-gray-200">false sense of security</strong>.
+        Data that appears encrypted or integrity-protected is actually vulnerable to forgery,
+        collision attacks, or brute-force decryption. This is especially dangerous for password
+        hashing, digital signatures, and data-at-rest encryption.
+    </p>
+    <p class="text-gray-300 leading-relaxed">
+        This weakness maps to <strong class="text-gray-200">OWASP A02:2021 — Cryptographic Failures</strong>.
+        The fix is to replace broken algorithms with their modern, NIST-recommended counterparts:
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-green-400">SHA-256</code> or
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-green-400">SHA-3</code> for hashing,
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-green-400">AES-256</code> for encryption,
+        and <code class="bg-gray-800 px-1.5 py-0.5 rounded text-green-400">bcrypt</code> /
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-green-400">Argon2</code> for password storage.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Java MD5 for password hashing -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: MD5 used for password hashing (Java)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                MD5 produces collisions in seconds and can be brute-forced at billions of hashes per
+                second on consumer GPUs. Using it to hash passwords means an attacker with a stolen
+                database can recover most passwords in minutes using rainbow tables or hashcat. Even
+                adding a salt does not fix the core problem — MD5 is simply too fast for password storage.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: MD5 is broken — trivially reversible for passwords.
+import java.security.MessageDigest;
+
+public class AuthService {
+
+    public String hashPassword(String password) throws Exception {
+        // MD5: 128-bit output, known collision attacks, GPU-crackable.
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] hash = md.digest(password.getBytes(StandardCharsets.UTF_8));
+        return HexFormat.of().formatHex(hash);
+    }
+
+    public boolean verifyPassword(String password, String storedHash) throws Exception {
+        return hashPassword(password).equals(storedHash);
+    }
+}
+
+// Also dangerous — SHA-1 has the same speed problem for passwords:
+MessageDigest sha1 = MessageDigest.getInstance("SHA-1"); // Don't use for passwords!</code></div>
+        </div>
+
+        <!-- Example 2: Node.js SHA-1 for integrity verification -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: SHA-1 for data integrity and HMAC signing (Node.js)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                SHA-1 has been broken since the <strong class="text-gray-200">SHAttered</strong> attack
+                in 2017, which produced two different PDF files with the same SHA-1 hash. Using SHA-1
+                for HMAC signatures or data integrity checks means an attacker could craft a malicious
+                payload that produces the same hash as a legitimate one — bypassing signature verification.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: SHA-1 is broken — collision attacks are practical.
+const crypto = require('crypto');
+
+/** Verify file integrity using SHA-1. */
+function verifyChecksum(data, expectedHash) {
+    // SHA-1: 160-bit output, practical collisions demonstrated.
+    const hash = crypto.createHash('sha1').update(data).digest('hex');
+    return hash === expectedHash;
+}
+
+/** Sign an API request with HMAC-SHA1. */
+function signRequest(payload, secret) {
+    // HMAC-SHA1 is less affected than bare SHA-1, but still flagged
+    // as risky and should be replaced with HMAC-SHA256.
+    return crypto.createHmac('sha1', secret)
+        .update(JSON.stringify(payload))
+        .digest('hex');
+}</code></div>
+        </div>
+
+        <!-- Example 3: Java DES encryption -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: DES and DESede (3DES) for data encryption (Java)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                DES uses a 56-bit key that can be brute-forced in hours on modern hardware. 3DES
+                (DESede) has an effective key length of only 112 bits and a 64-bit block size — making
+                it vulnerable to the <strong class="text-gray-200">Sweet32</strong> birthday attack
+                when encrypting large amounts of data. Both were officially retired by NIST in 2023.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: DES has a 56-bit key — brute-forceable in hours.
+public class LegacyEncryption {
+
+    public static byte[] encryptWithDES(byte[] data, SecretKey key) throws Exception {
+        Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding"); // 56-bit key!
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        return cipher.doFinal(data);
+    }
+
+    // 3DES is also deprecated — 64-bit block size enables Sweet32 attacks.
+    public static byte[] encryptWith3DES(byte[] data, SecretKey key) throws Exception {
+        Cipher cipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        return cipher.doFinal(data);
+    }
+
+    // RC4 (Arcfour) is broken — statistical biases and prohibited in TLS.
+    public static byte[] encryptWithRC4(byte[] data, SecretKey key) throws Exception {
+        Cipher cipher = Cipher.getInstance("RC4"); // Prohibited by RFC 7465!
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        return cipher.doFinal(data);
+    }
+}</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Java bcrypt for password hashing -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Use bcrypt for password hashing
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Replace MD5/SHA-1 with <code class="text-green-400">bcrypt</code> for password storage.
+                Bcrypt is intentionally slow — its cost factor makes brute-force attacks impractical
+                even with GPUs. It automatically generates and embeds a random salt, and the cost factor
+                can be increased over time as hardware improves.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: bcrypt is purpose-built for password hashing.
+// Add dependency: org.mindrot:jbcrypt:0.4
+import org.mindrot.jbcrypt.BCrypt;
+
+public class AuthService {
+
+    // Cost factor 12 = ~250ms per hash on modern hardware.
+    // Increase as hardware gets faster.
+    private static final int BCRYPT_COST = 12;
+
+    /** Hash a password for storage. */
+    public String hashPassword(String password) {
+        // BCrypt.gensalt() generates a random 128-bit salt automatically.
+        return BCrypt.hashpw(password, BCrypt.gensalt(BCRYPT_COST));
+    }
+
+    /** Verify a password against its stored bcrypt hash. */
+    public boolean verifyPassword(String password, String storedHash) {
+        return BCrypt.checkpw(password, storedHash);
+    }
+}
+
+// Alternative: Argon2 (winner of the Password Hashing Competition)
+// Add dependency: de.mkammerer:argon2-jvm:2.11
+// Argon2id is the recommended variant — resistant to both GPU and side-channel attacks.</code></div>
+        </div>
+
+        <!-- Fix 2: Node.js SHA-256 for integrity, bcrypt for passwords -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): SHA-256 for integrity, HMAC-SHA256 for signing, bcrypt for passwords
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Replace SHA-1 with <code class="text-green-400">SHA-256</code> (or SHA-3) for data
+                integrity and HMAC signing. For password hashing, use
+                <code class="text-green-400">bcrypt</code> — never a raw hash function, regardless of
+                how strong it is.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: SHA-256 for integrity, bcrypt for passwords.
+const crypto = require('crypto');
+const bcrypt = require('bcrypt');
+
+/** Verify file integrity using SHA-256. */
+function verifyChecksum(data, expectedHash) {
+    const hash = crypto.createHash('sha256').update(data).digest('hex');
+    // Use timingSafeEqual to prevent timing attacks on hash comparison.
+    return crypto.timingSafeEqual(
+        Buffer.from(hash, 'hex'),
+        Buffer.from(expectedHash, 'hex')
+    );
+}
+
+/** Sign an API request with HMAC-SHA256. */
+function signRequest(payload, secret) {
+    return crypto.createHmac('sha256', secret)
+        .update(JSON.stringify(payload))
+        .digest('hex');
+}
+
+/** Hash a password for storage using bcrypt. */
+async function hashPassword(password) {
+    const SALT_ROUNDS = 12;
+    return bcrypt.hash(password, SALT_ROUNDS);
+}
+
+/** Verify a password against its stored bcrypt hash. */
+async function verifyPassword(password, storedHash) {
+    return bcrypt.compare(password, storedHash);
+}</code></div>
+        </div>
+
+        <!-- Fix 3: Java AES-256 replacing DES/3DES/RC4 -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Replace DES/3DES/RC4 with AES-256-GCM
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Replace all legacy ciphers with <code class="text-green-400">AES/GCM/NoPadding</code>
+                using a 256-bit key. AES-256 is approved by NIST for TOP SECRET classification and is
+                the universal standard for symmetric encryption. GCM mode provides authenticated
+                encryption — both confidentiality and integrity.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: AES-256-GCM replaces all legacy ciphers (DES, 3DES, RC4).
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
+import java.security.SecureRandom;
+
+public class ModernEncryption {
+
+    private static final String ALGORITHM = "AES/GCM/NoPadding";
+    private static final int GCM_IV_LENGTH = 12;
+    private static final int GCM_TAG_BITS = 128;
+
+    /** Generate a 256-bit AES key. */
+    public static SecretKey generateKey() throws Exception {
+        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+        keyGen.init(256, new SecureRandom());
+        return keyGen.generateKey();
+    }
+
+    public static byte[] encrypt(byte[] plaintext, SecretKey key) throws Exception {
+        byte[] iv = new byte[GCM_IV_LENGTH];
+        new SecureRandom().nextBytes(iv);
+
+        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        cipher.init(Cipher.ENCRYPT_MODE, key, new GCMParameterSpec(GCM_TAG_BITS, iv));
+        byte[] ciphertext = cipher.doFinal(plaintext);
+
+        // Prepend IV for decryption.
+        byte[] output = new byte[iv.length + ciphertext.length];
+        System.arraycopy(iv, 0, output, 0, iv.length);
+        System.arraycopy(ciphertext, 0, output, iv.length, ciphertext.length);
+        return output;
+    }
+}
+
+// Quick reference — algorithm replacement guide:
+//   MD5         → SHA-256 (or SHA-3-256)
+//   SHA-1       → SHA-256 (or SHA-3-256)
+//   DES         → AES-256-GCM
+//   3DES/DESede → AES-256-GCM
+//   RC4         → AES-256-GCM (or ChaCha20-Poly1305)
+//   MD5/SHA-1 for passwords → bcrypt or Argon2id</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://cwe.mitre.org/data/definitions/327.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-327</p>
+                <p class="text-xs text-gray-500">Use of a Broken or Risky Cryptographic Algorithm</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP A02:2021 —
+                    Cryptographic Failures</p>
+                <p class="text-xs text-gray-500">Top 10 category covering broken cryptographic algorithms</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP Cryptographic
+                    Storage Cheat Sheet</p>
+                <p class="text-xs text-gray-500">Algorithm selection, key lengths, and storage best practices</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP Password Storage
+                    Cheat Sheet</p>
+                <p class="text-xs text-gray-500">bcrypt, Argon2id, scrypt — purpose-built password hashing</p>
+            </div>
+        </a>
+    </div>
+</div>

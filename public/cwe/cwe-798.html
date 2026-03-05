@@ -1,0 +1,381 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        This finding covers three closely related CWEs that SAST tools frequently flag:
+    </p>
+    <ul class="list-disc list-inside text-gray-300 leading-relaxed mb-4 space-y-1 ml-2">
+        <li><strong class="text-gray-200">CWE-798</strong> — Use of Hard-coded Credentials (usernames, passwords, API
+            keys)</li>
+        <li><strong class="text-gray-200">CWE-259</strong> — Use of Hard-coded Password (a specific subset of 798)</li>
+        <li><strong class="text-gray-200">CWE-547</strong> — Use of Hard-coded, Security-relevant Constants (encryption
+            keys, salts, tokens)</li>
+    </ul>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        When credentials or secrets are embedded directly in source code, they become visible to
+        <strong class="text-gray-200">anyone with access to the codebase</strong> — other developers,
+        contractors, open-source consumers, or attackers who gain access to version control. Secrets
+        in compiled binaries can be extracted with simple tools like <code
+            class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">strings</code>.
+        Once exposed, these credentials cannot be rotated without a code change and redeployment,
+        creating a window of vulnerability.
+    </p>
+    <p class="text-gray-300 leading-relaxed">
+        CWE-798 is ranked in the <strong class="text-gray-200">SANS/CWE Top 25</strong> and maps to
+        <strong class="text-gray-200">OWASP A07:2021 — Identification and Authentication Failures</strong>.
+        CWE-547 maps to <strong class="text-gray-200">OWASP A05:2021 — Security Misconfiguration</strong>.
+        The fix is the same for all three: <strong class="text-gray-200">externalize secrets</strong> using
+        environment variables, secrets managers, or vault services — never embed them in code.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Java hardcoded DB password -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Hardcoded database password in Java source (CWE-798/259)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                The database password is a string literal in the source code. It will be committed to
+                version control history (even if later removed), compiled into the JAR, and visible to
+                anyone who decompiles the class. Rotating this password requires a code change, rebuild,
+                and redeployment.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Database credentials hardcoded in source.
+public class DatabaseConfig {
+
+    private static final String DB_URL  = "jdbc:postgresql://prod-db:5432/myapp";
+    private static final String DB_USER = "admin";
+    private static final String DB_PASS = "SuperSecret123!"; // Hardcoded password!
+
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+    }
+}</code></div>
+        </div>
+
+        <!-- Example 2: Node.js hardcoded API key -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Hardcoded API keys and JWT secret in Node.js (CWE-798/547)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                This Express middleware uses a hardcoded string as the JWT signing secret and embeds a
+                third-party API key directly in the source. If this repo is public (or becomes public
+                accidentally), both secrets are immediately compromised. Even in private repos, every
+                developer and CI/CD system has access.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Secrets embedded directly in source code.
+const jwt = require('jsonwebtoken');
+const axios = require('axios');
+
+const JWT_SECRET = 'my-super-secret-jwt-key-2024';         // Hardcoded!
+const STRIPE_API_KEY = 'sk_live_EXAMPLE_FAKE_KEY_REPLACE_ME'; // Hardcoded!
+
+function verifyToken(req, res, next) {
+    const token = req.headers.authorization?.split(' ')[1];
+    try {
+        req.user = jwt.verify(token, JWT_SECRET);
+        next();
+    } catch {
+        res.status(401).json({ error: 'Invalid token' });
+    }
+}
+
+async function chargeCustomer(customerId, amount) {
+    return axios.post('https://api.stripe.com/v1/charges', {
+        customer: customerId,
+        amount
+    }, {
+        headers: { Authorization: `Bearer ${STRIPE_API_KEY}` }
+    });
+}</code></div>
+        </div>
+
+        <!-- Example 3: Java hardcoded encryption key -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Hardcoded AES encryption key and salt (CWE-547)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                The AES key and salt are byte arrays defined directly in source. An attacker who obtains
+                the JAR or source can extract these constants and decrypt any data encrypted by this
+                class. Because the key is static, <strong class="text-gray-200">every deployment uses
+                    the same key</strong> — compromising one environment compromises all of them.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Encryption key and salt hardcoded in source.
+public class EncryptionUtil {
+
+    // Hardcoded AES key — extractable from compiled .class file.
+    private static final byte[] AES_KEY = "MyS3cretK3y!2024".getBytes(StandardCharsets.UTF_8);
+    private static final byte[] SALT    = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
+
+    public static byte[] encrypt(byte[] plaintext) throws Exception {
+        SecretKeySpec keySpec = new SecretKeySpec(AES_KEY, "AES");
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+        cipher.init(Cipher.ENCRYPT_MODE, keySpec);
+        return cipher.doFinal(plaintext);
+    }
+}</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Environment variables + Spring Boot externalized config -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Externalize credentials with Spring Boot properties + environment variables
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Use Spring Boot's externalized configuration to read credentials from environment
+                variables or a secrets file at runtime. The source code never contains the actual values.
+                Environment variables can be set by the deployment platform (Kubernetes Secrets, AWS
+                Parameter Store, etc.) without touching the codebase.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Credentials injected at runtime via environment variables.
+
+// application.yml — references env vars, never contains actual secrets:
+// spring:
+//   datasource:
+//     url: ${DB_URL}
+//     username: ${DB_USERNAME}
+//     password: ${DB_PASSWORD}
+
+@Configuration
+public class DatabaseConfig {
+
+    @Value("${spring.datasource.url}")
+    private String dbUrl;
+
+    @Value("${spring.datasource.username}")
+    private String dbUser;
+
+    @Value("${spring.datasource.password}")
+    private String dbPassword;
+
+    @Bean
+    public DataSource dataSource() {
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(dbUrl);
+        config.setUsername(dbUser);
+        config.setPassword(dbPassword);
+        return new HikariDataSource(config);
+    }
+}
+
+// Set environment variables at deploy time (never in source):
+// export DB_URL="jdbc:postgresql://prod-db:5432/myapp"
+// export DB_USERNAME="admin"
+// export DB_PASSWORD="rotated-secret-from-vault"</code></div>
+        </div>
+
+        <!-- Fix 2: Node.js dotenv + secrets manager -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): dotenv for local dev + cloud secrets manager for production
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Use <code class="text-green-400">dotenv</code> for local development (with <code
+                    class="text-green-400">.env</code>
+                in <code class="text-green-400">.gitignore</code>) and a cloud secrets manager (AWS
+                Secrets Manager, GCP Secret Manager, Azure Key Vault) for production. The code references
+                variable names — never the values themselves.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Secrets loaded from environment, never in source code.
+require('dotenv').config(); // Loads .env file (in .gitignore!) for local dev.
+
+const jwt = require('jsonwebtoken');
+
+// Read from environment — fails fast if missing.
+const JWT_SECRET = process.env.JWT_SECRET;
+const STRIPE_API_KEY = process.env.STRIPE_API_KEY;
+
+if (!JWT_SECRET || !STRIPE_API_KEY) {
+    throw new Error('Missing required environment variables: JWT_SECRET, STRIPE_API_KEY');
+}
+
+function verifyToken(req, res, next) {
+    const token = req.headers.authorization?.split(' ')[1];
+    try {
+        req.user = jwt.verify(token, JWT_SECRET);
+        next();
+    } catch {
+        res.status(401).json({ error: 'Invalid token' });
+    }
+}
+
+// .env file (NEVER committed to git):
+// JWT_SECRET=generated-random-256-bit-key
+// STRIPE_API_KEY=sk_live_...
+//
+// .gitignore must include:
+// .env
+// .env.local
+// .env.production</code></div>
+        </div>
+
+        <!-- Fix 3: Java Vault / KMS for encryption keys -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Load encryption keys from a Key Management Service (KMS)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                For encryption keys and salts, use a dedicated Key Management Service — AWS KMS, GCP
+                Cloud KMS, Azure Key Vault, or HashiCorp Vault. The key material never exists in your
+                source code or application memory in plaintext. The KMS performs encryption/decryption
+                operations server-side, or provides keys that are rotated automatically.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Encryption key loaded from AWS KMS at startup — never in source.
+import software.amazon.awssdk.services.kms.KmsClient;
+import software.amazon.awssdk.services.kms.model.GenerateDataKeyRequest;
+import software.amazon.awssdk.services.kms.model.GenerateDataKeyResponse;
+
+public class EncryptionUtil {
+
+    private static final String KMS_KEY_ARN = System.getenv("KMS_KEY_ARN");
+    private final KmsClient kmsClient;
+
+    public EncryptionUtil() {
+        this.kmsClient = KmsClient.create(); // Uses IAM role credentials.
+    }
+
+    /** Generate a unique data key for each encryption operation. */
+    public GenerateDataKeyResponse generateDataKey() {
+        return kmsClient.generateDataKey(GenerateDataKeyRequest.builder()
+                .keyId(KMS_KEY_ARN)
+                .keySpec("AES_256")
+                .build());
+    }
+
+    public byte[] encrypt(byte[] plaintext) throws Exception {
+        GenerateDataKeyResponse dataKey = generateDataKey();
+
+        // Use the plaintext key for encryption.
+        SecretKeySpec keySpec = new SecretKeySpec(
+                dataKey.plaintext().asByteArray(), "AES");
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+        cipher.init(Cipher.ENCRYPT_MODE, keySpec);
+
+        byte[] ciphertext = cipher.doFinal(plaintext);
+
+        // Store the ENCRYPTED data key alongside the ciphertext.
+        // The plaintext key is never persisted — only KMS can decrypt it.
+        return combineKeyAndCiphertext(dataKey.ciphertextBlob().asByteArray(), ciphertext);
+    }
+}</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://cwe.mitre.org/data/definitions/798.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-798</p>
+                <p class="text-xs text-gray-500">Use of Hard-coded Credentials</p>
+            </div>
+        </a>
+
+        <a href="https://cwe.mitre.org/data/definitions/547.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-547</p>
+                <p class="text-xs text-gray-500">Use of Hard-coded, Security-relevant Constants</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP A07:2021 —
+                    Identification and Authentication Failures</p>
+                <p class="text-xs text-gray-500">Top 10 category for hardcoded credentials</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP Secrets
+                    Management Cheat Sheet</p>
+                <p class="text-xs text-gray-500">Vault patterns, rotation, and environment variable best practices</p>
+            </div>
+        </a>
+    </div>
+</div>

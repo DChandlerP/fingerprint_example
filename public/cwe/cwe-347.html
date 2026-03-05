@@ -1,0 +1,471 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-347 flags code that <strong class="text-gray-200">accepts a JWT (JSON Web Token) without
+            properly verifying its cryptographic signature</strong>. A JWT consists of three parts:
+        header, payload, and signature. If the signature is not validated — or if the library is
+        configured to accept the <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">"none"</code>
+        algorithm — an attacker can forge tokens with arbitrary claims (roles, user IDs, permissions)
+        and gain unauthorized access.
+    </p>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        Common ways this vulnerability manifests:
+    </p>
+    <ul class="list-disc list-inside text-gray-300 leading-relaxed mb-4 space-y-1 ml-2">
+        <li><strong class="text-gray-200">Algorithm "none" attack</strong> — the token header specifies
+            <code class="text-red-400">"alg": "none"</code>, and the library accepts it as valid without
+            any signature
+        </li>
+        <li><strong class="text-gray-200">Algorithm confusion (RS256 → HS256)</strong> — the attacker changes
+            the algorithm from asymmetric (RS256) to symmetric (HS256) and signs with the public key,
+            which the server then uses as the HMAC secret</li>
+        <li><strong class="text-gray-200">Missing verification</strong> — code decodes the JWT payload
+            without calling a verification function at all</li>
+        <li><strong class="text-gray-200">Key not provided</strong> — verification is called but with a
+            null, empty, or default key</li>
+    </ul>
+    <p class="text-gray-300 leading-relaxed">
+        This weakness maps to <strong class="text-gray-200">OWASP A02:2021 — Cryptographic Failures</strong>.
+        The fix requires <strong class="text-gray-200">always verifying the signature</strong>,
+        <strong class="text-gray-200">explicitly specifying allowed algorithms</strong> (never trusting
+        the token's header), and using a strong, properly managed signing key.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Java - decode without verify -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Decoding JWT without signature verification (Java)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Using <code class="text-red-400">Jwts.parser()</code> or
+                <code class="text-red-400">JWT.decode()</code> without providing a signing key
+                parses the token but <strong class="text-gray-200">never validates the signature</strong>.
+                An attacker can modify any claim (e.g., change
+                <code class="text-red-400">"role": "user"</code> to
+                <code class="text-red-400">"role": "admin"</code>) and the application will accept it.
+                Some libraries also accept <code class="text-red-400">"alg": "none"</code> by default
+                if no algorithm restriction is configured.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Decodes JWT payload WITHOUT verifying the signature.
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.Claims;
+
+public class AuthFilter {
+
+    public Claims extractClaims(String token) {
+        // ❌ parserBuilder() without signingKey — signature is IGNORED.
+        return Jwts.parserBuilder()
+                .build()                    // No signing key set!
+                .parseClaimsJwt(token)      // parseClaimsJwt = unsigned JWT
+                .getBody();
+        // Attacker can forge any claims — role, userId, permissions.
+    }
+}
+
+// Also dangerous — using a JWT library's decode (not verify) method:
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
+DecodedJWT decoded = JWT.decode(token);  // Decode only — NO verification!
+String userId = decoded.getClaim("sub").asString();
+// Attacker controls "sub" — impersonates any user.
+
+// Also dangerous — weak/default signing key:
+String key = "secret";  // Trivially guessable — brute-force in seconds.
+Claims claims = Jwts.parserBuilder()
+        .setSigningKey(key.getBytes())   // Weak key!
+        .build()
+        .parseClaimsJws(token)
+        .getBody();</code></div>
+        </div>
+
+        <!-- Example 2: Node.js - jsonwebtoken algorithm confusion + none -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Algorithm confusion and missing algorithm restriction (Node.js)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                The popular <code class="text-red-400">jsonwebtoken</code> library defaults to trusting
+                the algorithm specified in the token's header. If the server uses RS256 (asymmetric) but
+                doesn't restrict the allowed algorithms, an attacker can change the header to
+                <code class="text-red-400">"alg": "HS256"</code> and sign with the
+                <strong class="text-gray-200">public key</strong> — which the server then treats as the
+                HMAC secret. The signature validates, and the forged token is accepted.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: No algorithm restriction — vulnerable to alg confusion.
+const jwt = require('jsonwebtoken');
+const fs = require('fs');
+
+const publicKey = fs.readFileSync('public.pem');
+
+// ❌ No `algorithms` option — trusts the token's "alg" header.
+function verifyToken(token) {
+    return jwt.verify(token, publicKey);
+    // Attacker sets alg=HS256 and signs with the public key.
+    // Server uses publicKey as HMAC secret → signature matches!
+}
+
+// ALSO DANGEROUS: Using decode() instead of verify().
+const payload = jwt.decode(token);  // NO verification at all.
+const userId = payload.sub;          // Attacker-controlled.
+
+// ALSO DANGEROUS: Empty or null secret.
+jwt.verify(token, '', { algorithms: ['HS256'] });   // Empty secret!
+jwt.verify(token, null, { algorithms: ['HS256'] });  // Null secret!
+
+// ALSO DANGEROUS: Catching verification errors and proceeding anyway.
+function unsafeVerify(token) {
+    try {
+        return jwt.verify(token, secret);
+    } catch (err) {
+        // ❌ Falling back to decode on verification failure!
+        return jwt.decode(token);
+    }
+}</code></div>
+        </div>
+
+        <!-- Example 3: Spring Security misconfiguration -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Custom JWT filter that skips verification on failure (Spring)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                In Spring applications, custom JWT filters sometimes catch signature verification
+                exceptions and <strong class="text-gray-200">silently proceed</strong> with the
+                unverified token, or use a decode-only method as a fallback. This effectively makes
+                authentication optional — an attacker with any malformed or self-signed token passes
+                the filter.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Custom JWT filter that silently ignores verification failures.
+import io.jsonwebtoken.*;
+
+@Component
+public class JwtAuthFilter extends OncePerRequestFilter {
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+            HttpServletResponse response, FilterChain chain) throws Exception {
+
+        String header = request.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            String token = header.substring(7);
+            try {
+                Claims claims = Jwts.parserBuilder()
+                        .setSigningKey(secretKey)
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+                setAuthentication(claims);
+            } catch (JwtException e) {
+                // ❌ DANGEROUS: Catches ALL JWT exceptions and proceeds.
+                // Invalid signature, expired, malformed — all silently pass.
+                log.warn("JWT verification failed, proceeding anyway");
+            }
+        }
+        chain.doFilter(request, response);
+        // Unauthenticated requests reach protected endpoints!
+    }
+}
+
+// Also dangerous — using the unsigned parser variant:
+Jws&lt;Claims&gt; jws = Jwts.parserBuilder().build()
+        .parseClaimsJwt(token);  // parseClaimsJwt (not Jws!) = no sig check</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Java JJWT with explicit algorithm + strong key -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Verify with explicit algorithm and strong signing key
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Always use <code class="text-green-400">parseClaimsJws()</code> (not
+                <code class="text-red-400">parseClaimsJwt()</code>) which requires a valid signature.
+                Provide a <strong class="text-green-300">strong signing key</strong> (at least 256 bits
+                for HMAC, 2048-bit RSA, or P-256 EC). JJWT 0.12+ enforces algorithm restrictions
+                automatically when a key is provided — ensuring
+                <code class="text-red-400">"alg": "none"</code> is always rejected.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Signature verified with strong key, algorithm enforced.
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import javax.crypto.SecretKey;
+
+public class JwtService {
+
+    // Generate a cryptographically strong key (256+ bits for HS256).
+    // In production, load from a secrets manager (vault, env var, etc.).
+    private static final SecretKey SIGNING_KEY =
+            Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
+    /** Verify and extract claims — rejects unsigned/tampered tokens. */
+    public Claims verifyToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(SIGNING_KEY)          // Key MUST be set.
+                .build()
+                .parseClaimsJws(token)               // Jws = signature required!
+                .getBody();
+        // Throws SignatureException if tampered.
+        // Throws UnsupportedJwtException if alg=none.
+        // Throws ExpiredJwtException if exp claim is past.
+    }
+}
+
+// For asymmetric (RS256/ES256) — verify with the PUBLIC key:
+import java.security.PublicKey;
+
+public Claims verifyWithPublicKey(String token, PublicKey publicKey) {
+    return Jwts.parserBuilder()
+            .setSigningKey(publicKey)  // RSA/EC public key
+            .build()
+            .parseClaimsJws(token)     // Algorithm enforced by key type.
+            .getBody();
+}</code></div>
+        </div>
+
+        <!-- Fix 2: Node.js jsonwebtoken with algorithms whitelist -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): Always specify algorithms array and use verify(), never decode()
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Always call <code class="text-green-400">jwt.verify()</code> — never
+                <code class="text-red-400">jwt.decode()</code> — for authentication decisions. Pass
+                an explicit <code class="text-green-400">algorithms</code> array to prevent algorithm
+                confusion attacks. Use a strong secret (256+ bits for HMAC) or proper RSA/EC keys.
+                Never catch verification errors and fall back to an unverified path.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Explicit algorithm restriction prevents alg confusion.
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+
+// ─── HMAC (symmetric) ───
+// Generate a strong 256-bit secret (store in env var / secrets manager).
+const SECRET = process.env.JWT_SECRET; // At least 32 bytes.
+
+function verifyToken(token) {
+    // algorithms array MUST be specified — blocks alg=none and confusion.
+    return jwt.verify(token, SECRET, {
+        algorithms: ['HS256'],   // Only accept HS256 — reject all others.
+        maxAge: '1h',            // Reject tokens older than 1 hour.
+        clockTolerance: 30,      // 30s clock skew tolerance.
+    });
+    // Throws JsonWebTokenError if signature is invalid.
+    // Throws TokenExpiredError if token is expired.
+    // Throws NotBeforeError if token is not yet valid.
+    // NEVER catch these and fall back to decode()!
+}
+
+// ─── RSA (asymmetric) ───
+const fs = require('fs');
+const publicKey = fs.readFileSync('public.pem');
+
+function verifyAsymmetric(token) {
+    return jwt.verify(token, publicKey, {
+        algorithms: ['RS256'],   // CRITICAL: prevents HS256 confusion.
+    });
+}
+
+// ─── Express middleware pattern ───
+function authMiddleware(req, res, next) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Missing token' });
+    }
+    try {
+        req.user = verifyToken(authHeader.slice(7));
+        next();
+    } catch (err) {
+        // ❌ Do NOT fall back to jwt.decode() here.
+        return res.status(401).json({ error: 'Invalid token' });
+    }
+}</code></div>
+        </div>
+
+        <!-- Fix 3: Spring Security OAuth2 Resource Server -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Spring): Use Spring Security OAuth2 Resource Server for JWT validation
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Instead of writing a custom JWT filter, use Spring Security's
+                <code class="text-green-400">oauth2ResourceServer()</code> which handles signature
+                verification, algorithm enforcement, expiration checks, and issuer validation out of
+                the box. It supports both JWK Set URI (for OIDC providers) and local key configuration.
+                This eliminates entire classes of JWT vulnerabilities.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Spring Security handles all JWT verification automatically.
+
+// application.yml — OIDC provider auto-discovery:
+// spring:
+//   security:
+//     oauth2:
+//       resourceserver:
+//         jwt:
+//           issuer-uri: https://auth.example.com
+//           # Spring fetches JWKS, validates sig, alg, exp, iss, aud.
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/public/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .oauth2ResourceServer(oauth2 -> oauth2
+                .jwt(jwt -> jwt
+                    .jwtAuthenticationConverter(jwtAuthConverter())
+                )
+            )
+            .build();
+        // Spring Security automatically:
+        // ✅ Verifies signature against JWKS endpoint
+        // ✅ Rejects alg=none
+        // ✅ Validates exp, iat, nbf claims
+        // ✅ Validates issuer (iss) claim
+    }
+}
+
+// For local symmetric key (no OIDC provider):
+@Bean
+public JwtDecoder jwtDecoder() {
+    SecretKey key = new SecretKeySpec(
+        secretBytes, "HmacSHA256"
+    );
+    NimbusJwtDecoder decoder = NimbusJwtDecoder
+        .withSecretKey(key)
+        .macAlgorithm(MacAlgorithm.HS256)  // Explicit algorithm.
+        .build();
+
+    // Add additional validation (issuer, audience):
+    decoder.setJwtValidator(new DelegatingOAuth2TokenValidator&lt;&gt;(
+        JwtValidators.createDefaultWithIssuer("https://auth.example.com"),
+        new JwtClaimValidator&lt;&gt;("aud",
+            aud -> aud != null && aud.contains("my-api"))
+    ));
+    return decoder;
+}</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://cwe.mitre.org/data/definitions/347.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-347</p>
+                <p class="text-xs text-gray-500">Improper Verification of Cryptographic Signature</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP A02:2021 —
+                    Cryptographic Failures</p>
+                <p class="text-xs text-gray-500">Top 10 category covering signature verification bypass</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html"
+            target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP JWT for Java
+                    Cheat Sheet</p>
+                <p class="text-xs text-gray-500">Best practices for secure JWT handling in Java</p>
+            </div>
+        </a>
+
+        <a href="https://portswigger.net/web-security/jwt" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">PortSwigger — JWT
+                    Attacks</p>
+                <p class="text-xs text-gray-500">Comprehensive guide to JWT attack techniques and defenses</p>
+            </div>
+        </a>
+    </div>
+</div>

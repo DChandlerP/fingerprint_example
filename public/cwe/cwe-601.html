@@ -1,0 +1,484 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-601 flags code that <strong class="text-gray-200">redirects users to a URL derived from
+            untrusted input without validation</strong>. An attacker crafts a link that looks legitimate
+        (it starts with your domain) but redirects the victim to a malicious site — perfect for phishing
+        campaigns, credential theft, and OAuth token interception.
+    </p>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        Open redirects are dangerous because they:
+    </p>
+    <ul class="list-disc list-inside text-gray-300 leading-relaxed mb-4 space-y-1 ml-2">
+        <li><strong class="text-gray-200">Enable phishing</strong> — victims trust the initial domain and
+            don't notice the redirect to an attacker-controlled lookalike site</li>
+        <li><strong class="text-gray-200">Steal OAuth tokens</strong> — manipulating
+            <code class="text-red-400">redirect_uri</code> parameters to exfiltrate authorization codes
+        </li>
+        <li><strong class="text-gray-200">Bypass security filters</strong> — WAFs and URL scanners see the
+            legitimate domain and allow the link through</li>
+        <li><strong class="text-gray-200">Chain with other attacks</strong> — open redirects are commonly
+            paired with SSRF, XSS, or CSRF to amplify impact</li>
+    </ul>
+    <p class="text-gray-300 leading-relaxed">
+        This weakness is part of <strong class="text-gray-200">OWASP A01:2021 — Broken Access Control</strong>.
+        The primary defense is <strong class="text-gray-200">allowlisting known redirect targets</strong> and
+        never forwarding users to arbitrary, user-supplied URLs. If dynamic redirects are required, validate
+        that the target is a relative path or belongs to an explicit list of trusted domains.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Java Servlet / Spring open redirect -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Unvalidated redirect from request parameters (Java / Servlet / Spring)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Passing a user-supplied <code class="text-red-400">url</code> or
+                <code class="text-red-400">returnTo</code> parameter directly to
+                <code class="text-red-400">response.sendRedirect()</code> or Spring's
+                <code class="text-red-400">redirect:</code> prefix allows an attacker to craft a link like
+                <code class="text-gray-300 text-xs">https://yourapp.com/login?returnTo=https://evil.com/phish</code>
+                that silently sends the victim to a phishing page after login.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: User-controlled redirect target — open redirect.
+
+// --- Servlet: redirect parameter used directly ---
+@WebServlet("/login")
+public class LoginServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+        // ... authenticate user ...
+
+        String returnTo = req.getParameter("returnTo");
+        // Attacker sets returnTo=https://evil.com/steal-creds
+        resp.sendRedirect(returnTo);
+        //                 ↑ Open redirect — no validation!
+    }
+}
+
+// --- Spring MVC: redirect with user-controlled URL ---
+@Controller
+public class AuthController {
+    @GetMapping("/oauth/callback")
+    public String oauthCallback(@RequestParam String redirectUrl) {
+        // Attacker manipulates redirectUrl to exfiltrate OAuth tokens.
+        return "redirect:" + redirectUrl;
+        //      ↑ Open redirect — arbitrary external URL accepted.
+    }
+}
+
+// --- Spring Boot: another common pattern ---
+@GetMapping("/goto")
+public void goTo(@RequestParam String url, HttpServletResponse resp)
+        throws IOException {
+    resp.sendRedirect(url);  // No allowlist, no validation.
+}</code></div>
+        </div>
+
+        <!-- Example 2: Node.js / Express open redirect -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Unvalidated redirect in Express / Node.js
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Using <code class="text-red-400">res.redirect()</code> with a query parameter or request body
+                value allows attackers to redirect users to any external URL. Common patterns include post-login
+                redirects, link shorteners, and OAuth callback handlers. Attackers also use protocol-relative
+                URLs (<code class="text-red-400">//evil.com</code>) and URL-encoded payloads to bypass naive
+                checks.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: User-controlled redirect — open redirect in Express.
+const express = require('express');
+const app = express();
+
+// Post-login redirect — attacker controls "next" param.
+app.post('/login', (req, res) =&gt; {
+    // ... authenticate user ...
+
+    const next = req.query.next || '/dashboard';
+    // Attacker link: /login?next=https://evil.com/phish
+    res.redirect(next);
+    //             ↑ Open redirect — no validation!
+});
+
+// Link shortener / tracking redirect — no allowlist.
+app.get('/go', (req, res) =&gt; {
+    const target = req.query.url;
+    res.redirect(target);  // Arbitrary URL accepted.
+});
+
+// OAuth callback — redirect_uri not validated.
+app.get('/auth/callback', (req, res) =&gt; {
+    const { code, redirect_uri } = req.query;
+    // ... exchange code for token ...
+    res.redirect(redirect_uri);
+    //             ↑ Attacker exfiltrates OAuth token via crafted redirect_uri.
+});
+
+// Bypasses that fool naive prefix checks:
+// //evil.com            — protocol-relative URL
+// /\evil.com            — backslash interpreted as path by some servers
+// https://yourapp.com@evil.com  — userinfo component trick
+// https://evil.com#yourapp.com  — fragment confusion</code></div>
+        </div>
+
+        <!-- Example 3: Subtle bypass patterns -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Weak validation that is easily bypassed (Java &amp; JavaScript)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Many developers add a <code class="text-red-400">startsWith()</code> or
+                <code class="text-red-400">contains()</code> check thinking it prevents open redirects.
+                Attackers routinely bypass these with subdomains, userinfo tricks, and URL encoding.
+                A <strong class="text-gray-200">denylist or string-prefix approach is not sufficient</strong>.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Weak validation — trivially bypassed.
+
+// --- Java: startsWith check bypassed ---
+String redirectUrl = req.getParameter("url");
+if (redirectUrl.startsWith("https://myapp.com")) {
+    resp.sendRedirect(redirectUrl);
+}
+// Bypass: https://myapp.com.evil.com/phish   (subdomain trick)
+// Bypass: https://myapp.com@evil.com          (userinfo trick)
+
+// --- JavaScript: includes() check bypassed ---
+const url = req.query.next;
+if (url.includes('myapp.com')) {
+    res.redirect(url);
+}
+// Bypass: https://evil.com/?fake=myapp.com    (query param)
+// Bypass: https://myapp.com.attacker.com      (subdomain trick)
+
+// --- JavaScript: regex without anchoring ---
+if (/myapp\.com/.test(url)) {
+    res.redirect(url);
+}
+// Bypass: https://evil.com/myapp.com          (path component)
+// Bypass: https://notmyapp.com               (partial match)</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Java allowlist + URL validation -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Allowlist trusted domains and enforce relative paths
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                The safest approach is to <strong class="text-green-300">only allow relative paths</strong>
+                or redirect to a <strong class="text-green-300">predefined allowlist of trusted URLs</strong>.
+                Parse the URL with <code class="text-green-400">java.net.URI</code> to reliably extract the
+                host, then compare against the allowlist. Never trust string-prefix checks alone — always
+                parse the URL properly.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Allowlist-based redirect validation.
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Set;
+
+public class SafeRedirectUtil {
+
+    // Allowlist of trusted redirect domains.
+    private static final Set&lt;String&gt; ALLOWED_HOSTS = Set.of(
+        "myapp.com",
+        "www.myapp.com",
+        "accounts.myapp.com"
+    );
+
+    private static final String DEFAULT_REDIRECT = "/dashboard";
+
+    /**
+     * Validates a redirect URL and returns a safe target.
+     * Only allows relative paths or URLs to allowlisted hosts.
+     */
+    public static String validateRedirect(String redirectUrl) {
+        if (redirectUrl == null || redirectUrl.isBlank()) {
+            return DEFAULT_REDIRECT;
+        }
+
+        // Allow relative paths (must start with / but NOT //).
+        if (redirectUrl.startsWith("/") &amp;&amp; !redirectUrl.startsWith("//")) {
+            return redirectUrl;
+        }
+
+        // Parse and validate absolute URLs.
+        try {
+            URI uri = new URI(redirectUrl);
+            String host = uri.getHost();
+            String scheme = uri.getScheme();
+
+            if (host != null
+                    &amp;&amp; ALLOWED_HOSTS.contains(host.toLowerCase())
+                    &amp;&amp; ("https".equals(scheme) || "http".equals(scheme))) {
+                return redirectUrl;
+            }
+        } catch (URISyntaxException e) {
+            // Malformed URL — fall through to default.
+        }
+
+        return DEFAULT_REDIRECT;
+    }
+}
+
+// --- Usage in Servlet ---
+String target = SafeRedirectUtil.validateRedirect(
+    req.getParameter("returnTo")
+);
+resp.sendRedirect(target);
+
+// --- Usage in Spring MVC ---
+@GetMapping("/oauth/callback")
+public String callback(@RequestParam String redirectUrl) {
+    String safe = SafeRedirectUtil.validateRedirect(redirectUrl);
+    return "redirect:" + safe;
+}</code></div>
+        </div>
+
+        <!-- Fix 2: JavaScript / Express allowlist + URL parsing -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): URL parsing, allowlist validation, and middleware guard
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Use the built-in <code class="text-green-400">URL</code> constructor to parse redirect
+                targets — this correctly handles protocol-relative URLs, userinfo tricks, and encoding
+                bypasses. Implement a <strong class="text-green-300">reusable middleware</strong> that
+                validates every redirect against an allowlist. Default to a safe fallback for any
+                unrecognized target.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Allowlist-based redirect validation for Express / Node.js.
+
+const ALLOWED_HOSTS = new Set([
+    'myapp.com',
+    'www.myapp.com',
+    'accounts.myapp.com'
+]);
+
+const DEFAULT_REDIRECT = '/dashboard';
+
+/**
+ * Validates a redirect URL.
+ * Allows relative paths and URLs to allowlisted hosts only.
+ */
+function validateRedirectUrl(url) {
+    if (!url) return DEFAULT_REDIRECT;
+
+    // Allow relative paths (starts with / but NOT //).
+    if (url.startsWith('/') &amp;&amp; !url.startsWith('//')) {
+        return url;
+    }
+
+    try {
+        const parsed = new URL(url);
+
+        if (['http:', 'https:'].includes(parsed.protocol)
+            &amp;&amp; ALLOWED_HOSTS.has(parsed.hostname.toLowerCase())) {
+            return url;
+        }
+    } catch {
+        // Malformed URL — fall through to default.
+    }
+
+    return DEFAULT_REDIRECT;
+}
+
+// --- Express middleware for safe redirects ---
+function safeRedirect(req, res, next) {
+    res.safeRedirect = (url) =&gt; {
+        res.redirect(validateRedirectUrl(url));
+    };
+    next();
+}
+
+const express = require('express');
+const app = express();
+app.use(safeRedirect);
+
+// Usage — always use res.safeRedirect() instead of res.redirect().
+app.post('/login', (req, res) =&gt; {
+    // ... authenticate user ...
+    res.safeRedirect(req.query.next);
+    // Attacker's ?next=https://evil.com → redirected to /dashboard.
+});
+
+app.get('/auth/callback', (req, res) =&gt; {
+    // ... exchange code for token ...
+    res.safeRedirect(req.query.redirect_uri);
+    // Only allowlisted redirect_uri values are honoured.
+});</code></div>
+        </div>
+
+        <!-- Fix 3: Indirect / mapped redirects -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Defense-in-Depth: Mapped / indirect redirects and interstitial pages
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                The most robust pattern avoids passing URLs entirely. Instead, the client sends an
+                <strong class="text-green-300">opaque key</strong> that the server maps to a URL
+                server-side. If a direct URL must be used, show an
+                <strong class="text-green-300">interstitial warning page</strong> so users can confirm
+                before navigating to an external site.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Mapped redirects — URL never leaves the server.
+
+// --- Java: server-side redirect map ---
+private static final Map&lt;String, String&gt; REDIRECT_MAP = Map.of(
+    "dashboard",  "/app/dashboard",
+    "profile",    "/app/profile",
+    "billing",    "https://billing.myapp.com/account"
+);
+
+@GetMapping("/go/{key}")
+public String mappedRedirect(@PathVariable String key) {
+    String target = REDIRECT_MAP.getOrDefault(key, "/app/dashboard");
+    return "redirect:" + target;
+}
+// Client calls: /go/billing  → server resolves the real URL.
+// Attacker cannot inject an arbitrary URL because only keys are accepted.
+
+// --- JavaScript (Express): same pattern ---
+const redirectMap = {
+    dashboard: '/app/dashboard',
+    profile:   '/app/profile',
+    billing:   'https://billing.myapp.com/account'
+};
+
+app.get('/go/:key', (req, res) =&gt; {
+    const target = redirectMap[req.params.key] || '/app/dashboard';
+    res.redirect(target);
+});
+
+// --- Interstitial page for user-submitted external links ---
+app.get('/external', (req, res) =&gt; {
+    const url = req.query.url;
+    // Show a warning page instead of redirecting immediately.
+    res.render('external-warning', {
+        externalUrl: url,
+        message: 'You are leaving MyApp. Continue to external site?'
+    });
+    // User must click "Continue" — no automatic redirect.
+});</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://cwe.mitre.org/data/definitions/601.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-601</p>
+                <p class="text-xs text-gray-500">URL Redirection to Untrusted Site ('Open Redirect')</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP A01:2021 —
+                    Broken Access Control</p>
+                <p class="text-xs text-gray-500">Top 10 category covering open redirects and access control flaws</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html"
+            target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP Unvalidated
+                    Redirects Cheat Sheet</p>
+                <p class="text-xs text-gray-500">Prevention techniques and bypass patterns for open redirects</p>
+            </div>
+        </a>
+
+        <a href="https://portswigger.net/kb/issues/00500100_open-redirection-reflected" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">PortSwigger — Open
+                    Redirection</p>
+                <p class="text-xs text-gray-500">Detailed analysis of open redirect attack vectors and testing</p>
+            </div>
+        </a>
+    </div>
+</div>

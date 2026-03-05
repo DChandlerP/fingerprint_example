@@ -1,0 +1,472 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-297 flags code that connects to a remote host over TLS/SSL but
+        <strong class="text-gray-200">does not verify that the server's certificate matches the
+            hostname being requested</strong>. This is often caused by custom
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">TrustManager</code>,
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">HostnameVerifier</code>, or
+        <code class="bg-gray-800 px-1.5 py-0.5 rounded text-red-400">rejectUnauthorized: false</code>
+        configurations that silently accept any certificate — including self-signed, expired, or
+        certificates issued to a completely different domain.
+    </p>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        Without hostname verification, an attacker in a
+        <strong class="text-gray-200">man-in-the-middle (MITM)</strong> position can present their
+        own valid certificate (for <em>their</em> domain) and intercept all traffic — credentials,
+        API keys, PII, session tokens — even though the connection appears to be "encrypted." The
+        TLS handshake succeeds, the padlock icon shows, but the client is talking to the attacker,
+        not the intended server.
+    </p>
+    <ul class="list-disc list-inside text-gray-300 leading-relaxed mb-4 space-y-1 ml-2">
+        <li><strong class="text-gray-200">Java</strong> — custom <code class="text-red-400">X509TrustManager</code>
+            with empty <code class="text-red-400">checkServerTrusted()</code>, or
+            <code class="text-red-400">HostnameVerifier</code> that returns <code class="text-red-400">true</code>
+            for all hostnames
+        </li>
+        <li><strong class="text-gray-200">Node.js</strong> — setting
+            <code class="text-red-400">rejectUnauthorized: false</code> on HTTPS agents or
+            <code class="text-red-400">NODE_TLS_REJECT_UNAUTHORIZED=0</code> in the environment
+        </li>
+        <li><strong class="text-gray-200">Axios / Fetch</strong> — passing custom agents that disable
+            certificate validation to HTTP clients</li>
+    </ul>
+    <p class="text-gray-300 leading-relaxed">
+        This weakness maps to <strong class="text-gray-200">OWASP A07:2021 — Identification and
+            Authentication Failures</strong>. The fix is straightforward: use the platform's default
+        certificate validation and never override hostname checking in production code. If you need
+        to test against self-signed certificates, use environment-scoped trust stores — not code
+        changes.
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Java trust-all TrustManager + HostnameVerifier -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Trust-all TrustManager and HostnameVerifier (Java)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                This is the most common pattern flagged by SAST tools in Java. A custom
+                <code class="text-red-400">X509TrustManager</code> with an empty
+                <code class="text-red-400">checkServerTrusted()</code> method accepts
+                <strong class="text-gray-200">any certificate</strong> — self-signed, expired, revoked,
+                or issued to a different host. Combined with a permissive
+                <code class="text-red-400">HostnameVerifier</code>, TLS is effectively downgraded to
+                plaintext. This is often introduced during development to bypass self-signed cert errors
+                and accidentally left in production.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Accepts ANY certificate — TLS is effectively disabled.
+import javax.net.ssl.*;
+import java.security.cert.X509Certificate;
+
+public class ApiClient {
+
+    static {
+        try {
+            // Trust manager that accepts everything — including attacker certs.
+            TrustManager[] trustAll = new TrustManager[] {
+                new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() { return null; }
+                    public void checkClientTrusted(X509Certificate[] c, String t) { }
+                    public void checkServerTrusted(X509Certificate[] c, String t) { }
+                    //  ↑ EMPTY — no validation at all. MITM trivial.
+                }
+            };
+
+            SSLContext sc = SSLContext.getInstance("TLS");
+            sc.init(null, trustAll, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+            // Hostname verifier that accepts any hostname.
+            HttpsURLConnection.setDefaultHostnameVerifier(
+                (hostname, session) -> true  // Always true = no host checking.
+            );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+
+// Also dangerous — OkHttp with trust-all:
+OkHttpClient client = new OkHttpClient.Builder()
+    .sslSocketFactory(sc.getSocketFactory(), (X509TrustManager) trustAll[0])
+    .hostnameVerifier((h, s) -> true) // Hostname check disabled!
+    .build();</code></div>
+        </div>
+
+        <!-- Example 2: Node.js rejectUnauthorized: false -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: rejectUnauthorized: false and NODE_TLS_REJECT_UNAUTHORIZED=0 (Node.js)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Setting <code class="text-red-400">rejectUnauthorized: false</code> on an HTTPS agent
+                tells Node.js to accept <strong class="text-gray-200">any TLS certificate</strong>,
+                including certificates for the wrong hostname, self-signed certs, and expired certs.
+                The environment variable <code class="text-red-400">NODE_TLS_REJECT_UNAUTHORIZED=0</code>
+                does the same thing globally for the entire process — affecting every outbound HTTPS
+                connection, not just the one you intended.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Disables ALL certificate validation for this agent.
+const https = require('https');
+
+const agent = new https.Agent({
+    rejectUnauthorized: false  // Accepts any cert — MITM trivial.
+});
+
+https.get('https://api.example.com/data', { agent }, (res) => {
+    // Connection "succeeds" even if attacker swaps the cert.
+});
+
+// ALSO DANGEROUS: Global disable — affects ALL HTTPS connections.
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+// Every https.request, fetch(), axios call in the process is now vulnerable.
+
+// ALSO DANGEROUS: Axios with custom agent.
+const axios = require('axios');
+const response = await axios.get('https://api.example.com/data', {
+    httpsAgent: new https.Agent({ rejectUnauthorized: false })
+});
+
+// ALSO DANGEROUS: node-fetch with agent.
+const fetch = require('node-fetch');
+const res = await fetch('https://api.example.com/data', {
+    agent: new https.Agent({ rejectUnauthorized: false })
+});</code></div>
+        </div>
+
+        <!-- Example 3: Java Spring RestTemplate with disabled verification -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Spring RestTemplate / WebClient with disabled SSL (Java)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                In Spring applications, developers often disable SSL verification on
+                <code class="text-red-400">RestTemplate</code> or <code class="text-red-400">WebClient</code>
+                to work around self-signed certificates in dev/staging environments. This configuration
+                frequently leaks into production via shared beans or profiles that aren't properly
+                scoped. Once deployed, every outbound API call from the service is vulnerable to MITM.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: RestTemplate that accepts any certificate.
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.TrustAllStrategy;
+import org.apache.http.ssl.SSLContextBuilder;
+
+@Bean
+public RestTemplate restTemplate() throws Exception {
+    SSLContext sslContext = SSLContextBuilder.create()
+        .loadTrustMaterial(TrustAllStrategy.INSTANCE)  // Trusts ALL certs
+        .build();
+
+    CloseableHttpClient httpClient = HttpClients.custom()
+        .setSSLContext(sslContext)
+        .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE) // No host check
+        .build();
+
+    return new RestTemplate(new HttpComponentsClientHttpRequestFactory(httpClient));
+}
+
+// ALSO DANGEROUS: WebClient with InsecureTrustManagerFactory.
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+
+@Bean
+public WebClient webClient() {
+    SslContext sslContext = SslContextBuilder.forClient()
+        .trustManager(InsecureTrustManagerFactory.INSTANCE) // Trust everything!
+        .build();
+
+    HttpClient httpClient = HttpClient.create()
+        .secure(t -> t.sslContext(sslContext));
+
+    return WebClient.builder()
+        .clientConnector(new ReactorClientHttpConnector(httpClient))
+        .build();
+}</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Java default SSL + custom truststore -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Use default SSL validation or a scoped custom truststore
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                The simplest fix is to <strong class="text-green-300">remove the custom TrustManager and
+                    HostnameVerifier entirely</strong> — Java's default SSL stack validates certificate chains,
+                expiration, and hostname matching out of the box. If you need to trust an internal CA (e.g.,
+                corporate PKI), load it into a custom
+                <code class="text-green-400">TrustManagerFactory</code> scoped to that specific connection —
+                never set globals that affect all connections.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Use Java's default SSL validation — no custom TrustManager needed.
+import javax.net.ssl.HttpsURLConnection;
+import java.net.URL;
+
+public class ApiClient {
+
+    /** Default HTTPS — validates cert chain, expiry, AND hostname. */
+    public String fetchData(String endpoint) throws Exception {
+        URL url = new URL(endpoint);
+        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+        // No custom SSLSocketFactory, no custom HostnameVerifier.
+        // Java's defaults handle everything correctly.
+        conn.setRequestMethod("GET");
+        return new String(conn.getInputStream().readAllBytes());
+    }
+}
+
+// ─── If you need to trust an internal/private CA ───
+import javax.net.ssl.*;
+import java.security.KeyStore;
+import java.io.FileInputStream;
+
+public class InternalApiClient {
+
+    private final SSLSocketFactory sslFactory;
+
+    public InternalApiClient(String truststorePath, char[] password) throws Exception {
+        // Load ONLY your internal CA — don't trust everything.
+        KeyStore trustStore = KeyStore.getInstance("PKCS12");
+        try (var is = new FileInputStream(truststorePath)) {
+            trustStore.load(is, password);
+        }
+
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(
+            TrustManagerFactory.getDefaultAlgorithm()
+        );
+        tmf.init(trustStore);
+
+        SSLContext ctx = SSLContext.getInstance("TLS");
+        ctx.init(null, tmf.getTrustManagers(), null);
+        this.sslFactory = ctx.getSocketFactory();
+        // Hostname verification is STILL enforced by default.
+    }
+}</code></div>
+        </div>
+
+        <!-- Fix 2: Node.js proper cert config -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): Remove rejectUnauthorized: false, use CA bundles for internal certs
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Remove <code class="text-red-400">rejectUnauthorized: false</code> and
+                <code class="text-red-400">NODE_TLS_REJECT_UNAUTHORIZED=0</code> from all production code.
+                Node.js validates certificates by default — no configuration needed for public CAs. For
+                internal or self-signed certificates, pass the CA certificate via the
+                <code class="text-green-400">ca</code> option or the
+                <code class="text-green-400">NODE_EXTRA_CA_CERTS</code> environment variable, which adds
+                your CA to the trust chain without disabling validation.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Default Node.js HTTPS — validates cert chain + hostname.
+const https = require('https');
+
+// No custom agent needed for public CAs — defaults are correct.
+https.get('https://api.example.com/data', (res) => {
+    // Certificate chain, expiry, and hostname are all verified.
+});
+
+// ─── For internal/self-signed CAs: supply the CA cert ───
+const fs = require('fs');
+
+const agent = new https.Agent({
+    // Trust your internal CA WITHOUT disabling validation.
+    ca: fs.readFileSync('/path/to/internal-ca.pem'),
+    // rejectUnauthorized defaults to true — leave it that way.
+});
+
+https.get('https://internal-api.corp.example.com/data', { agent }, (res) => {
+    // Validates against your internal CA AND checks hostname.
+});
+
+// Axios equivalent:
+const axios = require('axios');
+const response = await axios.get('https://internal-api.corp.example.com/data', {
+    httpsAgent: new https.Agent({
+        ca: fs.readFileSync('/path/to/internal-ca.pem')
+    })
+});
+
+// Or set the env var — adds your CA to the default bundle:
+// NODE_EXTRA_CA_CERTS=/path/to/internal-ca.pem node app.js</code></div>
+        </div>
+
+        <!-- Fix 3: Spring RestTemplate / WebClient with proper SSL -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Spring): Profile-scoped SSL config with proper truststore
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                If your Spring service connects to internal APIs with private CAs, configure a
+                <strong class="text-green-300">profile-scoped truststore</strong> via Spring Boot's
+                built-in SSL bundles (Spring Boot 3.1+) or application properties. This keeps SSL
+                verification intact while trusting your internal CA. Never use
+                <code class="text-red-400">TrustAllStrategy</code> or
+                <code class="text-red-400">NoopHostnameVerifier</code>.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Spring Boot 3.1+ SSL bundles — truststore via config, not code.
+// application.yml:
+// spring:
+//   ssl:
+//     bundle:
+//       jks:
+//         internal-api:
+//           truststore:
+//             location: classpath:internal-ca-truststore.p12
+//             password: ${TRUSTSTORE_PASSWORD}
+//             type: PKCS12
+
+// Then reference the bundle in your RestClient / WebClient:
+import org.springframework.boot.ssl.SslBundles;
+
+@Bean
+public RestClient restClient(RestClient.Builder builder, SslBundles sslBundles) {
+    return builder
+        .baseUrl("https://internal-api.corp.example.com")
+        .apply(b -> b.setSslBundle(sslBundles.getBundle("internal-api")))
+        .build();
+    // Hostname verification is enforced. Only the specified CA is trusted.
+}
+
+// ─── For older Spring Boot (pre-3.1): manual truststore bean ───
+@Bean
+@Profile("!local") // Only active in non-local environments
+public RestTemplate restTemplate() throws Exception {
+    KeyStore trustStore = KeyStore.getInstance("PKCS12");
+    try (var is = new ClassPathResource("internal-ca-truststore.p12").getInputStream()) {
+        trustStore.load(is, truststorePassword.toCharArray());
+    }
+
+    SSLContext sslContext = SSLContextBuilder.create()
+        .loadTrustMaterial(trustStore, null) // null = default trust strategy
+        .build();
+
+    CloseableHttpClient httpClient = HttpClients.custom()
+        .setSSLContext(sslContext)
+        // DEFAULT hostname verifier — do NOT use NoopHostnameVerifier!
+        .build();
+
+    return new RestTemplate(new HttpComponentsClientHttpRequestFactory(httpClient));
+}</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://cwe.mitre.org/data/definitions/297.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-297</p>
+                <p class="text-xs text-gray-500">Improper Validation of Certificate with Host Mismatch</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP A07:2021 —
+                    Identification and Authentication Failures</p>
+                <p class="text-xs text-gray-500">Top 10 category covering certificate validation issues</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Security_Cheat_Sheet.html"
+            target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP TLS
+                    Cheat Sheet</p>
+                <p class="text-xs text-gray-500">Transport Layer Security configuration and certificate pinning</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Pinning_Cheat_Sheet.html" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP Certificate
+                    Pinning Cheat Sheet</p>
+                <p class="text-xs text-gray-500">When and how to pin certificates for additional security</p>
+            </div>
+        </a>
+    </div>
+</div>

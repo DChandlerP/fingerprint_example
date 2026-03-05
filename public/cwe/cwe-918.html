@@ -1,0 +1,358 @@
+<!-- Overview -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3">Why Is This an Issue?</h3>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        CWE-918 covers <strong class="text-gray-200">Server-Side Request Forgery (SSRF)</strong> — a vulnerability
+        where an attacker can <strong class="text-gray-200">induce the server-side application to make requests</strong>
+        to an arbitrary domain or internal resource. Because the request originates from the trusted server,
+        it can bypass firewalls, VPC restrictions, and ACLs to access internal services that are not
+        exposed to the public internet.
+    </p>
+    <p class="text-gray-300 leading-relaxed mb-4">
+        SSRF is particularly critical in cloud and microservices environments because it enables:
+    </p>
+    <ul class="list-disc list-inside text-gray-300 leading-relaxed mb-4 space-y-1 ml-2">
+        <li><strong class="text-gray-200">Cloud Metadata Exfiltration</strong> — stealing temporary IAM
+            credentials or instance identity by querying metadata services (e.g., <code
+                class="text-red-400">169.254.169.254</code>)</li>
+        <li><strong class="text-gray-200">Internal Port Scanning</strong> — probing the internal network
+            to identify databases, cache servers (Redis), and administrative consoles</li>
+        <li><strong class="text-gray-200">Data Extraction</strong> — reading internal configuration files
+            or interacting with private APIs via the <code class="text-red-400">file://</code> or <code
+                class="text-red-400">gopher://</code> protocols</li>
+        <li><strong class="text-gray-200">Secondary Attacks</strong> — leveraging domestic protocols to
+            exploit internal vulnerabilities like unauthenticated database commands</li>
+    </ul>
+    <p class="text-gray-300 leading-relaxed">
+        This weakness is part of <strong class="text-gray-200">OWASP A10:2021 — Server-Side Request Forgery</strong>.
+        The primary defense is <strong class="text-gray-200">strict allowlisting of domains and IP addresses</strong>.
+        Generic blacklisting is generally insufficient due to URL encoding tricks, DNS rebinding, and
+        alternative IP representations (e.g., decimal, octal, or IPv6).
+    </p>
+</div>
+
+<!-- Vulnerable Examples -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">Examples of the Issue</h3>
+    <div class="space-y-6">
+
+        <!-- Example 1: Java RestTemplate SSRF -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Unvalidated URL in HTTP Client (Java / Spring RestTemplate)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                When an application allows a user to specify a URL (e.g., for fetching a profile picture,
+                importing data, or a webhook), and passes that URL directly to an HTTP client like
+                <code class="text-red-400">RestTemplate</code> or <code class="text-red-400">HttpClient</code>,
+                it creates an SSRF sink. An attacker can supply internal URLs to probe the infrastructure.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: User-controlled URL parameter passed to HTTP client.
+
+@RestController
+public class ProxyController {
+    
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @GetMapping("/proxy")
+    public byte[] fetchUrl(@RequestParam String imageUrl) {
+        // Attacker input: http://169.254.169.254/latest/meta-data/iam/security-credentials/
+        // Attacker input: http://localhost:8080/admin/delete-all
+        // Attacker input: http://10.0.0.5:6379 (Redis)
+        
+        return restTemplate.getForObject(imageUrl, byte[].class);
+        //                               ↑ SSRF Sink: Arbitrary internal request
+    }
+}
+
+// --- Using Apache HttpClient or Java 11+ HttpClient ---
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create(userInputUrl)) // Still vulnerable!
+    .build();</code></div>
+        </div>
+
+        <!-- Example 2: Node.js / Axios SSRF -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: Unvalidated URL in Node.js (Axios / Fetch)
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Node.js applications fetching external resources are equally vulnerable. Attackers can
+                exploit SSRF to access AWS/GCP metadata, bypass local authentication on internal admin
+                tools, or even perform port scanning on the internal VPC network.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: User-controlled URL passed to Axios.
+const express = require('express');
+const axios = require('axios');
+const app = express();
+
+app.get('/fetch-profile', async (req, res) =&gt; {
+    const url = req.query.url;
+
+    // Attacker: ?url=http://169.254.169.254/latest/meta-data/
+    // Attacker: ?url=http://127.0.0.1:2375 (Docker API)
+    
+    try {
+        const response = await axios.get(url);
+        res.send(response.data);
+    } catch (error) {
+        res.status(500).send('Error fetching resource');
+    }
+});
+
+// --- Also applies to native fetch() or got ---
+const response = await fetch(req.query.target); // SSRF vulnerability</code></div>
+        </div>
+
+        <!-- Example 3: SSRF via Redirects and Partial Bypasses -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-gray-800">
+            <h4 class="font-semibold text-red-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Dangerous: SSRF via HTTP Redirects and Weak Denylists
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Simple denylists (e.g., checking if the host is "127.0.0.1") are easily bypassed.
+                Attackers use <strong class="text-gray-200">HTTP Redirects</strong> (telling the server
+                to follow a 302 to an internal IP), <strong class="text-gray-200">DNS Rebinding</strong>
+                (changing the IP of a safe domain to a private IP mid-request), or alternative IP
+                representations (e.g., <code class="text-red-400">2130706433</code> instead of
+                <code class="text-red-400">127.0.0.1</code>).
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// DANGEROUS: Weak SSRF validation (easily bypassed).
+
+// --- Java: Prefix check bypass ---
+if (url.startsWith("https://trusted.com")) {
+    restTemplate.getForObject(url, String.class);
+}
+// Bypass: https://trusted.com@evil.com (UserInfo trick)
+// Bypass: https://trusted.com.evil.com (Subdomain trick)
+
+// --- Node.js: Localhost check bypass ---
+if (new URL(url).hostname !== 'localhost') {
+    axios.get(url);
+}
+// Bypass: http://[::1]/ (IPv6)
+// Bypass: http://127.0.0.1.nip.io/ (DNS Wildcard)
+// Bypass: Redirecting from a remote server to http://localhost</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- Remediation -->
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">How to Resolve</h3>
+    <div class="space-y-6">
+
+        <!-- Fix 1: Java Allowlisting + Validation -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (Java): Domain Allowlisting and Protocol Enforcement
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                The most effective defense is a <strong class="text-green-300">Strict Allowlist</strong>.
+                Do not allow arbitrary domains; only allow requests to specific, trusted targets.
+                Always ensure the protocol is restricted to <code class="text-green-400">https</code>
+                and disable redirect following if the client allows it.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Strict allowlist and protocol enforcement.
+
+private final Set&lt;String&gt; ALLOWED_DOMAINS = Set.of("images.trusted.com", "cdn.partner.io");
+
+public byte[] safeFetch(String userUrl) {
+    URI uri = URI.create(userUrl);
+    
+    // 1. Enforce HTTPS protocol
+    if (!"https".equals(uri.getScheme())) {
+        throw new SecurityException("Incorrect protocol");
+    }
+
+    // 2. Validate against strict allowlist of domains
+    if (!ALLOWED_DOMAINS.contains(uri.getHost())) {
+        throw new SecurityException("Target not allowed");
+    }
+
+    // 3. Disable Redirects in your HTTP Client config
+    // (Example using Apache HttpClient)
+    HttpClient client = HttpClientBuilder.create()
+        .disableRedirectHandling()
+        .build();
+        
+    return restTemplate.getForObject(uri, byte[].class);
+}</code></div>
+        </div>
+
+        <!-- Fix 2: Node.js IP Validation and SSRF Guards -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Fix (JS): Resolve IP and block Private/Local Ranges
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                If the application requires fetching from many domains, you must <strong class="text-green-300">manually
+                    resolve the IP address</strong> and check it against a blocklist of private network ranges
+                (RFC 1918). This prevents users from hitting internal services even if they use DNS rebinding
+                or URL encoding tricks.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// SAFE: Manually resolving and checking for private IP ranges.
+const ipaddr = require('ipaddr.js');
+const dns = require('dns').promises;
+
+async function isSafeUrl(targetUrl) {
+    const url = new URL(targetUrl);
+    if (url.protocol !== 'https:') return false;
+
+    // Resolve domain to IP to prevent DNS Rebinding
+    const { address } = await dns.lookup(url.hostname);
+    const ip = ipaddr.parse(address);
+    const range = ip.range();
+
+    // Block private, loopback, and link-local ranges
+    const forbidden = ['private', 'loopback', 'linkLocal', 'unspecified'];
+    return !forbidden.includes(range);
+}
+
+app.get('/fetch', async (req, res) =&gt; {
+    if (!await isSafeUrl(req.query.url)) {
+        return res.status(403).send('Forbidden target');
+    }
+    const response = await axios.get(req.query.url, {
+        maxRedirects: 0 // Disable redirects to prevent internal hop
+    });
+    res.send(response.data);
+});</code></div>
+        </div>
+
+        <!-- Fix 3: Infrastructure-level Protections -->
+        <div class="bg-gray-900 p-5 rounded-xl border border-green-900/50">
+            <h4 class="font-semibold text-green-400 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Defense-in-Depth: Cloud Metadata Protection and Network Isolation
+            </h4>
+            <p class="text-gray-400 text-sm mb-3">
+                Application-level fixes should be complemented by infrastructure security. Enforce
+                <strong class="text-green-300">AWS IMDSv2</strong> (requires a session token header),
+                which makes it nearly impossible to hit metadata via simple SSRF. Use
+                <strong class="text-green-300">Network Egress Filters</strong> (e.g., ISTIO service mesh
+                or VPC egress rules) to block application servers from initiating requests to any IP
+                range they don't explicitly need.
+            </p>
+            <div class="code-block mt-2"><button class="copy-btn">Copy</button><code>// INFRASTRUCTURE HARDENING:
+// 1. AWS IMDSv2: Enforce "Require tokens" on all EC2 instances.
+//    Simple GET requests from an SSRF sink will fail to get metadata.
+
+// 2. VPC Egress Rules:
+//    Restrict application security groups so they cannot initiate
+//    outbound traffic to 169.254.169.254 or internal DB tiers.
+
+// 3. Use an Egress Proxy:
+//    Route all application outbound traffic through a central proxy
+//    (like Squid or Broadcom Proxy) that enforces a strict domain allowlist.
+
+// 4. Disable domestic protocols:
+//    In Java, specifically restrict allowed protocols:
+//    System.setProperty("sun.net.http.allowRestrictedHeaders", "false");</code></div>
+        </div>
+    </div>
+</div>
+
+<!-- References -->
+<div>
+    <h3 class="text-xl font-semibold text-blue-300 mb-4">References</h3>
+    <div class="grid sm:grid-cols-2 gap-3">
+        <a href="https://cwe.mitre.org/data/definitions/918.html" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">MITRE CWE-918</p>
+                <p class="text-xs text-gray-500">Official Server-Side Request Forgery (SSRF) definition</p>
+            </div>
+        </a>
+
+        <a href="https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_(SSRF)/" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP A10:2021 — SSRF
+                </p>
+                <p class="text-xs text-gray-500">Top 10 category covering Server-Side Request Forgery</p>
+            </div>
+        </a>
+
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html"
+            target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">OWASP SSRF Prevention
+                    Cheat Sheet</p>
+                <p class="text-xs text-gray-500">Comprehensive mitigation strategies and architectural patterns</p>
+            </div>
+        </a>
+
+        <a href="https://portswigger.net/web-security/ssrf" target="_blank" rel="noopener noreferrer"
+            class="flex items-center bg-gray-900 p-4 rounded-lg border border-gray-800 hover:border-blue-600 transition group">
+            <span class="text-blue-400 mr-3 group-hover:text-blue-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-gray-200 group-hover:text-white transition">PortSwigger — SSRF</p>
+                <p class="text-xs text-gray-500">Detailed lab-style walkthrough of SSRF exploitations</p>
+            </div>
+        </a>
+    </div>
+</div>
