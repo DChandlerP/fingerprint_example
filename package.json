@@ -8,9 +8,12 @@
     "fetch-kev": "node fetch_kev.js",
     "parse-quiz": "node parse_practice_questions.js",
     "build": "npm run fetch-kev && npm run parse-quiz && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "autoprefixer": "^10.4.16",
     "glob": "^13.0.0",
     "postcss": "^8.4.32",
