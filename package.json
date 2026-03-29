@@ -10,7 +10,8 @@
     "build": "npm run fetch-kev && npm run parse-quiz && vite build",
     "preview": "vite preview",
     "test": "playwright test",
-    "test:ui": "playwright test --ui"
+    "test:ui": "playwright test --ui",
+    "deploy": "npm run build && gcloud storage rsync dist/ gs://chandlerprince.com/ --recursive --delete-unmatched-destination-objects"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
